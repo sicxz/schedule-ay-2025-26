@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EWU Design Schedule Conflict Analyzer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .controls {
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #495057;
+            font-size: 0.9em;
+        }
+
+        select, button {
+            padding: 10px 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1em;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        select:hover, select:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            font-weight: 600;
+            padding: 10px 25px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .stats-bar {
+            padding: 20px 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            background: #fff;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .stat-card {
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card.critical {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+        }
+
+        .stat-card.warning {
+            background: linear-gradient(135deg, #ffd93d 0%, #ff9f1c 100%);
+            color: #333;
+        }
+
+        .stat-card.success {
+            background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+            color: white;
+        }
+
+        .stat-card.info {
+            background: linear-gradient(135deg, #74c0fc 0%, #4dabf7 100%);
+            color: white;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: 100px repeat(7, 1fr);
+            gap: 1px;
+            background: #dee2e6;
+            border: 1px solid #dee2e6;
+            margin-bottom: 30px;
+        }
+
+        .grid-header {
+            background: #495057;
+            color: white;
+            padding: 15px;
+            font-weight: 600;
+            text-align: center;
+            font-size: 0.9em;
+        }
+
+        .time-slot {
+            background: #495057;
+            color: white;
+            padding: 15px 10px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85em;
+        }
+
+        .schedule-cell {
+            background: white;
+            padding: 8px;
+            min-height: 80px;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .schedule-cell:hover {
+            background: #f8f9fa;
+        }
+
+        .course-block {
+            background: #e9ecef;
+            padding: 8px;
+            border-radius: 6px;
+            border-left: 4px solid #adb5bd;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 4px;
+        }
+
+        .course-block:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .course-block.conflict-0 {
+            background: #fff5f5;
+            border-left-color: #ff6b6b;
+        }
+
+        .course-block.conflict-1 {
+            background: #fff3e0;
+            border-left-color: #ffa726;
+        }
+
+        .course-block.conflict-2 {
+            background: #fff9c4;
+            border-left-color: #ffd93d;
+        }
+
+        .course-name {
+            font-weight: 600;
+            font-size: 0.85em;
+            margin-bottom: 2px;
+            color: #212529;
+        }
+
+        .course-details {
+            font-size: 0.75em;
+            color: #6c757d;
+        }
+
+        .conflict-badge {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: #ff6b6b;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7em;
+            font-weight: bold;
+        }
+
+        .conflicts-panel {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .conflicts-panel h2 {
+            color: #495057;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .conflict-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #adb5bd;
+            transition: all 0.3s;
+        }
+
+        .conflict-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .conflict-item.critical {
+            border-left-color: #ff6b6b;
+        }
+
+        .conflict-item.high {
+            border-left-color: #ffa726;
+        }
+
+        .conflict-item.medium {
+            border-left-color: #ffd93d;
+        }
+
+        .conflict-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .conflict-time {
+            font-weight: 600;
+            color: #212529;
+            font-size: 1.1em;
+        }
+
+        .severity-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .severity-badge.critical {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .severity-badge.high {
+            background: #ffa726;
+            color: white;
+        }
+
+        .severity-badge.medium {
+            background: #ffd93d;
+            color: #333;
+        }
+
+        .conflict-courses {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .conflict-course-tag {
+            background: #e9ecef;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+
+        .recommendations {
+            background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .recommendations h2 {
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .recommendation-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .recommendation-item h3 {
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .priority-high {
+            border-left: 4px solid #fff;
+        }
+
+        .legend {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        .day-divider {
+            grid-column: 1 / -1;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            margin: 10px 0;
+            position: relative;
+        }
+
+        .day-divider::after {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 5px 15px;
+            font-weight: 600;
+            color: #667eea;
+            border-radius: 20px;
+            font-size: 0.85em;
+        }
+
+        .day-divider.mw::after {
+            content: 'Monday/Wednesday';
+        }
+
+        .day-divider.tr::after {
+            content: 'Tuesday/Thursday';
+        }
+
+        /* Faculty color coding */
+        .faculty-masingale { border-left-color: #667eea !important; }
+        .faculty-durr { border-left-color: #e67e22 !important; }
+        .faculty-manikoth { border-left-color: #27ae60 !important; }
+        .faculty-mills { border-left-color: #9b59b6 !important; }
+        .faculty-lybbert { border-left-color: #e74c3c !important; }
+        .faculty-hustrulid { border-left-color: #f39c12 !important; }
+        .faculty-sopu { border-left-color: #3498db !important; }
+        .faculty-norris { border-left-color: #1abc9c !important; }
+        .faculty-braukmann { border-left-color: #34495e !important; }
+        .faculty-allison { border-left-color: #d35400 !important; }
+        .faculty-online { border-left-color: #7f8c8d !important; }
+        .faculty-adjunct { border-left-color: #95a5a6 !important; }
+        .faculty-tbd { border-left-color: #bdc3c7 !important; }
+
+        .faculty-legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .faculty-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85em;
+        }
+
+        .faculty-color-bar {
+            width: 30px;
+            height: 15px;
+            border-radius: 3px;
+        }
+
+        /* Minor highlighting */
+        .course-block.minor-highlight {
+            border-width: 3px;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .minor-info-panel {
+            background: linear-gradient(135deg, #74c0fc 0%, #4dabf7 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .minor-info-panel h3 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .minor-courses {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .minor-course-tag {
+            background: rgba(255,255,255,0.2);
+            padding: 10px;
+            border-radius: 6px;
+            backdrop-filter: blur(10px);
+            font-size: 0.9em;
+        }
+
+        .minor-note {
+            background: rgba(255,255,255,0.15);
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 15px;
+            font-size: 0.9em;
+            font-style: italic;
+        }
+
+        .suggested-minors {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .suggested-minors h3 {
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .minor-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .minor-chip {
+            background: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 2px solid #667eea;
+            color: #667eea;
+            font-weight: 600;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .minor-chip:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .minor-chip.not-typical {
+            border-color: #e67e22;
+            color: #e67e22;
+        }
+
+        .minor-chip.not-typical:hover {
+            background: #e67e22;
+            color: white;
+        }
+
+        .online-section {
+            background: linear-gradient(135deg, #74c0fc 0%, #4dabf7 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            color: white;
+        }
+
+        .online-section h3 {
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .online-courses {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .online-course-block {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid white;
+            backdrop-filter: blur(10px);
+        }
+
+        .arranged-section {
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            color: white;
+        }
+
+        .arranged-section h3 {
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .arranged-courses {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .arranged-course-block {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid white;
+            backdrop-filter: blur(10px);
+        }
+
+        @media (max-width: 768px) {
+            .schedule-grid {
+                grid-template-columns: 80px repeat(7, 1fr);
+                font-size: 0.8em;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>EWU Design Schedule Conflict Analyzer</h1>
+            <p class="subtitle">Visual Course Scheduling & Conflict Detection Tool</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="quarterSelect">Select Quarter:</label>
+                <select id="quarterSelect">
+                    <option value="fall">Fall 2025</option>
+                    <option value="winter">Winter 2026</option>
+                    <option value="spring" selected>Spring 2026</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="courseFilter">Filter by Course:</label>
+                <select id="courseFilter">
+                    <option value="all">All Courses</option>
+                    <option value="DESN 401">DESN 401 - Imaginary Worlds</option>
+                    <option value="DESN 463">DESN 463 - Community Design</option>
+                    <option value="DESN 379">DESN 379 - Web Dev 2</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="roomFilter">Filter by Room:</label>
+                <select id="roomFilter">
+                    <option value="all">All Rooms</option>
+                    <option value="206">206 UX Lab</option>
+                    <option value="207">207 Media Lab</option>
+                    <option value="209">209 Mac Lab</option>
+                    <option value="210">210 Mac Lab</option>
+                    <option value="212">212 Project Lab</option>
+                    <option value="CEB">CEB Rooms</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="minorFilter">Filter by Minor:</label>
+                <select id="minorFilter">
+                    <option value="all">All Courses</option>
+                    <option value="ux">UX/Interaction Design</option>
+                    <option value="animation">Animation</option>
+                    <option value="gameDesign">Game Design</option>
+                    <option value="graphicDesign">Graphic Design</option>
+                    <option value="photography">Photography</option>
+                    <option value="webDevelopment">Web Development</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="trackFilter">Student Track:</label>
+                <select id="trackFilter">
+                    <option value="all">All Tracks</option>
+                    <option value="ux">UX Design</option>
+                    <option value="interaction-design">Interaction Design</option>
+                    <option value="web-development">Web Development</option>
+                    <option value="animation">Animation</option>
+                    <option value="game-design">Game Design</option>
+                    <option value="motion">Motion Design</option>
+                    <option value="photography">Photography</option>
+                </select>
+            </div>
+
+            <button onclick="highlightConflicts()">Highlight Conflicts</button>
+            <button onclick="exportReport()">Export Report</button>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-card critical">
+                <div class="stat-number" id="criticalConflicts">3</div>
+                <div class="stat-label">Critical Conflicts</div>
+            </div>
+            <div class="stat-card warning">
+                <div class="stat-number" id="totalConflicts">7</div>
+                <div class="stat-label">Total Conflicts</div>
+            </div>
+            <div class="stat-card info">
+                <div class="stat-number" id="totalCourses">15</div>
+                <div class="stat-label">Total Courses</div>
+            </div>
+            <div class="stat-card success">
+                <div class="stat-number" id="utilizationRate">78%</div>
+                <div class="stat-label">Room Utilization</div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #fff5f5; border: 2px solid #ff6b6b;"></div>
+                    <span>Critical Conflict (3+ courses)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #fff3e0; border: 2px solid #ffa726;"></div>
+                    <span>High Conflict (2 courses)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #e9ecef; border: 2px solid #adb5bd;"></div>
+                    <span>No Conflict</span>
+                </div>
+            </div>
+
+            <div class="faculty-legend">
+                <div class="faculty-legend-item">
+                    <div class="faculty-color-bar" style="background: #667eea;"></div>
+                    <span>T.Masingale</span>
+                </div>
+                <div class="faculty-legend-item">
+                    <div class="faculty-color-bar" style="background: #e67e22;"></div>
+                    <span>S.Durr</span>
+                </div>
+                <div class="faculty-legend-item">
+                    <div class="faculty-color-bar" style="background: #27ae60;"></div>
+                    <span>C.Manikoth</span>
+                </div>
+                <div class="faculty-legend-item">
+                    <div class="faculty-color-bar" style="background: #9b59b6;"></div>
+                    <span>S.Mills</span>
+                </div>
+                <div class="faculty-legend-item">
+                    <div class="faculty-color-bar" style="background: #e74c3c;"></div>
+                    <span>M.Lybbert</span>
+                </div>
+                <div class="faculty-legend-item">
+                    <div class="faculty-color-bar" style="background: #f39c12;"></div>
+                    <span>G.Hustrulid</span>
+                </div>
+                <div class="faculty-legend-item">
+                    <div class="faculty-color-bar" style="background: #3498db;"></div>
+                    <span>A.Sopu</span>
+                </div>
+                <div class="faculty-legend-item">
+                    <div class="faculty-color-bar" style="background: #1abc9c;"></div>
+                    <span>E.Norris</span>
+                </div>
+                <div class="faculty-legend-item">
+                    <div class="faculty-color-bar" style="background: #34495e;"></div>
+                    <span>J.Braukmann</span>
+                </div>
+                <div class="faculty-legend-item">
+                    <div class="faculty-color-bar" style="background: #d35400;"></div>
+                    <span>S.Allison</span>
+                </div>
+                <div class="faculty-legend-item">
+                    <div class="faculty-color-bar" style="background: #7f8c8d;"></div>
+                    <span>Barton/Pettigrew (Online)</span>
+                </div>
+                <div class="faculty-legend-item">
+                    <div class="faculty-color-bar" style="background: #95a5a6;"></div>
+                    <span>Adjunct</span>
+                </div>
+                <div class="faculty-legend-item">
+                    <div class="faculty-color-bar" style="background: #bdc3c7;"></div>
+                    <span>TBD</span>
+                </div>
+            </div>
+
+            <div id="minorInfoPanel"></div>
+            <div id="trackSuggestionsPanel"></div>
+
+            <h2 style="margin-bottom: 20px; color: #495057;">Schedule Grid - <span id="quarterTitle">Spring 2026</span></h2>
+            <div class="schedule-grid" id="scheduleGrid"></div>
+
+            <div id="onlineSection"></div>
+            <div id="arrangedSection"></div>
+
+            <div class="conflicts-panel">
+                <h2>Detected Schedule Conflicts</h2>
+                <div id="conflictsList"></div>
+            </div>
+
+            <div class="recommendations">
+                <h2>Optimization Recommendations</h2>
+                <div id="recommendationsList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Faculty color mapping
+        const facultyColors = {
+            'T.Masingale': { class: 'faculty-masingale', color: '#667eea', name: 'T.Masingale' },
+            'T. Masingale': { class: 'faculty-masingale', color: '#667eea', name: 'T.Masingale' },
+            'S.Durr': { class: 'faculty-durr', color: '#e67e22', name: 'S.Durr' },
+            'C.Manikoth': { class: 'faculty-manikoth', color: '#27ae60', name: 'C.Manikoth' },
+            'Manikoth': { class: 'faculty-manikoth', color: '#27ae60', name: 'C.Manikoth' },
+            'S.Mills': { class: 'faculty-mills', color: '#9b59b6', name: 'S.Mills' },
+            'M.Lybbert': { class: 'faculty-lybbert', color: '#e74c3c', name: 'M.Lybbert' },
+            'G.Hustrulid': { class: 'faculty-hustrulid', color: '#f39c12', name: 'G.Hustrulid' },
+            'A.Sopu': { class: 'faculty-sopu', color: '#3498db', name: 'A.Sopu' },
+            'E.Norris': { class: 'faculty-norris', color: '#1abc9c', name: 'E.Norris' },
+            'J.Braukmann': { class: 'faculty-braukmann', color: '#34495e', name: 'J.Braukmann' },
+            'S.Allison': { class: 'faculty-allison', color: '#d35400', name: 'S.Allison' },
+            'Barton/Pettigrew': { class: 'faculty-online', color: '#7f8c8d', name: 'Barton/Pettigrew' },
+            'Adjunct': { class: 'faculty-adjunct', color: '#95a5a6', name: 'Adjunct' },
+            'TBD': { class: 'faculty-tbd', color: '#bdc3c7', name: 'TBD' }
+        };
+
+        function getFacultyClass(instructor) {
+            return facultyColors[instructor]?.class || 'faculty-tbd';
+        }
+
+        // Minor data structure
+        const minors = {
+            ux: {
+                name: 'UX/Interaction Design Minor',
+                courses: ['DESN 338', 'DESN 348', 'DESN 458', 'DESN 366'],
+                tracks: ['ux', 'interaction-design', 'web-development'],
+                color: '#e74c3c',
+                typical: true
+            },
+            animation: {
+                name: 'Animation Minor',
+                courses: ['DESN 326', 'DESN 355', 'DESN 365', 'DESN 336'],
+                tracks: ['animation', 'motion'],
+                color: '#f39c12',
+                typical: false, // UX/Interaction/Web Dev typically don't pursue this
+                note: 'UX, Interaction Design, and Web Dev students typically don\'t pursue this minor'
+            },
+            gameDesign: {
+                name: 'Game Design Minor',
+                courses: ['DESN 335', 'DESN 345', 'DESN 369', 'DESN 379'],
+                tracks: ['animation', 'game-design'],
+                color: '#27ae60',
+                typical: true,
+                note: 'Animation and Game Design students may pursue this minor'
+            },
+            graphicDesign: {
+                name: 'Graphic Design Minor',
+                courses: ['DESN 243', 'DESN 263', 'DESN 360', 'DESN 463'],
+                tracks: ['all'],
+                color: '#3498db',
+                typical: true,
+                note: 'Can be picked up along the way by any track'
+            },
+            photography: {
+                name: 'Photography Minor',
+                courses: ['DESN 350', 'DESN 301'],
+                tracks: ['photography', 'visual-storytelling'],
+                color: '#9b59b6',
+                typical: true,
+                note: 'PHOTO 350 only offered in Spring',
+                seasonal: { 'DESN 350': 'spring' }
+            },
+            webDevelopment: {
+                name: 'Web Development Minor',
+                courses: ['DESN 368', 'DESN 369', 'DESN 379', 'DESN 468'],
+                tracks: ['web-development', 'code-design'],
+                color: '#667eea',
+                typical: true
+            }
+        };
+
+        // Student track definitions
+        const studentTracks = {
+            'ux': { name: 'UX Design', suggestedMinors: ['ux', 'graphicDesign', 'webDevelopment'] },
+            'interaction-design': { name: 'Interaction Design', suggestedMinors: ['ux', 'graphicDesign', 'webDevelopment'] },
+            'web-development': { name: 'Web Development', suggestedMinors: ['webDevelopment', 'graphicDesign', 'ux'] },
+            'animation': { name: 'Animation', suggestedMinors: ['animation', 'gameDesign', 'graphicDesign'] },
+            'game-design': { name: 'Game Design', suggestedMinors: ['gameDesign', 'animation', 'graphicDesign'] },
+            'motion': { name: 'Motion Design', suggestedMinors: ['animation', 'graphicDesign'] },
+            'photography': { name: 'Photography', suggestedMinors: ['photography', 'graphicDesign'] },
+            'visual-storytelling': { name: 'Visual Storytelling', suggestedMinors: ['photography', 'graphicDesign'] },
+            'code-design': { name: 'Code + Design', suggestedMinors: ['webDevelopment', 'gameDesign', 'graphicDesign'] }
+        };
+
+        const scheduleData = {
+            fall: {
+                'MW': {
+                    '10:00-12:00': [
+                        { code: 'DESN 368', name: 'Code + Design 1', room: '206', instructor: 'T.Masingale', credits: 5 },
+                        { code: 'DESN 243', name: 'Typography', room: '209', instructor: 'S.Durr', credits: 5 },
+                        { code: 'DESN 490', name: 'Capstone', room: '210', instructor: 'C.Manikoth', credits: 5 },
+                        { code: 'DESN 100', name: 'Drawing Com.', room: 'CEB 104', instructor: 'A.Sopu', credits: 5 }
+                    ],
+                    '13:00-15:00': [
+                        { code: 'DESN 338', name: 'UX 1', room: '206', instructor: 'M.Lybbert', credits: 5 },
+                        { code: 'DESN 463', name: 'Community Dr.', room: '209', instructor: 'S.Durr', credits: 5 },
+                        { code: 'DESN 301', name: 'Visual Storyte.', room: '210', instructor: 'S.Mills', credits: 5 },
+                        { code: 'DESN 216', name: 'Digital Fdns.', room: 'CEB 102', instructor: 'A.Sopu', credits: 5 },
+                        { code: 'DESN 100', name: 'Drawing Com.', room: 'CEB 104', instructor: 'S.Allison', credits: 5 }
+                    ],
+                    '16:00-18:00': [
+                        { code: 'DESN 366', name: 'Production Des.', room: '206', instructor: 'M.Lybbert', credits: 5 }
+                    ]
+                },
+                'TR': {
+                    '10:00-12:00': [
+                        { code: 'DESN 374', name: 'AI + Design', room: '209', instructor: 'T.Masingale', credits: 5 },
+                        { code: 'DESN 200', name: 'Visual Thinking', room: '210', instructor: 'C.Manikoth', credits: 5 },
+                        { code: 'DESN 359', name: 'Histories of Des.', room: 'CEB 102', instructor: 'S.Durr', credits: 5 },
+                        { code: 'ITGS 110', name: 'FYE: Humanities', room: 'CEB 104', instructor: 'S.Mills', credits: 5 }
+                    ],
+                    '13:00-15:00': [
+                        { code: 'DESN 480', name: 'Pro. Practice', room: '206', instructor: 'C.Manikoth', credits: 5 },
+                        { code: 'DESN 326', name: 'Intro to Anim.', room: '209', instructor: 'G.Hustrulid', credits: 5 },
+                        { code: 'DESN 263', name: 'VCD 1', room: '210', instructor: 'A.Sopu', credits: 5 },
+                        { code: 'DESN 200', name: 'Visual Thinking', room: 'CEB 104', instructor: 'S.Mills', credits: 5 }
+                    ]
+                },
+                'ONLINE': {
+                    'async': [
+                        { code: 'DESN 216', name: 'Digital Fdns.', room: 'ONLINE', instructor: 'Barton/Pettigrew', credits: 5 }
+                    ]
+                }
+            },
+            winter: {
+                'MW': {
+                    '10:00-12:00': [
+                        { code: 'DESN 335', name: 'Board Game', room: '206', instructor: 'M.Lybbert', credits: 5 },
+                        { code: 'DESN 243', name: 'Typography', room: '209', instructor: 'S.Durr', credits: 5 },
+                        { code: 'DESN 216', name: 'Digital Fdns.', room: 'CEB 102', instructor: 'A.Sopu', credits: 5 }
+                    ],
+                    '13:00-15:00': [
+                        { code: 'DESN 348', name: 'UX 2', room: '206', instructor: 'M.Lybbert', credits: 5 },
+                        { code: 'DESN 360', name: 'Zine Pubic.', room: '209', instructor: 'S.Mills', credits: 5 },
+                        { code: 'DESN 480', name: 'Pro. Practice', room: '210', instructor: 'C.Manikoth', credits: 5 },
+                        { code: 'DESN 100', name: 'Drawing Com.', room: 'CEB 104', instructor: 'A.Sopu', credits: 5 }
+                    ],
+                    '16:00-18:00': [
+                        { code: 'DESN 338', name: 'UX 1', room: '206', instructor: 'M.Lybbert', credits: 5 },
+                        { code: 'DESN 378', name: 'Code + Design 2', room: '209', instructor: 'T. Masingale', credits: 5 }
+                    ]
+                },
+                'TR': {
+                    '10:00-12:00': [
+                        { code: 'DESN 369', name: 'Web Dev. 1', room: '206', instructor: 'C.Manikoth', credits: 5 },
+                        { code: 'DESN 490', name: 'Capstone', room: '209', instructor: 'TBD', credits: 5 },
+                        { code: 'DESN 359', name: 'Histories of Des.', room: '210', instructor: 'S.Durr', credits: 5 },
+                        { code: 'DESN 200', name: 'Visual Thinking', room: 'CEB 102', instructor: 'S.Mills', credits: 5 }
+                    ],
+                    '13:00-15:00': [
+                        { code: 'DESN 374', name: 'AI + Design', room: '206', instructor: 'T. Masingale', credits: 5 },
+                        { code: 'DESN 355', name: 'Motion Design', room: '209', instructor: 'G.Hustrulid', credits: 5 },
+                        { code: 'DESN 263', name: 'VCD 1', room: '210', instructor: 'A.Sopu', credits: 5 },
+                        { code: 'DESN 100', name: 'Drawing Com.', room: 'CEB 104', instructor: 'S.Allison', credits: 5 }
+                    ],
+                    '16:00-18:00': [
+                        { code: 'DESN 336', name: '3D Animation', room: '209', instructor: 'Adjunct', credits: 5 }
+                    ]
+                },
+                'ONLINE': {
+                    'async': [
+                        { code: 'DESN 216', name: 'Digital Fdns.', room: 'ONLINE', instructor: 'Barton/Pettigrew', credits: 5 }
+                    ]
+                },
+                'ARRANGED': {
+                    'arranged': [
+                        { code: 'DESN 396', name: 'Japan Study Ab.', room: 'ARRANGED', instructor: 'M.Lybbert', credits: 5 }
+                    ]
+                }
+            },
+            spring: {
+                'MW': {
+                    '10:00-12:00': [
+                        { code: 'DESN 305', name: 'Social Media', room: '206', instructor: 'E.Norris', credits: 5 },
+                        { code: 'DESN 374', name: 'AI + Design', room: '209', instructor: 'T. Masingale', credits: 5 },
+                        { code: 'DESN 490', name: 'Capstone', room: '210', instructor: 'TBD', credits: 5 },
+                        { code: 'DESN 359', name: 'Histories of Des.', room: 'CEB 102', instructor: 'S.Durr', credits: 5 }
+                    ],
+                    '13:00-15:00': [
+                        { code: 'DESN 338', name: 'UX 1', room: '206', instructor: 'M.Lybbert', credits: 5 },
+                        { code: 'DESN 345', name: 'Digital Game', room: '209', instructor: 'Manikoth', credits: 5 },
+                        { code: 'DESN 263', name: 'VCD 1', room: '210', instructor: 'A.Sopu', credits: 5 },
+                        { code: 'DESN 200', name: 'Visual Thinking', room: 'CEB 102', instructor: 'S.Mills', credits: 5 }
+                    ],
+                    '16:00-18:00': [
+                        { code: 'DESN 458', name: 'UX 3', room: '206', instructor: 'M.Lybbert', credits: 5 },
+                        { code: 'DESN 350', name: 'Digital Photo', room: '209', instructor: 'Adjunct', credits: 5 }
+                    ]
+                },
+                'TR': {
+                    '10:00-12:00': [
+                        { code: 'DESN 379', name: 'Web Dev. 2', room: '206', instructor: 'C.Manikoth', credits: 5 },
+                        { code: 'DESN 401', name: 'Imaginary Ws.', room: '209', instructor: 'S.Mills', credits: 5 },
+                        { code: 'DESN 463', name: 'Community Dr.', room: '210', instructor: 'S.Durr', credits: 5 },
+                        { code: 'DESN 216', name: 'Digital Fdns.', room: 'CEB 102', instructor: 'A.Sopu', credits: 5 }
+                    ],
+                    '13:00-15:00': [
+                        { code: 'DESN 468', name: 'Code + Design 3', room: '206', instructor: 'T. Masingale', credits: 5 },
+                        { code: 'DESN 365', name: 'Motion Des. 2', room: '209', instructor: 'G.Hustrulid', credits: 5 },
+                        { code: 'DESN 243', name: 'Typography', room: '210', instructor: 'S.Durr', credits: 5 },
+                        { code: 'DESN 384', name: 'Digital Sound', room: 'CEB 102', instructor: 'J.Braukmann', credits: 5 },
+                        { code: 'DESN 100', name: 'Drawing Com.', room: 'CEB 104', instructor: 'A.Sopu', credits: 5 }
+                    ]
+                },
+                'ONLINE': {
+                    'async': [
+                        { code: 'DESN 216', name: 'Digital Fdns.', room: 'ONLINE', instructor: 'Barton/Pettigrew', credits: 5 }
+                    ]
+                }
+            }
+        };
+
+        const conflictData = {
+            spring: [
+                {
+                    time: 'Tuesday & Thursday, 10:00 AM - 12:00 PM',
+                    severity: 'critical',
+                    courses: ['DESN 379 - Web Dev 2', 'DESN 401 - Imaginary Worlds', 'DESN 463 - Community Design'],
+                    impact: 'Students cannot take multiple upper-division electives simultaneously',
+                    affected: 'High'
+                }
+            ],
+            fall: [
+                {
+                    time: 'Monday & Wednesday, 10:00 AM - 12:00 PM',
+                    severity: 'high',
+                    courses: ['DESN 368 - Code + Design 1', 'DESN 490 - Capstone'],
+                    impact: 'Seniors in code track cannot complete both courses',
+                    affected: 'High'
+                },
+                {
+                    time: 'Monday & Wednesday, 1:00 PM - 3:00 PM',
+                    severity: 'medium',
+                    courses: ['DESN 338 - UX 1', 'DESN 463 - Community Design', 'DESN 301 - Visual Storytelling'],
+                    impact: 'UX track students limited in elective choices',
+                    affected: 'Medium'
+                }
+            ],
+            winter: [
+                {
+                    time: 'Monday & Wednesday, 1:00 PM - 3:00 PM',
+                    severity: 'high',
+                    courses: ['DESN 348 - UX 2', 'DESN 480 - Professional Practice'],
+                    impact: 'Seniors in UX track cannot complete required courses together',
+                    affected: 'High'
+                },
+                {
+                    time: 'Tuesday & Thursday, 10:00 AM - 12:00 PM',
+                    severity: 'high',
+                    courses: ['DESN 369 - Web Dev 1', 'DESN 490 - Capstone'],
+                    impact: 'Web development students delayed in capstone',
+                    affected: 'Medium'
+                }
+            ]
+        };
+
+        const recommendations = {
+            spring: [
+                {
+                    priority: 'high',
+                    title: 'Move DESN 463 to Monday/Wednesday 1-3 PM',
+                    description: 'Relocating Community Design eliminates the critical three-way conflict and S. Durr has no conflicts at this time.'
+                }
+            ],
+            fall: [
+                {
+                    priority: 'high',
+                    title: 'Add Second Capstone Section',
+                    description: 'Offer DESN 490 at Tuesday/Thursday 1-3 PM to allow seniors flexibility in completing degree requirements.'
+                }
+            ],
+            winter: [
+                {
+                    priority: 'high',
+                    title: 'Relocate Professional Practice',
+                    description: 'Move DESN 480 to Monday/Wednesday 10-12 AM or offer in Spring quarter as alternative.'
+                }
+            ]
+        };
+
+        function renderSchedule(quarter) {
+            const grid = document.getElementById('scheduleGrid');
+            const data = scheduleData[quarter];
+
+            grid.innerHTML = '';
+
+            // Header row
+            grid.innerHTML += '<div class="grid-header">Time</div>';
+            grid.innerHTML += '<div class="grid-header">206 UX Lab</div>';
+            grid.innerHTML += '<div class="grid-header">207 Media Lab</div>';
+            grid.innerHTML += '<div class="grid-header">209 Mac Lab</div>';
+            grid.innerHTML += '<div class="grid-header">210 Mac Lab</div>';
+            grid.innerHTML += '<div class="grid-header">212 Project Lab</div>';
+            grid.innerHTML += '<div class="grid-header">CEB 102</div>';
+            grid.innerHTML += '<div class="grid-header">CEB 104</div>';
+
+            const times = ['10:00-12:00', '13:00-15:00', '16:00-18:00'];
+            const days = ['MW', 'TR'];
+            const rooms = ['206', '207', '209', '210', '212', 'CEB 102', 'CEB 104'];
+
+            days.forEach((day, dayIndex) => {
+                // Add divider for each day section
+                if (dayIndex === 0) {
+                    grid.innerHTML += '<div class="day-divider mw"></div>';
+                } else if (dayIndex === 1) {
+                    grid.innerHTML += '<div class="day-divider tr"></div>';
+                }
+
+                times.forEach(time => {
+                    grid.innerHTML += `<div class="time-slot">${day}<br>${time}</div>`;
+
+                    rooms.forEach(room => {
+                        const courses = data[day] && data[day][time] ?
+                            data[day][time].filter(c => c.room === room) : [];
+
+                        const cellContent = courses.map(course => {
+                            const conflictLevel = courses.length > 2 ? 0 : courses.length > 1 ? 1 : 2;
+                            const facultyClass = getFacultyClass(course.instructor);
+                            return `
+                                <div class="course-block conflict-${conflictLevel} ${facultyClass}" onclick="showCourseDetails('${course.code}', '${course.name}', '${course.instructor}', ${course.credits}, '${course.room}')">
+                                    ${courses.length > 1 ? `<span class="conflict-badge">${courses.length}</span>` : ''}
+                                    <div class="course-name">${course.code}</div>
+                                    <div class="course-details">${course.name}</div>
+                                    <div class="course-details">${course.instructor}</div>
+                                </div>
+                            `;
+                        }).join('');
+
+                        grid.innerHTML += `<div class="schedule-cell">${cellContent}</div>`;
+                    });
+                });
+            });
+        }
+
+        function renderOnlineCourses(quarter) {
+            const onlineSection = document.getElementById('onlineSection');
+            const data = scheduleData[quarter];
+
+            if (!data['ONLINE']) {
+                onlineSection.innerHTML = '';
+                return;
+            }
+
+            const onlineCourses = data['ONLINE']['async'] || [];
+
+            if (onlineCourses.length === 0) {
+                onlineSection.innerHTML = '';
+                return;
+            }
+
+            onlineSection.innerHTML = `
+                <div class="online-section">
+                    <h3>📱 Online Courses (Asynchronous)</h3>
+                    <div class="online-courses">
+                        ${onlineCourses.map(course => {
+                            const facultyClass = getFacultyClass(course.instructor);
+                            return `
+                                <div class="online-course-block ${facultyClass}">
+                                    <div class="course-name" style="color: white; font-size: 1em; margin-bottom: 5px;">${course.code}</div>
+                                    <div class="course-details" style="color: rgba(255,255,255,0.9);">${course.name}</div>
+                                    <div class="course-details" style="color: rgba(255,255,255,0.9);">${course.instructor}</div>
+                                    <div class="course-details" style="color: rgba(255,255,255,0.9); margin-top: 5px;">${course.credits} credits</div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderArrangedCourses(quarter) {
+            const arrangedSection = document.getElementById('arrangedSection');
+            const data = scheduleData[quarter];
+
+            if (!data['ARRANGED']) {
+                arrangedSection.innerHTML = '';
+                return;
+            }
+
+            const arrangedCourses = data['ARRANGED']['arranged'] || [];
+
+            if (arrangedCourses.length === 0) {
+                arrangedSection.innerHTML = '';
+                return;
+            }
+
+            arrangedSection.innerHTML = `
+                <div class="arranged-section">
+                    <h3>✈️ Arranged Courses (Study Abroad & Independent Study)</h3>
+                    <div class="arranged-courses">
+                        ${arrangedCourses.map(course => {
+                            const facultyClass = getFacultyClass(course.instructor);
+                            return `
+                                <div class="arranged-course-block ${facultyClass}">
+                                    <div class="course-name" style="color: white; font-size: 1em; margin-bottom: 5px;">${course.code}</div>
+                                    <div class="course-details" style="color: rgba(255,255,255,0.9);">${course.name}</div>
+                                    <div class="course-details" style="color: rgba(255,255,255,0.9);">${course.instructor}</div>
+                                    <div class="course-details" style="color: rgba(255,255,255,0.9); margin-top: 5px;">${course.credits} credits</div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderConflicts(quarter) {
+            const conflictsList = document.getElementById('conflictsList');
+            const conflicts = conflictData[quarter] || [];
+
+            if (conflicts.length === 0) {
+                conflictsList.innerHTML = '<p style="color: #51cf66; font-weight: 600;">No major conflicts detected for this quarter!</p>';
+                return;
+            }
+
+            conflictsList.innerHTML = conflicts.map(conflict => `
+                <div class="conflict-item ${conflict.severity}">
+                    <div class="conflict-header">
+                        <span class="conflict-time">${conflict.time}</span>
+                        <span class="severity-badge ${conflict.severity}">${conflict.severity}</span>
+                    </div>
+                    <p style="margin: 10px 0; color: #495057;">${conflict.impact}</p>
+                    <p style="margin: 10px 0; color: #6c757d; font-size: 0.9em;"><strong>Students Affected:</strong> ${conflict.affected}</p>
+                    <div class="conflict-courses">
+                        ${conflict.courses.map(course => `<span class="conflict-course-tag">${course}</span>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderRecommendations(quarter) {
+            const recList = document.getElementById('recommendationsList');
+            const recs = recommendations[quarter] || [];
+
+            if (recs.length === 0) {
+                recList.innerHTML = '<p>No specific recommendations for this quarter.</p>';
+                return;
+            }
+
+            recList.innerHTML = recs.map(rec => `
+                <div class="recommendation-item ${rec.priority === 'high' ? 'priority-high' : ''}">
+                    <h3>${rec.title}</h3>
+                    <p>${rec.description}</p>
+                </div>
+            `).join('');
+        }
+
+        function updateStats(quarter) {
+            const data = scheduleData[quarter];
+            const conflicts = conflictData[quarter] || [];
+
+            let totalCourses = 0;
+            Object.values(data).forEach(dayData => {
+                Object.values(dayData).forEach(timeSlot => {
+                    totalCourses += timeSlot.length;
+                });
+            });
+
+            const criticalConflicts = conflicts.filter(c => c.severity === 'critical').length;
+
+            document.getElementById('criticalConflicts').textContent = criticalConflicts;
+            document.getElementById('totalConflicts').textContent = conflicts.length;
+            document.getElementById('totalCourses').textContent = totalCourses;
+        }
+
+        function isCourseInMinor(courseCode, minorKey) {
+            return minors[minorKey].courses.includes(courseCode);
+        }
+
+        function displayMinorInfo(minorKey) {
+            const panel = document.getElementById('minorInfoPanel');
+            if (minorKey === 'all') {
+                panel.innerHTML = '';
+                return;
+            }
+
+            const minor = minors[minorKey];
+            panel.innerHTML = `
+                <div class="minor-info-panel">
+                    <h3>${minor.name}</h3>
+                    <p>Required Courses:</p>
+                    <div class="minor-courses">
+                        ${minor.courses.map(course => `<div class="minor-course-tag">${course}</div>`).join('')}
+                    </div>
+                    ${minor.note ? `<div class="minor-note">${minor.note}</div>` : ''}
+                </div>
+            `;
+        }
+
+        function displayTrackSuggestions(trackKey) {
+            const panel = document.getElementById('trackSuggestionsPanel');
+            if (trackKey === 'all') {
+                panel.innerHTML = '';
+                return;
+            }
+
+            const track = studentTracks[trackKey];
+            const suggestedMinors = track.suggestedMinors.map(minorKey => {
+                const minor = minors[minorKey];
+                const isTypical = minor.typical;
+                return {
+                    key: minorKey,
+                    name: minor.name,
+                    typical: isTypical
+                };
+            });
+
+            panel.innerHTML = `
+                <div class="suggested-minors">
+                    <h3>Suggested Minors for ${track.name} Students</h3>
+                    <div class="minor-list">
+                        ${suggestedMinors.map(m => `
+                            <div class="minor-chip ${!m.typical ? 'not-typical' : ''}" onclick="selectMinor('${m.key}')">
+                                ${m.name}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function selectMinor(minorKey) {
+            document.getElementById('minorFilter').value = minorKey;
+            document.getElementById('minorFilter').dispatchEvent(new Event('change'));
+        }
+
+        function highlightMinorCourses(minorKey) {
+            const courseBlocks = document.querySelectorAll('.course-block');
+            courseBlocks.forEach(block => {
+                block.classList.remove('minor-highlight');
+            });
+
+            if (minorKey !== 'all') {
+                courseBlocks.forEach(block => {
+                    const courseCode = block.querySelector('.course-name').textContent;
+                    if (isCourseInMinor(courseCode, minorKey)) {
+                        block.classList.add('minor-highlight');
+                    }
+                });
+            }
+        }
+
+        function showCourseDetails(code, name, instructor, credits, room) {
+            alert(`${code}: ${name}\n\nInstructor: ${instructor}\nCredits: ${credits}\nRoom: ${room}`);
+        }
+
+        function highlightConflicts() {
+            alert('Conflicts are highlighted in red (3+ courses) and orange (2 courses) in the schedule grid!');
+        }
+
+        function exportReport() {
+            alert('Export functionality would generate a PDF report with full conflict analysis and recommendations.');
+        }
+
+        // Event listeners
+        document.getElementById('quarterSelect').addEventListener('change', function() {
+            const quarter = this.value;
+            document.getElementById('quarterTitle').textContent = quarter.charAt(0).toUpperCase() + quarter.slice(1) + ' 2026';
+            renderSchedule(quarter);
+            renderOnlineCourses(quarter);
+            renderArrangedCourses(quarter);
+            renderConflicts(quarter);
+            renderRecommendations(quarter);
+            updateStats(quarter);
+
+            // Re-apply minor filter if active
+            const minorFilter = document.getElementById('minorFilter').value;
+            if (minorFilter !== 'all') {
+                highlightMinorCourses(minorFilter);
+            }
+        });
+
+        document.getElementById('minorFilter').addEventListener('change', function() {
+            const minorKey = this.value;
+            displayMinorInfo(minorKey);
+            highlightMinorCourses(minorKey);
+        });
+
+        document.getElementById('trackFilter').addEventListener('change', function() {
+            const trackKey = this.value;
+            displayTrackSuggestions(trackKey);
+        });
+
+        // Initial render
+        renderSchedule('spring');
+        renderOnlineCourses('spring');
+        renderArrangedCourses('spring');
+        renderConflicts('spring');
+        renderRecommendations('spring');
+        updateStats('spring');
+    </script>
+</body>
+</html>
