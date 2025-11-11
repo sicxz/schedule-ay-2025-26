@@ -312,26 +312,6 @@
             color: #6c757d;
         }
 
-        .conflict-solver {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 30px;
-        }
-
-        .solution-option {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            border-left: 4px solid #51cf66;
-        }
-
-        .solution-option.creates-conflict {
-            border-left-color: #ff6b6b;
-            background: #fff5f5;
-        }
-
         @media (max-width: 768px) {
             .dashboard-grid {
                 grid-template-columns: 1fr;
@@ -459,14 +439,6 @@
                 <div class="capacity-grid" id="capacityGrid"></div>
             </div>
 
-            <div class="conflict-solver">
-                <h2>🔧 Conflict Resolution Solver</h2>
-                <p style="color: #666; font-size: 0.9em; margin-bottom: 20px;">
-                    Analyzes schedule matrix to find conflict resolutions that don't create new conflicts
-                </p>
-                <div id="conflictSolutions"></div>
-            </div>
-
             <div class="chart-container">
                 <h2>Detailed Course Data</h2>
                 <table class="data-table" id="courseDataTable">
@@ -544,7 +516,6 @@
             renderProgramHeadcountChart();
             renderFacultyWorkloadChart();
             renderCapacityUtilization();
-            renderConflictSolver();
             renderCourseTable();
             renderInsights();
         }
@@ -937,70 +908,6 @@
                             ${course.average} students / ${capacity} capacity<br>
                             ${Math.round(course.utilization)}% utilized
                         </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function renderConflictSolver() {
-            const solutionsDiv = document.getElementById('conflictSolutions');
-
-            // Schedule matrix - represents current course schedule
-            const scheduleMatrix = {
-                'MW 10-12': ['DESN 335 (206)', 'DESN 243 (209)', 'DESN 216 (CEB 102)'],
-                'MW 13-15': ['DESN 348 (206)', 'DESN 360 (209)', 'DESN 480 (210)', 'DESN 100 (CEB 104)'],
-                'MW 16-18': ['DESN 338 (206)', 'DESN 378 (209)'],
-                'TR 10-12': ['DESN 369 (206)', 'DESN 490 (209)', 'DESN 359 (210)', 'DESN 200 (CEB 102)'],
-                'TR 13-15': ['DESN 374 (206)', 'DESN 355 (209)', 'DESN 263 (210)', 'DESN 100 (CEB 104)'],
-                'TR 16-18': ['DESN 336 (209)']
-            };
-
-            // Define critical conflicts that need resolution
-            const conflicts = [
-                {
-                    name: 'DESN 348 / DESN 480 Conflict (Winter)',
-                    description: 'Both courses at MW 13-15. Seniors cannot complete UX minor and graduate.',
-                    affectedStudents: 17,
-                    currentSlot: 'MW 13-15',
-                    courseToMove: 'DESN 480',
-                    alternativeSlots: ['TR 13-15', 'TR 16-18', 'MW 16-18', 'TR 10-12']
-                }
-            ];
-
-            solutionsDiv.innerHTML = conflicts.map(conflict => {
-                // Analyze each potential solution
-                const solutions = conflict.alternativeSlots.map(slot => {
-                    const existingCourses = scheduleMatrix[slot] || [];
-                    const createsConflict = existingCourses.length >= 4; // 4+ courses in slot = high conflict
-                    const hasRoomAvailable = existingCourses.length < 6; // 6 rooms total
-
-                    return {
-                        slot,
-                        existingCourses,
-                        createsConflict,
-                        hasRoomAvailable,
-                        recommendation: !createsConflict && hasRoomAvailable ? '✅ RECOMMENDED' : createsConflict ? '⚠️ Creates new conflict' : '❌ No rooms available'
-                    };
-                });
-
-                return `
-                    <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #ff6b6b;">
-                        <h3 style="color: #ff6b6b; margin-bottom: 10px;">${conflict.name}</h3>
-                        <p style="color: #666; margin-bottom: 15px;">
-                            <strong>Impact:</strong> ${conflict.affectedStudents} students affected<br>
-                            <strong>Current Issue:</strong> ${conflict.description}
-                        </p>
-
-                        <h4 style="margin-top: 15px; margin-bottom: 10px;">Proposed Solutions:</h4>
-                        ${solutions.map(sol => `
-                            <div class="solution-option ${sol.createsConflict ? 'creates-conflict' : ''}">
-                                <strong>${sol.recommendation}</strong> Move ${conflict.courseToMove} to ${sol.slot}<br>
-                                <span style="font-size: 0.85em; color: #666;">
-                                    Currently scheduled: ${sol.existingCourses.join(', ') || 'EMPTY SLOT'}
-                                    ${sol.hasRoomAvailable ? ` (${6 - sol.existingCourses.length} rooms available)` : ''}
-                                </span>
-                            </div>
-                        `).join('')}
                     </div>
                 `;
             }).join('');

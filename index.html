@@ -779,6 +779,62 @@
             margin-left: 8px;
         }
 
+        .conflict-solver-panel {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .conflict-solver-panel h2 {
+            color: #495057;
+            margin-bottom: 10px;
+            font-size: 1.5em;
+        }
+
+        .conflict-solution-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #ff6b6b;
+        }
+
+        .conflict-solution-card h3 {
+            color: #ff6b6b;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .solution-option {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #51cf66;
+        }
+
+        .solution-option.creates-conflict {
+            border-left-color: #ff6b6b;
+            background: #fff5f5;
+        }
+
+        .solution-option.warning {
+            border-left-color: #ffd93d;
+            background: #fffdf0;
+        }
+
+        .solution-recommendation {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .solution-details {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+        }
+
         @media (max-width: 768px) {
             .schedule-grid {
                 grid-template-columns: 80px repeat(7, 1fr);
@@ -972,6 +1028,14 @@
             <div class="conflicts-panel">
                 <h2>Detected Schedule Conflicts</h2>
                 <div id="conflictsList"></div>
+            </div>
+
+            <div class="conflict-solver-panel">
+                <h2>🔧 Automated Conflict Resolution Solver</h2>
+                <p style="color: #666; font-size: 0.9em; margin-bottom: 20px;">
+                    Analyzes schedule matrix to find solutions that won't create new conflicts
+                </p>
+                <div id="conflictSolverList"></div>
             </div>
 
             <div class="recommendations">
@@ -1654,6 +1718,147 @@
             `).join('');
         }
 
+        function renderConflictSolver(quarter) {
+            const solverList = document.getElementById('conflictSolverList');
+            const data = scheduleData[quarter];
+
+            // Build schedule matrix from current quarter data
+            const scheduleMatrix = {};
+            const days = ['MW', 'TR'];
+            const times = ['10:00-12:00', '13:00-15:00', '16:00-18:00'];
+
+            days.forEach(day => {
+                times.forEach(time => {
+                    const key = `${day} ${time}`;
+                    const courses = data[day] && data[day][time] ? data[day][time] : [];
+                    scheduleMatrix[key] = courses.map(c => `${c.code} (${c.room})`);
+                });
+            });
+
+            // Define conflicts that need automated resolution
+            const conflictsToSolve = [];
+
+            // Winter: DESN 348/480 conflict
+            if (quarter === 'winter') {
+                conflictsToSolve.push({
+                    name: 'DESN 348 / DESN 480 Conflict',
+                    description: 'Both courses scheduled MW 13:00-15:00. Seniors cannot complete UX minor and graduate on time.',
+                    affectedStudents: 17,
+                    currentSlot: 'MW 13:00-15:00',
+                    courseToMove: 'DESN 480 (Professional Practice)',
+                    instructor: 'C.Manikoth',
+                    alternativeSlots: [
+                        'TR 16:00-18:00',
+                        'MW 16:00-18:00',
+                        'TR 13:00-15:00',
+                        'TR 10:00-12:00'
+                    ]
+                });
+            }
+
+            // Spring: TR 10-12 three-way conflict
+            if (quarter === 'spring') {
+                conflictsToSolve.push({
+                    name: 'Spring TR 10-12 Three-Way Conflict',
+                    description: 'DESN 379, DESN 401, and DESN 463 all at TR 10:00-12:00. Students cannot take multiple desired upper-division courses.',
+                    affectedStudents: 46,
+                    currentSlot: 'TR 10:00-12:00',
+                    courseToMove: 'DESN 463 (Community Design)',
+                    instructor: 'S.Durr',
+                    alternativeSlots: [
+                        'MW 13:00-15:00',
+                        'MW 16:00-18:00',
+                        'TR 13:00-15:00',
+                        'TR 16:00-18:00'
+                    ]
+                });
+            }
+
+            if (conflictsToSolve.length === 0) {
+                solverList.innerHTML = '<p style="color: #51cf66; font-weight: 600;">✓ No urgent conflicts requiring automated resolution for this quarter.</p>';
+                return;
+            }
+
+            // Analyze solutions for each conflict
+            solverList.innerHTML = conflictsToSolve.map(conflict => {
+                const solutions = conflict.alternativeSlots.map(slot => {
+                    const existingCourses = scheduleMatrix[slot] || [];
+                    const roomsUsed = existingCourses.length;
+                    const roomsAvailable = 6 - roomsUsed; // 6 total rooms (excluding 207)
+
+                    // Check if this creates a conflict
+                    const wouldCreateConflict = roomsUsed >= 4; // 4+ courses = likely conflict
+                    const hasSpace = roomsAvailable > 0;
+
+                    // Check if instructor has conflict at this time
+                    const instructorConflict = existingCourses.some(course =>
+                        course.includes(conflict.instructor) ||
+                        course.includes(conflict.instructor.split('.')[1])
+                    );
+
+                    let status = 'viable';
+                    let recommendation = '✅ RECOMMENDED';
+
+                    if (instructorConflict) {
+                        status = 'blocked';
+                        recommendation = '❌ Instructor conflict';
+                    } else if (!hasSpace) {
+                        status = 'blocked';
+                        recommendation = '❌ No rooms available';
+                    } else if (wouldCreateConflict) {
+                        status = 'warning';
+                        recommendation = '⚠️ May create new conflict';
+                    } else if (roomsUsed <= 2) {
+                        recommendation = '✅ BEST OPTION';
+                    }
+
+                    return {
+                        slot,
+                        existingCourses,
+                        roomsAvailable,
+                        status,
+                        recommendation,
+                        instructorConflict
+                    };
+                }).sort((a, b) => {
+                    // Sort best options first
+                    if (a.status === 'viable' && b.status !== 'viable') return -1;
+                    if (b.status === 'viable' && a.status !== 'viable') return 1;
+                    return b.roomsAvailable - a.roomsAvailable;
+                });
+
+                return `
+                    <div class="conflict-solution-card">
+                        <h3>${conflict.name}</h3>
+                        <p style="color: #666; margin-bottom: 15px;">
+                            <strong>Impact:</strong> ${conflict.affectedStudents} students affected<br>
+                            <strong>Issue:</strong> ${conflict.description}<br>
+                            <strong>Current Slot:</strong> ${conflict.currentSlot}
+                        </p>
+
+                        <h4 style="margin-top: 15px; margin-bottom: 10px; color: #495057;">Automated Solutions Analysis:</h4>
+                        <p style="font-size: 0.9em; color: #666; margin-bottom: 15px;">
+                            Matrix analysis for moving <strong>${conflict.courseToMove}</strong> (${conflict.instructor}):
+                        </p>
+
+                        ${solutions.map((sol, index) => `
+                            <div class="solution-option ${sol.status === 'blocked' ? 'creates-conflict' : sol.status === 'warning' ? 'warning' : ''}">
+                                <div class="solution-recommendation">
+                                    ${sol.recommendation} Move to ${sol.slot}
+                                </div>
+                                <div class="solution-details">
+                                    <strong>Currently scheduled:</strong> ${sol.existingCourses.length > 0 ? sol.existingCourses.join(', ') : 'EMPTY SLOT'}<br>
+                                    <strong>Rooms available:</strong> ${sol.roomsAvailable} of 6<br>
+                                    ${sol.instructorConflict ? '<span style="color: #ff6b6b;">⚠️ Instructor already teaching at this time</span>' : ''}
+                                    ${sol.status === 'viable' && sol.roomsAvailable >= 4 ? '<span style="color: #51cf66;">✓ Minimal impact, plenty of space</span>' : ''}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }).join('');
+        }
+
         function renderRecommendations(quarter) {
             const recList = document.getElementById('recommendationsList');
             const recs = recommendations[quarter] || [];
@@ -1814,6 +2019,7 @@
             renderArrangedCourses(quarter);
             renderEnrollmentAnalytics(quarter);
             renderConflicts(quarter);
+            renderConflictSolver(quarter);
             renderRecommendations(quarter);
             updateStats(quarter);
 
@@ -1841,6 +2047,7 @@
         renderArrangedCourses('spring');
         renderEnrollmentAnalytics('spring');
         renderConflicts('spring');
+        renderConflictSolver('spring');
         renderRecommendations('spring');
         updateStats('spring');
     </script>
