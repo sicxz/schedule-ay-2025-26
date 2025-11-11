@@ -541,6 +541,9 @@
         }
 
         function initializeDashboard() {
+            // Initialize with all-years data
+            window.currentFacultyData = workloadData.facultyWorkload;
+
             updateStatistics();
             renderWorkloadDistributionChart();
             renderTopFacultyChart();
@@ -558,18 +561,35 @@
             const yearFilter = document.getElementById('academicYearFilter').value;
             const statusFilter = document.getElementById('statusFilter').value;
 
-            // For now, we'll implement year filtering when we integrate with enrollment data
-            // Status filtering works immediately
+            // Switch to year-specific data if available
+            if (yearFilter !== 'all' && workloadData.workloadByYear && workloadData.workloadByYear.byYear[yearFilter]) {
+                // Use specific year's data
+                window.currentFacultyData = workloadData.workloadByYear.byYear[yearFilter];
+                console.log(`✅ Filtering by academic year: ${yearFilter}`);
+            } else {
+                // Use all-years data
+                window.currentFacultyData = workloadData.facultyWorkload;
+                console.log('✅ Showing all years combined');
+            }
 
+            // Update all visualizations with filtered data
             updateStatistics();
             renderWorkloadDistributionChart();
             renderTopFacultyChart();
             renderUtilizationPieChart();
             renderWorkloadTable();
+
+            // Update subtitle
+            const subtitle = document.querySelector('.subtitle');
+            if (yearFilter === 'all') {
+                subtitle.textContent = 'EWU Design Department - Academic Workload Analysis';
+            } else {
+                subtitle.textContent = `EWU Design Department - Academic Year ${yearFilter} Workload`;
+            }
         }
 
         function updateStatistics() {
-            const faculty = workloadData.facultyWorkload;
+            const faculty = window.currentFacultyData || workloadData.facultyWorkload;
             const total = Object.keys(faculty).length;
 
             let overloaded = 0;
@@ -590,7 +610,7 @@
 
         function renderWorkloadDistributionChart() {
             const ctx = document.getElementById('workloadDistributionChart').getContext('2d');
-            const faculty = Object.entries(workloadData.facultyWorkload)
+            const faculty = Object.entries(window.currentFacultyData || workloadData.facultyWorkload)
                 .sort((a, b) => b[1].totalWorkloadCredits - a[1].totalWorkloadCredits)
                 .slice(0, 15);
 
@@ -646,7 +666,7 @@
 
         function renderTopFacultyChart() {
             const ctx = document.getElementById('topFacultyChart').getContext('2d');
-            const faculty = Object.entries(workloadData.facultyWorkload)
+            const faculty = Object.entries(window.currentFacultyData || workloadData.facultyWorkload)
                 .sort((a, b) => b[1].totalWorkloadCredits - a[1].totalWorkloadCredits)
                 .slice(0, 10);
 
@@ -692,7 +712,7 @@
 
         function renderUtilizationPieChart() {
             const ctx = document.getElementById('utilizationPieChart').getContext('2d');
-            const faculty = Object.values(workloadData.facultyWorkload);
+            const faculty = Object.values(window.currentFacultyData || workloadData.facultyWorkload);
 
             const overloaded = faculty.filter(f => f.status === 'overloaded').length;
             const optimal = faculty.filter(f => f.status === 'optimal').length;
@@ -818,7 +838,7 @@
 
         function renderWorkloadTable() {
             const tbody = document.getElementById('workloadTableBody');
-            const faculty = Object.entries(workloadData.facultyWorkload)
+            const faculty = Object.entries(window.currentFacultyData || workloadData.facultyWorkload)
                 .sort((a, b) => b[1].totalWorkloadCredits - a[1].totalWorkloadCredits);
 
             tbody.innerHTML = faculty.map(([name, data]) => {
@@ -850,7 +870,7 @@
         }
 
         function exportWorkloadData() {
-            const faculty = Object.entries(workloadData.facultyWorkload);
+            const faculty = Object.entries(window.currentFacultyData || workloadData.facultyWorkload);
 
             let csv = 'Faculty,Total Credits,Workload Credits,Scheduled,Applied Learning,AL Workload,Students,Sections,Utilization %,Status\n';
 

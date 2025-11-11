@@ -305,6 +305,29 @@ class WorkloadCalculator {
     }
 
     /**
+     * Generate workload report by academic year
+     */
+    generateWorkloadReportByYear(enrollmentData, facultyRanks = {}) {
+        const yearlyReports = {};
+
+        // Get unique academic years
+        const academicYears = [...new Set(enrollmentData.map(r => r.AcademicYear))].sort();
+
+        academicYears.forEach(year => {
+            // Filter data for this year
+            const yearData = enrollmentData.filter(r => r.AcademicYear === year);
+
+            // Generate report for this year
+            yearlyReports[year] = this.generateWorkloadReport(yearData, facultyRanks);
+        });
+
+        return {
+            years: academicYears,
+            byYear: yearlyReports
+        };
+    }
+
+    /**
      * Generate applied learning trends across multiple years
      */
     generateAppliedLearningTrends(enrollmentData) {
@@ -440,10 +463,16 @@ if (require.main === module) {
         console.log(`   Trend: ${appliedLearningTrends.summary.trend} (${appliedLearningTrends.summary.percentChange})`);
     }
 
+    // Generate workload by year
+    console.log('━'.repeat(60));
+    console.log('\n📅 Generating workload breakdown by academic year...\n');
+    const workloadByYear = calculator.generateWorkloadReportByYear(enrollmentData);
+
     // Export to JSON
     const output = {
         generatedAt: new Date().toISOString(),
         facultyWorkload: workloadReport,
+        workloadByYear: workloadByYear,
         appliedLearningTrends,
         summary: {
             totalFaculty: Object.keys(workloadReport).length,

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2025-11-11T19:02:03.163Z",
+  "generatedAt": "2025-11-11T19:12:37.626Z",
   "facultyWorkload": {
     "Mills Simeon": {
       "facultyName": "Mills Simeon",
@@ -5760,6 +5760,6124 @@
       "utilizationRate": 2.2,
       "status": "underutilized",
       "availableCapacity": 44
+    }
+  },
+  "workloadByYear": {
+    "years": [
+      "2022-23",
+      "2023-24",
+      "2024-25",
+      "2025-26"
+    ],
+    "byYear": {
+      "2022-23": {
+        "Mills Simeon": {
+          "facultyName": "Mills Simeon",
+          "totalCredits": 34,
+          "totalWorkloadCredits": 34,
+          "scheduledCredits": 34,
+          "appliedLearningCredits": 0,
+          "appliedLearningWorkload": 0,
+          "totalStudents": 119,
+          "sections": 7,
+          "courses": [
+            {
+              "courseCode": "DESN 100",
+              "credits": 5,
+              "enrolled": 21,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "001",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 301",
+              "credits": 5,
+              "enrolled": 15,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 100",
+              "credits": 5,
+              "enrolled": 18,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 401",
+              "credits": 5,
+              "enrolled": 12,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 100",
+              "credits": 5,
+              "enrolled": 15,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 301",
+              "credits": 5,
+              "enrolled": 20,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 360",
+              "credits": 4,
+              "enrolled": 18,
+              "multiplier": 1,
+              "workloadCredits": 4,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 34,
+          "utilizationRate": 75.6,
+          "status": "optimal",
+          "availableCapacity": 11
+        },
+        "Sopu Ariel": {
+          "facultyName": "Sopu Ariel",
+          "totalCredits": 48,
+          "totalWorkloadCredits": 44,
+          "scheduledCredits": 43,
+          "appliedLearningCredits": 5,
+          "appliedLearningWorkload": 1,
+          "totalStudents": 153,
+          "sections": 10,
+          "courses": [
+            {
+              "courseCode": "DESN 100",
+              "credits": 5,
+              "enrolled": 22,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 350",
+              "credits": 5,
+              "enrolled": 18,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 366",
+              "credits": 4,
+              "enrolled": 10,
+              "multiplier": 1,
+              "workloadCredits": 4,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 100",
+              "credits": 5,
+              "enrolled": 24,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "001",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 350",
+              "credits": 5,
+              "enrolled": 11,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 366",
+              "credits": 4,
+              "enrolled": 18,
+              "multiplier": 1,
+              "workloadCredits": 4,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 4,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "048",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 100",
+              "credits": 5,
+              "enrolled": 22,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "001",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 350",
+              "credits": 5,
+              "enrolled": 11,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 351",
+              "credits": 5,
+              "enrolled": 13,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 5,
+              "workload": 1,
+              "students": 4,
+              "sections": 1
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 44,
+          "utilizationRate": 97.8,
+          "status": "optimal",
+          "availableCapacity": 1
+        },
+        "Kuhn Jamin": {
+          "facultyName": "Kuhn Jamin",
+          "totalCredits": 42,
+          "totalWorkloadCredits": 34,
+          "scheduledCredits": 32,
+          "appliedLearningCredits": 10,
+          "appliedLearningWorkload": 2,
+          "totalStudents": 126,
+          "sections": 9,
+          "courses": [
+            {
+              "courseCode": "DESN 200",
+              "credits": 5,
+              "enrolled": 24,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 216",
+              "credits": 5,
+              "enrolled": 20,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 200",
+              "credits": 5,
+              "enrolled": 18,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 216",
+              "credits": 5,
+              "enrolled": 19,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 1,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "042",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 200",
+              "credits": 5,
+              "enrolled": 22,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 216",
+              "credits": 5,
+              "enrolled": 14,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "041",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 396",
+              "credits": 2,
+              "enrolled": 8,
+              "multiplier": 1,
+              "workloadCredits": 2,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "041",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 0,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "046",
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 10,
+              "workload": 2,
+              "students": 1,
+              "sections": 2
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 34,
+          "utilizationRate": 75.6,
+          "status": "optimal",
+          "availableCapacity": 11
+        },
+        "Kelley Ian": {
+          "facultyName": "Kelley Ian",
+          "totalCredits": 5,
+          "totalWorkloadCredits": 5,
+          "scheduledCredits": 5,
+          "appliedLearningCredits": 0,
+          "appliedLearningWorkload": 0,
+          "totalStudents": 24,
+          "sections": 1,
+          "courses": [
+            {
+              "courseCode": "DESN 216",
+              "credits": 5,
+              "enrolled": 24,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "025",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 5,
+          "utilizationRate": 11.1,
+          "status": "underutilized",
+          "availableCapacity": 40
+        },
+        "Pettigrew Allan": {
+          "facultyName": "Pettigrew Allan",
+          "totalCredits": 47,
+          "totalWorkloadCredits": 43,
+          "scheduledCredits": 42,
+          "appliedLearningCredits": 5,
+          "appliedLearningWorkload": 1,
+          "totalStudents": 142,
+          "sections": 11,
+          "courses": [
+            {
+              "courseCode": "DESN 216",
+              "credits": 5,
+              "enrolled": 24,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "026",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 493",
+              "credits": 2,
+              "enrolled": 11,
+              "multiplier": 1,
+              "workloadCredits": 2,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 216",
+              "credits": 5,
+              "enrolled": 27,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "025",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 399",
+              "credits": 5,
+              "enrolled": 5,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 480",
+              "credits": 4,
+              "enrolled": 9,
+              "multiplier": 1,
+              "workloadCredits": 4,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 493",
+              "credits": 2,
+              "enrolled": 7,
+              "multiplier": 1,
+              "workloadCredits": 2,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 1,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "049",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 216",
+              "credits": 5,
+              "enrolled": 26,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "027",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 216",
+              "credits": 5,
+              "enrolled": 10,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 216",
+              "credits": 5,
+              "enrolled": 1,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "075",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 480",
+              "credits": 4,
+              "enrolled": 21,
+              "multiplier": 1,
+              "workloadCredits": 4,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 5,
+              "workload": 1,
+              "students": 1,
+              "sections": 1
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 43,
+          "utilizationRate": 95.6,
+          "status": "optimal",
+          "availableCapacity": 2
+        },
+        "Durr Sonja": {
+          "facultyName": "Durr Sonja",
+          "totalCredits": 82,
+          "totalWorkloadCredits": 46,
+          "scheduledCredits": 37,
+          "appliedLearningCredits": 45,
+          "appliedLearningWorkload": 9,
+          "totalStudents": 121,
+          "sections": 17,
+          "courses": [
+            {
+              "courseCode": "DESN 243",
+              "credits": 5,
+              "enrolled": 7,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 463",
+              "credits": 4,
+              "enrolled": 16,
+              "multiplier": 1,
+              "workloadCredits": 4,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 0,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "040",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 1,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "042",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 1,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "045",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 1,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "047",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 243",
+              "credits": 5,
+              "enrolled": 24,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 359",
+              "credits": 5,
+              "enrolled": 13,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 463",
+              "credits": 4,
+              "enrolled": 6,
+              "multiplier": 1,
+              "workloadCredits": 4,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 4,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "041",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 2,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "044",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 1,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "047",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 243",
+              "credits": 5,
+              "enrolled": 16,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 359",
+              "credits": 5,
+              "enrolled": 13,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 463",
+              "credits": 4,
+              "enrolled": 14,
+              "multiplier": 1,
+              "workloadCredits": 4,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 2,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "041",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 0,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "043",
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 45,
+              "workload": 9,
+              "students": 12,
+              "sections": 9
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 46,
+          "utilizationRate": 102.2,
+          "status": "overloaded",
+          "availableCapacity": 0
+        },
+        "Hustrulid Ginelle": {
+          "facultyName": "Hustrulid Ginelle",
+          "totalCredits": 52,
+          "totalWorkloadCredits": 32,
+          "scheduledCredits": 27,
+          "appliedLearningCredits": 25,
+          "appliedLearningWorkload": 5,
+          "totalStudents": 108,
+          "sections": 11,
+          "courses": [
+            {
+              "courseCode": "DESN 263",
+              "credits": 5,
+              "enrolled": 12,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 355",
+              "credits": 4,
+              "enrolled": 20,
+              "multiplier": 1,
+              "workloadCredits": 4,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 0,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "041",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 1,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "046",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 263",
+              "credits": 5,
+              "enrolled": 22,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 365",
+              "credits": 4,
+              "enrolled": 13,
+              "multiplier": 1,
+              "workloadCredits": 4,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 5,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "045",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 263",
+              "credits": 5,
+              "enrolled": 22,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 355",
+              "credits": 4,
+              "enrolled": 13,
+              "multiplier": 1,
+              "workloadCredits": 4,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 0,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "040",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 0,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "042",
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 25,
+              "workload": 5,
+              "students": 6,
+              "sections": 5
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 32,
+          "utilizationRate": 71.1,
+          "status": "optimal",
+          "availableCapacity": 13
+        },
+        "Lybbert Meg": {
+          "facultyName": "Lybbert Meg",
+          "totalCredits": 46,
+          "totalWorkloadCredits": 42,
+          "scheduledCredits": 41,
+          "appliedLearningCredits": 5,
+          "appliedLearningWorkload": 1,
+          "totalStudents": 149,
+          "sections": 10,
+          "courses": [
+            {
+              "courseCode": "DESN 338",
+              "credits": 5,
+              "enrolled": 15,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "025",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 338",
+              "credits": 5,
+              "enrolled": 15,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 368",
+              "credits": 5,
+              "enrolled": 21,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 338",
+              "credits": 5,
+              "enrolled": 22,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 348",
+              "credits": 4,
+              "enrolled": 9,
+              "multiplier": 1,
+              "workloadCredits": 4,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 458",
+              "credits": 4,
+              "enrolled": 12,
+              "multiplier": 1,
+              "workloadCredits": 4,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 3,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "046",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 325",
+              "credits": 4,
+              "enrolled": 23,
+              "multiplier": 1,
+              "workloadCredits": 4,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 338",
+              "credits": 5,
+              "enrolled": 11,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 348",
+              "credits": 4,
+              "enrolled": 18,
+              "multiplier": 1,
+              "workloadCredits": 4,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 5,
+              "workload": 1,
+              "students": 3,
+              "sections": 1
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 42,
+          "utilizationRate": 93.3,
+          "status": "optimal",
+          "availableCapacity": 3
+        },
+        "Galey Eric": {
+          "facultyName": "Galey Eric",
+          "totalCredits": 12,
+          "totalWorkloadCredits": 12,
+          "scheduledCredits": 12,
+          "appliedLearningCredits": 0,
+          "appliedLearningWorkload": 0,
+          "totalStudents": 31,
+          "sections": 3,
+          "courses": [
+            {
+              "courseCode": "DESN 363",
+              "credits": 4,
+              "enrolled": 14,
+              "multiplier": 1,
+              "workloadCredits": 4,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 363",
+              "credits": 4,
+              "enrolled": 12,
+              "multiplier": 1,
+              "workloadCredits": 4,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 363",
+              "credits": 4,
+              "enrolled": 5,
+              "multiplier": 1,
+              "workloadCredits": 4,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 12,
+          "utilizationRate": 26.7,
+          "status": "underutilized",
+          "availableCapacity": 33
+        },
+        "Manikoth Colin": {
+          "facultyName": "Manikoth Colin",
+          "totalCredits": 44,
+          "totalWorkloadCredits": 40,
+          "scheduledCredits": 39,
+          "appliedLearningCredits": 5,
+          "appliedLearningWorkload": 1,
+          "totalStudents": 106,
+          "sections": 10,
+          "courses": [
+            {
+              "courseCode": "DESN 458",
+              "credits": 4,
+              "enrolled": 12,
+              "multiplier": 1,
+              "workloadCredits": 4,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 468",
+              "credits": 4,
+              "enrolled": 12,
+              "multiplier": 1,
+              "workloadCredits": 4,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 480",
+              "credits": 4,
+              "enrolled": 17,
+              "multiplier": 1,
+              "workloadCredits": 4,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 368",
+              "credits": 5,
+              "enrolled": 8,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 378",
+              "credits": 4,
+              "enrolled": 5,
+              "multiplier": 1,
+              "workloadCredits": 4,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 468",
+              "credits": 4,
+              "enrolled": 11,
+              "multiplier": 1,
+              "workloadCredits": 4,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 1,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "050",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 368",
+              "credits": 5,
+              "enrolled": 20,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "025",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 368",
+              "credits": 5,
+              "enrolled": 10,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 378",
+              "credits": 4,
+              "enrolled": 10,
+              "multiplier": 1,
+              "workloadCredits": 4,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 5,
+              "workload": 1,
+              "students": 1,
+              "sections": 1
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 40,
+          "utilizationRate": 88.9,
+          "status": "optimal",
+          "availableCapacity": 5
+        },
+        "Breen Melinda": {
+          "facultyName": "Breen Melinda",
+          "totalCredits": 40,
+          "totalWorkloadCredits": 15,
+          "scheduledCredits": 5,
+          "appliedLearningCredits": 70,
+          "appliedLearningWorkload": 0,
+          "totalStudents": 63,
+          "sections": 17,
+          "courses": [
+            {
+              "courseCode": "DESN 490",
+              "credits": 5,
+              "enrolled": 16,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 5,
+              "enrolled": 0,
+              "multiplier": 0.1,
+              "workloadCredits": 0.5,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 5,
+              "enrolled": 4,
+              "multiplier": 0.1,
+              "workloadCredits": 0.5,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "041",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 5,
+              "enrolled": 1,
+              "multiplier": 0.1,
+              "workloadCredits": 0.5,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "042",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 1,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "043",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 1,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "044",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            },
+            {
+              "courseCode": "DESN 490",
+              "credits": 5,
+              "enrolled": 19,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 5,
+              "enrolled": 4,
+              "multiplier": 0.1,
+              "workloadCredits": 0.5,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": true,
+              "excludeReason": "Administrative duty"
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 5,
+              "enrolled": 3,
+              "multiplier": 0.1,
+              "workloadCredits": 0.5,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "041",
+              "excludedFromWorkload": true,
+              "excludeReason": "Administrative duty"
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 5,
+              "enrolled": 5,
+              "multiplier": 0.1,
+              "workloadCredits": 0.5,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "042",
+              "excludedFromWorkload": true,
+              "excludeReason": "Administrative duty"
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 5,
+              "enrolled": 2,
+              "multiplier": 0.1,
+              "workloadCredits": 0.5,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "043",
+              "excludedFromWorkload": true,
+              "excludeReason": "Administrative duty"
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 2,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "043",
+              "excludedFromWorkload": true,
+              "excludeReason": "Administrative duty"
+            },
+            {
+              "courseCode": "DESN 490",
+              "credits": 5,
+              "enrolled": 12,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 5,
+              "enrolled": 2,
+              "multiplier": 0.1,
+              "workloadCredits": 0.5,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 5,
+              "enrolled": 1,
+              "multiplier": 0.1,
+              "workloadCredits": 0.5,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "042",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 5,
+              "enrolled": 2,
+              "multiplier": 0.1,
+              "workloadCredits": 0.5,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "043",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 0,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "044",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 20,
+              "workload": 0,
+              "students": 4,
+              "sections": 4
+            },
+            "DESN 495": {
+              "credits": 50,
+              "workload": 0,
+              "students": 24,
+              "sections": 10
+            }
+          },
+          "specialRole": "Department Chair",
+          "roleNotes": "Full release Fall & Winter. Applied learning supervision is part of administrative duties.",
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 15,
+          "utilizationRate": 33.3,
+          "status": "underutilized",
+          "availableCapacity": 30
+        },
+        "Stodgell Brittany": {
+          "facultyName": "Stodgell Brittany",
+          "totalCredits": 5,
+          "totalWorkloadCredits": 5,
+          "scheduledCredits": 5,
+          "appliedLearningCredits": 0,
+          "appliedLearningWorkload": 0,
+          "totalStudents": 19,
+          "sections": 1,
+          "courses": [
+            {
+              "courseCode": "DESN 305",
+              "credits": 5,
+              "enrolled": 19,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 5,
+          "utilizationRate": 11.1,
+          "status": "underutilized",
+          "availableCapacity": 40
+        },
+        "Braukmann James": {
+          "facultyName": "Braukmann James",
+          "totalCredits": 14,
+          "totalWorkloadCredits": 14,
+          "scheduledCredits": 14,
+          "appliedLearningCredits": 0,
+          "appliedLearningWorkload": 0,
+          "totalStudents": 31,
+          "sections": 3,
+          "courses": [
+            {
+              "courseCode": "DESN 385",
+              "credits": 4,
+              "enrolled": 5,
+              "multiplier": 1,
+              "workloadCredits": 4,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "001",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 384",
+              "credits": 5,
+              "enrolled": 22,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "027",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 384",
+              "credits": 5,
+              "enrolled": 4,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "075",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 14,
+          "utilizationRate": 31.1,
+          "status": "underutilized",
+          "availableCapacity": 31
+        },
+        "Baxter Ginny": {
+          "facultyName": "Baxter Ginny",
+          "totalCredits": 5,
+          "totalWorkloadCredits": 1,
+          "scheduledCredits": 0,
+          "appliedLearningCredits": 5,
+          "appliedLearningWorkload": 1,
+          "totalStudents": 1,
+          "sections": 1,
+          "courses": [
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 1,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "045",
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 5,
+              "workload": 1,
+              "students": 1,
+              "sections": 1
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 1,
+          "utilizationRate": 2.2,
+          "status": "underutilized",
+          "availableCapacity": 44
+        }
+      },
+      "2023-24": {
+        "Sopu Ariel": {
+          "facultyName": "Sopu Ariel",
+          "totalCredits": 58,
+          "totalWorkloadCredits": 47.6,
+          "scheduledCredits": 45,
+          "appliedLearningCredits": 13,
+          "appliedLearningWorkload": 2.6,
+          "totalStudents": 165,
+          "sections": 12,
+          "courses": [
+            {
+              "courseCode": "DESN 100",
+              "credits": 5,
+              "enrolled": 23,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "001",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 216",
+              "credits": 5,
+              "enrolled": 22,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "001",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 363",
+              "credits": 5,
+              "enrolled": 13,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 216",
+              "credits": 5,
+              "enrolled": 21,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "001",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 363",
+              "credits": 5,
+              "enrolled": 23,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 366",
+              "credits": 5,
+              "enrolled": 8,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 3,
+              "enrolled": 3,
+              "multiplier": 0.2,
+              "workloadCredits": 0.6000000000000001,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "050",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 100",
+              "credits": 5,
+              "enrolled": 10,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "002",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 216",
+              "credits": 5,
+              "enrolled": 10,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "001",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 363",
+              "credits": 5,
+              "enrolled": 7,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 24,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "040",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 1,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "041",
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 13,
+              "workload": 2.6,
+              "students": 28,
+              "sections": 3
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 47.6,
+          "utilizationRate": 105.8,
+          "status": "overloaded",
+          "availableCapacity": 0
+        },
+        "Masingale Travis": {
+          "facultyName": "Masingale Travis",
+          "totalCredits": 58,
+          "totalWorkloadCredits": 40.7,
+          "scheduledCredits": 37,
+          "appliedLearningCredits": 21,
+          "appliedLearningWorkload": 3.7,
+          "totalStudents": 123,
+          "sections": 13,
+          "courses": [
+            {
+              "courseCode": "DESN 100",
+              "credits": 5,
+              "enrolled": 17,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 350",
+              "credits": 5,
+              "enrolled": 14,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 396",
+              "credits": 5,
+              "enrolled": 14,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 399",
+              "credits": 2,
+              "enrolled": 1,
+              "multiplier": 1,
+              "workloadCredits": 2,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "002",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 100",
+              "credits": 5,
+              "enrolled": 22,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "002",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 351",
+              "credits": 5,
+              "enrolled": 9,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 5,
+              "enrolled": 5,
+              "multiplier": 0.1,
+              "workloadCredits": 0.5,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "041",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 5,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "043",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 5,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "047",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 3,
+              "enrolled": 3,
+              "multiplier": 0.2,
+              "workloadCredits": 0.6000000000000001,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "048",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 325",
+              "credits": 5,
+              "enrolled": 16,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 350",
+              "credits": 5,
+              "enrolled": 9,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 3,
+              "enrolled": 3,
+              "multiplier": 0.2,
+              "workloadCredits": 0.6000000000000001,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "046",
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 16,
+              "workload": 3.2,
+              "students": 16,
+              "sections": 4
+            },
+            "DESN 495": {
+              "credits": 5,
+              "workload": 0.5,
+              "students": 5,
+              "sections": 1
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 40.7,
+          "utilizationRate": 90.4,
+          "status": "optimal",
+          "availableCapacity": 4.299999999999997
+        },
+        "Mills Simeon": {
+          "facultyName": "Mills Simeon",
+          "totalCredits": 35,
+          "totalWorkloadCredits": 35,
+          "scheduledCredits": 35,
+          "appliedLearningCredits": 0,
+          "appliedLearningWorkload": 0,
+          "totalStudents": 129,
+          "sections": 7,
+          "courses": [
+            {
+              "courseCode": "DESN 200",
+              "credits": 5,
+              "enrolled": 24,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 301",
+              "credits": 5,
+              "enrolled": 17,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 100",
+              "credits": 5,
+              "enrolled": 16,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "001",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 200",
+              "credits": 5,
+              "enrolled": 23,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "001",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 401",
+              "credits": 5,
+              "enrolled": 14,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 200",
+              "credits": 5,
+              "enrolled": 21,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "001",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 360",
+              "credits": 5,
+              "enrolled": 14,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 35,
+          "utilizationRate": 77.8,
+          "status": "optimal",
+          "availableCapacity": 10
+        },
+        "Pettigrew Allan": {
+          "facultyName": "Pettigrew Allan",
+          "totalCredits": 37,
+          "totalWorkloadCredits": 27.4,
+          "scheduledCredits": 25,
+          "appliedLearningCredits": 12,
+          "appliedLearningWorkload": 2.4,
+          "totalStudents": 116,
+          "sections": 9,
+          "courses": [
+            {
+              "courseCode": "DESN 216",
+              "credits": 5,
+              "enrolled": 25,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "025",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 216",
+              "credits": 5,
+              "enrolled": 20,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "075",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 216",
+              "credits": 5,
+              "enrolled": 30,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "027",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 5,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "046",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 2,
+              "enrolled": 2,
+              "multiplier": 0.2,
+              "workloadCredits": 0.4,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "049",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 216",
+              "credits": 5,
+              "enrolled": 10,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "027",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 338",
+              "credits": 5,
+              "enrolled": 22,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "025",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 2,
+              "enrolled": 1,
+              "multiplier": 0.2,
+              "workloadCredits": 0.4,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "043",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 3,
+              "enrolled": 1,
+              "multiplier": 0.2,
+              "workloadCredits": 0.6000000000000001,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "045",
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 12,
+              "workload": 2.4,
+              "students": 9,
+              "sections": 4
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 27.4,
+          "utilizationRate": 60.9,
+          "status": "optimal",
+          "availableCapacity": 17.6
+        },
+        "Durr Sonja": {
+          "facultyName": "Durr Sonja",
+          "totalCredits": 56,
+          "totalWorkloadCredits": 49.6,
+          "scheduledCredits": 48,
+          "appliedLearningCredits": 8,
+          "appliedLearningWorkload": 1.6,
+          "totalStudents": 167,
+          "sections": 14,
+          "courses": [
+            {
+              "courseCode": "DESN 243",
+              "credits": 5,
+              "enrolled": 15,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 359",
+              "credits": 5,
+              "enrolled": 17,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "001",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 463",
+              "credits": 5,
+              "enrolled": 16,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 491",
+              "credits": 3,
+              "enrolled": 24,
+              "multiplier": 1,
+              "workloadCredits": 3,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 1,
+              "enrolled": 1,
+              "multiplier": 0.2,
+              "workloadCredits": 0.2,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "043",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 243",
+              "credits": 5,
+              "enrolled": 14,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 359",
+              "credits": 5,
+              "enrolled": 18,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "001",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 463",
+              "credits": 5,
+              "enrolled": 10,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 3,
+              "enrolled": 3,
+              "multiplier": 0.2,
+              "workloadCredits": 0.6000000000000001,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "042",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 2,
+              "enrolled": 2,
+              "multiplier": 0.2,
+              "workloadCredits": 0.4,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "044",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 243",
+              "credits": 5,
+              "enrolled": 17,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 359",
+              "credits": 5,
+              "enrolled": 15,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 463",
+              "credits": 5,
+              "enrolled": 14,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 2,
+              "enrolled": 1,
+              "multiplier": 0.2,
+              "workloadCredits": 0.4,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "042",
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 8,
+              "workload": 1.6,
+              "students": 7,
+              "sections": 4
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 49.6,
+          "utilizationRate": 110.2,
+          "status": "overloaded",
+          "availableCapacity": 0
+        },
+        "Hustrutid Ginelle": {
+          "facultyName": "Hustrutid Ginelle",
+          "totalCredits": 43,
+          "totalWorkloadCredits": 36.400000000000006,
+          "scheduledCredits": 35,
+          "appliedLearningCredits": 8,
+          "appliedLearningWorkload": 1.4,
+          "totalStudents": 139,
+          "sections": 10,
+          "courses": [
+            {
+              "courseCode": "DESN 263",
+              "credits": 5,
+              "enrolled": 14,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 326",
+              "credits": 5,
+              "enrolled": 24,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 263",
+              "credits": 5,
+              "enrolled": 7,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 365",
+              "credits": 5,
+              "enrolled": 16,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 263",
+              "credits": 5,
+              "enrolled": 17,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 336",
+              "credits": 5,
+              "enrolled": 14,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 355",
+              "credits": 5,
+              "enrolled": 20,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 2,
+              "enrolled": 2,
+              "multiplier": 0.1,
+              "workloadCredits": 0.2,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "003",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 1,
+              "enrolled": 1,
+              "multiplier": 0.2,
+              "workloadCredits": 0.2,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "044",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 24,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "048",
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 6,
+              "workload": 1.2,
+              "students": 25,
+              "sections": 2
+            },
+            "DESN 495": {
+              "credits": 2,
+              "workload": 0.2,
+              "students": 2,
+              "sections": 1
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 36.400000000000006,
+          "utilizationRate": 80.9,
+          "status": "optimal",
+          "availableCapacity": 8.599999999999994
+        },
+        "Lybbert Meg": {
+          "facultyName": "Lybbert Meg",
+          "totalCredits": 24,
+          "totalWorkloadCredits": 24,
+          "scheduledCredits": 24,
+          "appliedLearningCredits": 0,
+          "appliedLearningWorkload": 0,
+          "totalStudents": 96,
+          "sections": 6,
+          "courses": [
+            {
+              "courseCode": "DESN 338",
+              "credits": 5,
+              "enrolled": 24,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 399",
+              "credits": 2,
+              "enrolled": 24,
+              "multiplier": 1,
+              "workloadCredits": 2,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "001",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 458",
+              "credits": 5,
+              "enrolled": 8,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 338",
+              "credits": 5,
+              "enrolled": 13,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 458",
+              "credits": 5,
+              "enrolled": 15,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 493",
+              "credits": 2,
+              "enrolled": 12,
+              "multiplier": 1,
+              "workloadCredits": 2,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 24,
+          "utilizationRate": 53.3,
+          "status": "underutilized",
+          "availableCapacity": 21
+        },
+        "Manikoth Colin": {
+          "facultyName": "Manikoth Colin",
+          "totalCredits": 46,
+          "totalWorkloadCredits": 38.8,
+          "scheduledCredits": 37,
+          "appliedLearningCredits": 9,
+          "appliedLearningWorkload": 1.7999999999999998,
+          "totalStudents": 134,
+          "sections": 11,
+          "courses": [
+            {
+              "courseCode": "DESN 368",
+              "credits": 5,
+              "enrolled": 12,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 480",
+              "credits": 5,
+              "enrolled": 9,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 24,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "041",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 368",
+              "credits": 5,
+              "enrolled": 23,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 468",
+              "credits": 5,
+              "enrolled": 13,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 480",
+              "credits": 5,
+              "enrolled": 15,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 2,
+              "enrolled": 2,
+              "multiplier": 0.2,
+              "workloadCredits": 0.4,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "051",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 368",
+              "credits": 5,
+              "enrolled": 14,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 378",
+              "credits": 5,
+              "enrolled": 8,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 493",
+              "credits": 2,
+              "enrolled": 12,
+              "multiplier": 1,
+              "workloadCredits": 2,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "041",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 2,
+              "enrolled": 2,
+              "multiplier": 0.2,
+              "workloadCredits": 0.4,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "049",
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 9,
+              "workload": 1.7999999999999998,
+              "students": 28,
+              "sections": 3
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 38.8,
+          "utilizationRate": 86.2,
+          "status": "optimal",
+          "availableCapacity": 6.200000000000003
+        },
+        "Breen Melinda": {
+          "facultyName": "Breen Melinda",
+          "totalCredits": 32,
+          "totalWorkloadCredits": 23,
+          "scheduledCredits": 9,
+          "appliedLearningCredits": 33,
+          "appliedLearningWorkload": 0,
+          "totalStudents": 67,
+          "sections": 15,
+          "courses": [
+            {
+              "courseCode": "DESN 490",
+              "credits": 5,
+              "enrolled": 7,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            },
+            {
+              "courseCode": "DESN 491",
+              "credits": 4,
+              "enrolled": 24,
+              "multiplier": 1,
+              "workloadCredits": 4,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "041",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 5,
+              "enrolled": 2,
+              "multiplier": 0.1,
+              "workloadCredits": 0.5,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "001",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 2,
+              "enrolled": 1,
+              "multiplier": 0.1,
+              "workloadCredits": 0.2,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "002",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 3,
+              "enrolled": 1,
+              "multiplier": 0.1,
+              "workloadCredits": 0.30000000000000004,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "003",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 4,
+              "enrolled": 1,
+              "multiplier": 0.1,
+              "workloadCredits": 0.4,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "004",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 1,
+              "enrolled": 24,
+              "multiplier": 0.2,
+              "workloadCredits": 0.2,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "042",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 6,
+              "enrolled": 24,
+              "multiplier": 0.2,
+              "workloadCredits": 1.2000000000000002,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "044",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            },
+            {
+              "courseCode": "DESN 490",
+              "credits": 5,
+              "enrolled": 22,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 491",
+              "credits": 4,
+              "enrolled": 0,
+              "multiplier": 1,
+              "workloadCredits": 4,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 2,
+              "enrolled": 2,
+              "multiplier": 0.1,
+              "workloadCredits": 0.2,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "042",
+              "excludedFromWorkload": true,
+              "excludeReason": "Administrative duty"
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 3,
+              "enrolled": 3,
+              "multiplier": 0.1,
+              "workloadCredits": 0.30000000000000004,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "043",
+              "excludedFromWorkload": true,
+              "excludeReason": "Administrative duty"
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 4,
+              "enrolled": 4,
+              "multiplier": 0.2,
+              "workloadCredits": 0.8,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "045",
+              "excludedFromWorkload": true,
+              "excludeReason": "Administrative duty"
+            },
+            {
+              "courseCode": "DESN 491",
+              "credits": 5,
+              "enrolled": 5,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 3,
+              "enrolled": 3,
+              "multiplier": 0.1,
+              "workloadCredits": 0.30000000000000004,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "001",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 11,
+              "workload": 0,
+              "students": 52,
+              "sections": 3
+            },
+            "DESN 495": {
+              "credits": 22,
+              "workload": 0,
+              "students": 13,
+              "sections": 7
+            }
+          },
+          "specialRole": "Department Chair",
+          "roleNotes": "Full release Fall & Winter. Applied learning supervision is part of administrative duties.",
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 23,
+          "utilizationRate": 51.1,
+          "status": "underutilized",
+          "availableCapacity": 22
+        },
+        "Stodgell Brittany": {
+          "facultyName": "Stodgell Brittany",
+          "totalCredits": 5,
+          "totalWorkloadCredits": 5,
+          "scheduledCredits": 5,
+          "appliedLearningCredits": 0,
+          "appliedLearningWorkload": 0,
+          "totalStudents": 23,
+          "sections": 1,
+          "courses": [
+            {
+              "courseCode": "DESN 305",
+              "credits": 5,
+              "enrolled": 23,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 5,
+          "utilizationRate": 11.1,
+          "status": "underutilized",
+          "availableCapacity": 40
+        },
+        "Braukmann James": {
+          "facultyName": "Braukmann James",
+          "totalCredits": 10,
+          "totalWorkloadCredits": 10,
+          "scheduledCredits": 10,
+          "appliedLearningCredits": 0,
+          "appliedLearningWorkload": 0,
+          "totalStudents": 32,
+          "sections": 2,
+          "courses": [
+            {
+              "courseCode": "DESN 385",
+              "credits": 5,
+              "enrolled": 8,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "001",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 384",
+              "credits": 5,
+              "enrolled": 24,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "027",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 10,
+          "utilizationRate": 22.2,
+          "status": "underutilized",
+          "availableCapacity": 35
+        },
+        "Kuhn Jamin": {
+          "facultyName": "Kuhn Jamin",
+          "totalCredits": 14,
+          "totalWorkloadCredits": 6.8,
+          "scheduledCredits": 5,
+          "appliedLearningCredits": 9,
+          "appliedLearningWorkload": 1.8,
+          "totalStudents": 33,
+          "sections": 4,
+          "courses": [
+            {
+              "courseCode": "DESN 499",
+              "credits": 3,
+              "enrolled": 3,
+              "multiplier": 0.2,
+              "workloadCredits": 0.6000000000000001,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "040",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 5,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "041",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 490",
+              "credits": 5,
+              "enrolled": 24,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "001",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 1,
+              "enrolled": 1,
+              "multiplier": 0.2,
+              "workloadCredits": 0.2,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "047",
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 9,
+              "workload": 1.8,
+              "students": 9,
+              "sections": 3
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 6.8,
+          "utilizationRate": 15.1,
+          "status": "underutilized",
+          "availableCapacity": 38.2
+        },
+        "Poosri Tyrell": {
+          "facultyName": "Poosri Tyrell",
+          "totalCredits": 5,
+          "totalWorkloadCredits": 5,
+          "scheduledCredits": 5,
+          "appliedLearningCredits": 0,
+          "appliedLearningWorkload": 0,
+          "totalStudents": 20,
+          "sections": 1,
+          "courses": [
+            {
+              "courseCode": "DESN 348",
+              "credits": 5,
+              "enrolled": 20,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 5,
+          "utilizationRate": 11.1,
+          "status": "underutilized",
+          "availableCapacity": 40
+        }
+      },
+      "2024-25": {
+        "Sopu_Ariel": {
+          "facultyName": "Sopu_Ariel",
+          "totalCredits": 51,
+          "totalWorkloadCredits": 42.199999999999996,
+          "scheduledCredits": 40,
+          "appliedLearningCredits": 11,
+          "appliedLearningWorkload": 2.2,
+          "totalStudents": 148,
+          "sections": 12,
+          "courses": [
+            {
+              "courseCode": "DESN 100",
+              "credits": 5,
+              "enrolled": 21,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "001",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 216",
+              "credits": 5,
+              "enrolled": 21,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "001",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 263",
+              "credits": 5,
+              "enrolled": 17,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 2,
+              "enrolled": 2,
+              "multiplier": 0.2,
+              "workloadCredits": 0.4,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "044",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 216",
+              "credits": 5,
+              "enrolled": 16,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "001",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 363",
+              "credits": 5,
+              "enrolled": 12,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 3,
+              "enrolled": 3,
+              "multiplier": 0.2,
+              "workloadCredits": 0.6000000000000001,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "040",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 4,
+              "enrolled": 4,
+              "multiplier": 0.2,
+              "workloadCredits": 0.8,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "041",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 216",
+              "credits": 5,
+              "enrolled": 20,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "001",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 263",
+              "credits": 5,
+              "enrolled": 10,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 363",
+              "credits": 5,
+              "enrolled": 20,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 2,
+              "enrolled": 2,
+              "multiplier": 0.2,
+              "workloadCredits": 0.4,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "041",
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 11,
+              "workload": 2.2,
+              "students": 11,
+              "sections": 4
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 42.199999999999996,
+          "utilizationRate": 93.8,
+          "status": "optimal",
+          "availableCapacity": 2.8000000000000043
+        },
+        "Allison_Shelby": {
+          "facultyName": "Allison_Shelby",
+          "totalCredits": 15,
+          "totalWorkloadCredits": 15,
+          "scheduledCredits": 15,
+          "appliedLearningCredits": 0,
+          "appliedLearningWorkload": 0,
+          "totalStudents": 54,
+          "sections": 3,
+          "courses": [
+            {
+              "courseCode": "DESN 100",
+              "credits": 5,
+              "enrolled": 19,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "002",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 100",
+              "credits": 5,
+              "enrolled": 13,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "001",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 100",
+              "credits": 5,
+              "enrolled": 22,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "001",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 15,
+          "utilizationRate": 33.3,
+          "status": "underutilized",
+          "availableCapacity": 30
+        },
+        "Mills_Simeon": {
+          "facultyName": "Mills_Simeon",
+          "totalCredits": 62,
+          "totalWorkloadCredits": 38.60000000000001,
+          "scheduledCredits": 35,
+          "appliedLearningCredits": 27,
+          "appliedLearningWorkload": 3.6000000000000005,
+          "totalStudents": 140,
+          "sections": 15,
+          "courses": [
+            {
+              "courseCode": "DESN 200",
+              "credits": 5,
+              "enrolled": 22,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "001",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 301",
+              "credits": 5,
+              "enrolled": 10,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 3,
+              "enrolled": 3,
+              "multiplier": 0.1,
+              "workloadCredits": 0.30000000000000004,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "040",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 200",
+              "credits": 5,
+              "enrolled": 10,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "001",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 301",
+              "credits": 5,
+              "enrolled": 22,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 2,
+              "enrolled": 2,
+              "multiplier": 0.1,
+              "workloadCredits": 0.2,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "001",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 5,
+              "enrolled": 5,
+              "multiplier": 0.1,
+              "workloadCredits": 0.5,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "005",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 3,
+              "enrolled": 3,
+              "multiplier": 0.2,
+              "workloadCredits": 0.6000000000000001,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "050",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 200",
+              "credits": 5,
+              "enrolled": 10,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "001",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 360",
+              "credits": 5,
+              "enrolled": 18,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 401",
+              "credits": 5,
+              "enrolled": 21,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 2,
+              "enrolled": 2,
+              "multiplier": 0.1,
+              "workloadCredits": 0.2,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "002",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 6,
+              "enrolled": 6,
+              "multiplier": 0.1,
+              "workloadCredits": 0.6000000000000001,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "004",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 3,
+              "enrolled": 3,
+              "multiplier": 0.2,
+              "workloadCredits": 0.6000000000000001,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "043",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 3,
+              "enrolled": 3,
+              "multiplier": 0.2,
+              "workloadCredits": 0.6000000000000001,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "048",
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 9,
+              "workload": 1.8000000000000003,
+              "students": 9,
+              "sections": 3
+            },
+            "DESN 495": {
+              "credits": 18,
+              "workload": 1.8,
+              "students": 18,
+              "sections": 5
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 38.60000000000001,
+          "utilizationRate": 85.8,
+          "status": "optimal",
+          "availableCapacity": 6.3999999999999915
+        },
+        "Heidle_Carl": {
+          "facultyName": "Heidle_Carl",
+          "totalCredits": 5,
+          "totalWorkloadCredits": 5,
+          "scheduledCredits": 5,
+          "appliedLearningCredits": 0,
+          "appliedLearningWorkload": 0,
+          "totalStudents": 20,
+          "sections": 1,
+          "courses": [
+            {
+              "courseCode": "DESN 200",
+              "credits": 5,
+              "enrolled": 20,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "002",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 5,
+          "utilizationRate": 11.1,
+          "status": "underutilized",
+          "availableCapacity": 40
+        },
+        "Pettigrew_Allan_Barton_Jayleana": {
+          "facultyName": "Pettigrew_Allan_Barton_Jayleana",
+          "totalCredits": 25,
+          "totalWorkloadCredits": 25,
+          "scheduledCredits": 25,
+          "appliedLearningCredits": 0,
+          "appliedLearningWorkload": 0,
+          "totalStudents": 81,
+          "sections": 5,
+          "courses": [
+            {
+              "courseCode": "DESN 216",
+              "credits": 5,
+              "enrolled": 31,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "025",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 216",
+              "credits": 5,
+              "enrolled": 21,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "025",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 216",
+              "credits": 5,
+              "enrolled": 2,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "075",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 216",
+              "credits": 5,
+              "enrolled": 22,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "025",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 216",
+              "credits": 5,
+              "enrolled": 5,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "075",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 25,
+          "utilizationRate": 55.6,
+          "status": "underutilized",
+          "availableCapacity": 20
+        },
+        "Durr_Sonja": {
+          "facultyName": "Durr_Sonja",
+          "totalCredits": 52,
+          "totalWorkloadCredits": 41.9,
+          "scheduledCredits": 40,
+          "appliedLearningCredits": 12,
+          "appliedLearningWorkload": 1.9,
+          "totalStudents": 151,
+          "sections": 11,
+          "courses": [
+            {
+              "courseCode": "DESN 243",
+              "credits": 5,
+              "enrolled": 14,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "001",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 359",
+              "credits": 5,
+              "enrolled": 18,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "001",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 463",
+              "credits": 5,
+              "enrolled": 19,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 243",
+              "credits": 5,
+              "enrolled": 15,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 359",
+              "credits": 5,
+              "enrolled": 22,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 463",
+              "credits": 5,
+              "enrolled": 10,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 2,
+              "enrolled": 2,
+              "multiplier": 0.2,
+              "workloadCredits": 0.4,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "043",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 243",
+              "credits": 5,
+              "enrolled": 21,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 359",
+              "credits": 5,
+              "enrolled": 20,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 5,
+              "enrolled": 5,
+              "multiplier": 0.1,
+              "workloadCredits": 0.5,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "001",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 5,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "042",
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 7,
+              "workload": 1.4,
+              "students": 7,
+              "sections": 2
+            },
+            "DESN 495": {
+              "credits": 5,
+              "workload": 0.5,
+              "students": 5,
+              "sections": 1
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 41.9,
+          "utilizationRate": 93.1,
+          "status": "optimal",
+          "availableCapacity": 3.1000000000000014
+        },
+        "Masingale_Travis": {
+          "facultyName": "Masingale_Travis",
+          "totalCredits": 77,
+          "totalWorkloadCredits": 40.5,
+          "scheduledCredits": 33,
+          "appliedLearningCredits": 44,
+          "appliedLearningWorkload": 7.500000000000001,
+          "totalStudents": 136,
+          "sections": 20,
+          "courses": [
+            {
+              "courseCode": "DESN 325",
+              "credits": 5,
+              "enrolled": 15,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 368",
+              "credits": 5,
+              "enrolled": 18,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 5,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "043",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 4,
+              "enrolled": 4,
+              "multiplier": 0.2,
+              "workloadCredits": 0.8,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "046",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 325",
+              "credits": 5,
+              "enrolled": 18,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 368",
+              "credits": 5,
+              "enrolled": 12,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 491",
+              "credits": 2,
+              "enrolled": 2,
+              "multiplier": 1,
+              "workloadCredits": 2,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "002",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 5,
+              "enrolled": 5,
+              "multiplier": 0.1,
+              "workloadCredits": 0.5,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "002",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 3,
+              "enrolled": 3,
+              "multiplier": 0.1,
+              "workloadCredits": 0.30000000000000004,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "007",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 2,
+              "enrolled": 2,
+              "multiplier": 0.1,
+              "workloadCredits": 0.2,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "009",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 2,
+              "enrolled": 2,
+              "multiplier": 0.2,
+              "workloadCredits": 0.4,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "048",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 1,
+              "enrolled": 1,
+              "multiplier": 0.2,
+              "workloadCredits": 0.2,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "049",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 368",
+              "credits": 5,
+              "enrolled": 21,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 399",
+              "credits": 4,
+              "enrolled": 4,
+              "multiplier": 1,
+              "workloadCredits": 4,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 491",
+              "credits": 2,
+              "enrolled": 2,
+              "multiplier": 1,
+              "workloadCredits": 2,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 3,
+              "enrolled": 3,
+              "multiplier": 0.1,
+              "workloadCredits": 0.30000000000000004,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "005",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 3,
+              "enrolled": 3,
+              "multiplier": 0.2,
+              "workloadCredits": 0.6000000000000001,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "040",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 5,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "044",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 6,
+              "enrolled": 6,
+              "multiplier": 0.2,
+              "workloadCredits": 1.2000000000000002,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "045",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 5,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "046",
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 31,
+              "workload": 6.2,
+              "students": 31,
+              "sections": 8
+            },
+            "DESN 495": {
+              "credits": 13,
+              "workload": 1.3,
+              "students": 13,
+              "sections": 4
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 40.5,
+          "utilizationRate": 90,
+          "status": "optimal",
+          "availableCapacity": 4.5
+        },
+        "Hustrutid_Ginelle": {
+          "facultyName": "Hustrutid_Ginelle",
+          "totalCredits": 52,
+          "totalWorkloadCredits": 26.400000000000002,
+          "scheduledCredits": 20,
+          "appliedLearningCredits": 32,
+          "appliedLearningWorkload": 6.3999999999999995,
+          "totalStudents": 99,
+          "sections": 11,
+          "courses": [
+            {
+              "courseCode": "DESN 326",
+              "credits": 5,
+              "enrolled": 10,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 5,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "042",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 5,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "045",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 336",
+              "credits": 5,
+              "enrolled": 21,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 365",
+              "credits": 5,
+              "enrolled": 15,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 5,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "044",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 5,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "045",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 3,
+              "enrolled": 3,
+              "multiplier": 0.2,
+              "workloadCredits": 0.6000000000000001,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "046",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 355",
+              "credits": 5,
+              "enrolled": 21,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 5,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "051",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 4,
+              "enrolled": 4,
+              "multiplier": 0.2,
+              "workloadCredits": 0.8,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "052",
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 32,
+              "workload": 6.3999999999999995,
+              "students": 32,
+              "sections": 7
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 26.400000000000002,
+          "utilizationRate": 58.7,
+          "status": "underutilized",
+          "availableCapacity": 18.599999999999998
+        },
+        "Lybbert_Meg": {
+          "facultyName": "Lybbert_Meg",
+          "totalCredits": 32,
+          "totalWorkloadCredits": 30.4,
+          "scheduledCredits": 30,
+          "appliedLearningCredits": 2,
+          "appliedLearningWorkload": 0.4,
+          "totalStudents": 89,
+          "sections": 7,
+          "courses": [
+            {
+              "courseCode": "DESN 338",
+              "credits": 5,
+              "enrolled": 17,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 338",
+              "credits": 5,
+              "enrolled": 14,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 458",
+              "credits": 5,
+              "enrolled": 14,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 2,
+              "enrolled": 2,
+              "multiplier": 0.2,
+              "workloadCredits": 0.4,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "047",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 338",
+              "credits": 5,
+              "enrolled": 23,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "025",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 338",
+              "credits": 5,
+              "enrolled": 2,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "075",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 348",
+              "credits": 5,
+              "enrolled": 17,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 2,
+              "workload": 0.4,
+              "students": 2,
+              "sections": 1
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 30.4,
+          "utilizationRate": 67.6,
+          "status": "optimal",
+          "availableCapacity": 14.600000000000001
+        },
+        "Breen_Melinda": {
+          "facultyName": "Breen_Melinda",
+          "totalCredits": 29,
+          "totalWorkloadCredits": 11,
+          "scheduledCredits": 3,
+          "appliedLearningCredits": 40,
+          "appliedLearningWorkload": 0,
+          "totalStudents": 32,
+          "sections": 12,
+          "courses": [
+            {
+              "courseCode": "DESN 343",
+              "credits": 5,
+              "enrolled": 8,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "001",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 5,
+              "enrolled": 10,
+              "multiplier": 0.1,
+              "workloadCredits": 0.5,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "001",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 5,
+              "enrolled": 10,
+              "multiplier": 0.1,
+              "workloadCredits": 0.5,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "002",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 2,
+              "enrolled": 3,
+              "multiplier": 0.1,
+              "workloadCredits": 0.2,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "003",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 5,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "041",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            },
+            {
+              "courseCode": "DESN 491",
+              "credits": 3,
+              "enrolled": 3,
+              "multiplier": 1,
+              "workloadCredits": 3,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "001",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 5,
+              "enrolled": 5,
+              "multiplier": 0.1,
+              "workloadCredits": 0.5,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "003",
+              "excludedFromWorkload": true,
+              "excludeReason": "Administrative duty"
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 4,
+              "enrolled": 4,
+              "multiplier": 0.1,
+              "workloadCredits": 0.4,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "004",
+              "excludedFromWorkload": true,
+              "excludeReason": "Administrative duty"
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 2,
+              "enrolled": 2,
+              "multiplier": 0.1,
+              "workloadCredits": 0.2,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "006",
+              "excludedFromWorkload": true,
+              "excludeReason": "Administrative duty"
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 7,
+              "enrolled": 7,
+              "multiplier": 0.1,
+              "workloadCredits": 0.7000000000000001,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "008",
+              "excludedFromWorkload": true,
+              "excludeReason": "Administrative duty"
+            },
+            {
+              "courseCode": "DESN 491",
+              "credits": 3,
+              "enrolled": 3,
+              "multiplier": 1,
+              "workloadCredits": 3,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "041",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 5,
+              "enrolled": 5,
+              "multiplier": 0.1,
+              "workloadCredits": 0.5,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "003",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 5,
+              "workload": 0,
+              "students": 5,
+              "sections": 1
+            },
+            "DESN 495": {
+              "credits": 35,
+              "workload": 0,
+              "students": 46,
+              "sections": 8
+            }
+          },
+          "specialRole": "Department Chair",
+          "roleNotes": "Full release Fall & Winter. Applied learning supervision is part of administrative duties.",
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 11,
+          "utilizationRate": 24.4,
+          "status": "underutilized",
+          "availableCapacity": 34
+        },
+        "Davis_Dean": {
+          "facultyName": "Davis_Dean",
+          "totalCredits": 5,
+          "totalWorkloadCredits": 5,
+          "scheduledCredits": 5,
+          "appliedLearningCredits": 0,
+          "appliedLearningWorkload": 0,
+          "totalStudents": 14,
+          "sections": 1,
+          "courses": [
+            {
+              "courseCode": "DESN 350",
+              "credits": 5,
+              "enrolled": 14,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 5,
+          "utilizationRate": 11.1,
+          "status": "underutilized",
+          "availableCapacity": 40
+        },
+        "Manikoth_Colin": {
+          "facultyName": "Manikoth_Colin",
+          "totalCredits": 38,
+          "totalWorkloadCredits": 31.599999999999998,
+          "scheduledCredits": 30,
+          "appliedLearningCredits": 8,
+          "appliedLearningWorkload": 1.5999999999999999,
+          "totalStudents": 94,
+          "sections": 9,
+          "courses": [
+            {
+              "courseCode": "DESN 480",
+              "credits": 5,
+              "enrolled": 15,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 490",
+              "credits": 5,
+              "enrolled": 14,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 2,
+              "enrolled": 2,
+              "multiplier": 0.2,
+              "workloadCredits": 0.4,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "040",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 468",
+              "credits": 5,
+              "enrolled": 12,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 480",
+              "credits": 5,
+              "enrolled": 18,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 490",
+              "credits": 5,
+              "enrolled": 10,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 5,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Spring",
+              "section": "042",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 378",
+              "credits": 5,
+              "enrolled": 17,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 1,
+              "enrolled": 1,
+              "multiplier": 0.2,
+              "workloadCredits": 0.2,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "047",
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 8,
+              "workload": 1.5999999999999999,
+              "students": 8,
+              "sections": 3
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 31.599999999999998,
+          "utilizationRate": 70.2,
+          "status": "optimal",
+          "availableCapacity": 13.400000000000002
+        },
+        "Norris_Erica": {
+          "facultyName": "Norris_Erica",
+          "totalCredits": 5,
+          "totalWorkloadCredits": 5,
+          "scheduledCredits": 5,
+          "appliedLearningCredits": 0,
+          "appliedLearningWorkload": 0,
+          "totalStudents": 22,
+          "sections": 1,
+          "courses": [
+            {
+              "courseCode": "DESN 305",
+              "credits": 5,
+              "enrolled": 22,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 5,
+          "utilizationRate": 11.1,
+          "status": "underutilized",
+          "availableCapacity": 40
+        },
+        "Thompson_Chris_Alberts_Jennifer": {
+          "facultyName": "Thompson_Chris_Alberts_Jennifer",
+          "totalCredits": 10,
+          "totalWorkloadCredits": 10,
+          "scheduledCredits": 10,
+          "appliedLearningCredits": 0,
+          "appliedLearningWorkload": 0,
+          "totalStudents": 20,
+          "sections": 2,
+          "courses": [
+            {
+              "courseCode": "DESN 351",
+              "credits": 5,
+              "enrolled": 6,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 350",
+              "credits": 5,
+              "enrolled": 14,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 10,
+          "utilizationRate": 22.2,
+          "status": "underutilized",
+          "availableCapacity": 35
+        },
+        "Braukmann_James_Durfee_Jayna": {
+          "facultyName": "Braukmann_James_Durfee_Jayna",
+          "totalCredits": 10,
+          "totalWorkloadCredits": 10,
+          "scheduledCredits": 10,
+          "appliedLearningCredits": 0,
+          "appliedLearningWorkload": 0,
+          "totalStudents": 18,
+          "sections": 2,
+          "courses": [
+            {
+              "courseCode": "DESN 384",
+              "credits": 5,
+              "enrolled": 17,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "025",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 384",
+              "credits": 5,
+              "enrolled": 1,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Spring",
+              "section": "075",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 10,
+          "utilizationRate": 22.2,
+          "status": "underutilized",
+          "availableCapacity": 35
+        },
+        "Lybbert_Meg_Manikoth_Colin": {
+          "facultyName": "Lybbert_Meg_Manikoth_Colin",
+          "totalCredits": 5,
+          "totalWorkloadCredits": 5,
+          "scheduledCredits": 5,
+          "appliedLearningCredits": 0,
+          "appliedLearningWorkload": 0,
+          "totalStudents": 10,
+          "sections": 1,
+          "courses": [
+            {
+              "courseCode": "DESN 335",
+              "credits": 5,
+              "enrolled": 10,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 5,
+          "utilizationRate": 11.1,
+          "status": "underutilized",
+          "availableCapacity": 40
+        },
+        "Patterson_Tiffany": {
+          "facultyName": "Patterson_Tiffany",
+          "totalCredits": 2,
+          "totalWorkloadCredits": 2,
+          "scheduledCredits": 2,
+          "appliedLearningCredits": 0,
+          "appliedLearningWorkload": 0,
+          "totalStudents": 6,
+          "sections": 1,
+          "courses": [
+            {
+              "courseCode": "DESN 496",
+              "credits": 2,
+              "enrolled": 6,
+              "multiplier": 1,
+              "workloadCredits": 2,
+              "type": "scheduled",
+              "quarter": "Winter",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 2,
+          "utilizationRate": 4.4,
+          "status": "underutilized",
+          "availableCapacity": 43
+        },
+        "Thompson_Chris": {
+          "facultyName": "Thompson_Chris",
+          "totalCredits": 5,
+          "totalWorkloadCredits": 1,
+          "scheduledCredits": 0,
+          "appliedLearningCredits": 5,
+          "appliedLearningWorkload": 1,
+          "totalStudents": 5,
+          "sections": 1,
+          "courses": [
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 5,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Winter",
+              "section": "049",
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 5,
+              "workload": 1,
+              "students": 5,
+              "sections": 1
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 1,
+          "utilizationRate": 2.2,
+          "status": "underutilized",
+          "availableCapacity": 44
+        }
+      },
+      "2025-26": {
+        "Sopu. Ariel": {
+          "facultyName": "Sopu. Ariel",
+          "totalCredits": 15,
+          "totalWorkloadCredits": 15,
+          "scheduledCredits": 15,
+          "appliedLearningCredits": 0,
+          "appliedLearningWorkload": 0,
+          "totalStudents": 17,
+          "sections": 3,
+          "courses": [
+            {
+              "courseCode": "DESN 100",
+              "credits": 5,
+              "enrolled": 10,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "001",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 216",
+              "credits": 5,
+              "enrolled": 5,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "001",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 263",
+              "credits": 5,
+              "enrolled": 2,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 15,
+          "utilizationRate": 33.3,
+          "status": "underutilized",
+          "availableCapacity": 30
+        },
+        "Allison. Shelby": {
+          "facultyName": "Allison. Shelby",
+          "totalCredits": 5,
+          "totalWorkloadCredits": 5,
+          "scheduledCredits": 5,
+          "appliedLearningCredits": 0,
+          "appliedLearningWorkload": 0,
+          "totalStudents": 7,
+          "sections": 1,
+          "courses": [
+            {
+              "courseCode": "DESN 100",
+              "credits": 5,
+              "enrolled": 7,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "002",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 5,
+          "utilizationRate": 11.1,
+          "status": "underutilized",
+          "availableCapacity": 40
+        },
+        "Mills. Simeon": {
+          "facultyName": "Mills. Simeon",
+          "totalCredits": 20,
+          "totalWorkloadCredits": 11,
+          "scheduledCredits": 10,
+          "appliedLearningCredits": 10,
+          "appliedLearningWorkload": 1,
+          "totalStudents": 39,
+          "sections": 4,
+          "courses": [
+            {
+              "courseCode": "DESN 200",
+              "credits": 5,
+              "enrolled": 10,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "002",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 301",
+              "credits": 5,
+              "enrolled": 9,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 5,
+              "enrolled": 10,
+              "multiplier": 0.1,
+              "workloadCredits": 0.5,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "001",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 5,
+              "enrolled": 10,
+              "multiplier": 0.1,
+              "workloadCredits": 0.5,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "003",
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            },
+            "DESN 495": {
+              "credits": 10,
+              "workload": 1,
+              "students": 20,
+              "sections": 2
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 11,
+          "utilizationRate": 24.4,
+          "status": "underutilized",
+          "availableCapacity": 34
+        },
+        "Manikoth. Colin": {
+          "facultyName": "Manikoth. Colin",
+          "totalCredits": 15,
+          "totalWorkloadCredits": 15,
+          "scheduledCredits": 15,
+          "appliedLearningCredits": 0,
+          "appliedLearningWorkload": 0,
+          "totalStudents": 29,
+          "sections": 3,
+          "courses": [
+            {
+              "courseCode": "DESN 200",
+              "credits": 5,
+              "enrolled": 14,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 480",
+              "credits": 5,
+              "enrolled": 8,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 490",
+              "credits": 5,
+              "enrolled": 7,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 15,
+          "utilizationRate": 33.3,
+          "status": "underutilized",
+          "availableCapacity": 30
+        },
+        "Pettinrew. Allan / Barton. Jayleana": {
+          "facultyName": "Pettinrew. Allan / Barton. Jayleana",
+          "totalCredits": 5,
+          "totalWorkloadCredits": 5,
+          "scheduledCredits": 5,
+          "appliedLearningCredits": 0,
+          "appliedLearningWorkload": 0,
+          "totalStudents": 10,
+          "sections": 1,
+          "courses": [
+            {
+              "courseCode": "DESN 216",
+              "credits": 5,
+              "enrolled": 10,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "002",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 5,
+          "utilizationRate": 11.1,
+          "status": "underutilized",
+          "availableCapacity": 40
+        },
+        "Durr. Sonja": {
+          "facultyName": "Durr. Sonja",
+          "totalCredits": 20,
+          "totalWorkloadCredits": 20,
+          "scheduledCredits": 20,
+          "appliedLearningCredits": 0,
+          "appliedLearningWorkload": 0,
+          "totalStudents": 33,
+          "sections": 4,
+          "courses": [
+            {
+              "courseCode": "DESN 243",
+              "credits": 5,
+              "enrolled": 13,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 359",
+              "credits": 5,
+              "enrolled": 1,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "001",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 399",
+              "credits": 5,
+              "enrolled": 10,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 463",
+              "credits": 5,
+              "enrolled": 9,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 20,
+          "utilizationRate": 44.4,
+          "status": "underutilized",
+          "availableCapacity": 25
+        },
+        "Hustulid. Ginelle": {
+          "facultyName": "Hustulid. Ginelle",
+          "totalCredits": 5,
+          "totalWorkloadCredits": 5,
+          "scheduledCredits": 5,
+          "appliedLearningCredits": 0,
+          "appliedLearningWorkload": 0,
+          "totalStudents": 8,
+          "sections": 1,
+          "courses": [
+            {
+              "courseCode": "DESN 326",
+              "credits": 5,
+              "enrolled": 8,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 5,
+          "utilizationRate": 11.1,
+          "status": "underutilized",
+          "availableCapacity": 40
+        },
+        "Lybbert. Meg": {
+          "facultyName": "Lybbert. Meg",
+          "totalCredits": 10,
+          "totalWorkloadCredits": 10,
+          "scheduledCredits": 10,
+          "appliedLearningCredits": 0,
+          "appliedLearningWorkload": 0,
+          "totalStudents": 7,
+          "sections": 2,
+          "courses": [
+            {
+              "courseCode": "DESN 338",
+              "credits": 5,
+              "enrolled": 1,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 366",
+              "credits": 5,
+              "enrolled": 6,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            },
+            "DESN 495": {
+              "credits": 0,
+              "workload": 0,
+              "students": 0,
+              "sections": 0
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 10,
+          "utilizationRate": 22.2,
+          "status": "underutilized",
+          "availableCapacity": 35
+        },
+        "Masingale. Travis": {
+          "facultyName": "Masingale. Travis",
+          "totalCredits": 25,
+          "totalWorkloadCredits": 12.5,
+          "scheduledCredits": 10,
+          "appliedLearningCredits": 15,
+          "appliedLearningWorkload": 2.5,
+          "totalStudents": 47,
+          "sections": 5,
+          "courses": [
+            {
+              "courseCode": "DESN 368",
+              "credits": 5,
+              "enrolled": 11,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 374",
+              "credits": 5,
+              "enrolled": 6,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "040",
+              "excludedFromWorkload": false,
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 5,
+              "enrolled": 10,
+              "multiplier": 0.1,
+              "workloadCredits": 0.5,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "006",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 10,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "040",
+              "excludeReason": null
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 10,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "041",
+              "excludeReason": null
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 10,
+              "workload": 2,
+              "students": 20,
+              "sections": 2
+            },
+            "DESN 495": {
+              "credits": 5,
+              "workload": 0.5,
+              "students": 10,
+              "sections": 1
+            }
+          },
+          "specialRole": null,
+          "roleNotes": null,
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 12.5,
+          "utilizationRate": 27.8,
+          "status": "underutilized",
+          "availableCapacity": 32.5
+        },
+        "Breen. Melinda": {
+          "facultyName": "Breen. Melinda",
+          "totalCredits": 5,
+          "totalWorkloadCredits": 5,
+          "scheduledCredits": 0,
+          "appliedLearningCredits": 20,
+          "appliedLearningWorkload": 0,
+          "totalStudents": 10,
+          "sections": 5,
+          "courses": [
+            {
+              "courseCode": "DESN 399",
+              "credits": 5,
+              "enrolled": 10,
+              "multiplier": 1,
+              "workloadCredits": 5,
+              "type": "scheduled",
+              "quarter": "Fall",
+              "section": "041",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 5,
+              "enrolled": 10,
+              "multiplier": 0.1,
+              "workloadCredits": 0.5,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "002",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 5,
+              "enrolled": 1,
+              "multiplier": 0.1,
+              "workloadCredits": 0.5,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "004",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            },
+            {
+              "courseCode": "DESN 495",
+              "credits": 5,
+              "enrolled": 10,
+              "multiplier": 0.1,
+              "workloadCredits": 0.5,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "005",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            },
+            {
+              "courseCode": "DESN 499",
+              "credits": 5,
+              "enrolled": 10,
+              "multiplier": 0.2,
+              "workloadCredits": 1,
+              "type": "applied-learning",
+              "quarter": "Fall",
+              "section": "042",
+              "excludedFromWorkload": true,
+              "excludeReason": "Release quarter"
+            }
+          ],
+          "appliedLearning": {
+            "DESN 499": {
+              "credits": 5,
+              "workload": 0,
+              "students": 10,
+              "sections": 1
+            },
+            "DESN 495": {
+              "credits": 15,
+              "workload": 0,
+              "students": 21,
+              "sections": 3
+            }
+          },
+          "specialRole": "Department Chair",
+          "roleNotes": "Full release Fall & Winter. Applied learning supervision is part of administrative duties.",
+          "rank": "Lecturer",
+          "maxWorkload": 45,
+          "currentWorkload": 5,
+          "utilizationRate": 11.1,
+          "status": "underutilized",
+          "availableCapacity": 40
+        }
+      }
     }
   },
   "appliedLearningTrends": {
