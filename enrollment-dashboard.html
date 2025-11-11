@@ -486,10 +486,10 @@
             "DESN 365": { average: 15, peak: 16, trend: "stable", peakQuarter: "spring-2024" },
             "DESN 366": { average: 12, peak: 18, trend: "declining", peakQuarter: "spring-2023" },
             "DESN 368": { average: 18, peak: 20, trend: "stable", peakQuarter: "fall" },
-            "DESN 369": { average: 20, peak: 22, trend: "stable", peakQuarter: "winter" },
+            "DESN 369": { average: 0, peak: 0, trend: "new", peakQuarter: "never-offered", isNew: true, note: "New course - Web Dev 1 (Winter 2026)" },
             "DESN 374": { average: 22, peak: 25, trend: "stable", peakQuarter: "fall" },
             "DESN 378": { average: 15, peak: 16, trend: "stable", peakQuarter: "winter" },
-            "DESN 379": { average: 18, peak: 20, trend: "stable", peakQuarter: "spring" },
+            "DESN 379": { average: 0, peak: 0, trend: "new", peakQuarter: "never-offered", isNew: true, note: "New course - Web Dev 2 (Spring 2026)" },
             "DESN 384": { average: 19, peak: 24, trend: "stable", peakQuarter: "winter-2023" },
             "DESN 401": { average: 16, peak: 21, trend: "growing", peakQuarter: "winter-2025" },
             "DESN 458": { average: 12, peak: 15, trend: "stable", peakQuarter: "spring-2024" },
@@ -895,9 +895,10 @@
                 .map(([code, data]) => {
                     const utilization = (data.average / capacity) * 100;
                     const status = utilization > 100 ? 'over' : utilization > 90 ? 'near' : 'under';
-                    return { code, ...data, utilization, status };
+                    const courseNum = parseInt(code.split(' ')[1]); // Extract course number
+                    return { code, courseNum, ...data, utilization, status };
                 })
-                .sort((a, b) => b.utilization - a.utilization);
+                .sort((a, b) => b.courseNum - a.courseNum); // Sort by course number descending (490 to 100)
 
             grid.innerHTML = courses.map(course => {
                 const icon = course.status === 'over' ? '🔴' : course.status === 'near' ? '🟡' : '🟢';
