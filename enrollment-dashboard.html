@@ -352,6 +352,17 @@
                 </select>
             </div>
 
+            <div class="control-group">
+                <label for="academicYearFilter">Academic Year:</label>
+                <select id="academicYearFilter">
+                    <option value="all">All Years (2022-2026)</option>
+                    <option value="2022-23">2022-23</option>
+                    <option value="2023-24">2023-24</option>
+                    <option value="2024-25">2024-25</option>
+                    <option value="2025-26">2025-26 (Current)</option>
+                </select>
+            </div>
+
             <button onclick="window.location.href='pages/workload-dashboard.html'" style="background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);">👥 Faculty Workload</button>
             <button onclick="generateReport()">Generate PDF Report</button>
         </div>
@@ -868,10 +879,18 @@
             }).join('');
         }
 
+        // Store chart instance for destruction/recreation
+        let programHeadcountChartInstance = null;
+
         function renderProgramHeadcountChart() {
             const ctx = document.getElementById('programHeadcountChart').getContext('2d');
 
-            new Chart(ctx, {
+            // Destroy existing chart if it exists
+            if (programHeadcountChartInstance) {
+                programHeadcountChartInstance.destroy();
+            }
+
+            programHeadcountChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: censusData.quarters,
@@ -1074,6 +1093,55 @@
         document.getElementById('trendFilter').addEventListener('change', function() {
             // Filter logic would be implemented here
             console.log('Filter by trend:', this.value);
+        });
+
+        document.getElementById('academicYearFilter').addEventListener('change', function() {
+            const selectedYear = this.value;
+            console.log('Filter by academic year:', selectedYear);
+
+            if (selectedYear === 'all') {
+                // Restore original data
+                if (window.enrollmentDashboardData && window.enrollmentDashboardData.censusData) {
+                    censusData.quarters = window.enrollmentDashboardData.censusData.quarters;
+                    censusData.headcount = window.enrollmentDashboardData.censusData.headcount;
+                }
+            } else {
+                // Filter census data by selected year
+                if (window.enrollmentDashboardData && window.enrollmentDashboardData.censusData) {
+                    const originalQuarters = window.enrollmentDashboardData.censusData.quarters;
+                    const originalHeadcount = window.enrollmentDashboardData.censusData.headcount;
+
+                    const filtered = originalQuarters.reduce((acc, quarter, index) => {
+                        // Check if quarter belongs to selected academic year
+                        // Academic year format: "2022-23" includes Fall 2022, Winter 2023, Spring 2023
+                        const yearMatch = selectedYear.match(/(\d{4})-(\d{2})/);
+                        if (yearMatch) {
+                            const startYear = yearMatch[1];
+                            const endYear = '20' + yearMatch[2];
+
+                            if (quarter.includes(startYear) || quarter.includes(endYear)) {
+                                acc.quarters.push(quarter);
+                                acc.headcount.push(originalHeadcount[index]);
+                            }
+                        }
+                        return acc;
+                    }, { quarters: [], headcount: [] });
+
+                    censusData.quarters = filtered.quarters;
+                    censusData.headcount = filtered.headcount;
+                }
+            }
+
+            // Re-render program headcount chart with filtered data
+            renderProgramHeadcountChart();
+
+            // Show filtered status in subtitle
+            const subtitle = document.querySelector('.subtitle');
+            if (selectedYear === 'all') {
+                subtitle.textContent = 'EWU Design Program Analytics 2022-2025';
+            } else {
+                subtitle.textContent = `EWU Design Program Analytics - Academic Year ${selectedYear}`;
+            }
         });
 
         // Initialize dashboard on load
