@@ -368,6 +368,11 @@
             border-left: 4px solid #fff;
         }
 
+        .priority-critical {
+            border-left: 4px solid #ff6b6b;
+            background: rgba(255, 107, 107, 0.2) !important;
+        }
+
         .legend {
             display: flex;
             gap: 20px;
@@ -601,6 +606,179 @@
             backdrop-filter: blur(10px);
         }
 
+        /* Enrollment indicators */
+        .enrollment-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 0.7em;
+            font-weight: 600;
+            margin-left: 4px;
+        }
+
+        .enrollment-high {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .enrollment-medium {
+            background: #ffd93d;
+            color: #333;
+        }
+
+        .enrollment-low {
+            background: #51cf66;
+            color: white;
+        }
+
+        .trend-growing::after {
+            content: " ↗";
+            color: #51cf66;
+            font-weight: bold;
+        }
+
+        .trend-declining::after {
+            content: " ↘";
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+
+        .trend-stable::after {
+            content: " →";
+            color: #4dabf7;
+            font-weight: bold;
+        }
+
+        .trend-new::after {
+            content: " ✨";
+            color: #9b59b6;
+            font-weight: bold;
+        }
+
+        /* Enrollment tooltip */
+        .enrollment-tooltip {
+            position: absolute;
+            background: #2c3e50;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.8em;
+            z-index: 1000;
+            min-width: 200px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            display: none;
+            pointer-events: none;
+        }
+
+        .enrollment-tooltip.show {
+            display: block;
+        }
+
+        .enrollment-analytics {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .enrollment-analytics h2 {
+            color: #495057;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .enrollment-category {
+            margin-bottom: 20px;
+        }
+
+        .enrollment-category h3 {
+            color: #495057;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .enrollment-course-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .enrollment-course-tag {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border-left: 4px solid;
+            font-size: 0.85em;
+        }
+
+        .enrollment-course-tag.high {
+            border-left-color: #ff6b6b;
+        }
+
+        .enrollment-course-tag.low {
+            border-left-color: #51cf66;
+        }
+
+        .enrollment-course-tag.declining {
+            border-left-color: #ffa726;
+        }
+
+        .quarterly-enrollment {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .quarterly-enrollment h3 {
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .enrollment-history-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85em;
+        }
+
+        .enrollment-history-table th {
+            background: #f8f9fa;
+            padding: 10px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .enrollment-history-table td {
+            padding: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .enrollment-history-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .enrollment-number {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .enrollment-split {
+            font-size: 0.85em;
+            color: #6c757d;
+        }
+
+        .course-note-badge {
+            display: inline-block;
+            background: #9b59b6;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.75em;
+            margin-left: 8px;
+        }
+
         @media (max-width: 768px) {
             .schedule-grid {
                 grid-template-columns: 80px repeat(7, 1fr);
@@ -782,6 +960,8 @@
             <div id="minorInfoPanel"></div>
             <div id="trackSuggestionsPanel"></div>
 
+            <div id="enrollmentAnalytics"></div>
+
             <h2 style="margin-bottom: 20px; color: #495057;">Schedule Grid - <span id="quarterTitle">Spring 2026</span></h2>
             <div class="schedule-grid" id="scheduleGrid"></div>
 
@@ -887,6 +1067,71 @@
             'visual-storytelling': { name: 'Visual Storytelling', suggestedMinors: ['photography', 'graphicDesign'] },
             'code-design': { name: 'Code + Design', suggestedMinors: ['webDevelopment', 'gameDesign', 'graphicDesign'] }
         };
+
+        // Enrollment data extracted from 2022-2025 census data
+        const enrollmentData = {
+            "DESN 100": {
+                average: 35,
+                peak: 48,
+                trend: "declining",
+                peakQuarter: "fall-2022",
+                quarterly: {
+                    "winter-2023": 38,
+                    "winter-2024": 24,
+                    "winter-2025": 22
+                }
+            },
+            "DESN 200": { average: 26, peak: 44, trend: "growing", peakQuarter: "fall-2024" },
+            "DESN 216": {
+                average: 52,
+                peak: 73,
+                trend: "declining",
+                peakQuarter: "fall-2022",
+                quarterly: {
+                    "winter-2023": { total: 38, online: 19, inPerson: 19 },
+                    "winter-2024": { total: 25, online: 13, inPerson: 12 },
+                    "winter-2025": { total: 22, online: 11, inPerson: 11 }
+                }
+            },
+            "DESN 243": { average: 17, peak: 25, trend: "stable", peakQuarter: "spring-2023" },
+            "DESN 263": { average: 18, peak: 25, trend: "stable", peakQuarter: "spring-2023" },
+            "DESN 301": { average: 21, peak: 25, trend: "growing", peakQuarter: "fall-2024" },
+            "DESN 305": { average: 22, peak: 23, trend: "stable", peakQuarter: "spring-2024" },
+            "DESN 326": { average: 25, peak: 25, trend: "stable", peakQuarter: "fall-2023" },
+            "DESN 335": { average: 24, peak: 24, trend: "stable", peakQuarter: "winter-2025" },
+            "DESN 336": { average: 18, peak: 21, trend: "growing", peakQuarter: "spring-2025" },
+            "DESN 338": { average: 20, peak: 30, trend: "declining", peakQuarter: "fall-2022" },
+            "DESN 345": { average: 0, peak: 0, trend: "new", peakQuarter: "never-offered", isNew: true, note: "New course - Digital Game Design (Spring 2026)" },
+            "DESN 348": { average: 16, peak: 20, trend: "stable", peakQuarter: "winter-2024" },
+            "DESN 350": { average: 10, peak: 10, trend: "stable", peakQuarter: "spring" },
+            "DESN 355": { average: 19, peak: 22, trend: "stable", peakQuarter: "winter-2024" },
+            "DESN 359": { average: 19, peak: 24, trend: "growing", peakQuarter: "winter-2024" },
+            "DESN 360": { average: 17, peak: 19, trend: "stable", peakQuarter: "winter-2025" },
+            "DESN 365": { average: 15, peak: 16, trend: "stable", peakQuarter: "spring-2024" },
+            "DESN 366": { average: 12, peak: 18, trend: "declining", peakQuarter: "spring-2023" },
+            "DESN 368": { average: 18, peak: 20, trend: "stable", peakQuarter: "fall" },
+            "DESN 369": { average: 20, peak: 22, trend: "stable", peakQuarter: "winter" },
+            "DESN 374": { average: 22, peak: 25, trend: "stable", peakQuarter: "fall" },
+            "DESN 378": { average: 15, peak: 16, trend: "stable", peakQuarter: "winter" },
+            "DESN 379": { average: 18, peak: 20, trend: "stable", peakQuarter: "spring" },
+            "DESN 384": { average: 19, peak: 24, trend: "stable", peakQuarter: "winter-2023" },
+            "DESN 401": { average: 16, peak: 21, trend: "growing", peakQuarter: "winter-2025" },
+            "DESN 458": { average: 12, peak: 15, trend: "stable", peakQuarter: "spring-2024" },
+            "DESN 463": { average: 16, peak: 24, trend: "growing", peakQuarter: "spring-2025" },
+            "DESN 468": { average: 12, peak: 13, trend: "stable", peakQuarter: "spring-2024" },
+            "DESN 480": { average: 15, peak: 20, trend: "stable", peakQuarter: "winter-2023" },
+            "DESN 490": { average: 15, peak: 25, trend: "growing", peakQuarter: "spring-2025" }
+        };
+
+        function getEnrollmentLevel(average) {
+            if (average >= 30) return 'high';
+            if (average >= 15) return 'medium';
+            return 'low';
+        }
+
+        function getEnrollmentData(courseCode) {
+            return enrollmentData[courseCode] || { average: 0, peak: 0, trend: "unknown", peakQuarter: "" };
+        }
 
         const scheduleData = {
             fall: {
@@ -1045,9 +1290,9 @@
             winter: [
                 {
                     time: 'Monday & Wednesday, 1:00 PM - 3:00 PM',
-                    severity: 'high',
+                    severity: 'critical',
                     courses: ['DESN 348 - UX 2', 'DESN 480 - Professional Practice'],
-                    impact: 'Seniors in UX track cannot complete required courses together',
+                    impact: 'Seniors pursuing UX minor must choose between DESN 348 (required for UX minor) and DESN 480 (required to graduate). This prevents seniors from completing both the UX minor and graduation requirements in the same quarter.',
                     affected: 'High'
                 },
                 {
@@ -1077,9 +1322,19 @@
             ],
             winter: [
                 {
+                    priority: 'critical',
+                    title: 'URGENT: Resolve DESN 348/480 Senior Graduation Conflict',
+                    description: 'DESN 348 (UX 2 - UX minor requirement) conflicts with DESN 480 (Professional Practice - required to graduate). Seniors cannot complete UX minor and graduate on time. Recommendation: Move DESN 480 to TR 13:00-15:00 or offer additional DESN 348 section at different time (MW 16:00-18:00 or TR time slot).'
+                },
+                {
                     priority: 'high',
-                    title: 'Relocate Professional Practice',
-                    description: 'Move DESN 480 to Monday/Wednesday 10-12 AM or offer in Spring quarter as alternative.'
+                    title: 'Optimize DESN 100 Winter Sections',
+                    description: 'DESN 100 winter enrollment has declined from 38 (2023) to 22 (2025) students. Currently offering 2 sections, but only 1 section is needed. Consider consolidating to a single section.'
+                },
+                {
+                    priority: 'high',
+                    title: 'Review DESN 216 Winter Capacity',
+                    description: 'DESN 216 winter shows declining enrollment (38→25→22 students, split 50/50 between online and in-person). The in-person section now has only ~11 students. Consider consolidating to online-only or offering in-person every other year.'
                 }
             ]
         };
@@ -1122,10 +1377,15 @@
                         const cellContent = courses.map(course => {
                             const conflictLevel = courses.length > 2 ? 0 : courses.length > 1 ? 1 : 2;
                             const facultyClass = getFacultyClass(course.instructor);
+                            const enrollment = getEnrollmentData(course.code);
+                            const enrollmentLevel = getEnrollmentLevel(enrollment.average);
+                            const trendClass = `trend-${enrollment.trend}`;
                             return `
-                                <div class="course-block conflict-${conflictLevel} ${facultyClass}" onclick="showCourseDetails('${course.code}', '${course.name}', '${course.instructor}', ${course.credits}, '${course.room}')">
+                                <div class="course-block conflict-${conflictLevel} ${facultyClass} ${trendClass}"
+                                     onclick="showCourseDetails('${course.code}', '${course.name}', '${course.instructor}', ${course.credits}, '${course.room}')"
+                                     title="Avg enrollment: ${enrollment.average} | Peak: ${enrollment.peak} | Trend: ${enrollment.trend}">
                                     ${courses.length > 1 ? `<span class="conflict-badge">${courses.length}</span>` : ''}
-                                    <div class="course-name">${course.code}</div>
+                                    <div class="course-name">${course.code} <span class="enrollment-badge enrollment-${enrollmentLevel}">👥 ${enrollment.average}</span></div>
                                     <div class="course-details">${course.name}</div>
                                     <div class="course-details">${course.instructor}</div>
                                 </div>
@@ -1210,6 +1470,165 @@
             `;
         }
 
+        function renderEnrollmentAnalytics(quarter) {
+            const analyticsPanel = document.getElementById('enrollmentAnalytics');
+            const data = scheduleData[quarter];
+
+            // Collect all courses from the quarter
+            let allCourses = [];
+            ['MW', 'TR'].forEach(day => {
+                if (data[day]) {
+                    ['10:00-12:00', '13:00-15:00', '16:00-18:00'].forEach(time => {
+                        if (data[day][time]) {
+                            allCourses = allCourses.concat(data[day][time]);
+                        }
+                    });
+                }
+            });
+
+            // Add online and arranged courses
+            if (data['ONLINE'] && data['ONLINE']['async']) {
+                allCourses = allCourses.concat(data['ONLINE']['async']);
+            }
+
+            // Categorize courses
+            const highEnrollment = [];
+            const lowEnrollment = [];
+            const decliningTrend = [];
+
+            allCourses.forEach(course => {
+                const enrollment = getEnrollmentData(course.code);
+                if (enrollment.average >= 30) {
+                    highEnrollment.push({ ...course, enrollment });
+                }
+                if (enrollment.average < 15 && enrollment.average > 0) {
+                    lowEnrollment.push({ ...course, enrollment });
+                }
+                if (enrollment.trend === 'declining') {
+                    decliningTrend.push({ ...course, enrollment });
+                }
+            });
+
+            // Build quarterly enrollment history section
+            const coursesWithHistory = allCourses
+                .filter(c => {
+                    const enrollment = getEnrollmentData(c.code);
+                    return enrollment.quarterly || enrollment.isNew;
+                })
+                .reduce((unique, course) => {
+                    if (!unique.find(c => c.code === course.code)) {
+                        unique.push(course);
+                    }
+                    return unique;
+                }, []);
+
+            analyticsPanel.innerHTML = `
+                <div class="enrollment-analytics">
+                    <h2>📊 Enrollment Analytics - ${quarter.charAt(0).toUpperCase() + quarter.slice(1)} 2026</h2>
+
+                    ${coursesWithHistory.length > 0 ? `
+                    <div class="quarterly-enrollment">
+                        <h3>📈 Per-Class Enrollment History</h3>
+                        <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;">Historical enrollment data by course and quarter</p>
+                        <table class="enrollment-history-table">
+                            <thead>
+                                <tr>
+                                    <th>Course</th>
+                                    <th>Course Name</th>
+                                    <th>Instructor</th>
+                                    <th>Winter 2023</th>
+                                    <th>Winter 2024</th>
+                                    <th>Winter 2025</th>
+                                    <th>Trend</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${coursesWithHistory.map(c => {
+                                    const enrollment = getEnrollmentData(c.code);
+                                    const quarterly = enrollment.quarterly || {};
+
+                                    let w2023 = '-', w2024 = '-', w2025 = '-';
+
+                                    if (enrollment.isNew) {
+                                        w2023 = w2024 = w2025 = '<span style="color: #9b59b6; font-weight: 600;">NEW</span>';
+                                    } else if (c.code === 'DESN 216') {
+                                        const q2023 = quarterly['winter-2023'] || {};
+                                        const q2024 = quarterly['winter-2024'] || {};
+                                        const q2025 = quarterly['winter-2025'] || {};
+
+                                        w2023 = `<span class="enrollment-number">${q2023.total || '-'}</span><br><span class="enrollment-split">(${q2023.online || '-'} online, ${q2023.inPerson || '-'} in-person)</span>`;
+                                        w2024 = `<span class="enrollment-number">${q2024.total || '-'}</span><br><span class="enrollment-split">(${q2024.online || '-'} online, ${q2024.inPerson || '-'} in-person)</span>`;
+                                        w2025 = `<span class="enrollment-number">${q2025.total || '-'}</span><br><span class="enrollment-split">(${q2025.online || '-'} online, ${q2025.inPerson || '-'} in-person)</span>`;
+                                    } else {
+                                        w2023 = quarterly['winter-2023'] ? `<span class="enrollment-number">${quarterly['winter-2023']}</span>` : '-';
+                                        w2024 = quarterly['winter-2024'] ? `<span class="enrollment-number">${quarterly['winter-2024']}</span>` : '-';
+                                        w2025 = quarterly['winter-2025'] ? `<span class="enrollment-number">${quarterly['winter-2025']}</span>` : '-';
+                                    }
+
+                                    const trendIcon = enrollment.trend === 'declining' ? '📉' : enrollment.trend === 'growing' ? '📈' : enrollment.trend === 'new' ? '✨' : '➡️';
+
+                                    return `
+                                        <tr>
+                                            <td><strong>${c.code}</strong>${enrollment.isNew ? '<span class="course-note-badge">NEW</span>' : ''}</td>
+                                            <td>${c.name}</td>
+                                            <td>${c.instructor}</td>
+                                            <td>${w2023}</td>
+                                            <td>${w2024}</td>
+                                            <td>${w2025}</td>
+                                            <td>${trendIcon} ${enrollment.trend}</td>
+                                        </tr>
+                                    `;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    ` : ''}
+
+                    ${highEnrollment.length > 0 ? `
+                    <div class="enrollment-category">
+                        <h3>🔴 High Demand Courses (30+ students)</h3>
+                        <p style="color: #666; font-size: 0.9em; margin-bottom: 10px;">These courses may need larger rooms or additional sections</p>
+                        <div class="enrollment-course-list">
+                            ${highEnrollment.map(c => `
+                                <div class="enrollment-course-tag high">
+                                    <strong>${c.code}</strong> - Avg: ${c.enrollment.average} | Peak: ${c.enrollment.peak}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    ` : ''}
+
+                    ${lowEnrollment.length > 0 ? `
+                    <div class="enrollment-category">
+                        <h3>🟢 Low Enrollment Courses (<15 students)</h3>
+                        <p style="color: #666; font-size: 0.9em; margin-bottom: 10px;">Consider consolidation or review offering frequency</p>
+                        <div class="enrollment-course-list">
+                            ${lowEnrollment.map(c => `
+                                <div class="enrollment-course-tag low">
+                                    <strong>${c.code}</strong> - Avg: ${c.enrollment.average} | Instructor: ${c.instructor}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    ` : ''}
+
+                    ${decliningTrend.length > 0 ? `
+                    <div class="enrollment-category">
+                        <h3>⚠️ Declining Enrollment Trends</h3>
+                        <p style="color: #666; font-size: 0.9em; margin-bottom: 10px;">Courses showing declining enrollment patterns</p>
+                        <div class="enrollment-course-list">
+                            ${decliningTrend.map(c => `
+                                <div class="enrollment-course-tag declining">
+                                    <strong>${c.code}</strong> - Avg: ${c.enrollment.average} | Trend: ${c.enrollment.trend} ↘
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
         function renderConflicts(quarter) {
             const conflictsList = document.getElementById('conflictsList');
             const conflicts = conflictData[quarter] || [];
@@ -1244,7 +1663,7 @@
             }
 
             recList.innerHTML = recs.map(rec => `
-                <div class="recommendation-item ${rec.priority === 'high' ? 'priority-high' : ''}">
+                <div class="recommendation-item ${rec.priority === 'critical' ? 'priority-critical' : rec.priority === 'high' ? 'priority-high' : ''}">
                     <h3>${rec.title}</h3>
                     <p>${rec.description}</p>
                 </div>
@@ -1264,9 +1683,36 @@
 
             const criticalConflicts = conflicts.filter(c => c.severity === 'critical').length;
 
+            // Calculate room utilization (excluding room 207 - Media Lab flex space)
+            const rooms = ['206', '209', '210', '212', 'CEB 102', 'CEB 104']; // Excluding 207
+            const times = ['10:00-12:00', '13:00-15:00', '16:00-18:00'];
+            const days = ['MW', 'TR'];
+
+            let totalSlots = 0;
+            let filledSlots = 0;
+
+            days.forEach(day => {
+                if (data[day]) {
+                    times.forEach(time => {
+                        if (data[day][time]) {
+                            rooms.forEach(room => {
+                                totalSlots++;
+                                const coursesInRoom = data[day][time].filter(c => c.room === room);
+                                if (coursesInRoom.length > 0) {
+                                    filledSlots++;
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+
+            const utilizationRate = totalSlots > 0 ? Math.round((filledSlots / totalSlots) * 100) : 0;
+
             document.getElementById('criticalConflicts').textContent = criticalConflicts;
             document.getElementById('totalConflicts').textContent = conflicts.length;
             document.getElementById('totalCourses').textContent = totalCourses;
+            document.getElementById('utilizationRate').textContent = utilizationRate + '%';
         }
 
         function isCourseInMinor(courseCode, minorKey) {
@@ -1365,6 +1811,7 @@
             renderSchedule(quarter);
             renderOnlineCourses(quarter);
             renderArrangedCourses(quarter);
+            renderEnrollmentAnalytics(quarter);
             renderConflicts(quarter);
             renderRecommendations(quarter);
             updateStats(quarter);
@@ -1391,6 +1838,7 @@
         renderSchedule('spring');
         renderOnlineCourses('spring');
         renderArrangedCourses('spring');
+        renderEnrollmentAnalytics('spring');
         renderConflicts('spring');
         renderRecommendations('spring');
         updateStats('spring');
