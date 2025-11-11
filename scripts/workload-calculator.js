@@ -18,11 +18,13 @@ class WorkloadCalculator {
         };
 
         // Standard workload limits by faculty rank (per academic year)
+        // Note: These can be negotiated with release time for other duties
+        // Anything outside of these limits is considered overload
         this.workloadLimits = {
-            'Full Professor': 30,
-            'Associate Professor': 30,
-            'Assistant Professor': 30,
-            'Senior Lecturer': 40,
+            'Full Professor': 36,
+            'Associate Professor': 36,
+            'Assistant Professor': 36,
+            'Senior Lecturer': 45,
             'Lecturer': 45,
             'Adjunct': 15
         };

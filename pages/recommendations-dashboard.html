@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommendations Dashboard - EWU Design</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .back-link {
+            position: absolute;
+            left: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .back-link:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-50%) translateX(-5px);
+        }
+
+        .controls {
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .recommendation-section {
+            margin-bottom: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .section-icon {
+            font-size: 2em;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #495057;
+        }
+
+        .recommendation-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 6px solid;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .recommendation-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .recommendation-card.critical {
+            border-left-color: #ff6b6b;
+            background: linear-gradient(to right, #fff5f5 0%, white 100%);
+        }
+
+        .recommendation-card.high {
+            border-left-color: #ffa726;
+            background: linear-gradient(to right, #fff3e0 0%, white 100%);
+        }
+
+        .recommendation-card.medium {
+            border-left-color: #ffd93d;
+            background: linear-gradient(to right, #fffdf0 0%, white 100%);
+        }
+
+        .recommendation-card.low {
+            border-left-color: #51cf66;
+            background: linear-gradient(to right, #f0fdf4 0%, white 100%);
+        }
+
+        .rec-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .rec-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #212529;
+        }
+
+        .priority-badge {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .priority-badge.critical {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .priority-badge.high {
+            background: #ffa726;
+            color: white;
+        }
+
+        .priority-badge.medium {
+            background: #ffd93d;
+            color: #333;
+        }
+
+        .priority-badge.low {
+            background: #51cf66;
+            color: white;
+        }
+
+        .rec-description {
+            color: #495057;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .rec-impact {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .rec-impact-label {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .rec-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .action-item {
+            background: #f8f9fa;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            border-left: 3px solid #667eea;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        .summary-panel {
+            background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .summary-panel h2 {
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .summary-item {
+            background: rgba(255,255,255,0.2);
+            padding: 20px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .summary-item h3 {
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 1.2em;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="../index.html" class="back-link">← Back to Schedule</a>
+            <h1>💡 Recommendations Dashboard</h1>
+            <p class="subtitle">Data-Driven Insights & Actionable Recommendations</p>
+        </header>
+
+        <div class="controls">
+            <button onclick="window.location.href='../enrollment-dashboard.html'">📊 Enrollment Trends</button>
+            <button onclick="window.location.href='workload-dashboard.html'">👥 Faculty Workload</button>
+            <button onclick="refreshRecommendations()">🔄 Refresh Recommendations</button>
+            <button onclick="exportRecommendations()">📄 Export Report</button>
+        </div>
+
+        <div class="content">
+            <div id="loadingMessage" class="loading">
+                Analyzing enrollment and workload data...
+            </div>
+
+            <div id="dashboardContent" style="display: none;">
+                <!-- Summary Panel -->
+                <div class="summary-panel">
+                    <h2>📈 Executive Summary</h2>
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <h3 id="totalRecommendations">0 Total Recommendations</h3>
+                            <p>Based on analysis of enrollment and workload data</p>
+                        </div>
+                        <div class="summary-item">
+                            <h3 id="criticalIssues">0 Critical Issues</h3>
+                            <p>Requiring immediate attention</p>
+                        </div>
+                        <div class="summary-item">
+                            <h3 id="facultyImpact">0 Faculty Impacted</h3>
+                            <p>By workload or scheduling concerns</p>
+                        </div>
+                        <div class="summary-item">
+                            <h3 id="studentImpact">0 Students Affected</h3>
+                            <p>By enrollment or capacity issues</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Faculty Workload Recommendations -->
+                <div class="recommendation-section">
+                    <div class="section-header">
+                        <div class="section-icon">👥</div>
+                        <h2 class="section-title">Faculty Workload Recommendations</h2>
+                    </div>
+                    <div id="workloadRecommendations"></div>
+                </div>
+
+                <!-- Enrollment Recommendations -->
+                <div class="recommendation-section">
+                    <div class="section-header">
+                        <div class="section-icon">📚</div>
+                        <h2 class="section-title">Enrollment & Capacity Recommendations</h2>
+                    </div>
+                    <div id="enrollmentRecommendations"></div>
+                </div>
+
+                <!-- Scheduling Recommendations -->
+                <div class="recommendation-section">
+                    <div class="section-header">
+                        <div class="section-icon">📅</div>
+                        <h2 class="section-title">Schedule Optimization Recommendations</h2>
+                    </div>
+                    <div id="schedulingRecommendations"></div>
+                </div>
+
+                <!-- Strategic Recommendations -->
+                <div class="recommendation-section">
+                    <div class="section-header">
+                        <div class="section-icon">🎯</div>
+                        <h2 class="section-title">Strategic Planning Recommendations</h2>
+                    </div>
+                    <div id="strategicRecommendations"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let workloadData = null;
+        let enrollmentData = null;
+
+        async function loadData() {
+            try {
+                // Load workload data
+                const workloadResponse = await fetch('../workload-data.json');
+                if (workloadResponse.ok) {
+                    workloadData = await workloadResponse.json();
+                    console.log('✅ Loaded workload data');
+                }
+
+                // Load enrollment data
+                const enrollmentResponse = await fetch('../enrollment-dashboard-data.json');
+                if (enrollmentResponse.ok) {
+                    enrollmentData = await enrollmentResponse.json();
+                    console.log('✅ Loaded enrollment data');
+                }
+
+                return true;
+            } catch (error) {
+                console.error('Error loading data:', error);
+                return false;
+            }
+        }
+
+        async function initDashboard() {
+            const loaded = await loadData();
+
+            if (!loaded || !workloadData || !enrollmentData) {
+                document.getElementById('loadingMessage').innerHTML = `
+                    <p style="color: #ff6b6b;">⚠️ Unable to load data files.</p>
+                    <p style="margin-top: 10px;">Please ensure workload-data.json and enrollment-dashboard-data.json exist.</p>
+                    <p style="margin-top: 10px; font-size: 0.9em;">Run: <code>node scripts/workload-calculator.js enrollment-data/processed</code></p>
+                `;
+                return;
+            }
+
+            document.getElementById('loadingMessage').style.display = 'none';
+            document.getElementById('dashboardContent').style.display = 'block';
+
+            generateRecommendations();
+        }
+
+        function generateRecommendations() {
+            const recommendations = {
+                workload: analyzeWorkload(),
+                enrollment: analyzeEnrollment(),
+                scheduling: analyzeScheduling(),
+                strategic: generateStrategicRecommendations()
+            };
+
+            updateSummary(recommendations);
+            renderWorkloadRecommendations(recommendations.workload);
+            renderEnrollmentRecommendations(recommendations.enrollment);
+            renderSchedulingRecommendations(recommendations.scheduling);
+            renderStrategicRecommendations(recommendations.strategic);
+        }
+
+        function analyzeWorkload() {
+            const faculty = workloadData.facultyWorkload;
+            const recommendations = [];
+
+            // Find overloaded faculty
+            const overloaded = Object.entries(faculty)
+                .filter(([_, data]) => data.status === 'overloaded')
+                .sort((a, b) => b[1].utilizationRate - a[1].utilizationRate);
+
+            if (overloaded.length > 0) {
+                overloaded.forEach(([name, data]) => {
+                    recommendations.push({
+                        title: `Address ${name}'s Workload (${data.utilizationRate}% Utilization)`,
+                        priority: data.utilizationRate > 150 ? 'critical' : 'high',
+                        description: `${name} is teaching ${data.totalCredits} credits (${data.totalWorkloadCredits.toFixed(1)} workload credits), exceeding standard capacity of ${data.maxWorkload} credits.`,
+                        impact: `Affects ${data.totalStudents} students across ${data.sections} sections. Risk of instructor burnout and reduced course quality.`,
+                        actions: [
+                            `Redistribute ${Math.ceil(data.totalWorkloadCredits - data.maxWorkload)} workload credits`,
+                            data.appliedLearningCredits > 0 ? `Consider limiting applied learning supervision (currently ${data.appliedLearningCredits} credits)` : null,
+                            'Hire adjunct to take over 1-2 sections',
+                            'Review course assignments for upcoming quarters'
+                        ].filter(Boolean),
+                        faculty: name,
+                        students: data.totalStudents
+                    });
+                });
+            }
+
+            // Analyze applied learning growth
+            const trends = workloadData.appliedLearningTrends;
+            if (trends && trends.summary) {
+                const summary = trends.summary;
+                if (summary.trend === 'increasing' && parseFloat(summary.percentChange) > 20) {
+                    recommendations.push({
+                        title: `Applied Learning Supervision Growing Rapidly (${summary.percentChange})`,
+                        priority: 'medium',
+                        description: `Applied learning workload has ${summary.trend} from ${summary.change > 0 ? '+' : ''}${summary.change} workload credits. Current load: ${summary.latestWorkload.toFixed(1)} credits.`,
+                        impact: 'Increasing supervision demands without corresponding workload recognition.',
+                        actions: [
+                            'Establish maximum applied learning credits per faculty',
+                            'Consider group supervision models for DESN 499',
+                            'Review applied learning credit multipliers',
+                            'Create dedicated applied learning coordinator role'
+                        ]
+                    });
+                }
+            }
+
+            return recommendations;
+        }
+
+        function analyzeEnrollment() {
+            const courses = enrollmentData.courseStats;
+            const recommendations = [];
+
+            // Find declining courses
+            const declining = Object.entries(courses)
+                .filter(([_, data]) => data.trend === 'declining' && data.average > 0)
+                .sort((a, b) => b[1].average - a[1].average);
+
+            if (declining.length > 0) {
+                declining.forEach(([code, data]) => {
+                    if (data.average < 15) {
+                        recommendations.push({
+                            title: `Low Enrollment in ${code} (Avg: ${data.average} students)`,
+                            priority: 'medium',
+                            description: `${code} has declining enrollment with average of ${data.average} students. Peak was ${data.peak} in ${data.peakQuarter}.`,
+                            impact: `Course may not be cost-effective. ${data.sections} sections offered across all years.`,
+                            actions: [
+                                'Review course content and relevance',
+                                'Consider offering biennially instead of annually',
+                                'Market course to appropriate student tracks',
+                                'Evaluate if course can be merged with similar offering'
+                            ]
+                        });
+                    }
+                });
+            }
+
+            // Find over-capacity courses
+            const overCapacity = Object.entries(courses)
+                .filter(([_, data]) => data.average > 24)
+                .sort((a, b) => b[1].average - a[1].average);
+
+            if (overCapacity.length > 0) {
+                overCapacity.forEach(([code, data]) => {
+                    recommendations.push({
+                        title: `${code} Consistently Over Standard Capacity (${data.average} avg)`,
+                        priority: 'high',
+                        description: `${code} averages ${data.average} students, exceeding standard 24-seat room capacity. Peak enrollment: ${data.peak}.`,
+                        impact: `Requires larger rooms or multiple sections. Current: ${data.sections} sections total.`,
+                        actions: [
+                            'Reserve larger classroom (30+ capacity)',
+                            'Consider adding additional section',
+                            'Review if prerequisite is appropriate gatekeeper',
+                            'Ensure sufficient lab resources for larger class'
+                        ]
+                    });
+                });
+            }
+
+            return recommendations;
+        }
+
+        function analyzeScheduling() {
+            const recommendations = [];
+
+            // General scheduling recommendations based on data patterns
+            recommendations.push({
+                title: 'Balance Faculty Teaching Across Quarters',
+                priority: 'medium',
+                description: 'Some faculty show uneven distribution of teaching load across quarters, leading to inconsistent utilization.',
+                impact: 'Affects work-life balance and may contribute to overload situations.',
+                actions: [
+                    'Analyze teaching distribution by quarter for each faculty',
+                    'Spread courses more evenly across Fall/Winter/Spring',
+                    'Consider faculty preferences for quarter assignments',
+                    'Balance high-enrollment and low-enrollment courses per quarter'
+                ]
+            });
+
+            if (enrollmentData.forecast && enrollmentData.forecast.trend === 'declining') {
+                recommendations.push({
+                    title: `Enrollment Trending ${enrollmentData.forecast.trend} (${enrollmentData.forecast.growthRate})`,
+                    priority: 'high',
+                    description: `Overall enrollment forecast shows ${enrollmentData.forecast.trend} trend with ${enrollmentData.forecast.growthRate} growth rate. Predicted next quarter: ${enrollmentData.forecast.predicted} students.`,
+                    impact: 'May indicate need to reduce sections or adjust staffing for future quarters.',
+                    actions: [
+                        'Review recruitment and retention strategies',
+                        'Analyze which specific courses are declining',
+                        'Consider consolidating low-enrollment sections',
+                        'Prepare contingency plan if trend continues'
+                    ]
+                });
+            }
+
+            return recommendations;
+        }
+
+        function generateStrategicRecommendations() {
+            const recommendations = [];
+
+            // Calculate adjunct needs
+            const faculty = workloadData.facultyWorkload;
+            const overloadedCount = Object.values(faculty).filter(f => f.status === 'overloaded').length;
+            const totalOverloadCredits = Object.values(faculty)
+                .filter(f => f.status === 'overloaded')
+                .reduce((sum, f) => sum + (f.totalWorkloadCredits - f.maxWorkload), 0);
+
+            if (overloadedCount > 0) {
+                const adjunctsNeeded = Math.ceil(totalOverloadCredits / 15); // 15 credits per adjunct
+                recommendations.push({
+                    title: `Hire ${adjunctsNeeded} Adjunct Faculty for Load Balancing`,
+                    priority: 'high',
+                    description: `${overloadedCount} faculty members are overloaded with total of ${totalOverloadCredits.toFixed(1)} excess workload credits. Based on 15-credit adjunct capacity, recommend hiring ${adjunctsNeeded} adjunct instructor(s).`,
+                    impact: `Would reduce overload and improve course quality. Estimated cost: $${(adjunctsNeeded * 15 * 1200).toLocaleString()} (assuming $1,200/credit).`,
+                    actions: [
+                        `Post adjunct positions for ${adjunctsNeeded} instructor(s)`,
+                        'Prioritize courses in high-demand areas',
+                        'Identify foundation courses that can be taught by adjuncts',
+                        'Begin recruitment 2 quarters in advance'
+                    ]
+                });
+            }
+
+            // Applied learning recommendations
+            if (workloadData.appliedLearningTrends) {
+                const latest = workloadData.appliedLearningTrends.summary;
+                if (latest && latest.latestWorkload > 20) {
+                    recommendations.push({
+                        title: 'Formalize Applied Learning Supervision Policy',
+                        priority: 'medium',
+                        description: `Applied learning represents ${latest.latestWorkload.toFixed(1)} workload credits (${latest.trend}). Need clear policies on supervision limits.`,
+                        impact: 'Prevents faculty overload from uncapped DESN 499/495 supervision.',
+                        actions: [
+                            'Set maximum applied learning credits per faculty (suggest: 10-15 credits)',
+                            'Create tiered supervision: individual vs group projects',
+                            'Establish applied learning coordinator role',
+                            'Document supervision requirements and expectations'
+                        ]
+                    });
+                }
+            }
+
+            return recommendations;
+        }
+
+        function updateSummary(recommendations) {
+            const all = [
+                ...recommendations.workload,
+                ...recommendations.enrollment,
+                ...recommendations.scheduling,
+                ...recommendations.strategic
+            ];
+
+            const critical = all.filter(r => r.priority === 'critical').length;
+            const totalFaculty = new Set(all.filter(r => r.faculty).map(r => r.faculty)).size;
+            const totalStudents = all.reduce((sum, r) => sum + (r.students || 0), 0);
+
+            document.getElementById('totalRecommendations').textContent = `${all.length} Total Recommendations`;
+            document.getElementById('criticalIssues').textContent = `${critical} Critical Issues`;
+            document.getElementById('facultyImpact').textContent = `${totalFaculty} Faculty Impacted`;
+            document.getElementById('studentImpact').textContent = `${totalStudents} Students Affected`;
+        }
+
+        function renderRecommendations(recommendations, containerId) {
+            const container = document.getElementById(containerId);
+
+            if (recommendations.length === 0) {
+                container.innerHTML = '<p style="color: #51cf66; font-weight: 600;">✓ No recommendations in this category. Everything looks good!</p>';
+                return;
+            }
+
+            container.innerHTML = recommendations.map(rec => `
+                <div class="recommendation-card ${rec.priority}">
+                    <div class="rec-header">
+                        <div class="rec-title">${rec.title}</div>
+                        <span class="priority-badge ${rec.priority}">${rec.priority}</span>
+                    </div>
+                    <div class="rec-description">${rec.description}</div>
+                    ${rec.impact ? `
+                        <div class="rec-impact">
+                            <div class="rec-impact-label">Impact:</div>
+                            <div>${rec.impact}</div>
+                        </div>
+                    ` : ''}
+                    <div style="font-weight: 600; margin-top: 15px; margin-bottom: 10px;">Recommended Actions:</div>
+                    <div class="rec-actions">
+                        ${rec.actions.map(action => `<div class="action-item">• ${action}</div>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderWorkloadRecommendations(recommendations) {
+            renderRecommendations(recommendations, 'workloadRecommendations');
+        }
+
+        function renderEnrollmentRecommendations(recommendations) {
+            renderRecommendations(recommendations, 'enrollmentRecommendations');
+        }
+
+        function renderSchedulingRecommendations(recommendations) {
+            renderRecommendations(recommendations, 'schedulingRecommendations');
+        }
+
+        function renderStrategicRecommendations(recommendations) {
+            renderRecommendations(recommendations, 'strategicRecommendations');
+        }
+
+        function refreshRecommendations() {
+            location.reload();
+        }
+
+        function exportRecommendations() {
+            alert('Export functionality would generate a PDF report with all recommendations and action items.');
+        }
+
+        // Initialize on load
+        window.addEventListener('load', initDashboard);
+    </script>
+</body>
+</html>
