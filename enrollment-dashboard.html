@@ -273,6 +273,65 @@
             font-size: 1.1em;
         }
 
+        .capacity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .capacity-card {
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid;
+            background: white;
+        }
+
+        .capacity-card.over {
+            border-left-color: #ff6b6b;
+            background: #fff5f5;
+        }
+
+        .capacity-card.near {
+            border-left-color: #ffd93d;
+            background: #fffdf0;
+        }
+
+        .capacity-card.under {
+            border-left-color: #51cf66;
+            background: #f0fdf4;
+        }
+
+        .capacity-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .capacity-details {
+            font-size: 0.85em;
+            color: #6c757d;
+        }
+
+        .conflict-solver {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .solution-option {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #51cf66;
+        }
+
+        .solution-option.creates-conflict {
+            border-left-color: #ff6b6b;
+            background: #fff5f5;
+        }
+
         @media (max-width: 768px) {
             .dashboard-grid {
                 grid-template-columns: 1fr;
@@ -371,6 +430,41 @@
                         <canvas id="winterTrendChart"></canvas>
                     </div>
                 </div>
+
+                <div class="chart-container full-width">
+                    <h2>Program Headcount - Census Enrollment Data</h2>
+                    <div class="chart-wrapper">
+                        <canvas id="programHeadcountChart"></canvas>
+                    </div>
+                    <p style="color: #666; font-size: 0.9em; margin-top: 15px;">
+                        <strong>Key Finding:</strong> 36% growth from Fall 2022 (91 students) to Fall 2025 (124 students).
+                        Explosive growth in Fall 2024 (+28 students), now stabilized at high plateau.
+                    </p>
+                </div>
+
+                <div class="chart-container full-width">
+                    <h2>Faculty Workload Distribution</h2>
+                    <div class="chart-wrapper">
+                        <canvas id="facultyWorkloadChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h2>📊 Course Capacity Utilization</h2>
+                <p style="color: #666; font-size: 0.9em; margin-bottom: 10px;">
+                    Comparing enrollment to 24-seat standard room capacity.
+                    🔴 Over-capacity | 🟡 Near-capacity (90%+) | 🟢 Under-enrolled
+                </p>
+                <div class="capacity-grid" id="capacityGrid"></div>
+            </div>
+
+            <div class="conflict-solver">
+                <h2>🔧 Conflict Resolution Solver</h2>
+                <p style="color: #666; font-size: 0.9em; margin-bottom: 20px;">
+                    Analyzes schedule matrix to find conflict resolutions that don't create new conflicts
+                </p>
+                <div id="conflictSolutions"></div>
             </div>
 
             <div class="chart-container">
@@ -433,6 +527,12 @@
             "DESN 490": { average: 15, peak: 25, trend: "growing", peakQuarter: "spring-2025" }
         };
 
+        // Census enrollment data - Program headcount
+        const censusData = {
+            quarters: ['Fall 2022', 'Winter 2023', 'Spring 2023', 'Fall 2023', 'Winter 2024', 'Spring 2024', 'Fall 2024', 'Winter 2025', 'Spring 2025', 'Fall 2025'],
+            headcount: [91, 102, 99, 90, 99, 100, 128, 119, 125, 124]
+        };
+
         // Initialize dashboard
         function initDashboard() {
             updateStats();
@@ -441,6 +541,10 @@
             renderTrendPieChart();
             renderTopCoursesChart();
             renderWinterTrendChart();
+            renderProgramHeadcountChart();
+            renderFacultyWorkloadChart();
+            renderCapacityUtilization();
+            renderConflictSolver();
             renderCourseTable();
             renderInsights();
         }
@@ -698,6 +802,206 @@
                             </span>
                         </td>
                     </tr>
+                `;
+            }).join('');
+        }
+
+        function renderProgramHeadcountChart() {
+            const ctx = document.getElementById('programHeadcountChart').getContext('2d');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: censusData.quarters,
+                    datasets: [{
+                        label: 'Program Headcount (Unique Students)',
+                        data: censusData.headcount,
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.2)',
+                        tension: 0.4,
+                        fill: true,
+                        borderWidth: 3,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true
+                        },
+                        tooltip: {
+                            callbacks: {
+                                afterLabel: function(context) {
+                                    const index = context.dataIndex;
+                                    if (index === 0) return '';
+                                    const prevValue = censusData.headcount[index - 1];
+                                    const currValue = censusData.headcount[index];
+                                    const change = currValue - prevValue;
+                                    const pct = ((change / prevValue) * 100).toFixed(1);
+                                    return `Change: ${change > 0 ? '+' : ''}${change} (${pct}%)`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 80
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderFacultyWorkloadChart() {
+            const ctx = document.getElementById('facultyWorkloadChart').getContext('2d');
+
+            const facultyData = [
+                { name: 'A.Sopu', students: 315, sections: 9 },
+                { name: 'M.Lybbert', students: 143, sections: 8 },
+                { name: 'S.Mills', students: 141, sections: 7 },
+                { name: 'S.Durr', students: 132, sections: 8 },
+                { name: 'C.Manikoth', students: 125, sections: 7 },
+                { name: 'T.Masingale', students: 72, sections: 4 },
+                { name: 'G.Hustrulid', students: 31, sections: 3 }
+            ];
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: facultyData.map(f => f.name),
+                    datasets: [{
+                        label: 'Total Students Taught',
+                        data: facultyData.map(f => f.students),
+                        backgroundColor: facultyData.map(f =>
+                            f.students > 200 ? 'rgba(255, 107, 107, 0.8)' :
+                            f.students > 100 ? 'rgba(255, 215, 61, 0.8)' :
+                            'rgba(81, 207, 102, 0.8)'
+                        ),
+                        borderColor: facultyData.map(f =>
+                            f.students > 200 ? '#ff6b6b' :
+                            f.students > 100 ? '#ffd93d' :
+                            '#51cf66'
+                        ),
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                afterLabel: function(context) {
+                                    const index = context.dataIndex;
+                                    return `Sections: ${facultyData[index].sections}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderCapacityUtilization() {
+            const grid = document.getElementById('capacityGrid');
+            const capacity = 24; // Standard room capacity
+
+            const courses = Object.entries(enrollmentData)
+                .filter(([_, data]) => !data.isNew)
+                .map(([code, data]) => {
+                    const utilization = (data.average / capacity) * 100;
+                    const status = utilization > 100 ? 'over' : utilization > 90 ? 'near' : 'under';
+                    return { code, ...data, utilization, status };
+                })
+                .sort((a, b) => b.utilization - a.utilization);
+
+            grid.innerHTML = courses.map(course => {
+                const icon = course.status === 'over' ? '🔴' : course.status === 'near' ? '🟡' : '🟢';
+                return `
+                    <div class="capacity-card ${course.status}">
+                        <div class="capacity-title">${icon} ${course.code}</div>
+                        <div class="capacity-details">
+                            ${course.average} students / ${capacity} capacity<br>
+                            ${Math.round(course.utilization)}% utilized
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderConflictSolver() {
+            const solutionsDiv = document.getElementById('conflictSolutions');
+
+            // Schedule matrix - represents current course schedule
+            const scheduleMatrix = {
+                'MW 10-12': ['DESN 335 (206)', 'DESN 243 (209)', 'DESN 216 (CEB 102)'],
+                'MW 13-15': ['DESN 348 (206)', 'DESN 360 (209)', 'DESN 480 (210)', 'DESN 100 (CEB 104)'],
+                'MW 16-18': ['DESN 338 (206)', 'DESN 378 (209)'],
+                'TR 10-12': ['DESN 369 (206)', 'DESN 490 (209)', 'DESN 359 (210)', 'DESN 200 (CEB 102)'],
+                'TR 13-15': ['DESN 374 (206)', 'DESN 355 (209)', 'DESN 263 (210)', 'DESN 100 (CEB 104)'],
+                'TR 16-18': ['DESN 336 (209)']
+            };
+
+            // Define critical conflicts that need resolution
+            const conflicts = [
+                {
+                    name: 'DESN 348 / DESN 480 Conflict (Winter)',
+                    description: 'Both courses at MW 13-15. Seniors cannot complete UX minor and graduate.',
+                    affectedStudents: 17,
+                    currentSlot: 'MW 13-15',
+                    courseToMove: 'DESN 480',
+                    alternativeSlots: ['TR 13-15', 'TR 16-18', 'MW 16-18', 'TR 10-12']
+                }
+            ];
+
+            solutionsDiv.innerHTML = conflicts.map(conflict => {
+                // Analyze each potential solution
+                const solutions = conflict.alternativeSlots.map(slot => {
+                    const existingCourses = scheduleMatrix[slot] || [];
+                    const createsConflict = existingCourses.length >= 4; // 4+ courses in slot = high conflict
+                    const hasRoomAvailable = existingCourses.length < 6; // 6 rooms total
+
+                    return {
+                        slot,
+                        existingCourses,
+                        createsConflict,
+                        hasRoomAvailable,
+                        recommendation: !createsConflict && hasRoomAvailable ? '✅ RECOMMENDED' : createsConflict ? '⚠️ Creates new conflict' : '❌ No rooms available'
+                    };
+                });
+
+                return `
+                    <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #ff6b6b;">
+                        <h3 style="color: #ff6b6b; margin-bottom: 10px;">${conflict.name}</h3>
+                        <p style="color: #666; margin-bottom: 15px;">
+                            <strong>Impact:</strong> ${conflict.affectedStudents} students affected<br>
+                            <strong>Current Issue:</strong> ${conflict.description}
+                        </p>
+
+                        <h4 style="margin-top: 15px; margin-bottom: 10px;">Proposed Solutions:</h4>
+                        ${solutions.map(sol => `
+                            <div class="solution-option ${sol.createsConflict ? 'creates-conflict' : ''}">
+                                <strong>${sol.recommendation}</strong> Move ${conflict.courseToMove} to ${sol.slot}<br>
+                                <span style="font-size: 0.85em; color: #666;">
+                                    Currently scheduled: ${sol.existingCourses.join(', ') || 'EMPTY SLOT'}
+                                    ${sol.hasRoomAvailable ? ` (${6 - sol.existingCourses.length} rooms available)` : ''}
+                                </span>
+                            </div>
+                        `).join('')}
+                    </div>
                 `;
             }).join('');
         }
