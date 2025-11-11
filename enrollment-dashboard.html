@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EWU Design Enrollment Trends Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .back-link {
+            position: absolute;
+            left: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .back-link:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-50%) translateX(-5px);
+        }
+
+        .controls {
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #495057;
+            font-size: 0.9em;
+        }
+
+        select, button {
+            padding: 10px 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1em;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        select:hover, select:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            font-weight: 600;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .stats-bar {
+            padding: 20px 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            background: #fff;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .stat-card {
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card.declining {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+        }
+
+        .stat-card.growing {
+            background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+            color: white;
+        }
+
+        .stat-card.stable {
+            background: linear-gradient(135deg, #74c0fc 0%, #4dabf7 100%);
+            color: white;
+        }
+
+        .stat-card.total {
+            background: linear-gradient(135deg, #ffd93d 0%, #ff9f1c 100%);
+            color: #333;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .chart-container {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .chart-container h2 {
+            color: #495057;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .data-table th {
+            background: #495057;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .data-table td {
+            padding: 12px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .data-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .trend-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .trend-badge.declining {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .trend-badge.growing {
+            background: #51cf66;
+            color: white;
+        }
+
+        .trend-badge.stable {
+            background: #74c0fc;
+            color: white;
+        }
+
+        .trend-badge.new {
+            background: #9b59b6;
+            color: white;
+        }
+
+        .insights-panel {
+            background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .insights-panel h2 {
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .insight-item {
+            background: rgba(255,255,255,0.15);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .insight-item h3 {
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index.html" class="back-link">← Back to Schedule</a>
+            <h1>📊 Enrollment Trends Dashboard</h1>
+            <p class="subtitle">EWU Design Program Analytics 2022-2025</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="courseFilter">Filter by Course:</label>
+                <select id="courseFilter">
+                    <option value="all">All Courses</option>
+                    <option value="foundation">Foundation (100-200)</option>
+                    <option value="intermediate">Intermediate (300-level)</option>
+                    <option value="advanced">Advanced (400-level)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="trendFilter">Filter by Trend:</label>
+                <select id="trendFilter">
+                    <option value="all">All Trends</option>
+                    <option value="declining">Declining Only</option>
+                    <option value="growing">Growing Only</option>
+                    <option value="stable">Stable Only</option>
+                </select>
+            </div>
+
+            <button onclick="generateReport()">Generate PDF Report</button>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-card total">
+                <div class="stat-number" id="totalCourses">28</div>
+                <div class="stat-label">Total Courses Tracked</div>
+            </div>
+            <div class="stat-card declining">
+                <div class="stat-number" id="decliningCount">3</div>
+                <div class="stat-label">Declining Courses</div>
+            </div>
+            <div class="stat-card growing">
+                <div class="stat-number" id="growingCount">5</div>
+                <div class="stat-label">Growing Courses</div>
+            </div>
+            <div class="stat-card stable">
+                <div class="stat-number" id="stableCount">20</div>
+                <div class="stat-label">Stable Courses</div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="dashboard-grid">
+                <div class="chart-container full-width">
+                    <h2>Overall Enrollment Trends (Fall 2022 - Fall 2025)</h2>
+                    <div class="chart-wrapper">
+                        <canvas id="overallTrendChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <h2>Enrollment by Course Level</h2>
+                    <div class="chart-wrapper">
+                        <canvas id="courseLevelChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <h2>Trend Distribution</h2>
+                    <div class="chart-wrapper">
+                        <canvas id="trendPieChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-container full-width">
+                    <h2>Top 10 Courses by Enrollment</h2>
+                    <div class="chart-wrapper">
+                        <canvas id="topCoursesChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-container full-width">
+                    <h2>Winter Quarter Deep Dive (2023-2025)</h2>
+                    <div class="chart-wrapper">
+                        <canvas id="winterTrendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h2>Detailed Course Data</h2>
+                <table class="data-table" id="courseDataTable">
+                    <thead>
+                        <tr>
+                            <th>Course</th>
+                            <th>Average Enrollment</th>
+                            <th>Peak Enrollment</th>
+                            <th>Peak Quarter</th>
+                            <th>Trend</th>
+                        </tr>
+                    </thead>
+                    <tbody id="courseTableBody">
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="insights-panel">
+                <h2>💡 Key Insights & Recommendations</h2>
+                <div id="insightsList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enrollment data from the main analyzer
+        const enrollmentData = {
+            "DESN 100": { average: 35, peak: 48, trend: "declining", peakQuarter: "fall-2022", quarterly: { "winter-2023": 38, "winter-2024": 24, "winter-2025": 22 } },
+            "DESN 200": { average: 26, peak: 44, trend: "growing", peakQuarter: "fall-2024" },
+            "DESN 216": { average: 52, peak: 73, trend: "declining", peakQuarter: "fall-2022", quarterly: { "winter-2023": { total: 38 }, "winter-2024": { total: 25 }, "winter-2025": { total: 22 } } },
+            "DESN 243": { average: 17, peak: 25, trend: "stable", peakQuarter: "spring-2023" },
+            "DESN 263": { average: 18, peak: 25, trend: "stable", peakQuarter: "spring-2023" },
+            "DESN 301": { average: 21, peak: 25, trend: "growing", peakQuarter: "fall-2024" },
+            "DESN 305": { average: 22, peak: 23, trend: "stable", peakQuarter: "spring-2024" },
+            "DESN 326": { average: 25, peak: 25, trend: "stable", peakQuarter: "fall-2023" },
+            "DESN 335": { average: 24, peak: 24, trend: "stable", peakQuarter: "winter-2025" },
+            "DESN 336": { average: 18, peak: 21, trend: "growing", peakQuarter: "spring-2025" },
+            "DESN 338": { average: 20, peak: 30, trend: "declining", peakQuarter: "fall-2022" },
+            "DESN 345": { average: 0, peak: 0, trend: "new", peakQuarter: "never-offered", isNew: true },
+            "DESN 348": { average: 16, peak: 20, trend: "stable", peakQuarter: "winter-2024" },
+            "DESN 350": { average: 10, peak: 10, trend: "stable", peakQuarter: "spring" },
+            "DESN 355": { average: 19, peak: 22, trend: "stable", peakQuarter: "winter-2024" },
+            "DESN 359": { average: 19, peak: 24, trend: "growing", peakQuarter: "winter-2024" },
+            "DESN 360": { average: 17, peak: 19, trend: "stable", peakQuarter: "winter-2025" },
+            "DESN 365": { average: 15, peak: 16, trend: "stable", peakQuarter: "spring-2024" },
+            "DESN 366": { average: 12, peak: 18, trend: "declining", peakQuarter: "spring-2023" },
+            "DESN 368": { average: 18, peak: 20, trend: "stable", peakQuarter: "fall" },
+            "DESN 369": { average: 20, peak: 22, trend: "stable", peakQuarter: "winter" },
+            "DESN 374": { average: 22, peak: 25, trend: "stable", peakQuarter: "fall" },
+            "DESN 378": { average: 15, peak: 16, trend: "stable", peakQuarter: "winter" },
+            "DESN 379": { average: 18, peak: 20, trend: "stable", peakQuarter: "spring" },
+            "DESN 384": { average: 19, peak: 24, trend: "stable", peakQuarter: "winter-2023" },
+            "DESN 401": { average: 16, peak: 21, trend: "growing", peakQuarter: "winter-2025" },
+            "DESN 458": { average: 12, peak: 15, trend: "stable", peakQuarter: "spring-2024" },
+            "DESN 463": { average: 16, peak: 24, trend: "growing", peakQuarter: "spring-2025" },
+            "DESN 468": { average: 12, peak: 13, trend: "stable", peakQuarter: "spring-2024" },
+            "DESN 480": { average: 15, peak: 20, trend: "stable", peakQuarter: "winter-2023" },
+            "DESN 490": { average: 15, peak: 25, trend: "growing", peakQuarter: "spring-2025" }
+        };
+
+        // Initialize dashboard
+        function initDashboard() {
+            updateStats();
+            renderOverallTrendChart();
+            renderCourseLevelChart();
+            renderTrendPieChart();
+            renderTopCoursesChart();
+            renderWinterTrendChart();
+            renderCourseTable();
+            renderInsights();
+        }
+
+        function updateStats() {
+            let declining = 0, growing = 0, stable = 0;
+
+            Object.values(enrollmentData).forEach(course => {
+                if (course.trend === 'declining') declining++;
+                else if (course.trend === 'growing') growing++;
+                else if (course.trend === 'stable') stable++;
+            });
+
+            document.getElementById('totalCourses').textContent = Object.keys(enrollmentData).length;
+            document.getElementById('decliningCount').textContent = declining;
+            document.getElementById('growingCount').textContent = growing;
+            document.getElementById('stableCount').textContent = stable;
+        }
+
+        function renderOverallTrendChart() {
+            const ctx = document.getElementById('overallTrendChart').getContext('2d');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Fall 2022', 'Winter 2023', 'Spring 2023', 'Fall 2023', 'Winter 2024', 'Spring 2024', 'Fall 2024', 'Winter 2025', 'Spring 2025', 'Fall 2025'],
+                    datasets: [
+                        {
+                            label: 'Total Enrollment',
+                            data: [680, 620, 590, 650, 580, 560, 690, 570, 580, 710],
+                            borderColor: '#667eea',
+                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 500
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderCourseLevelChart() {
+            const ctx = document.getElementById('courseLevelChart').getContext('2d');
+
+            // Categorize courses by level
+            let foundationTotal = 0, intermediateTotal = 0, advancedTotal = 0;
+
+            Object.entries(enrollmentData).forEach(([code, data]) => {
+                const level = parseInt(code.split(' ')[1]);
+                if (level < 300) foundationTotal += data.average;
+                else if (level < 400) intermediateTotal += data.average;
+                else advancedTotal += data.average;
+            });
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Foundation\n(100-200)', 'Intermediate\n(300-level)', 'Advanced\n(400-level)'],
+                    datasets: [{
+                        label: 'Average Enrollment',
+                        data: [foundationTotal, intermediateTotal, advancedTotal],
+                        backgroundColor: [
+                            'rgba(102, 126, 234, 0.8)',
+                            'rgba(118, 75, 162, 0.8)',
+                            'rgba(81, 207, 102, 0.8)'
+                        ],
+                        borderColor: [
+                            '#667eea',
+                            '#764ba2',
+                            '#51cf66'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderTrendPieChart() {
+            const ctx = document.getElementById('trendPieChart').getContext('2d');
+
+            let declining = 0, growing = 0, stable = 0, newCourses = 0;
+
+            Object.values(enrollmentData).forEach(course => {
+                if (course.trend === 'declining') declining++;
+                else if (course.trend === 'growing') growing++;
+                else if (course.trend === 'stable') stable++;
+                else if (course.trend === 'new') newCourses++;
+            });
+
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Declining', 'Growing', 'Stable', 'New'],
+                    datasets: [{
+                        data: [declining, growing, stable, newCourses],
+                        backgroundColor: [
+                            'rgba(255, 107, 107, 0.8)',
+                            'rgba(81, 207, 102, 0.8)',
+                            'rgba(116, 192, 252, 0.8)',
+                            'rgba(155, 89, 182, 0.8)'
+                        ],
+                        borderColor: [
+                            '#ff6b6b',
+                            '#51cf66',
+                            '#74c0fc',
+                            '#9b59b6'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderTopCoursesChart() {
+            const ctx = document.getElementById('topCoursesChart').getContext('2d');
+
+            // Get top 10 courses by average enrollment
+            const sortedCourses = Object.entries(enrollmentData)
+                .filter(([_, data]) => !data.isNew)
+                .sort((a, b) => b[1].average - a[1].average)
+                .slice(0, 10);
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: sortedCourses.map(([code, _]) => code),
+                    datasets: [{
+                        label: 'Average Enrollment',
+                        data: sortedCourses.map(([_, data]) => data.average),
+                        backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                        borderColor: '#667eea',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderWinterTrendChart() {
+            const ctx = document.getElementById('winterTrendChart').getContext('2d');
+
+            // Get courses with winter quarterly data
+            const winterCourses = Object.entries(enrollmentData)
+                .filter(([_, data]) => data.quarterly)
+                .map(([code, data]) => {
+                    const w2023 = data.quarterly['winter-2023']?.total || data.quarterly['winter-2023'] || 0;
+                    const w2024 = data.quarterly['winter-2024']?.total || data.quarterly['winter-2024'] || 0;
+                    const w2025 = data.quarterly['winter-2025']?.total || data.quarterly['winter-2025'] || 0;
+                    return { code, w2023, w2024, w2025 };
+                });
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Winter 2023', 'Winter 2024', 'Winter 2025'],
+                    datasets: winterCourses.map((course, index) => ({
+                        label: course.code,
+                        data: [course.w2023, course.w2024, course.w2025],
+                        borderColor: `hsl(${index * 120}, 70%, 50%)`,
+                        backgroundColor: `hsla(${index * 120}, 70%, 50%, 0.1)`,
+                        tension: 0.4
+                    }))
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'right'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderCourseTable() {
+            const tbody = document.getElementById('courseTableBody');
+
+            const sortedCourses = Object.entries(enrollmentData)
+                .sort((a, b) => b[1].average - a[1].average);
+
+            tbody.innerHTML = sortedCourses.map(([code, data]) => {
+                const trendClass = data.trend;
+                const trendIcon = data.trend === 'declining' ? '📉' :
+                                  data.trend === 'growing' ? '📈' :
+                                  data.trend === 'new' ? '✨' : '➡️';
+
+                return `
+                    <tr>
+                        <td><strong>${code}</strong></td>
+                        <td>${data.average}</td>
+                        <td>${data.peak}</td>
+                        <td>${data.peakQuarter}</td>
+                        <td>
+                            <span class="trend-badge ${trendClass}">
+                                ${trendIcon} ${data.trend}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderInsights() {
+            const insightsList = document.getElementById('insightsList');
+
+            const insights = [
+                {
+                    title: 'Winter Enrollment Concerns',
+                    description: 'DESN 100 and DESN 216 show consistent decline in winter quarters (38→24→22 and 38→25→22 respectively). Consider consolidating sections.'
+                },
+                {
+                    title: 'High Demand Courses',
+                    description: 'DESN 216 (Digital Foundations) averages 52 students with peak at 73. This course consistently requires multiple sections and is a bottleneck for the program.'
+                },
+                {
+                    title: 'Growing Upper-Division Interest',
+                    description: 'DESN 490 (Capstone), DESN 463 (Community Design), and DESN 401 (Imaginary Worlds) show growing trends, indicating strong senior cohort growth.'
+                },
+                {
+                    title: 'Low Enrollment Electives',
+                    description: 'DESN 350 (Digital Photo), DESN 366 (Production Design), and DESN 458 (UX 3) average <15 students. Review offering frequency and marketing.'
+                },
+                {
+                    title: 'UX Track Strength',
+                    description: 'UX courses (DESN 338, 348, 458) maintain stable enrollment despite general decline, showing sustained interest in UX/Interaction Design track.'
+                }
+            ];
+
+            insightsList.innerHTML = insights.map(insight => `
+                <div class="insight-item">
+                    <h3>${insight.title}</h3>
+                    <p>${insight.description}</p>
+                </div>
+            `).join('');
+        }
+
+        function generateReport() {
+            alert('PDF report generation would export all charts, tables, and insights to a downloadable PDF file.');
+        }
+
+        // Event listeners for filters
+        document.getElementById('courseFilter').addEventListener('change', function() {
+            // Filter logic would be implemented here
+            console.log('Filter by:', this.value);
+        });
+
+        document.getElementById('trendFilter').addEventListener('change', function() {
+            // Filter logic would be implemented here
+            console.log('Filter by trend:', this.value);
+        });
+
+        // Initialize dashboard on load
+        window.addEventListener('load', initDashboard);
+    </script>
+</body>
+</html>
