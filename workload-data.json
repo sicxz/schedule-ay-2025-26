@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2025-11-11T18:19:46.867Z",
+  "generatedAt": "2025-11-11T18:53:34.186Z",
   "facultyWorkload": {
     "Mills Simeon": {
       "facultyName": "Mills Simeon",
@@ -19,7 +19,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 301",
@@ -29,7 +31,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 200",
@@ -39,7 +43,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 301",
@@ -49,7 +55,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 100",
@@ -59,7 +67,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 401",
@@ -69,7 +79,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 100",
@@ -79,7 +91,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 200",
@@ -89,7 +103,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 401",
@@ -99,7 +115,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 100",
@@ -109,7 +127,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 301",
@@ -119,7 +139,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 360",
@@ -129,7 +151,9 @@
           "workloadCredits": 4,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 200",
@@ -139,7 +163,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 360",
@@ -149,7 +175,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -166,6 +194,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 69,
@@ -191,7 +221,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 350",
@@ -201,7 +233,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 366",
@@ -211,7 +245,9 @@
           "workloadCredits": 4,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 100",
@@ -221,7 +257,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 216",
@@ -231,7 +269,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 363",
@@ -241,7 +281,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 100",
@@ -251,7 +293,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 350",
@@ -261,7 +305,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 366",
@@ -271,7 +317,9 @@
           "workloadCredits": 4,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -281,7 +329,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "048"
+          "section": "048",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 216",
@@ -291,7 +340,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 363",
@@ -301,7 +352,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 366",
@@ -311,7 +364,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -321,7 +376,8 @@
           "workloadCredits": 0.6000000000000001,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "050"
+          "section": "050",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 100",
@@ -331,7 +387,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 350",
@@ -341,7 +399,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 351",
@@ -351,7 +411,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 100",
@@ -361,7 +423,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "002"
+          "section": "002",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 216",
@@ -371,7 +435,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 363",
@@ -381,7 +447,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -391,7 +459,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -401,7 +470,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "041"
+          "section": "041",
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -418,6 +488,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 91.6,
@@ -443,7 +515,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 216",
@@ -453,7 +527,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 200",
@@ -463,7 +539,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 216",
@@ -473,7 +551,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -483,7 +563,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "042"
+          "section": "042",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -493,7 +574,8 @@
           "workloadCredits": 0.6000000000000001,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -503,7 +585,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "041"
+          "section": "041",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 200",
@@ -513,7 +596,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 216",
@@ -523,7 +608,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "041"
+          "section": "041",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 396",
@@ -533,7 +620,9 @@
           "workloadCredits": 2,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "041"
+          "section": "041",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -543,7 +632,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "046"
+          "section": "046",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 490",
@@ -553,7 +643,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -563,7 +655,8 @@
           "workloadCredits": 0.2,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "047"
+          "section": "047",
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -580,6 +673,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 40.800000000000004,
@@ -605,7 +700,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "025"
+          "section": "025",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -622,6 +719,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 5,
@@ -647,7 +746,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "026"
+          "section": "026",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 493",
@@ -657,7 +758,9 @@
           "workloadCredits": 2,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 216",
@@ -667,7 +770,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "025"
+          "section": "025",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 216",
@@ -677,7 +782,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "075"
+          "section": "075",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 216",
@@ -687,7 +794,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "025"
+          "section": "025",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 399",
@@ -697,7 +806,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 480",
@@ -707,7 +818,9 @@
           "workloadCredits": 4,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 493",
@@ -717,7 +830,9 @@
           "workloadCredits": 2,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -727,7 +842,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "049"
+          "section": "049",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 216",
@@ -737,7 +853,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "027"
+          "section": "027",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -747,7 +865,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "046"
+          "section": "046",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -757,7 +876,8 @@
           "workloadCredits": 0.4,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "049"
+          "section": "049",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 216",
@@ -767,7 +887,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "027"
+          "section": "027",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 216",
@@ -777,7 +899,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 216",
@@ -787,7 +911,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "075"
+          "section": "075",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 480",
@@ -797,7 +923,9 @@
           "workloadCredits": 4,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 216",
@@ -807,7 +935,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "027"
+          "section": "027",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 338",
@@ -817,7 +947,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "025"
+          "section": "025",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -827,7 +959,8 @@
           "workloadCredits": 0.4,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "043"
+          "section": "043",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -837,7 +970,8 @@
           "workloadCredits": 0.6000000000000001,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "045"
+          "section": "045",
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -854,6 +988,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 70.4,
@@ -879,7 +1015,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 463",
@@ -889,7 +1027,9 @@
           "workloadCredits": 4,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -899,7 +1039,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -909,7 +1050,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "042"
+          "section": "042",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -919,7 +1061,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "045"
+          "section": "045",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -929,7 +1072,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "047"
+          "section": "047",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 243",
@@ -939,7 +1083,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 359",
@@ -949,7 +1095,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 463",
@@ -959,7 +1107,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 491",
@@ -969,7 +1119,9 @@
           "workloadCredits": 3,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -979,7 +1131,8 @@
           "workloadCredits": 0.2,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "043"
+          "section": "043",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 243",
@@ -989,7 +1142,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 359",
@@ -999,7 +1154,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 463",
@@ -1009,7 +1166,9 @@
           "workloadCredits": 4,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -1019,7 +1178,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "041"
+          "section": "041",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -1029,7 +1189,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "044"
+          "section": "044",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -1039,7 +1200,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "047"
+          "section": "047",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 243",
@@ -1049,7 +1211,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 359",
@@ -1059,7 +1223,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 463",
@@ -1069,7 +1235,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -1079,7 +1247,8 @@
           "workloadCredits": 0.6000000000000001,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "042"
+          "section": "042",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -1089,7 +1258,8 @@
           "workloadCredits": 0.4,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "044"
+          "section": "044",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 243",
@@ -1099,7 +1269,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 359",
@@ -1109,7 +1281,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 463",
@@ -1119,7 +1293,9 @@
           "workloadCredits": 4,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -1129,7 +1305,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "041"
+          "section": "041",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -1139,7 +1316,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "043"
+          "section": "043",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 243",
@@ -1149,7 +1327,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 359",
@@ -1159,7 +1339,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 463",
@@ -1169,7 +1351,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -1179,7 +1363,8 @@
           "workloadCredits": 0.4,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "042"
+          "section": "042",
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -1196,6 +1381,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 95.60000000000001,
@@ -1221,7 +1408,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 355",
@@ -1231,7 +1420,9 @@
           "workloadCredits": 4,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -1241,7 +1432,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "041"
+          "section": "041",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -1251,7 +1443,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "046"
+          "section": "046",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 263",
@@ -1261,7 +1454,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 365",
@@ -1271,7 +1466,9 @@
           "workloadCredits": 4,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -1281,7 +1478,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "045"
+          "section": "045",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 263",
@@ -1291,7 +1489,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 355",
@@ -1301,7 +1501,9 @@
           "workloadCredits": 4,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -1311,7 +1513,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -1321,7 +1524,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "042"
+          "section": "042",
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -1338,6 +1542,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 32,
@@ -1363,7 +1569,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "025"
+          "section": "025",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 338",
@@ -1373,7 +1581,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 368",
@@ -1383,7 +1593,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 338",
@@ -1393,7 +1605,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 399",
@@ -1403,7 +1617,9 @@
           "workloadCredits": 2,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 458",
@@ -1413,7 +1629,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 338",
@@ -1423,7 +1641,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 348",
@@ -1433,7 +1653,9 @@
           "workloadCredits": 4,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 458",
@@ -1443,7 +1665,9 @@
           "workloadCredits": 4,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -1453,7 +1677,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "046"
+          "section": "046",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 338",
@@ -1463,7 +1688,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 458",
@@ -1473,7 +1700,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 493",
@@ -1483,7 +1712,9 @@
           "workloadCredits": 2,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 325",
@@ -1493,7 +1724,9 @@
           "workloadCredits": 4,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 338",
@@ -1503,7 +1736,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 348",
@@ -1513,7 +1748,9 @@
           "workloadCredits": 4,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -1530,6 +1767,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 66,
@@ -1555,7 +1794,9 @@
           "workloadCredits": 4,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 363",
@@ -1565,7 +1806,9 @@
           "workloadCredits": 4,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 363",
@@ -1575,7 +1818,9 @@
           "workloadCredits": 4,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -1592,6 +1837,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 12,
@@ -1617,7 +1864,9 @@
           "workloadCredits": 4,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 468",
@@ -1627,7 +1876,9 @@
           "workloadCredits": 4,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 480",
@@ -1637,7 +1888,9 @@
           "workloadCredits": 4,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 368",
@@ -1647,7 +1900,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 480",
@@ -1657,7 +1912,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -1667,7 +1924,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "041"
+          "section": "041",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 368",
@@ -1677,7 +1935,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 378",
@@ -1687,7 +1947,9 @@
           "workloadCredits": 4,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 468",
@@ -1697,7 +1959,9 @@
           "workloadCredits": 4,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -1707,7 +1971,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "050"
+          "section": "050",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 368",
@@ -1717,7 +1982,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 468",
@@ -1727,7 +1994,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 480",
@@ -1737,7 +2006,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -1747,7 +2018,8 @@
           "workloadCredits": 0.4,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "051"
+          "section": "051",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 368",
@@ -1757,7 +2029,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "025"
+          "section": "025",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 368",
@@ -1767,7 +2041,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 378",
@@ -1777,7 +2053,9 @@
           "workloadCredits": 4,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 368",
@@ -1787,7 +2065,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 378",
@@ -1797,7 +2077,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 493",
@@ -1807,7 +2089,9 @@
           "workloadCredits": 2,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "041"
+          "section": "041",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -1817,7 +2101,8 @@
           "workloadCredits": 0.4,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "049"
+          "section": "049",
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -1834,6 +2119,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 78.80000000000001,
@@ -1843,12 +2130,12 @@
     },
     "Breen Melinda": {
       "facultyName": "Breen Melinda",
-      "totalCredits": 141,
-      "totalWorkloadCredits": 51.39999999999999,
-      "scheduledCredits": 38,
+      "totalCredits": 72,
+      "totalWorkloadCredits": 38,
+      "scheduledCredits": 14,
       "appliedLearningCredits": 103,
-      "appliedLearningWorkload": 13.400000000000002,
-      "totalStudents": 198,
+      "appliedLearningWorkload": 0,
+      "totalStudents": 130,
       "sections": 32,
       "courses": [
         {
@@ -1859,7 +2146,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         },
         {
           "courseCode": "DESN 495",
@@ -1869,7 +2158,9 @@
           "workloadCredits": 0.5,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         },
         {
           "courseCode": "DESN 495",
@@ -1879,7 +2170,9 @@
           "workloadCredits": 0.5,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "041"
+          "section": "041",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         },
         {
           "courseCode": "DESN 495",
@@ -1889,7 +2182,9 @@
           "workloadCredits": 0.5,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "042"
+          "section": "042",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         },
         {
           "courseCode": "DESN 499",
@@ -1899,7 +2194,9 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "043"
+          "section": "043",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         },
         {
           "courseCode": "DESN 499",
@@ -1909,7 +2206,9 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "044"
+          "section": "044",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         },
         {
           "courseCode": "DESN 490",
@@ -1919,7 +2218,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         },
         {
           "courseCode": "DESN 491",
@@ -1929,7 +2230,9 @@
           "workloadCredits": 4,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "041"
+          "section": "041",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         },
         {
           "courseCode": "DESN 495",
@@ -1939,7 +2242,9 @@
           "workloadCredits": 0.5,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         },
         {
           "courseCode": "DESN 495",
@@ -1949,7 +2254,9 @@
           "workloadCredits": 0.2,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "002"
+          "section": "002",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         },
         {
           "courseCode": "DESN 495",
@@ -1959,7 +2266,9 @@
           "workloadCredits": 0.30000000000000004,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "003"
+          "section": "003",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         },
         {
           "courseCode": "DESN 495",
@@ -1969,7 +2278,9 @@
           "workloadCredits": 0.4,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "004"
+          "section": "004",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         },
         {
           "courseCode": "DESN 499",
@@ -1979,7 +2290,9 @@
           "workloadCredits": 0.2,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "042"
+          "section": "042",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         },
         {
           "courseCode": "DESN 499",
@@ -1989,7 +2302,9 @@
           "workloadCredits": 1.2000000000000002,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "044"
+          "section": "044",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         },
         {
           "courseCode": "DESN 490",
@@ -1999,7 +2314,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 495",
@@ -2009,7 +2326,9 @@
           "workloadCredits": 0.5,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": true,
+          "excludeReason": "Administrative duty"
         },
         {
           "courseCode": "DESN 495",
@@ -2019,7 +2338,9 @@
           "workloadCredits": 0.5,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "041"
+          "section": "041",
+          "excludedFromWorkload": true,
+          "excludeReason": "Administrative duty"
         },
         {
           "courseCode": "DESN 495",
@@ -2029,7 +2350,9 @@
           "workloadCredits": 0.5,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "042"
+          "section": "042",
+          "excludedFromWorkload": true,
+          "excludeReason": "Administrative duty"
         },
         {
           "courseCode": "DESN 495",
@@ -2039,7 +2362,9 @@
           "workloadCredits": 0.5,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "043"
+          "section": "043",
+          "excludedFromWorkload": true,
+          "excludeReason": "Administrative duty"
         },
         {
           "courseCode": "DESN 499",
@@ -2049,7 +2374,9 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "043"
+          "section": "043",
+          "excludedFromWorkload": true,
+          "excludeReason": "Administrative duty"
         },
         {
           "courseCode": "DESN 490",
@@ -2059,7 +2386,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 491",
@@ -2069,7 +2398,9 @@
           "workloadCredits": 4,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 495",
@@ -2079,7 +2410,9 @@
           "workloadCredits": 0.2,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "042"
+          "section": "042",
+          "excludedFromWorkload": true,
+          "excludeReason": "Administrative duty"
         },
         {
           "courseCode": "DESN 495",
@@ -2089,7 +2422,9 @@
           "workloadCredits": 0.30000000000000004,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "043"
+          "section": "043",
+          "excludedFromWorkload": true,
+          "excludeReason": "Administrative duty"
         },
         {
           "courseCode": "DESN 499",
@@ -2099,7 +2434,9 @@
           "workloadCredits": 0.8,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "045"
+          "section": "045",
+          "excludedFromWorkload": true,
+          "excludeReason": "Administrative duty"
         },
         {
           "courseCode": "DESN 490",
@@ -2109,7 +2446,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         },
         {
           "courseCode": "DESN 495",
@@ -2119,7 +2458,9 @@
           "workloadCredits": 0.5,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         },
         {
           "courseCode": "DESN 495",
@@ -2129,7 +2470,9 @@
           "workloadCredits": 0.5,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "042"
+          "section": "042",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         },
         {
           "courseCode": "DESN 495",
@@ -2139,7 +2482,9 @@
           "workloadCredits": 0.5,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "043"
+          "section": "043",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         },
         {
           "courseCode": "DESN 499",
@@ -2149,7 +2494,9 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "044"
+          "section": "044",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         },
         {
           "courseCode": "DESN 491",
@@ -2159,7 +2506,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         },
         {
           "courseCode": "DESN 495",
@@ -2169,29 +2518,33 @@
           "workloadCredits": 0.30000000000000004,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         }
       ],
       "appliedLearning": {
         "DESN 499": {
           "credits": 31,
-          "workload": 6.2,
+          "workload": 0,
           "students": 56,
           "sections": 7
         },
         "DESN 495": {
           "credits": 72,
-          "workload": 7.2,
+          "workload": 0,
           "students": 37,
           "sections": 17
         }
       },
+      "specialRole": "Department Chair",
+      "roleNotes": "Full release Fall & Winter. Applied learning supervision is part of administrative duties.",
       "rank": "Lecturer",
       "maxWorkload": 45,
-      "currentWorkload": 51.39999999999999,
-      "utilizationRate": 114.2,
-      "status": "overloaded",
-      "availableCapacity": 0
+      "currentWorkload": 38,
+      "utilizationRate": 84.4,
+      "status": "optimal",
+      "availableCapacity": 7
     },
     "Masingale Travis": {
       "facultyName": "Masingale Travis",
@@ -2211,7 +2564,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 350",
@@ -2221,7 +2576,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 396",
@@ -2231,7 +2588,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 399",
@@ -2241,7 +2600,9 @@
           "workloadCredits": 2,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "002"
+          "section": "002",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 100",
@@ -2251,7 +2612,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "002"
+          "section": "002",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 351",
@@ -2261,7 +2624,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 495",
@@ -2271,7 +2636,8 @@
           "workloadCredits": 0.5,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "041"
+          "section": "041",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -2281,7 +2647,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "043"
+          "section": "043",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -2291,7 +2658,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "047"
+          "section": "047",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -2301,7 +2669,8 @@
           "workloadCredits": 0.6000000000000001,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "048"
+          "section": "048",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 325",
@@ -2311,7 +2680,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 350",
@@ -2321,7 +2692,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -2331,7 +2704,8 @@
           "workloadCredits": 0.6000000000000001,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "046"
+          "section": "046",
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -2348,6 +2722,8 @@
           "sections": 1
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 40.7,
@@ -2373,7 +2749,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 326",
@@ -2383,7 +2761,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 263",
@@ -2393,7 +2773,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 365",
@@ -2403,7 +2785,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 263",
@@ -2413,7 +2797,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 336",
@@ -2423,7 +2809,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 355",
@@ -2433,7 +2821,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 495",
@@ -2443,7 +2833,8 @@
           "workloadCredits": 0.2,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "003"
+          "section": "003",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -2453,7 +2844,8 @@
           "workloadCredits": 0.2,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "044"
+          "section": "044",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -2463,7 +2855,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "048"
+          "section": "048",
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -2480,6 +2873,8 @@
           "sections": 1
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 36.400000000000006,
@@ -2505,7 +2900,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 216",
@@ -2515,7 +2912,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 263",
@@ -2525,7 +2924,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -2535,7 +2936,8 @@
           "workloadCredits": 0.4,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "044"
+          "section": "044",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 216",
@@ -2545,7 +2947,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 363",
@@ -2555,7 +2959,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -2565,7 +2971,8 @@
           "workloadCredits": 0.6000000000000001,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -2575,7 +2982,8 @@
           "workloadCredits": 0.8,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "041"
+          "section": "041",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 216",
@@ -2585,7 +2993,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 263",
@@ -2595,7 +3005,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 363",
@@ -2605,7 +3017,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -2615,7 +3029,8 @@
           "workloadCredits": 0.4,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "041"
+          "section": "041",
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -2632,6 +3047,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 42.199999999999996,
@@ -2657,7 +3074,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "002"
+          "section": "002",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 100",
@@ -2667,7 +3086,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 100",
@@ -2677,7 +3098,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -2694,6 +3117,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 15,
@@ -2719,7 +3144,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 301",
@@ -2729,7 +3156,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 495",
@@ -2739,7 +3168,8 @@
           "workloadCredits": 0.30000000000000004,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 200",
@@ -2749,7 +3179,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 301",
@@ -2759,7 +3191,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 495",
@@ -2769,7 +3203,8 @@
           "workloadCredits": 0.2,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "001"
+          "section": "001",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 495",
@@ -2779,7 +3214,8 @@
           "workloadCredits": 0.5,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "005"
+          "section": "005",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -2789,7 +3225,8 @@
           "workloadCredits": 0.6000000000000001,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "050"
+          "section": "050",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 200",
@@ -2799,7 +3236,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 360",
@@ -2809,7 +3248,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 401",
@@ -2819,7 +3260,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 495",
@@ -2829,7 +3272,8 @@
           "workloadCredits": 0.2,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "002"
+          "section": "002",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 495",
@@ -2839,7 +3283,8 @@
           "workloadCredits": 0.6000000000000001,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "004"
+          "section": "004",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -2849,7 +3294,8 @@
           "workloadCredits": 0.6000000000000001,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "043"
+          "section": "043",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -2859,7 +3305,8 @@
           "workloadCredits": 0.6000000000000001,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "048"
+          "section": "048",
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -2876,6 +3323,8 @@
           "sections": 5
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 38.60000000000001,
@@ -2901,7 +3350,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "002"
+          "section": "002",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -2918,6 +3369,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 5,
@@ -2943,7 +3396,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "025"
+          "section": "025",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 216",
@@ -2953,7 +3408,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "025"
+          "section": "025",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 216",
@@ -2963,7 +3420,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "075"
+          "section": "075",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 216",
@@ -2973,7 +3432,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "025"
+          "section": "025",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 216",
@@ -2983,7 +3444,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "075"
+          "section": "075",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -3000,6 +3463,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 25,
@@ -3025,7 +3490,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 359",
@@ -3035,7 +3502,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 463",
@@ -3045,7 +3514,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 243",
@@ -3055,7 +3526,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 359",
@@ -3065,7 +3538,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 463",
@@ -3075,7 +3550,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -3085,7 +3562,8 @@
           "workloadCredits": 0.4,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "043"
+          "section": "043",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 243",
@@ -3095,7 +3573,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 359",
@@ -3105,7 +3585,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 495",
@@ -3115,7 +3597,8 @@
           "workloadCredits": 0.5,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "001"
+          "section": "001",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -3125,7 +3608,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "042"
+          "section": "042",
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -3142,6 +3626,8 @@
           "sections": 1
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 41.9,
@@ -3167,7 +3653,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 368",
@@ -3177,7 +3665,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -3187,7 +3677,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "043"
+          "section": "043",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -3197,7 +3688,8 @@
           "workloadCredits": 0.8,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "046"
+          "section": "046",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 325",
@@ -3207,7 +3699,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 368",
@@ -3217,7 +3711,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 491",
@@ -3227,7 +3723,9 @@
           "workloadCredits": 2,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "002"
+          "section": "002",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 495",
@@ -3237,7 +3735,8 @@
           "workloadCredits": 0.5,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "002"
+          "section": "002",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 495",
@@ -3247,7 +3746,8 @@
           "workloadCredits": 0.30000000000000004,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "007"
+          "section": "007",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 495",
@@ -3257,7 +3757,8 @@
           "workloadCredits": 0.2,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "009"
+          "section": "009",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -3267,7 +3768,8 @@
           "workloadCredits": 0.4,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "048"
+          "section": "048",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -3277,7 +3779,8 @@
           "workloadCredits": 0.2,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "049"
+          "section": "049",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 368",
@@ -3287,7 +3790,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 399",
@@ -3297,7 +3802,9 @@
           "workloadCredits": 4,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 491",
@@ -3307,7 +3814,9 @@
           "workloadCredits": 2,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 495",
@@ -3317,7 +3826,8 @@
           "workloadCredits": 0.30000000000000004,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "005"
+          "section": "005",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -3327,7 +3837,8 @@
           "workloadCredits": 0.6000000000000001,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -3337,7 +3848,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "044"
+          "section": "044",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -3347,7 +3859,8 @@
           "workloadCredits": 1.2000000000000002,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "045"
+          "section": "045",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -3357,7 +3870,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "046"
+          "section": "046",
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -3374,6 +3888,8 @@
           "sections": 4
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 40.5,
@@ -3399,7 +3915,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -3409,7 +3927,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "042"
+          "section": "042",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -3419,7 +3938,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "045"
+          "section": "045",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 336",
@@ -3429,7 +3949,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 365",
@@ -3439,7 +3961,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -3449,7 +3973,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "044"
+          "section": "044",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -3459,7 +3984,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "045"
+          "section": "045",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -3469,7 +3995,8 @@
           "workloadCredits": 0.6000000000000001,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "046"
+          "section": "046",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 355",
@@ -3479,7 +4006,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -3489,7 +4018,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "051"
+          "section": "051",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -3499,7 +4029,8 @@
           "workloadCredits": 0.8,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "052"
+          "section": "052",
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -3516,6 +4047,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 26.400000000000002,
@@ -3541,7 +4074,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 338",
@@ -3551,7 +4086,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 458",
@@ -3561,7 +4098,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -3571,7 +4110,8 @@
           "workloadCredits": 0.4,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "047"
+          "section": "047",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 338",
@@ -3581,7 +4121,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "025"
+          "section": "025",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 338",
@@ -3591,7 +4133,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "075"
+          "section": "075",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 348",
@@ -3601,7 +4145,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -3618,6 +4164,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 30.4,
@@ -3627,12 +4175,12 @@
     },
     "Breen_Melinda": {
       "facultyName": "Breen_Melinda",
-      "totalCredits": 51,
-      "totalWorkloadCredits": 15.499999999999998,
-      "scheduledCredits": 11,
+      "totalCredits": 29,
+      "totalWorkloadCredits": 11,
+      "scheduledCredits": 3,
       "appliedLearningCredits": 40,
-      "appliedLearningWorkload": 4.5,
-      "totalStudents": 65,
+      "appliedLearningWorkload": 0,
+      "totalStudents": 32,
       "sections": 12,
       "courses": [
         {
@@ -3643,7 +4191,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         },
         {
           "courseCode": "DESN 495",
@@ -3653,7 +4203,9 @@
           "workloadCredits": 0.5,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         },
         {
           "courseCode": "DESN 495",
@@ -3663,7 +4215,9 @@
           "workloadCredits": 0.5,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "002"
+          "section": "002",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         },
         {
           "courseCode": "DESN 495",
@@ -3673,7 +4227,9 @@
           "workloadCredits": 0.2,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "003"
+          "section": "003",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         },
         {
           "courseCode": "DESN 499",
@@ -3683,7 +4239,9 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "041"
+          "section": "041",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         },
         {
           "courseCode": "DESN 491",
@@ -3693,7 +4251,9 @@
           "workloadCredits": 3,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 495",
@@ -3703,7 +4263,9 @@
           "workloadCredits": 0.5,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "003"
+          "section": "003",
+          "excludedFromWorkload": true,
+          "excludeReason": "Administrative duty"
         },
         {
           "courseCode": "DESN 495",
@@ -3713,7 +4275,9 @@
           "workloadCredits": 0.4,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "004"
+          "section": "004",
+          "excludedFromWorkload": true,
+          "excludeReason": "Administrative duty"
         },
         {
           "courseCode": "DESN 495",
@@ -3723,7 +4287,9 @@
           "workloadCredits": 0.2,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "006"
+          "section": "006",
+          "excludedFromWorkload": true,
+          "excludeReason": "Administrative duty"
         },
         {
           "courseCode": "DESN 495",
@@ -3733,7 +4299,9 @@
           "workloadCredits": 0.7000000000000001,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "008"
+          "section": "008",
+          "excludedFromWorkload": true,
+          "excludeReason": "Administrative duty"
         },
         {
           "courseCode": "DESN 491",
@@ -3743,7 +4311,9 @@
           "workloadCredits": 3,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "041"
+          "section": "041",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         },
         {
           "courseCode": "DESN 495",
@@ -3753,29 +4323,33 @@
           "workloadCredits": 0.5,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "003"
+          "section": "003",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         }
       ],
       "appliedLearning": {
         "DESN 499": {
           "credits": 5,
-          "workload": 1,
+          "workload": 0,
           "students": 5,
           "sections": 1
         },
         "DESN 495": {
           "credits": 35,
-          "workload": 3.5000000000000004,
+          "workload": 0,
           "students": 46,
           "sections": 8
         }
       },
+      "specialRole": "Department Chair",
+      "roleNotes": "Full release Fall & Winter. Applied learning supervision is part of administrative duties.",
       "rank": "Lecturer",
       "maxWorkload": 45,
-      "currentWorkload": 15.499999999999998,
-      "utilizationRate": 34.4,
+      "currentWorkload": 11,
+      "utilizationRate": 24.4,
       "status": "underutilized",
-      "availableCapacity": 29.5
+      "availableCapacity": 34
     },
     "Davis_Dean": {
       "facultyName": "Davis_Dean",
@@ -3795,7 +4369,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -3812,6 +4388,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 5,
@@ -3837,7 +4415,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 490",
@@ -3847,7 +4427,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -3857,7 +4439,8 @@
           "workloadCredits": 0.4,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 468",
@@ -3867,7 +4450,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 480",
@@ -3877,7 +4462,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 490",
@@ -3887,7 +4474,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -3897,7 +4486,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Spring",
-          "section": "042"
+          "section": "042",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 378",
@@ -3907,7 +4497,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -3917,7 +4509,8 @@
           "workloadCredits": 0.2,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "047"
+          "section": "047",
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -3934,6 +4527,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 31.599999999999998,
@@ -3959,7 +4554,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 216",
@@ -3969,7 +4566,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 263",
@@ -3979,7 +4578,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -3996,6 +4597,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 15,
@@ -4021,7 +4624,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "002"
+          "section": "002",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -4038,6 +4643,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 5,
@@ -4063,7 +4670,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "002"
+          "section": "002",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 301",
@@ -4073,7 +4682,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 495",
@@ -4083,7 +4694,8 @@
           "workloadCredits": 0.5,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "001"
+          "section": "001",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 495",
@@ -4093,7 +4705,8 @@
           "workloadCredits": 0.5,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "003"
+          "section": "003",
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -4110,6 +4723,8 @@
           "sections": 2
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 11,
@@ -4135,7 +4750,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 480",
@@ -4145,7 +4762,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 490",
@@ -4155,7 +4774,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -4172,6 +4793,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 15,
@@ -4197,7 +4820,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "002"
+          "section": "002",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -4214,6 +4839,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 5,
@@ -4239,7 +4866,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 359",
@@ -4249,7 +4878,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 399",
@@ -4259,7 +4890,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 463",
@@ -4269,7 +4902,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -4286,6 +4921,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 20,
@@ -4311,7 +4948,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -4328,6 +4967,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 5,
@@ -4353,7 +4994,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 366",
@@ -4363,7 +5006,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -4380,6 +5025,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 10,
@@ -4405,7 +5052,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 374",
@@ -4415,7 +5064,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 495",
@@ -4425,7 +5076,8 @@
           "workloadCredits": 0.5,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "006"
+          "section": "006",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -4435,7 +5087,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "040"
+          "section": "040",
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 499",
@@ -4445,7 +5098,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "041"
+          "section": "041",
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -4462,6 +5116,8 @@
           "sections": 1
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 12.5,
@@ -4471,12 +5127,12 @@
     },
     "Breen. Melinda": {
       "facultyName": "Breen. Melinda",
-      "totalCredits": 25,
-      "totalWorkloadCredits": 7.5,
-      "scheduledCredits": 5,
+      "totalCredits": 5,
+      "totalWorkloadCredits": 5,
+      "scheduledCredits": 0,
       "appliedLearningCredits": 20,
-      "appliedLearningWorkload": 2.5,
-      "totalStudents": 41,
+      "appliedLearningWorkload": 0,
+      "totalStudents": 10,
       "sections": 5,
       "courses": [
         {
@@ -4487,7 +5143,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Fall",
-          "section": "041"
+          "section": "041",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         },
         {
           "courseCode": "DESN 495",
@@ -4497,7 +5155,9 @@
           "workloadCredits": 0.5,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "002"
+          "section": "002",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         },
         {
           "courseCode": "DESN 495",
@@ -4507,7 +5167,9 @@
           "workloadCredits": 0.5,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "004"
+          "section": "004",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         },
         {
           "courseCode": "DESN 495",
@@ -4517,7 +5179,9 @@
           "workloadCredits": 0.5,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "005"
+          "section": "005",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         },
         {
           "courseCode": "DESN 499",
@@ -4527,29 +5191,33 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Fall",
-          "section": "042"
+          "section": "042",
+          "excludedFromWorkload": true,
+          "excludeReason": "Release quarter"
         }
       ],
       "appliedLearning": {
         "DESN 499": {
           "credits": 5,
-          "workload": 1,
+          "workload": 0,
           "students": 10,
           "sections": 1
         },
         "DESN 495": {
           "credits": 15,
-          "workload": 1.5,
+          "workload": 0,
           "students": 21,
           "sections": 3
         }
       },
+      "specialRole": "Department Chair",
+      "roleNotes": "Full release Fall & Winter. Applied learning supervision is part of administrative duties.",
       "rank": "Lecturer",
       "maxWorkload": 45,
-      "currentWorkload": 7.5,
-      "utilizationRate": 16.7,
+      "currentWorkload": 5,
+      "utilizationRate": 11.1,
       "status": "underutilized",
-      "availableCapacity": 37.5
+      "availableCapacity": 40
     },
     "Stodgell Brittany": {
       "facultyName": "Stodgell Brittany",
@@ -4569,7 +5237,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 305",
@@ -4579,7 +5249,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -4596,6 +5268,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 10,
@@ -4621,7 +5295,9 @@
           "workloadCredits": 4,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 385",
@@ -4631,7 +5307,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "001"
+          "section": "001",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 384",
@@ -4641,7 +5319,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "027"
+          "section": "027",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 384",
@@ -4651,7 +5331,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "075"
+          "section": "075",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 384",
@@ -4661,7 +5343,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "027"
+          "section": "027",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -4678,6 +5362,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 24,
@@ -4703,7 +5389,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -4720,6 +5408,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 5,
@@ -4745,7 +5435,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 350",
@@ -4755,7 +5447,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -4772,6 +5466,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 10,
@@ -4797,7 +5493,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "025"
+          "section": "025",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         },
         {
           "courseCode": "DESN 384",
@@ -4807,7 +5505,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Spring",
-          "section": "075"
+          "section": "075",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -4824,6 +5524,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 10,
@@ -4849,7 +5551,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "045"
+          "section": "045",
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -4866,6 +5569,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 1,
@@ -4891,7 +5596,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -4908,6 +5615,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 5,
@@ -4933,7 +5642,9 @@
           "workloadCredits": 5,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -4950,6 +5661,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 5,
@@ -4975,7 +5688,9 @@
           "workloadCredits": 2,
           "type": "scheduled",
           "quarter": "Winter",
-          "section": "040"
+          "section": "040",
+          "excludedFromWorkload": false,
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -4992,6 +5707,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 2,
@@ -5017,7 +5734,8 @@
           "workloadCredits": 1,
           "type": "applied-learning",
           "quarter": "Winter",
-          "section": "049"
+          "section": "049",
+          "excludeReason": null
         }
       ],
       "appliedLearning": {
@@ -5034,6 +5752,8 @@
           "sections": 0
         }
       },
+      "specialRole": null,
+      "roleNotes": null,
       "rank": "Lecturer",
       "maxWorkload": 45,
       "currentWorkload": 1,
@@ -5397,8 +6117,8 @@
   "summary": {
     "totalFaculty": 45,
     "totalSections": 360,
-    "averageWorkload": "26.4",
-    "overloadedFaculty": 7,
+    "averageWorkload": "25.9",
+    "overloadedFaculty": 6,
     "underutilizedFaculty": 28
   }
 }

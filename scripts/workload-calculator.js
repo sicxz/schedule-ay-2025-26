@@ -26,6 +26,34 @@ class WorkloadCalculator {
             'Lecturer': 45,
             'Adjunct': 15
         };
+
+        // Faculty roles and special considerations
+        this.facultyRoles = {
+            'Breen Melinda': {
+                role: 'Department Chair',
+                releaseQuarters: ['Fall', 'Winter'],
+                appliedLearningBuiltIn: true, // DESN 499/495 built into chair duties
+                notes: 'Full release Fall & Winter. Applied learning supervision is part of administrative duties.'
+            },
+            'Breen_Melinda': {
+                role: 'Department Chair',
+                releaseQuarters: ['Fall', 'Winter'],
+                appliedLearningBuiltIn: true,
+                notes: 'Full release Fall & Winter. Applied learning supervision is part of administrative duties.'
+            },
+            'Breen. Melinda': {
+                role: 'Department Chair',
+                releaseQuarters: ['Fall', 'Winter'],
+                appliedLearningBuiltIn: true,
+                notes: 'Full release Fall & Winter. Applied learning supervision is part of administrative duties.'
+            },
+            'M. Breen': {
+                role: 'Department Chair',
+                releaseQuarters: ['Fall', 'Winter'],
+                appliedLearningBuiltIn: true,
+                notes: 'Full release Fall & Winter. Applied learning supervision is part of administrative duties.'
+            }
+        };
     }
 
     /**
@@ -63,6 +91,11 @@ class WorkloadCalculator {
             'DESN 495': { credits: 0, workload: 0, students: 0, sections: 0 }
         };
 
+        // Check if faculty has special role considerations
+        const facultyRole = this.facultyRoles[facultyName];
+        const isChairWithBuiltInAppliedLearning = facultyRole?.appliedLearningBuiltIn;
+        const releaseQuarters = facultyRole?.releaseQuarters || [];
+
         courses.forEach(course => {
             const workload = this.calculateCourseWorkload(
                 course.courseCode,
@@ -70,29 +103,48 @@ class WorkloadCalculator {
                 course.enrolled
             );
 
-            totalCredits += course.credits;
-            totalWorkloadCredits += workload.workloadCredits;
-            totalStudents += course.enrolled || 0;
+            // Check if this course should be excluded from workload
+            const isReleaseQuarter = releaseQuarters.includes(course.quarter);
+            const isAppliedLearning = workload.type === 'applied-learning';
+            const shouldExcludeAppliedLearning = isAppliedLearning && isChairWithBuiltInAppliedLearning;
 
-            if (workload.type === 'applied-learning') {
+            // Only count workload if not in release quarter and not excluded applied learning
+            if (!isReleaseQuarter || !shouldExcludeAppliedLearning) {
+                totalCredits += course.credits;
+
+                // For chair: don't count applied learning workload (it's administrative)
+                if (!shouldExcludeAppliedLearning) {
+                    totalWorkloadCredits += workload.workloadCredits;
+                }
+
+                totalStudents += course.enrolled || 0;
+            }
+
+            if (isAppliedLearning) {
                 appliedLearningCredits += course.credits;
-                appliedLearningWorkload += workload.workloadCredits;
 
-                // Track applied learning details
+                // Only count workload if not built into chair duties
+                if (!shouldExcludeAppliedLearning) {
+                    appliedLearningWorkload += workload.workloadCredits;
+                }
+
+                // Track applied learning details (for reporting, even if excluded from workload)
                 if (appliedLearningDetails[course.courseCode]) {
                     appliedLearningDetails[course.courseCode].credits += course.credits;
-                    appliedLearningDetails[course.courseCode].workload += workload.workloadCredits;
+                    appliedLearningDetails[course.courseCode].workload += shouldExcludeAppliedLearning ? 0 : workload.workloadCredits;
                     appliedLearningDetails[course.courseCode].students += course.enrolled || 0;
                     appliedLearningDetails[course.courseCode].sections += 1;
                 }
-            } else {
+            } else if (!isReleaseQuarter) {
                 scheduledCredits += course.credits;
             }
 
             courseDetails.push({
                 ...workload,
                 quarter: course.quarter,
-                section: course.section
+                section: course.section,
+                excludedFromWorkload: isReleaseQuarter || shouldExcludeAppliedLearning,
+                excludeReason: isReleaseQuarter ? 'Release quarter' : shouldExcludeAppliedLearning ? 'Administrative duty' : null
             });
         });
 
@@ -106,7 +158,9 @@ class WorkloadCalculator {
             totalStudents,
             sections,
             courses: courseDetails,
-            appliedLearning: appliedLearningDetails
+            appliedLearning: appliedLearningDetails,
+            specialRole: facultyRole?.role || null,
+            roleNotes: facultyRole?.notes || null
         };
     }
 
