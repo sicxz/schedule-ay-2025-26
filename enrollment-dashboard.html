@@ -505,8 +505,30 @@
             headcount: [91, 102, 99, 90, 99, 100, 128, 119, 125, 124]
         };
 
+        // Load dynamic enrollment data if available
+        async function loadDynamicData() {
+            try {
+                const response = await fetch('./enrollment-dashboard-data.json');
+                if (response.ok) {
+                    window.enrollmentDashboardData = await response.json();
+                    console.log('✅ Loaded dynamic enrollment data from enrollment-dashboard-data.json');
+                    console.log(`   Generated: ${window.enrollmentDashboardData.generatedAt}`);
+                    console.log(`   Total Records: ${window.enrollmentDashboardData.totalRecords}`);
+                    return true;
+                }
+            } catch (error) {
+                console.warn('⚠️ Could not load enrollment-dashboard-data.json');
+                console.warn('   Run: node scripts/process-enrollment-data.js to generate dynamic data');
+            }
+            return false;
+        }
+
         // Initialize dashboard
-        function initDashboard() {
+        async function initDashboard() {
+            // Try to load dynamic data first
+            await loadDynamicData();
+
+            // Render all visualizations
             updateStats();
             renderOverallTrendChart();
             renderCourseLevelChart();
@@ -830,15 +852,37 @@
         function renderFacultyWorkloadChart() {
             const ctx = document.getElementById('facultyWorkloadChart').getContext('2d');
 
-            const facultyData = [
-                { name: 'A.Sopu', students: 315, sections: 9 },
-                { name: 'M.Lybbert', students: 143, sections: 8 },
-                { name: 'S.Mills', students: 141, sections: 7 },
-                { name: 'S.Durr', students: 132, sections: 8 },
-                { name: 'C.Manikoth', students: 125, sections: 7 },
-                { name: 'T.Masingale', students: 72, sections: 4 },
-                { name: 'G.Hustrulid', students: 31, sections: 3 }
-            ];
+            // NOTE: Faculty workload is now dynamically calculated from actual schedule data
+            // Run: node scripts/process-enrollment-data.js to generate enrollment-dashboard-data.json
+            // This data will be auto-loaded if available
+
+            // Load dynamic data if available, otherwise use placeholder
+            let facultyData = [];
+
+            // Check if dynamic data is loaded
+            if (window.enrollmentDashboardData && window.enrollmentDashboardData.facultyWorkload) {
+                facultyData = Object.entries(window.enrollmentDashboardData.facultyWorkload)
+                    .map(([name, data]) => ({
+                        name,
+                        students: data.students,
+                        sections: data.sections
+                    }))
+                    .sort((a, b) => b.students - a.students);
+            } else {
+                // Placeholder data - THESE ARE ESTIMATES AND MAY BE INACCURATE
+                // Run process-enrollment-data.js to get accurate dynamic workload
+                console.warn('⚠️ Using placeholder faculty data. Run process-enrollment-data.js for accurate workload.');
+
+                facultyData = [
+                    { name: 'A.Sopu', students: 315, sections: 9 },
+                    { name: 'M.Lybbert', students: 143, sections: 8 },
+                    { name: 'S.Mills', students: 141, sections: 7 },
+                    { name: 'S.Durr', students: 132, sections: 8 },
+                    { name: 'C.Manikoth', students: 125, sections: 7 },
+                    { name: 'G.Hustrulid', students: 77, sections: 4 }, // Updated from 31 - was incorrect
+                    { name: 'T.Masingale', students: 72, sections: 4 }
+                ];
+            }
 
             new Chart(ctx, {
                 type: 'bar',

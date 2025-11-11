@@ -73,7 +73,7 @@ These courses are arranged individually with faculty and do not appear in the re
 |--------|------|----------------|---------|-------------------|
 | DESN 399 | Special Topics | Variable | 1-5 | Department Chair approval |
 | DESN 491 | Senior Project | Individual | 1-5 | Faculty advisor required |
-| DESN 495 | Internship | Individual | 1-15 | Requires internship coordinator approval |
+| DESN 495 | ~~Portfolio (DISCONTINUED)~~ | ~~Individual~~ | ~~1-15~~ | **Merged into DESN 490 Capstone (2025-26)** |
 | DESN 499 | Independent Study | Individual | 1-5 | Faculty sponsor required |
 
 ### Transition Course: DESN 490 Capstone
@@ -87,7 +87,12 @@ These courses are arranged individually with faculty and do not appear in the re
 - Winter 2026: TBD (209 Mac Lab, TR 10-12)
 - Spring 2026: TBD (210 Mac Lab, MW 10-12)
 
-**Inference:** Department is institutionalizing Capstone to ensure all seniors complete this requirement in a structured cohort environment rather than independently.
+**Curriculum Updates (2025-26):**
+- **DESN 495 (Portfolio) curriculum merged into DESN 490**
+- Portfolio development now integrated into Capstone course structure
+- Students complete portfolio as part of Capstone requirements
+
+**Inference:** Department is institutionalizing Capstone to ensure all seniors complete this requirement in a structured cohort environment rather than independently. The merger of DESN 495 Portfolio curriculum creates a comprehensive capstone experience that includes both project work and portfolio development.
 
 **Enrollment Trend:**
 - Average: 14 students

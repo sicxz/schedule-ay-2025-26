@@ -1,0 +1,766 @@
+{
+  "generatedAt": "2025-11-11T18:04:16.709Z",
+  "dataSource": "enrollment-data/processed",
+  "totalRecords": 360,
+  "courseStats": {
+    "DESN 100": {
+      "average": 18,
+      "peak": 24,
+      "trend": "stable",
+      "peakQuarter": "fall-2022",
+      "sections": 17,
+      "quarterly": {
+        "fall-2022": 43,
+        "fall-2023": 40,
+        "fall-2024": 40,
+        "fall-2025": 17,
+        "spring-2022": 42,
+        "spring-2023": 38,
+        "spring-2024": 13,
+        "winter-2022": 37,
+        "winter-2023": 10,
+        "winter-2024": 22
+      },
+      "isNew": false
+    },
+    "DESN 200": {
+      "average": 18,
+      "peak": 24,
+      "trend": "stable",
+      "peakQuarter": "fall-2024",
+      "sections": 12,
+      "quarterly": {
+        "fall-2022": 24,
+        "fall-2023": 24,
+        "fall-2024": 42,
+        "fall-2025": 24,
+        "spring-2022": 18,
+        "spring-2023": 23,
+        "spring-2024": 10,
+        "winter-2022": 22,
+        "winter-2023": 21,
+        "winter-2024": 10
+      },
+      "isNew": false
+    },
+    "DESN 216": {
+      "average": 18,
+      "peak": 31,
+      "trend": "stable",
+      "peakQuarter": "fall-2022",
+      "sections": 26,
+      "quarterly": {
+        "fall-2022": 68,
+        "fall-2023": 67,
+        "fall-2024": 52,
+        "fall-2025": 15,
+        "spring-2022": 46,
+        "spring-2023": 51,
+        "spring-2024": 39,
+        "winter-2022": 51,
+        "winter-2023": 20,
+        "winter-2024": 47
+      },
+      "isNew": false
+    },
+    "DESN 243": {
+      "average": 16,
+      "peak": 24,
+      "trend": "stable",
+      "peakQuarter": "spring-2022",
+      "sections": 10,
+      "quarterly": {
+        "fall-2022": 7,
+        "fall-2023": 15,
+        "fall-2024": 14,
+        "fall-2025": 13,
+        "spring-2022": 24,
+        "spring-2023": 14,
+        "spring-2024": 15,
+        "winter-2022": 16,
+        "winter-2023": 17,
+        "winter-2024": 21
+      },
+      "isNew": false
+    },
+    "DESN 263": {
+      "average": 14,
+      "peak": 22,
+      "trend": "stable",
+      "peakQuarter": "spring-2022",
+      "sections": 9,
+      "quarterly": {
+        "fall-2022": 12,
+        "fall-2023": 14,
+        "fall-2024": 17,
+        "fall-2025": 2,
+        "spring-2022": 22,
+        "spring-2023": 7,
+        "winter-2022": 22,
+        "winter-2023": 17,
+        "winter-2024": 10
+      },
+      "isNew": false
+    },
+    "DESN 301": {
+      "average": 16,
+      "peak": 22,
+      "trend": "growing",
+      "peakQuarter": "spring-2024",
+      "sections": 6,
+      "quarterly": {
+        "fall-2022": 15,
+        "fall-2023": 17,
+        "fall-2024": 10,
+        "fall-2025": 9,
+        "spring-2024": 22,
+        "winter-2022": 20
+      },
+      "isNew": false
+    },
+    "DESN 338": {
+      "average": 15,
+      "peak": 24,
+      "trend": "stable",
+      "peakQuarter": "fall-2022",
+      "sections": 12,
+      "quarterly": {
+        "fall-2022": 30,
+        "fall-2023": 24,
+        "fall-2024": 17,
+        "fall-2025": 1,
+        "spring-2022": 22,
+        "spring-2023": 13,
+        "spring-2024": 14,
+        "winter-2022": 11,
+        "winter-2023": 22,
+        "winter-2024": 25
+      },
+      "isNew": false
+    },
+    "DESN 350": {
+      "average": 13,
+      "peak": 18,
+      "trend": "stable",
+      "peakQuarter": "fall-2022",
+      "sections": 7,
+      "quarterly": {
+        "fall-2022": 18,
+        "fall-2023": 14,
+        "fall-2024": 14,
+        "spring-2022": 11,
+        "winter-2022": 11,
+        "winter-2023": 9,
+        "winter-2024": 14
+      },
+      "isNew": false
+    },
+    "DESN 355": {
+      "average": 19,
+      "peak": 21,
+      "trend": "stable",
+      "peakQuarter": "winter-2024",
+      "sections": 4,
+      "quarterly": {
+        "fall-2022": 20,
+        "winter-2022": 13,
+        "winter-2023": 20,
+        "winter-2024": 21
+      },
+      "isNew": false
+    },
+    "DESN 363": {
+      "average": 13,
+      "peak": 23,
+      "trend": "stable",
+      "peakQuarter": "spring-2023",
+      "sections": 8,
+      "quarterly": {
+        "fall-2022": 14,
+        "fall-2023": 13,
+        "spring-2022": 12,
+        "spring-2023": 23,
+        "spring-2024": 12,
+        "winter-2022": 5,
+        "winter-2023": 7,
+        "winter-2024": 20
+      },
+      "isNew": false
+    },
+    "DESN 366": {
+      "average": 11,
+      "peak": 18,
+      "trend": "stable",
+      "peakQuarter": "spring-2022",
+      "sections": 4,
+      "quarterly": {
+        "fall-2022": 10,
+        "fall-2025": 6,
+        "spring-2022": 18,
+        "spring-2023": 8
+      },
+      "isNew": false
+    },
+    "DESN 368": {
+      "average": 15,
+      "peak": 23,
+      "trend": "stable",
+      "peakQuarter": "winter-2022",
+      "sections": 11,
+      "quarterly": {
+        "fall-2022": 21,
+        "fall-2023": 12,
+        "fall-2024": 18,
+        "fall-2025": 11,
+        "spring-2022": 8,
+        "spring-2023": 23,
+        "spring-2024": 12,
+        "winter-2022": 30,
+        "winter-2023": 14,
+        "winter-2024": 21
+      },
+      "isNew": false
+    },
+    "DESN 458": {
+      "average": 12,
+      "peak": 15,
+      "trend": "growing",
+      "peakQuarter": "spring-2023",
+      "sections": 5,
+      "quarterly": {
+        "fall-2022": 12,
+        "fall-2023": 8,
+        "spring-2022": 12,
+        "spring-2023": 15,
+        "spring-2024": 14
+      },
+      "isNew": false
+    },
+    "DESN 463": {
+      "average": 13,
+      "peak": 19,
+      "trend": "stable",
+      "peakQuarter": "fall-2024",
+      "sections": 9,
+      "quarterly": {
+        "fall-2022": 16,
+        "fall-2023": 16,
+        "fall-2024": 19,
+        "fall-2025": 9,
+        "spring-2022": 6,
+        "spring-2023": 10,
+        "spring-2024": 10,
+        "winter-2022": 14,
+        "winter-2023": 14
+      },
+      "isNew": false
+    },
+    "DESN 468": {
+      "average": 12,
+      "peak": 13,
+      "trend": "stable",
+      "peakQuarter": "spring-2023",
+      "sections": 4,
+      "quarterly": {
+        "fall-2022": 12,
+        "spring-2022": 11,
+        "spring-2023": 13,
+        "spring-2024": 12
+      },
+      "isNew": false
+    },
+    "DESN 480": {
+      "average": 14,
+      "peak": 21,
+      "trend": "stable",
+      "peakQuarter": "winter-2022",
+      "sections": 8,
+      "quarterly": {
+        "fall-2022": 17,
+        "fall-2023": 9,
+        "fall-2024": 15,
+        "fall-2025": 8,
+        "spring-2022": 9,
+        "spring-2023": 15,
+        "spring-2024": 18,
+        "winter-2022": 21
+      },
+      "isNew": false
+    },
+    "DESN 490": {
+      "average": 15,
+      "peak": 24,
+      "trend": "stable",
+      "peakQuarter": "winter-2023",
+      "sections": 9,
+      "quarterly": {
+        "fall-2022": 16,
+        "fall-2023": 7,
+        "fall-2024": 14,
+        "fall-2025": 7,
+        "spring-2022": 19,
+        "spring-2023": 22,
+        "spring-2024": 10,
+        "winter-2022": 12,
+        "winter-2023": 24
+      },
+      "isNew": false
+    },
+    "DESN 493": {
+      "average": 11,
+      "peak": 12,
+      "trend": "stable",
+      "peakQuarter": "spring-2023",
+      "sections": 4,
+      "quarterly": {
+        "fall-2022": 11,
+        "spring-2022": 7,
+        "spring-2023": 12,
+        "winter-2023": 12
+      },
+      "isNew": false
+    },
+    "DESN 495": {
+      "average": 4,
+      "peak": 10,
+      "trend": "stable",
+      "peakQuarter": "fall-2025",
+      "sections": 43,
+      "quarterly": {
+        "fall-2022": 5,
+        "fall-2023": 5,
+        "fall-2024": 26,
+        "fall-2025": 51,
+        "spring-2022": 14,
+        "spring-2023": 10,
+        "spring-2024": 35,
+        "winter-2022": 5,
+        "winter-2023": 5,
+        "winter-2024": 21
+      },
+      "isNew": false
+    },
+    "DESN 499": {
+      "average": 4,
+      "peak": 24,
+      "trend": "stable",
+      "peakQuarter": "fall-2023",
+      "sections": 84,
+      "quarterly": {
+        "fall-2022": 6,
+        "fall-2023": 73,
+        "fall-2024": 28,
+        "fall-2025": 30,
+        "spring-2022": 24,
+        "spring-2023": 42,
+        "spring-2024": 35,
+        "winter-2022": 3,
+        "winter-2023": 59,
+        "winter-2024": 47
+      },
+      "isNew": false
+    },
+    "DESN 326": {
+      "average": 14,
+      "peak": 24,
+      "trend": "declining",
+      "peakQuarter": "fall-2023",
+      "sections": 3,
+      "quarterly": {
+        "fall-2023": 24,
+        "fall-2024": 10,
+        "fall-2025": 8
+      },
+      "isNew": false
+    },
+    "DESN 359": {
+      "average": 15,
+      "peak": 22,
+      "trend": "stable",
+      "peakQuarter": "spring-2024",
+      "sections": 9,
+      "quarterly": {
+        "fall-2023": 17,
+        "fall-2024": 18,
+        "fall-2025": 1,
+        "spring-2022": 13,
+        "spring-2023": 18,
+        "spring-2024": 22,
+        "winter-2022": 13,
+        "winter-2023": 15,
+        "winter-2024": 20
+      },
+      "isNew": false
+    },
+    "DESN 396": {
+      "average": 11,
+      "peak": 14,
+      "trend": "declining",
+      "peakQuarter": "fall-2023",
+      "sections": 2,
+      "quarterly": {
+        "fall-2023": 14,
+        "winter-2022": 8
+      },
+      "isNew": true
+    },
+    "DESN 399": {
+      "average": 9,
+      "peak": 24,
+      "trend": "declining",
+      "peakQuarter": "fall-2023",
+      "sections": 6,
+      "quarterly": {
+        "fall-2023": 25,
+        "fall-2025": 20,
+        "spring-2022": 5,
+        "winter-2024": 4
+      },
+      "isNew": false
+    },
+    "DESN 491": {
+      "average": 8,
+      "peak": 24,
+      "trend": "declining",
+      "peakQuarter": "fall-2023",
+      "sections": 8,
+      "quarterly": {
+        "fall-2023": 48,
+        "spring-2023": 0,
+        "spring-2024": 5,
+        "winter-2023": 5,
+        "winter-2024": 5
+      },
+      "isNew": false
+    },
+    "DESN 325": {
+      "average": 18,
+      "peak": 23,
+      "trend": "stable",
+      "peakQuarter": "winter-2022",
+      "sections": 4,
+      "quarterly": {
+        "fall-2024": 15,
+        "spring-2024": 18,
+        "winter-2022": 23,
+        "winter-2023": 16
+      },
+      "isNew": false
+    },
+    "DESN 343": {
+      "average": 8,
+      "peak": 8,
+      "trend": "new",
+      "peakQuarter": "fall-2024",
+      "sections": 1,
+      "quarterly": {
+        "fall-2024": 8
+      },
+      "isNew": true
+    },
+    "DESN 374": {
+      "average": 6,
+      "peak": 6,
+      "trend": "new",
+      "peakQuarter": "fall-2025",
+      "sections": 1,
+      "quarterly": {
+        "fall-2025": 6
+      },
+      "isNew": true
+    },
+    "DESN 305": {
+      "average": 21,
+      "peak": 23,
+      "trend": "growing",
+      "peakQuarter": "spring-2023",
+      "sections": 3,
+      "quarterly": {
+        "spring-2022": 19,
+        "spring-2023": 23,
+        "spring-2024": 22
+      },
+      "isNew": false
+    },
+    "DESN 348": {
+      "average": 16,
+      "peak": 20,
+      "trend": "growing",
+      "peakQuarter": "winter-2023",
+      "sections": 4,
+      "quarterly": {
+        "spring-2022": 9,
+        "winter-2022": 18,
+        "winter-2023": 20,
+        "winter-2024": 17
+      },
+      "isNew": false
+    },
+    "DESN 365": {
+      "average": 15,
+      "peak": 16,
+      "trend": "stable",
+      "peakQuarter": "spring-2023",
+      "sections": 3,
+      "quarterly": {
+        "spring-2022": 13,
+        "spring-2023": 16,
+        "spring-2024": 15
+      },
+      "isNew": false
+    },
+    "DESN 378": {
+      "average": 10,
+      "peak": 17,
+      "trend": "growing",
+      "peakQuarter": "winter-2024",
+      "sections": 4,
+      "quarterly": {
+        "spring-2022": 5,
+        "winter-2022": 10,
+        "winter-2023": 8,
+        "winter-2024": 17
+      },
+      "isNew": false
+    },
+    "DESN 385": {
+      "average": 7,
+      "peak": 8,
+      "trend": "growing",
+      "peakQuarter": "spring-2023",
+      "sections": 2,
+      "quarterly": {
+        "spring-2022": 5,
+        "spring-2023": 8
+      },
+      "isNew": true
+    },
+    "DESN 401": {
+      "average": 16,
+      "peak": 21,
+      "trend": "growing",
+      "peakQuarter": "winter-2024",
+      "sections": 3,
+      "quarterly": {
+        "spring-2022": 12,
+        "spring-2023": 14,
+        "winter-2024": 21
+      },
+      "isNew": false
+    },
+    "DESN 351": {
+      "average": 9,
+      "peak": 13,
+      "trend": "growing",
+      "peakQuarter": "winter-2022",
+      "sections": 3,
+      "quarterly": {
+        "spring-2023": 9,
+        "spring-2024": 6,
+        "winter-2022": 13
+      },
+      "isNew": false
+    },
+    "DESN 336": {
+      "average": 18,
+      "peak": 21,
+      "trend": "declining",
+      "peakQuarter": "spring-2024",
+      "sections": 2,
+      "quarterly": {
+        "spring-2024": 21,
+        "winter-2023": 14
+      },
+      "isNew": true
+    },
+    "DESN 384": {
+      "average": 14,
+      "peak": 24,
+      "trend": "growing",
+      "peakQuarter": "winter-2022",
+      "sections": 5,
+      "quarterly": {
+        "spring-2024": 18,
+        "winter-2022": 26,
+        "winter-2023": 24
+      },
+      "isNew": false
+    },
+    "DESN 360": {
+      "average": 17,
+      "peak": 18,
+      "trend": "stable",
+      "peakQuarter": "winter-2022",
+      "sections": 3,
+      "quarterly": {
+        "winter-2022": 18,
+        "winter-2023": 14,
+        "winter-2024": 18
+      },
+      "isNew": false
+    },
+    "DESN 335": {
+      "average": 10,
+      "peak": 10,
+      "trend": "new",
+      "peakQuarter": "winter-2024",
+      "sections": 1,
+      "quarterly": {
+        "winter-2024": 10
+      },
+      "isNew": true
+    },
+    "DESN 496": {
+      "average": 6,
+      "peak": 6,
+      "trend": "new",
+      "peakQuarter": "winter-2024",
+      "sections": 1,
+      "quarterly": {
+        "winter-2024": 6
+      },
+      "isNew": true
+    }
+  },
+  "facultyWorkload": {},
+  "censusData": {
+    "quarters": [
+      "Fall 2022",
+      "Winter 2022",
+      "Spring 2022",
+      "Fall 2023",
+      "Winter 2023",
+      "Spring 2023",
+      "Fall 2024",
+      "Winter 2024",
+      "Spring 2024",
+      "Fall 2025"
+    ],
+    "headcount": [
+      75,
+      84,
+      81,
+      97,
+      77,
+      85,
+      75,
+      79,
+      80,
+      48
+    ],
+    "totalEnrollments": [
+      377,
+      422,
+      406,
+      486,
+      387,
+      427,
+      377,
+      397,
+      398,
+      238
+    ]
+  },
+  "quarterlyTrends": [
+    {
+      "quarter": "Fall 2022",
+      "headcount": 75,
+      "qoq": null,
+      "qoqPercent": null,
+      "yoy": null,
+      "yoyPercent": null
+    },
+    {
+      "quarter": "Winter 2022",
+      "headcount": 84,
+      "qoq": 9,
+      "qoqPercent": "12.0",
+      "yoy": null,
+      "yoyPercent": null
+    },
+    {
+      "quarter": "Spring 2022",
+      "headcount": 81,
+      "qoq": -3,
+      "qoqPercent": "-3.6",
+      "yoy": null,
+      "yoyPercent": null
+    },
+    {
+      "quarter": "Fall 2023",
+      "headcount": 97,
+      "qoq": 16,
+      "qoqPercent": "19.8",
+      "yoy": 22,
+      "yoyPercent": "29.3"
+    },
+    {
+      "quarter": "Winter 2023",
+      "headcount": 77,
+      "qoq": -20,
+      "qoqPercent": "-20.6",
+      "yoy": -7,
+      "yoyPercent": "-8.3"
+    },
+    {
+      "quarter": "Spring 2023",
+      "headcount": 85,
+      "qoq": 8,
+      "qoqPercent": "10.4",
+      "yoy": 4,
+      "yoyPercent": "4.9"
+    },
+    {
+      "quarter": "Fall 2024",
+      "headcount": 75,
+      "qoq": -10,
+      "qoqPercent": "-11.8",
+      "yoy": -22,
+      "yoyPercent": "-22.7"
+    },
+    {
+      "quarter": "Winter 2024",
+      "headcount": 79,
+      "qoq": 4,
+      "qoqPercent": "5.3",
+      "yoy": 2,
+      "yoyPercent": "2.6"
+    },
+    {
+      "quarter": "Spring 2024",
+      "headcount": 80,
+      "qoq": 1,
+      "qoqPercent": "1.3",
+      "yoy": -5,
+      "yoyPercent": "-5.9"
+    },
+    {
+      "quarter": "Fall 2025",
+      "headcount": 48,
+      "qoq": -32,
+      "qoqPercent": "-40.0",
+      "yoy": -27,
+      "yoyPercent": "-36.0"
+    }
+  ],
+  "forecast": {
+    "predicted": 67,
+    "lower95": 45,
+    "upper95": 89,
+    "trend": "declining",
+    "growthRate": "-2.6%"
+  },
+  "summary": {
+    "totalCourses": 40,
+    "totalFaculty": 0,
+    "latestQuarter": "Fall 2025",
+    "latestHeadcount": 48,
+    "programGrowth": {
+      "from": "Fall 2022",
+      "to": "Fall 2025",
+      "change": -27,
+      "percent": "-36.0%",
+      "direction": "decline"
+    }
+  }
+}
