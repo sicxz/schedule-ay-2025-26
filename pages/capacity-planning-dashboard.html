@@ -4,7 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Capacity Planning Dashboard - EWU Design</title>
+
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- External Stylesheets -->
+    <link rel="stylesheet" href="../css/shared.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+
+    <!-- Utility Scripts -->
+    <script src="../js/data-loader.js"></script>
+    <script src="../js/year-filter.js"></script>
+    <script src="../js/faculty-utils.js"></script>
+    <script src="../js/chart-utils.js"></script>
+
     <style>
         * {
             margin: 0;
@@ -215,6 +228,10 @@
             background: #ff6b6b;
         }
 
+        .progress-bar.warning {
+            background: #FFC107;
+        }
+
         .alert-box {
             background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
             color: white;
@@ -245,7 +262,36 @@
         </header>
 
         <div class="controls">
+            <div class="control-group">
+                <label for="academicYearFilter">Academic Year:</label>
+                <select id="academicYearFilter">
+                    <option value="all">All Years (2022-2026)</option>
+                    <option value="2022-23">2022-23</option>
+                    <option value="2023-24">2023-24</option>
+                    <option value="2024-25" selected>2024-25</option>
+                    <option value="2025-26">2025-26 (Projected)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="quarterFilter">Quarter:</label>
+                <select id="quarterFilter">
+                    <option value="annual" selected>Annual (All Quarters)</option>
+                    <option value="Fall">Fall</option>
+                    <option value="Winter">Winter</option>
+                    <option value="Spring">Spring</option>
+                </select>
+            </div>
+
+            <div class="control-group" style="display: flex; align-items: center; gap: 10px;">
+                <input type="checkbox" id="includeAppliedLearning" checked style="width: auto; cursor: pointer;">
+                <label for="includeAppliedLearning" style="margin: 0; cursor: pointer; font-weight: normal;">
+                    Include Applied Learning (499, 495, etc.)
+                </label>
+            </div>
+
             <button onclick="window.location.href='../enrollment-dashboard.html'">📚 Enrollment Trends</button>
+            <button onclick="window.location.href='applied-learning-dashboard.html'">📖 Applied Learning</button>
             <button onclick="window.location.href='workload-dashboard.html'">👥 Faculty Workload</button>
             <button onclick="window.location.href='recommendations-dashboard.html'">💡 Recommendations</button>
         </div>
@@ -271,11 +317,11 @@
                     </div>
                     <div class="stat-card available">
                         <div class="stat-number" id="availableCapacity">0</div>
-                        <div class="stat-label">Available Capacity (Credits)</div>
+                        <div class="stat-label">Net Available Capacity (Credits)</div>
                     </div>
                     <div class="stat-card needed">
                         <div class="stat-number" id="additionalNeeded">0</div>
-                        <div class="stat-label">Additional Capacity Needed</div>
+                        <div class="stat-label">Overloaded Faculty (Credits)</div>
                     </div>
                 </div>
 
@@ -285,6 +331,13 @@
                         <h2>Faculty Capacity vs. Current Load</h2>
                         <div class="chart-wrapper">
                             <canvas id="capacityChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-container full-width" id="quarterlyCapacityContainer" style="display: none;">
+                        <h2>Quarterly Capacity Comparison</h2>
+                        <div class="chart-wrapper">
+                            <canvas id="quarterlyCapacityChart"></canvas>
                         </div>
                     </div>
 
@@ -332,318 +385,6 @@
         </div>
     </div>
 
-    <script>
-        let workloadData = null;
-        let enrollmentData = null;
-
-        async function loadData() {
-            try {
-                const workloadResponse = await fetch('../workload-data.json');
-                if (workloadResponse.ok) {
-                    workloadData = await workloadResponse.json();
-                }
-
-                const enrollmentResponse = await fetch('../enrollment-dashboard-data.json');
-                if (enrollmentResponse.ok) {
-                    enrollmentData = await enrollmentResponse.json();
-                }
-
-                return workloadData && enrollmentData;
-            } catch (error) {
-                console.error('Error loading data:', error);
-                return false;
-            }
-        }
-
-        async function initDashboard() {
-            const loaded = await loadData();
-
-            if (!loaded) {
-                document.getElementById('loadingMessage').innerHTML = `
-                    <p style="color: #ff6b6b;">⚠️ Unable to load required data files.</p>
-                `;
-                return;
-            }
-
-            document.getElementById('loadingMessage').style.display = 'none';
-            document.getElementById('dashboardContent').style.display = 'block';
-
-            analyzeCapacity();
-        }
-
-        function analyzeCapacity() {
-            const faculty = workloadData.facultyWorkload;
-
-            let totalCapacity = 0;
-            let currentLoad = 0;
-            let availableCapacity = 0;
-            let overload = 0;
-
-            const capacityData = Object.entries(faculty).map(([name, data]) => {
-                totalCapacity += data.maxWorkload;
-                currentLoad += data.totalWorkloadCredits;
-
-                const available = Math.max(0, data.maxWorkload - data.totalWorkloadCredits);
-                const excess = Math.max(0, data.totalWorkloadCredits - data.maxWorkload);
-
-                availableCapacity += available;
-                overload += excess;
-
-                return {
-                    name,
-                    maxCapacity: data.maxWorkload,
-                    currentLoad: data.totalWorkloadCredits,
-                    available: available,
-                    utilizationRate: data.utilizationRate,
-                    status: data.status
-                };
-            });
-
-            // Update stats
-            document.getElementById('totalCapacity').textContent = totalCapacity;
-            document.getElementById('currentLoad').textContent = currentLoad.toFixed(1);
-            document.getElementById('availableCapacity').textContent = availableCapacity.toFixed(1);
-            document.getElementById('additionalNeeded').textContent = overload.toFixed(1);
-
-            // Show alerts if needed
-            if (overload > 0) {
-                document.getElementById('capacityAlerts').innerHTML = `
-                    <div class="alert-box">
-                        <h3>⚠️ Capacity Alert</h3>
-                        <p>Department is ${overload.toFixed(1)} workload credits over capacity. Current utilization: ${((currentLoad / totalCapacity) * 100).toFixed(1)}%</p>
-                        <p style="margin-top: 10px;">Recommend hiring ${Math.ceil(overload / 15)} adjunct instructor(s) at 15 credits each.</p>
-                    </div>
-                `;
-            }
-
-            renderCapacityChart(capacityData);
-            renderUtilizationChart(capacityData);
-            renderRatioChart();
-            renderForecastCapacityChart();
-            renderCapacityTable(capacityData);
-        }
-
-        function renderCapacityChart(data) {
-            const ctx = document.getElementById('capacityChart').getContext('2d');
-            const sorted = data.sort((a, b) => b.currentLoad - a.currentLoad).slice(0, 15);
-
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: sorted.map(d => d.name),
-                    datasets: [
-                        {
-                            label: 'Max Capacity',
-                            data: sorted.map(d => d.maxCapacity),
-                            backgroundColor: 'rgba(102, 126, 234, 0.3)',
-                            borderColor: '#667eea',
-                            borderWidth: 2
-                        },
-                        {
-                            label: 'Current Load',
-                            data: sorted.map(d => d.currentLoad),
-                            backgroundColor: sorted.map(d =>
-                                d.status === 'overloaded' ? 'rgba(255, 107, 107, 0.8)' :
-                                d.status === 'optimal' ? 'rgba(255, 167, 38, 0.8)' :
-                                'rgba(81, 207, 102, 0.8)'
-                            ),
-                            borderColor: sorted.map(d =>
-                                d.status === 'overloaded' ? '#ff6b6b' :
-                                d.status === 'optimal' ? '#ffa726' :
-                                '#51cf66'
-                            ),
-                            borderWidth: 2
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    indexAxis: 'y',
-                    plugins: {
-                        legend: {
-                            display: true
-                        }
-                    },
-                    scales: {
-                        x: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Workload Credits'
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        function renderUtilizationChart(data) {
-            const ctx = document.getElementById('utilizationChart').getContext('2d');
-
-            const overloaded = data.filter(d => d.status === 'overloaded').length;
-            const optimal = data.filter(d => d.status === 'optimal').length;
-            const underutilized = data.filter(d => d.status === 'underutilized').length;
-
-            new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Overloaded (>100%)', 'Optimal (60-100%)', 'Underutilized (<60%)'],
-                    datasets: [{
-                        data: [overloaded, optimal, underutilized],
-                        backgroundColor: [
-                            'rgba(255, 107, 107, 0.8)',
-                            'rgba(255, 167, 38, 0.8)',
-                            'rgba(81, 207, 102, 0.8)'
-                        ],
-                        borderColor: ['#ff6b6b', '#ffa726', '#51cf66'],
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
-                        }
-                    }
-                }
-            });
-        }
-
-        function renderRatioChart() {
-            const ctx = document.getElementById('ratioChart').getContext('2d');
-
-            // Calculate student-to-faculty ratio per quarter
-            const census = enrollmentData.censusData;
-            const facultyCount = Object.keys(workloadData.facultyWorkload).length;
-
-            const ratios = census.headcount.map(count => (count / facultyCount).toFixed(1));
-
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: census.quarters,
-                    datasets: [{
-                        label: 'Students per Faculty Member',
-                        data: ratios,
-                        borderColor: '#667eea',
-                        backgroundColor: 'rgba(102, 126, 234, 0.2)',
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: true
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Ratio'
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        function renderForecastCapacityChart() {
-            const ctx = document.getElementById('forecastCapacityChart').getContext('2d');
-
-            const census = enrollmentData.censusData;
-            const forecast = enrollmentData.forecast;
-
-            // Extend data with forecast
-            const labels = [...census.quarters, 'Forecast'];
-            const headcount = [...census.headcount, forecast.predicted];
-
-            // Calculate required faculty (assuming 1 faculty per 3 students average)
-            const requiredFaculty = headcount.map(count => Math.ceil(count / 3));
-            const currentFaculty = Array(labels.length).fill(Object.keys(workloadData.facultyWorkload).length);
-
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'Current Faculty Count',
-                            data: currentFaculty,
-                            borderColor: '#51cf66',
-                            backgroundColor: 'rgba(81, 207, 102, 0.2)',
-                            tension: 0,
-                            fill: false,
-                            borderWidth: 3
-                        },
-                        {
-                            label: 'Required Faculty (1:3 ratio)',
-                            data: requiredFaculty,
-                            borderColor: '#667eea',
-                            backgroundColor: 'rgba(102, 126, 234, 0.2)',
-                            tension: 0.4,
-                            fill: true
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: true
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Faculty Count'
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        function renderCapacityTable(data) {
-            const tbody = document.getElementById('capacityTableBody');
-            const sorted = data.sort((a, b) => b.utilizationRate - a.utilizationRate);
-
-            tbody.innerHTML = sorted.map(faculty => {
-                const progressClass = faculty.status === 'overloaded' ? 'high' :
-                                      faculty.status === 'optimal' ? 'medium' : 'low';
-
-                return `
-                    <tr>
-                        <td><strong>${faculty.name}</strong></td>
-                        <td>${faculty.maxCapacity}</td>
-                        <td>${faculty.currentLoad.toFixed(1)}</td>
-                        <td>${faculty.available.toFixed(1)}</td>
-                        <td>
-                            <div class="progress-bar-container">
-                                <div class="progress-bar ${progressClass}" style="width: ${Math.min(faculty.utilizationRate, 100)}%"></div>
-                            </div>
-                            <div style="margin-top: 5px;">${faculty.utilizationRate.toFixed(1)}%</div>
-                        </td>
-                        <td style="text-transform: capitalize; font-weight: 600; color: ${
-                            faculty.status === 'overloaded' ? '#ff6b6b' :
-                            faculty.status === 'optimal' ? '#ffa726' : '#51cf66'
-                        }">${faculty.status}</td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        window.addEventListener('load', initDashboard);
-    </script>
+    <script src="./capacity-planning-dashboard.js"></script>
 </body>
 </html>

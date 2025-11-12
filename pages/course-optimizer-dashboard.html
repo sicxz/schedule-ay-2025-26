@@ -307,6 +307,17 @@
                 </select>
             </div>
 
+            <div class="control-group">
+                <label for="academicYearFilter">Academic Year:</label>
+                <select id="academicYearFilter">
+                    <option value="all">All Years (2022-2026)</option>
+                    <option value="2022-23">2022-23</option>
+                    <option value="2023-24">2023-24</option>
+                    <option value="2024-25" selected>2024-25 (Most Recent Complete)</option>
+                    <option value="2025-26">2025-26 (Current)</option>
+                </select>
+            </div>
+
             <button onclick="window.location.href='../enrollment-dashboard.html'">📊 Enrollment Trends</button>
             <button onclick="window.location.href='recommendations-dashboard.html'">💡 Recommendations</button>
         </div>
@@ -448,22 +459,32 @@
         }
 
         function getRecommendation(course, score, rating) {
+            const isUnderMinimum = course.average < 10;
+            const isNearCapacity = course.average > 20;
+
+            if (isUnderMinimum) {
+                return `🔴 CRITICAL: Below 10-student minimum (avg: ${course.average}). Requires justification or restructuring.`;
+            }
+
             if (rating === 'excellent') {
+                if (isNearCapacity) {
+                    return `✅ Excellent! Near/at 24-student capacity (avg: ${course.average}). Maintain current offering.`;
+                }
                 return '✅ Course is performing excellently. Maintain current offering pattern.';
             } else if (rating === 'good') {
-                return '👍 Course is healthy. Monitor enrollment trends and consider minor optimizations.';
+                return `👍 Healthy course (avg: ${course.average}/24 capacity). Monitor enrollment trends.`;
             } else if (rating === 'fair') {
                 if (course.trend === 'declining') {
-                    return '⚠️ Review course content and marketing. Consider student feedback.';
+                    return `⚠️ Declining trend (avg: ${course.average}/24). Review course content and marketing.`;
                 }
-                return '⚠️ Course shows moderate concerns. Review and adjust as needed.';
+                return `⚠️ Moderate performance (avg: ${course.average}/24). Review and adjust as needed.`;
             } else if (rating === 'poor') {
                 if (course.average < 12) {
-                    return '🔴 Low enrollment. Consider offering less frequently or restructuring.';
+                    return `🔴 Near minimum threshold (avg: ${course.average}/10 min). Offer less frequently or restructure.`;
                 }
-                return '🔴 Needs attention. Review curriculum, prerequisites, and scheduling.';
+                return `🔴 Low enrollment (avg: ${course.average}/24). Review curriculum and scheduling.`;
             } else {
-                return '❌ Critical: Consider consolidation, major revision, or discontinuation.';
+                return `❌ Critical (avg: ${course.average}/10 min). Consider major revision or discontinuation.`;
             }
         }
 

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applied Learning Dashboard - EWU Design</title>
+
+    <!-- External Stylesheets -->
+    <link rel="stylesheet" href="../css/shared.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- Utility Scripts -->
+    <script src="../js/data-loader.js"></script>
+    <script src="../js/year-filter.js"></script>
+    <script src="../js/chart-utils.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="../index.html" class="back-link">← Back to Schedule</a>
+            <h1>📚 Applied Learning Dashboard</h1>
+            <p class="subtitle">DESN 499, 495, 491 - Supervision Tracking & Trends</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="academicYearFilter">Academic Year:</label>
+                <select id="academicYearFilter">
+                    <option value="all">All Years (2022-2026)</option>
+                    <option value="2022-23">2022-23</option>
+                    <option value="2023-24">2023-24</option>
+                    <option value="2024-25" selected>2024-25</option>
+                    <option value="2025-26">2025-26 (Projected)</option>
+                </select>
+            </div>
+
+            <button onclick="window.location.href='workload-dashboard.html'">👥 Faculty Workload</button>
+            <button onclick="window.location.href='../enrollment-dashboard.html'">📊 Enrollment Trends</button>
+            <button onclick="window.location.href='capacity-planning-dashboard.html'">📈 Capacity</button>
+        </div>
+
+        <div class="content">
+            <div id="loadingMessage" class="loading">
+                Loading applied learning data...
+            </div>
+
+            <div id="dashboardContent" style="display: none;">
+                <!-- Summary Statistics -->
+                <div class="section-header">
+                    <h2>Applied Learning Summary</h2>
+                    <span class="badge" id="yearBadge">2024-25</span>
+                </div>
+
+                <div class="stats-bar">
+                    <div class="stat-card">
+                        <div class="stat-label">DESN 499 (Independent Study)</div>
+                        <div class="stat-value" id="desn499Total">0</div>
+                        <div class="stat-subtitle">
+                            <span id="desn499Credits">0 credits</span> •
+                            <span id="desn499Sections">0 sections</span> •
+                            <span id="desn499Workload">0.0 workload</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">DESN 495 (Internship)</div>
+                        <div class="stat-value" id="desn495Total">0</div>
+                        <div class="stat-subtitle">
+                            <span id="desn495Credits">0 credits</span> •
+                            <span id="desn495Sections">0 sections</span> •
+                            <span id="desn495Workload">0.0 workload</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">DESN 491 (Senior Project)</div>
+                        <div class="stat-value" id="desn491Total">0</div>
+                        <div class="stat-subtitle">
+                            <span id="desn491Credits">0 credits</span> •
+                            <span id="desn491Sections">0 sections</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Students Served</div>
+                        <div class="stat-value" id="totalStudents">0</div>
+                        <div class="stat-subtitle">
+                            <span id="totalWorkload">0.0 workload equivalent</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cumulative Trends Chart -->
+                <div class="section-header">
+                    <h2>📈 Cumulative Trends (2022-2026)</h2>
+                </div>
+
+                <div class="chart-container full-width">
+                    <h3>Total Credits Offered by Year</h3>
+                    <div class="chart-wrapper tall">
+                        <canvas id="cumulativeTrendChart"></canvas>
+                    </div>
+                    <p style="margin-top: 15px; color: #6c757d; font-size: 0.9em;">
+                        <strong>Note:</strong> DESN 499 multiplier = 0.2× | DESN 495 multiplier = 0.1× for workload calculation
+                    </p>
+                </div>
+
+                <!-- Instructor Summary Chart -->
+                <div class="section-header">
+                    <h2>👥 Supervision by Instructor (Cumulative 2022-2026)</h2>
+                </div>
+
+                <div class="chart-container full-width">
+                    <h3>Total Applied Learning Credits per Faculty Member</h3>
+                    <div class="chart-wrapper tall">
+                        <canvas id="instructorSummaryChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Annual Breakdown Table -->
+                <div class="section-header">
+                    <h2>📋 Annual Breakdown by Instructor</h2>
+                </div>
+
+                <div class="chart-container full-width">
+                    <table class="data-table" id="annualBreakdownTable">
+                        <thead>
+                            <tr>
+                                <th rowspan="2">Instructor</th>
+                                <th colspan="3">2022-23</th>
+                                <th colspan="3">2023-24</th>
+                                <th colspan="3">2024-25</th>
+                                <th colspan="3">2025-26</th>
+                                <th rowspan="2">Total</th>
+                            </tr>
+                            <tr>
+                                <th>499</th><th>495</th><th>491</th>
+                                <th>499</th><th>495</th><th>491</th>
+                                <th>499</th><th>495</th><th>491</th>
+                                <th>499</th><th>495</th><th>491</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <!-- Current Year Details -->
+                <div class="section-header">
+                    <h2>🔍 Current Year Details</h2>
+                    <span class="badge" id="currentYearBadge">2024-25</span>
+                </div>
+
+                <div class="card-grid">
+                    <div class="card" id="desn499Card">
+                        <div class="card-header">
+                            <h3 class="card-title">DESN 499</h3>
+                            <span class="health-score good">Independent Study</span>
+                        </div>
+                        <div class="card-content" id="desn499Details">
+                            Loading...
+                        </div>
+                    </div>
+
+                    <div class="card" id="desn495Card">
+                        <div class="card-header">
+                            <h3 class="card-title">DESN 495</h3>
+                            <span class="health-score good">Internship</span>
+                        </div>
+                        <div class="card-content" id="desn495Details">
+                            Loading...
+                        </div>
+                    </div>
+
+                    <div class="card" id="desn491Card">
+                        <div class="card-header">
+                            <h3 class="card-title">DESN 491</h3>
+                            <span class="health-score good">Senior Project</span>
+                        </div>
+                        <div class="card-content" id="desn491Details">
+                            Loading...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./applied-learning-dashboard.js"></script>
+</body>
+</html>

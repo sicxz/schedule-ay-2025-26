@@ -24,6 +24,23 @@ class EnrollmentProcessor {
             totalEnrollments: []
         };
         this.quarterlyTrends = [];
+
+        // Load faculty mapping for capacity planning
+        this.facultyMapping = this.loadFacultyMapping();
+    }
+
+    /**
+     * Load faculty mapping configuration
+     */
+    loadFacultyMapping() {
+        try {
+            const mappingPath = path.join(__dirname, 'faculty-mapping.json');
+            const content = fs.readFileSync(mappingPath, 'utf-8');
+            return JSON.parse(content);
+        } catch (error) {
+            console.warn('⚠️ Could not load faculty-mapping.json');
+            return null;
+        }
     }
 
     /**
@@ -119,7 +136,14 @@ class EnrollmentProcessor {
         this.rawData.forEach(record => {
             const course = record.CourseCode;
             const enrolled = parseInt(record.Enrolled) || 0;
-            const quarter = `${record.Quarter.toLowerCase()}-${record.AcademicYear.split('-')[0]}`;
+
+            // Map academic year to calendar year for quarter key
+            // fall-2024-25 → fall-2024
+            // winter-2024-25 → winter-2025
+            // spring-2024-25 → spring-2025
+            const [firstYear, secondYear] = record.AcademicYear.split('-');
+            const calendarYear = record.Quarter === 'Fall' ? firstYear : `20${secondYear}`;
+            const quarter = `${record.Quarter.toLowerCase()}-${calendarYear}`;
 
             if (!courseSections[course]) {
                 courseSections[course] = {
@@ -282,6 +306,76 @@ class EnrollmentProcessor {
     }
 
     /**
+     * Calculate capacity planning by academic year
+     */
+    calculateCapacityPlanning() {
+        console.log('📐 Calculating capacity planning...');
+
+        if (!this.facultyMapping || !this.facultyMapping.individualCapacities) {
+            console.warn('⚠️ No faculty capacity data available');
+            return null;
+        }
+
+        const capacityByYear = {};
+
+        // Process each academic year
+        Object.keys(this.facultyMapping.individualCapacities).forEach(academicYear => {
+            const yearCapacities = this.facultyMapping.individualCapacities[academicYear];
+            const facultyStatus = this.facultyMapping.facultyStatusByYear[academicYear];
+
+            if (!facultyStatus) return;
+
+            // Calculate total full-time capacity (adjuncts count as 0)
+            let totalFullTimeCapacity = 0;
+            let fullTimeFaculty = [];
+
+            facultyStatus.fullTime.forEach(name => {
+                const capacity = yearCapacities[name] || 0;
+                totalFullTimeCapacity += capacity;
+                fullTimeFaculty.push({ name, capacity });
+            });
+
+            // Calculate actual workload from enrollment data
+            let totalStudentLoad = 0;
+            let fullTimeLoad = 0;
+            let adjunctLoad = 0;
+
+            Object.entries(this.facultyWorkload).forEach(([name, data]) => {
+                totalStudentLoad += data.students;
+
+                if (facultyStatus.fullTime.includes(name)) {
+                    fullTimeLoad += data.students;
+                } else {
+                    adjunctLoad += data.students;
+                }
+            });
+
+            // Calculate net available capacity
+            // Since adjuncts have 0 capacity, total demand = fullTimeLoad + adjunctLoad
+            const totalDemand = fullTimeLoad + adjunctLoad;
+            const netAvailable = totalFullTimeCapacity - totalDemand;
+
+            capacityByYear[academicYear] = {
+                totalFullTimeCapacity,
+                fullTimeFaculty,
+                fullTimeLoad,
+                adjunctLoad,
+                totalLoad: totalStudentLoad,
+                totalDemand,
+                netAvailable,
+                capacityUtilization: totalFullTimeCapacity > 0
+                    ? ((totalDemand / totalFullTimeCapacity) * 100).toFixed(1) + '%'
+                    : 'N/A',
+                overCapacity: totalDemand > totalFullTimeCapacity,
+                adjunctCount: facultyStatus.adjunct?.length || 0
+            };
+        });
+
+        console.log(`✅ Capacity planning calculated for ${Object.keys(capacityByYear).length} academic years\n`);
+        return capacityByYear;
+    }
+
+    /**
      * Calculate census data (unique student headcount per quarter)
      */
     calculateCensusData() {
@@ -291,7 +385,13 @@ class EnrollmentProcessor {
 
         // Group by academic quarter
         this.rawData.forEach(record => {
-            const quarter = `${record.Quarter} ${record.AcademicYear.split('-')[0]}`;
+            // Map academic year to calendar year
+            // Fall 2024-25 → Fall 2024
+            // Winter 2024-25 → Winter 2025
+            // Spring 2024-25 → Spring 2025
+            const [firstYear, secondYear] = record.AcademicYear.split('-');
+            const calendarYear = record.Quarter === 'Fall' ? firstYear : `20${secondYear}`;
+            const quarter = `${record.Quarter} ${calendarYear}`;
 
             if (!quarterlyData[quarter]) {
                 quarterlyData[quarter] = {
@@ -436,6 +536,7 @@ class EnrollmentProcessor {
 
             courseStats: this.courseStats,
             facultyWorkload: this.facultyWorkload,
+            capacityPlanning: this.calculateCapacityPlanning(),
             censusData: this.censusData,
             quarterlyTrends: this.quarterlyTrends,
             forecast: this.generateForecast(),

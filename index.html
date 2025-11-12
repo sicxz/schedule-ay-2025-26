@@ -923,6 +923,12 @@
             <button onclick="exportReport()">Export Report</button>
             <button onclick="window.location.href='enrollment-dashboard.html'" style="background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);">📊 Enrollment Trends</button>
             <button onclick="window.location.href='pages/workload-dashboard.html'" style="background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);">👥 Faculty Workload</button>
+            <button onclick="window.location.href='pages/applied-learning-dashboard.html'" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">📚 Applied Learning</button>
+        </div>
+
+        <div style="background: #e7f5ff; border-left: 4px solid #339af0; padding: 12px 16px; margin: 20px; border-radius: 8px; font-size: 0.9em;">
+            <strong>📊 Enrollment Data:</strong> Course enrollment badges show previous year's same-quarter enrollment.
+            Example: <span style="background: #51cf66; color: white; padding: 2px 8px; border-radius: 12px; font-weight: 600;">👥 22 ('25)</span> means 22 students enrolled in this course during the same quarter in 2025.
         </div>
 
         <div class="stats-bar">
@@ -1134,8 +1140,29 @@
             'code-design': { name: 'Code + Design', suggestedMinors: ['webDevelopment', 'gameDesign', 'graphicDesign'] }
         };
 
-        // Enrollment data extracted from 2022-2025 census data
-        const enrollmentData = {
+        // Load dynamic enrollment data from JSON file
+        let enrollmentData = {};
+
+        async function loadEnrollmentData() {
+            try {
+                const response = await fetch('./enrollment-dashboard-data.json');
+                if (response.ok) {
+                    const data = await response.json();
+                    enrollmentData = data.courseStats || {};
+                    console.log('✅ Loaded dynamic enrollment data');
+                    console.log(`   Total courses: ${Object.keys(enrollmentData).length}`);
+                    return true;
+                }
+            } catch (error) {
+                console.warn('⚠️ Could not load enrollment-dashboard-data.json, using fallback data');
+            }
+            // Fallback to hardcoded data if JSON fails
+            enrollmentData = fallbackEnrollmentData;
+            return false;
+        }
+
+        // Fallback enrollment data (used if JSON file is not available)
+        const fallbackEnrollmentData = {
             "DESN 100": {
                 average: 35,
                 peak: 48,
@@ -1444,14 +1471,37 @@
                             const conflictLevel = courses.length > 2 ? 0 : courses.length > 1 ? 1 : 2;
                             const facultyClass = getFacultyClass(course.instructor);
                             const enrollment = getEnrollmentData(course.code);
-                            const enrollmentLevel = getEnrollmentLevel(enrollment.average);
+
+                            // Get quarter-specific enrollment from previous year instead of overall average
+                            const prevYearQuarter = quarter === 'fall' ? 'fall-2025' :
+                                                   quarter === 'winter' ? 'winter-2025' :
+                                                   quarter === 'spring' ? 'spring-2025' : null;
+
+                            let displayEnrollment = enrollment.average; // fallback
+                            let tooltipText = `Avg enrollment: ${enrollment.average}`;
+
+                            let yearIndicator = '';
+                            if (prevYearQuarter && enrollment.quarterly && enrollment.quarterly[prevYearQuarter]) {
+                                const prevYearData = enrollment.quarterly[prevYearQuarter];
+                                displayEnrollment = typeof prevYearData === 'object' ? prevYearData.total : prevYearData;
+                                tooltipText = `${quarter.charAt(0).toUpperCase() + quarter.slice(1)} 2025: ${displayEnrollment} students`;
+                                yearIndicator = " <span style='font-size: 0.75em; opacity: 0.8;'>('25)</span>";
+                            } else if (enrollment.isNew) {
+                                displayEnrollment = 'NEW';
+                                tooltipText = 'New course - no historical data';
+                            } else {
+                                tooltipText = `Avg enrollment: ${enrollment.average}`;
+                            }
+
+                            const enrollmentLevel = typeof displayEnrollment === 'number' ? getEnrollmentLevel(displayEnrollment) : 'medium';
                             const trendClass = `trend-${enrollment.trend}`;
+
                             return `
                                 <div class="course-block conflict-${conflictLevel} ${facultyClass} ${trendClass}"
                                      onclick="showCourseDetails('${course.code}', '${course.name}', '${course.instructor}', ${course.credits}, '${course.room}')"
-                                     title="Avg enrollment: ${enrollment.average} | Peak: ${enrollment.peak} | Trend: ${enrollment.trend}">
+                                     title="${tooltipText} | Peak: ${enrollment.peak} | Trend: ${enrollment.trend}">
                                     ${courses.length > 1 ? `<span class="conflict-badge">${courses.length}</span>` : ''}
-                                    <div class="course-name">${course.code} <span class="enrollment-badge enrollment-${enrollmentLevel}">👥 ${enrollment.average}</span></div>
+                                    <div class="course-name">${course.code} <span class="enrollment-badge enrollment-${enrollmentLevel}">👥 ${displayEnrollment}${yearIndicator}</span></div>
                                     <div class="course-details">${course.name}</div>
                                     <div class="course-details">${course.instructor}</div>
                                 </div>
@@ -1575,36 +1625,59 @@
                 }
             });
 
-            // Build quarterly enrollment history section
+            // Build quarterly enrollment history section - show ALL courses for selected quarter
             const coursesWithHistory = allCourses
-                .filter(c => {
-                    const enrollment = getEnrollmentData(c.code);
-                    return enrollment.quarterly || enrollment.isNew;
-                })
                 .reduce((unique, course) => {
                     if (!unique.find(c => c.code === course.code)) {
                         unique.push(course);
                     }
                     return unique;
-                }, []);
+                }, [])
+                .sort((a, b) => {
+                    // Sort by course number
+                    const numA = parseInt(a.code.split(' ')[1]);
+                    const numB = parseInt(b.code.split(' ')[1]);
+                    return numA - numB;
+                });
+
+            // Determine which historical quarters to show based on selected quarter
+            const quarterName = quarter.charAt(0).toUpperCase() + quarter.slice(1);
+            const q2023Key = `${quarter}-2023`;
+            const q2024Key = `${quarter}-2024`;
+            const q2025Key = `${quarter}-2025`;
 
             analyticsPanel.innerHTML = `
                 <div class="enrollment-analytics">
-                    <h2>📊 Enrollment Analytics - ${quarter.charAt(0).toUpperCase() + quarter.slice(1)} 2026</h2>
+                    <h2>📊 Enrollment Analytics - ${quarterName} 2026</h2>
 
                     ${coursesWithHistory.length > 0 ? `
                     <div class="quarterly-enrollment">
-                        <h3>📈 Per-Class Enrollment History</h3>
-                        <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;">Historical enrollment data by course and quarter</p>
-                        <table class="enrollment-history-table">
+                        <h3 style="cursor: pointer; user-select: none; padding: 10px; background: #f8f9fa; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;"
+                            onclick="
+                                const content = this.nextElementSibling;
+                                const arrow = this.querySelector('.accordion-arrow');
+                                if (content.style.display === 'none') {
+                                    content.style.display = 'block';
+                                    arrow.textContent = '▼';
+                                } else {
+                                    content.style.display = 'none';
+                                    arrow.textContent = '▶';
+                                }
+                            ">
+                            <span>📈 Per-Class Enrollment History <span style="font-size: 0.8em; color: #666; font-weight: normal;">(${coursesWithHistory.length} courses)</span></span>
+                            <span class="accordion-arrow" style="font-size: 0.8em;">▶</span>
+                        </h3>
+                        <div style="display: none;">
+                            <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;">Historical enrollment data for ${quarterName} quarter courses</p>
+                            <table class="enrollment-history-table">
                             <thead>
                                 <tr>
                                     <th>Course</th>
                                     <th>Course Name</th>
                                     <th>Instructor</th>
-                                    <th>Winter 2023</th>
-                                    <th>Winter 2024</th>
-                                    <th>Winter 2025</th>
+                                    <th>${quarterName} 2023</th>
+                                    <th>${quarterName} 2024</th>
+                                    <th>${quarterName} 2025</th>
                                     <th>Trend</th>
                                 </tr>
                             </thead>
@@ -1613,22 +1686,30 @@
                                     const enrollment = getEnrollmentData(c.code);
                                     const quarterly = enrollment.quarterly || {};
 
-                                    let w2023 = '-', w2024 = '-', w2025 = '-';
+                                    let q2023 = '-', q2024 = '-', q2025 = '-';
 
                                     if (enrollment.isNew) {
-                                        w2023 = w2024 = w2025 = '<span style="color: #9b59b6; font-weight: 600;">NEW</span>';
-                                    } else if (c.code === 'DESN 216') {
-                                        const q2023 = quarterly['winter-2023'] || {};
-                                        const q2024 = quarterly['winter-2024'] || {};
-                                        const q2025 = quarterly['winter-2025'] || {};
-
-                                        w2023 = `<span class="enrollment-number">${q2023.total || '-'}</span><br><span class="enrollment-split">(${q2023.online || '-'} online, ${q2023.inPerson || '-'} in-person)</span>`;
-                                        w2024 = `<span class="enrollment-number">${q2024.total || '-'}</span><br><span class="enrollment-split">(${q2024.online || '-'} online, ${q2024.inPerson || '-'} in-person)</span>`;
-                                        w2025 = `<span class="enrollment-number">${q2025.total || '-'}</span><br><span class="enrollment-split">(${q2025.online || '-'} online, ${q2025.inPerson || '-'} in-person)</span>`;
+                                        q2023 = q2024 = q2025 = '<span style="color: #9b59b6; font-weight: 600;">NEW</span>';
                                     } else {
-                                        w2023 = quarterly['winter-2023'] ? `<span class="enrollment-number">${quarterly['winter-2023']}</span>` : '-';
-                                        w2024 = quarterly['winter-2024'] ? `<span class="enrollment-number">${quarterly['winter-2024']}</span>` : '-';
-                                        w2025 = quarterly['winter-2025'] ? `<span class="enrollment-number">${quarterly['winter-2025']}</span>` : '-';
+                                        // Handle quarterly data - can be either a number or object with {total, online, inPerson}
+                                        const data2023 = quarterly[q2023Key];
+                                        const data2024 = quarterly[q2024Key];
+                                        const data2025 = quarterly[q2025Key];
+
+                                        // Format each quarter's data
+                                        const formatQuarterData = (data) => {
+                                            if (!data) return '-';
+                                            if (typeof data === 'object' && data.total !== undefined) {
+                                                // DESN 216 style with split data
+                                                return `<span class="enrollment-number">${data.total}</span><br><span class="enrollment-split">(${data.online || '-'} online, ${data.inPerson || '-'} in-person)</span>`;
+                                            }
+                                            // Regular number
+                                            return `<span class="enrollment-number">${data}</span>`;
+                                        };
+
+                                        q2023 = formatQuarterData(data2023);
+                                        q2024 = formatQuarterData(data2024);
+                                        q2025 = formatQuarterData(data2025);
                                     }
 
                                     const trendIcon = enrollment.trend === 'declining' ? '📉' : enrollment.trend === 'growing' ? '📈' : enrollment.trend === 'new' ? '✨' : '➡️';
@@ -1638,15 +1719,16 @@
                                             <td><strong>${c.code}</strong>${enrollment.isNew ? '<span class="course-note-badge">NEW</span>' : ''}</td>
                                             <td>${c.name}</td>
                                             <td>${c.instructor}</td>
-                                            <td>${w2023}</td>
-                                            <td>${w2024}</td>
-                                            <td>${w2025}</td>
+                                            <td>${q2023}</td>
+                                            <td>${q2024}</td>
+                                            <td>${q2025}</td>
                                             <td>${trendIcon} ${enrollment.trend}</td>
                                         </tr>
                                     `;
                                 }).join('')}
                             </tbody>
                         </table>
+                        </div>
                     </div>
                     ` : ''}
 
@@ -2042,15 +2124,23 @@
             displayTrackSuggestions(trackKey);
         });
 
-        // Initial render
-        renderSchedule('spring');
-        renderOnlineCourses('spring');
-        renderArrangedCourses('spring');
-        renderEnrollmentAnalytics('spring');
-        renderConflicts('spring');
-        renderConflictSolver('spring');
-        renderRecommendations('spring');
-        updateStats('spring');
+        // Initialize app - load data then render
+        async function init() {
+            await loadEnrollmentData();
+
+            // Initial render
+            renderSchedule('spring');
+            renderOnlineCourses('spring');
+            renderArrangedCourses('spring');
+            renderEnrollmentAnalytics('spring');
+            renderConflicts('spring');
+            renderConflictSolver('spring');
+            renderRecommendations('spring');
+            updateStats('spring');
+        }
+
+        // Start the app when page loads
+        init();
     </script>
 </body>
 </html>

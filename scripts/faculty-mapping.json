@@ -1,0 +1,302 @@
+{
+  "nameNormalization": {
+    "Breen Melinda": "Melinda Breen",
+    "Breen_Melinda": "Melinda Breen",
+    "Breen. Melinda": "Melinda Breen",
+    "Durr Sonja": "Sonja Durr",
+    "Durr_Sonja": "Sonja Durr",
+    "Durr. Sonja": "Sonja Durr",
+    "Masingale Travis": "Travis Masingale",
+    "Masingale_Travis": "Travis Masingale",
+    "Masingale. Travis": "Travis Masingale",
+    "Hustrulid Ginelle": "Ginelle Hustrulid",
+    "Hustrutid Ginelle": "Ginelle Hustrulid",
+    "Hustrutid_Ginelle": "Ginelle Hustrulid",
+    "Hustulid. Ginelle": "Ginelle Hustrulid",
+    "Mills Simeon": "Simeon Mills",
+    "Mills_Simeon": "Simeon Mills",
+    "Mills. Simeon": "Simeon Mills",
+    "Sopu Ariel": "Ariel Sopu",
+    "Sopu_Ariel": "Ariel Sopu",
+    "Sopu. Ariel": "Ariel Sopu",
+    "Lybbert Meg": "Meg Lybbert",
+    "Lybbert_Meg": "Meg Lybbert",
+    "Lybbert. Meg": "Meg Lybbert",
+    "Manikoth Colin": "Colin Manikoth",
+    "Manikoth_Colin": "Colin Manikoth",
+    "Manikoth. Colin": "Colin Manikoth",
+    "Kuhn Jamin": "Jamin Kuhn",
+    "Allison_Shelby": "Shelby Allison",
+    "Allison. Shelby": "Shelby Allison",
+    "Baxter Ginny": "Ginny Baxter",
+    "Braukmann James": "James Braukman",
+    "Braukmann_James_Durfee_Jayna": "James Braukman",
+    "Heidle_Carl": "Carl Heidle",
+    "Davis_Dean": "Dean Davis",
+    "Galey Eric": "Eric Galey",
+    "Kelley Ian": "Ian Kelley",
+    "Norris_Erica": "Erica Norris",
+    "Patterson_Tiffany": "Tiffany Patterson",
+    "Pettigrew Allan": "Allan Pettigrew",
+    "Pettigrew_Allan_Barton_Jayleana": "Allan Pettigrew",
+    "Pettinrew. Allan / Barton. Jayleana": "Allan Pettigrew",
+    "Poosri Tyrell": "Tyrell Poosri",
+    "Stodgell Brittany": "Brittany Stodgell",
+    "Thompson_Chris": "Chris Thompson",
+    "Thompson_Chris_Alberts_Jennifer": "Chris Thompson",
+    "Lybbert_Meg_Manikoth_Colin": "Meg Lybbert"
+  },
+  "facultyStatusByYear": {
+    "2022-23": {
+      "fullTime": [
+        "Melinda Breen",
+        "Sonja Durr",
+        "Travis Masingale",
+        "Simeon Mills",
+        "Meg Lybbert",
+        "Colin Manikoth",
+        "Jamin Kuhn"
+      ],
+      "sabbatical": [
+        "Ginelle Hustrulid"
+      ],
+      "adjunct": [
+        "Ariel Sopu",
+        "Shelby Allison",
+        "James Braukman",
+        "Carl Heidle",
+        "Dean Davis",
+        "Eric Galey",
+        "Ian Kelley",
+        "Erica Norris",
+        "Tiffany Patterson",
+        "Tyrell Poosri",
+        "Brittany Stodgell",
+        "Chris Thompson",
+        "Allan Pettigrew"
+      ],
+      "former": [
+        "Ginny Baxter"
+      ]
+    },
+    "2023-24": {
+      "fullTime": [
+        "Melinda Breen",
+        "Sonja Durr",
+        "Ginelle Hustrulid",
+        "Simeon Mills",
+        "Meg Lybbert",
+        "Colin Manikoth",
+        "Jamin Kuhn",
+        "Ariel Sopu"
+      ],
+      "sabbatical": [
+        "Travis Masingale"
+      ],
+      "adjunct": [
+        "Shelby Allison",
+        "James Braukman",
+        "Carl Heidle",
+        "Dean Davis",
+        "Eric Galey",
+        "Ian Kelley",
+        "Erica Norris",
+        "Tiffany Patterson",
+        "Tyrell Poosri",
+        "Brittany Stodgell",
+        "Chris Thompson",
+        "Allan Pettigrew"
+      ],
+      "former": [
+        "Ginny Baxter"
+      ]
+    },
+    "2024-25": {
+      "fullTime": [
+        "Melinda Breen",
+        "Sonja Durr",
+        "Travis Masingale",
+        "Ginelle Hustrulid",
+        "Simeon Mills",
+        "Meg Lybbert",
+        "Colin Manikoth",
+        "Ariel Sopu"
+      ],
+      "sabbatical": [],
+      "adjunct": [
+        "Shelby Allison",
+        "James Braukman",
+        "Carl Heidle",
+        "Dean Davis",
+        "Eric Galey",
+        "Ian Kelley",
+        "Erica Norris",
+        "Tiffany Patterson",
+        "Tyrell Poosri",
+        "Brittany Stodgell",
+        "Chris Thompson"
+      ],
+      "former": [
+        "Jamin Kuhn",
+        "Allan Pettigrew",
+        "Ginny Baxter"
+      ]
+    },
+    "2025-26": {
+      "fullTime": [
+        "Melinda Breen",
+        "Sonja Durr",
+        "Travis Masingale",
+        "Ginelle Hustrulid",
+        "Simeon Mills",
+        "Meg Lybbert",
+        "Colin Manikoth",
+        "Ariel Sopu"
+      ],
+      "sabbatical": [],
+      "adjunct": [
+        "Shelby Allison",
+        "James Braukman",
+        "Carl Heidle",
+        "Dean Davis",
+        "Eric Galey",
+        "Ian Kelley",
+        "Erica Norris",
+        "Tiffany Patterson",
+        "Tyrell Poosri",
+        "Brittany Stodgell",
+        "Chris Thompson"
+      ],
+      "former": [
+        "Jamin Kuhn",
+        "Allan Pettigrew",
+        "Ginny Baxter"
+      ]
+    }
+  },
+  "chairAssignments": {
+    "fall-2022": {
+      "chair": "Melinda Breen",
+      "releaseTime": "partial",
+      "classesPerQuarter": 1
+    },
+    "winter-2023": {
+      "chair": "Melinda Breen",
+      "releaseTime": "partial",
+      "classesPerQuarter": 1
+    },
+    "spring-2023": {
+      "chair": "Melinda Breen",
+      "releaseTime": "partial",
+      "classesPerQuarter": 1
+    },
+    "fall-2023": {
+      "chair": "Melinda Breen",
+      "releaseTime": "partial",
+      "classesPerQuarter": 1
+    },
+    "winter-2024": {
+      "chair": "Melinda Breen",
+      "releaseTime": "partial",
+      "classesPerQuarter": 1
+    },
+    "spring-2024": {
+      "chair": "Melinda Breen",
+      "releaseTime": "partial",
+      "classesPerQuarter": 1
+    },
+    "fall-2024": {
+      "chair": "Melinda Breen",
+      "releaseTime": "partial",
+      "classesPerQuarter": 1
+    },
+    "winter-2025": {
+      "chair": "Travis Masingale",
+      "releaseTime": "none",
+      "classesPerQuarter": 1,
+      "notes": "Taught 1 class + extra 499's + 40 advisees"
+    },
+    "spring-2025": {
+      "chair": "Melinda Breen",
+      "releaseTime": "partial",
+      "classesPerQuarter": 1
+    },
+    "fall-2025": {
+      "chair": "Melinda Breen",
+      "releaseTime": "full",
+      "classesPerQuarter": 0
+    },
+    "winter-2026": {
+      "chair": "Melinda Breen",
+      "releaseTime": "full",
+      "classesPerQuarter": 0
+    },
+    "spring-2026": {
+      "chair": "Melinda Breen",
+      "releaseTime": "full",
+      "classesPerQuarter": 0
+    }
+  },
+  "facultyRanks": {
+    "Melinda Breen": "Full Professor",
+    "Sonja Durr": "Associate Professor",
+    "Travis Masingale": "Associate Professor",
+    "Ginelle Hustrulid": "Assistant Professor",
+    "Simeon Mills": "Assistant Professor",
+    "Meg Lybbert": "Senior Lecturer",
+    "Colin Manikoth": "Senior Lecturer",
+    "Ariel Sopu": "Lecturer",
+    "Jamin Kuhn": "Assistant Professor"
+  },
+  "workloadLimits": {
+    "Full Professor": 36,
+    "Associate Professor": 36,
+    "Assistant Professor": 36,
+    "Senior Lecturer": 45,
+    "Lecturer": 45,
+    "Adjunct": 15
+  },
+  "individualCapacities": {
+    "2022-23": {
+      "Melinda Breen": 15,
+      "Sonja Durr": 45,
+      "Travis Masingale": 36,
+      "Ginelle Hustrulid": 0,
+      "Simeon Mills": 45,
+      "Meg Lybbert": 45,
+      "Colin Manikoth": 36,
+      "Jamin Kuhn": 36
+    },
+    "2023-24": {
+      "Melinda Breen": 15,
+      "Sonja Durr": 45,
+      "Travis Masingale": 0,
+      "Ginelle Hustrulid": 36,
+      "Simeon Mills": 45,
+      "Meg Lybbert": 45,
+      "Colin Manikoth": 36,
+      "Ariel Sopu": 45,
+      "Jamin Kuhn": 36
+    },
+    "2024-25": {
+      "Melinda Breen": 15,
+      "Sonja Durr": 45,
+      "Travis Masingale": 36,
+      "Ginelle Hustrulid": 36,
+      "Simeon Mills": 45,
+      "Meg Lybbert": 45,
+      "Colin Manikoth": 36,
+      "Ariel Sopu": 45
+    },
+    "2025-26": {
+      "Melinda Breen": 36,
+      "Sonja Durr": 45,
+      "Travis Masingale": 36,
+      "Ginelle Hustrulid": 36,
+      "Simeon Mills": 45,
+      "Meg Lybbert": 45,
+      "Colin Manikoth": 36,
+      "Ariel Sopu": 45
+    }
+  }
+}

@@ -358,12 +358,13 @@
                     <option value="all">All Years (2022-2026)</option>
                     <option value="2022-23">2022-23</option>
                     <option value="2023-24">2023-24</option>
-                    <option value="2024-25">2024-25</option>
+                    <option value="2024-25" selected>2024-25 (Most Recent Complete)</option>
                     <option value="2025-26">2025-26 (Current)</option>
                 </select>
             </div>
 
             <button onclick="window.location.href='pages/workload-dashboard.html'" style="background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);">👥 Workload</button>
+            <button onclick="window.location.href='pages/applied-learning-dashboard.html'" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">📚 Applied Learning</button>
             <button onclick="window.location.href='pages/recommendations-dashboard.html'" style="background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);">💡 Recommendations</button>
             <button onclick="window.location.href='pages/capacity-planning-dashboard.html'" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);">📊 Capacity</button>
             <button onclick="window.location.href='pages/course-optimizer-dashboard.html'" style="background: linear-gradient(135deg, #1abc9c 0%, #16a085 100%);">🎓 Optimizer</button>
@@ -421,51 +422,85 @@
                     <div class="chart-wrapper">
                         <canvas id="overallTrendChart"></canvas>
                     </div>
+                    <p style="color: #666; font-size: 0.9em; margin-top: 15px;">
+                        <strong>Note:</strong> This shows unique students enrolled in <em>at least one Design course</em> per quarter,
+                        not total declared Design majors. Students may skip quarters for gen-eds, internships, or personal reasons.
+                        <br><strong>Current declared Design majors:</strong> 124 students (Fall 2025)
+                    </p>
                 </div>
 
                 <div class="chart-container">
-                    <h2>Enrollment by Course Level</h2>
+                    <h2>Total Enrollment by Course Level (Annual Average)</h2>
                     <div class="chart-wrapper">
                         <canvas id="courseLevelChart"></canvas>
                     </div>
+                    <p style="color: #666; font-size: 0.9em; margin-top: 15px;">
+                        <strong>Note:</strong> Sum of average enrollments across all courses in each level.
+                    </p>
                 </div>
 
                 <div class="chart-container">
-                    <h2>Trend Distribution</h2>
+                    <h2>Course Trend Distribution (by count)</h2>
                     <div class="chart-wrapper">
                         <canvas id="trendPieChart"></canvas>
                     </div>
-                </div>
-
-                <div class="chart-container full-width">
-                    <h2>Top 10 Courses by Enrollment</h2>
-                    <div class="chart-wrapper">
-                        <canvas id="topCoursesChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="chart-container full-width">
-                    <h2>Winter Quarter Deep Dive (2023-2025)</h2>
-                    <div class="chart-wrapper">
-                        <canvas id="winterTrendChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="chart-container full-width">
-                    <h2>Program Headcount - Census Enrollment Data</h2>
-                    <div class="chart-wrapper">
-                        <canvas id="programHeadcountChart"></canvas>
-                    </div>
                     <p style="color: #666; font-size: 0.9em; margin-top: 15px;">
-                        <strong>Key Finding:</strong> 36% growth from Fall 2022 (91 students) to Fall 2025 (124 students).
-                        Explosive growth in Fall 2024 (+28 students), now stabilized at high plateau.
+                        <strong>Note:</strong> Number of courses in each trend category based on multi-year enrollment patterns.
                     </p>
                 </div>
 
                 <div class="chart-container full-width">
-                    <h2>Faculty Workload Distribution</h2>
+                    <h2>Top 10 Courses by Average Enrollment (2022-2025)</h2>
+                    <div class="chart-wrapper">
+                        <canvas id="topCoursesChart"></canvas>
+                    </div>
+                    <p style="color: #666; font-size: 0.9em; margin-top: 15px;">
+                        <strong>Note:</strong> Average students per section across all offerings Fall 2022 - Spring 2025.
+                    </p>
+                </div>
+
+                <div class="chart-container full-width">
+                    <h2>Winter Quarter Deep Dive - Completed Quarters Only</h2>
+                    <div class="chart-wrapper">
+                        <canvas id="winterTrendChart"></canvas>
+                    </div>
+                    <p style="color: #666; font-size: 0.9em; margin-top: 15px;">
+                        <strong>Note:</strong> Showing only completed winter quarters (2023-2025). Winter 2026 enrollment will be available after census date.
+                        Based on current trends, expect Winter 2026 enrollment to track similarly to Winter 2025 levels.
+                    </p>
+                </div>
+
+                <div class="chart-container full-width">
+                    <h2>Quarterly Course Participation - Unique Students</h2>
+                    <div class="chart-wrapper">
+                        <canvas id="programHeadcountChart"></canvas>
+                    </div>
+                    <p style="color: #666; font-size: 0.9em; margin-top: 15px;">
+                        <strong>Note:</strong> This shows unique students enrolled in Design courses each quarter.
+                        Ranges from 66-97 students taking courses per quarter. Not all declared Design majors (124 students) take Design courses every quarter.
+                    </p>
+                </div>
+
+                <div class="chart-container full-width">
+                    <h2>Cumulative Seat Enrollments by Academic Year</h2>
+                    <div class="chart-wrapper">
+                        <canvas id="cumulativeCreditsChart"></canvas>
+                    </div>
+                    <p style="color: #666; font-size: 0.9em; margin-top: 15px;">
+                        <strong>Purpose:</strong> Track if current year is "on pace" with previous years.
+                        Shows cumulative total seat enrollments (sum of all students across all courses) through each quarter.
+                        Example: 2022-23 had 377 seats in Fall, 764 total after Winter, and 1,191 for the full year.
+                    </p>
+                </div>
+
+                <div class="chart-container full-width">
+                    <h2>Faculty Capacity Planning</h2>
                     <div class="chart-wrapper">
                         <canvas id="facultyWorkloadChart"></canvas>
+                    </div>
+                    <div id="capacityPlanningInfo" style="background: #e7f5ff; border-left: 4px solid #339af0; padding: 12px 16px; margin-top: 16px; border-radius: 8px;">
+                        <strong>📊 Capacity Planning:</strong> This chart shows baseline teaching capacity for full-time faculty only.
+                        <strong>Adjunct capacity = 0</strong> for planning purposes - any adjunct teaching indicates over-capacity demand beyond full-time faculty baseline.
                     </div>
                 </div>
             </div>
@@ -542,7 +577,8 @@
         // Census enrollment data - Program headcount
         const censusData = {
             quarters: ['Fall 2022', 'Winter 2023', 'Spring 2023', 'Fall 2023', 'Winter 2024', 'Spring 2024', 'Fall 2024', 'Winter 2025', 'Spring 2025', 'Fall 2025'],
-            headcount: [91, 102, 99, 90, 99, 100, 128, 119, 125, 124]
+            headcount: [91, 102, 99, 90, 99, 100, 128, 119, 125, 124],
+            totalEnrollments: []
         };
 
         // Load dynamic enrollment data if available
@@ -570,18 +606,25 @@
 
             // Replace enrollmentData with dynamic data if available
             if (dynamicLoaded && window.enrollmentDashboardData && window.enrollmentDashboardData.courseStats) {
-                // Merge dynamic data with hardcoded data (dynamic takes priority)
+                // COMPLETELY REPLACE enrollment data (not merge)
+                Object.keys(enrollmentData).forEach(key => delete enrollmentData[key]);
                 Object.assign(enrollmentData, window.enrollmentDashboardData.courseStats);
                 console.log('✅ Using dynamic enrollment data from JSON file');
+                console.log('   Courses loaded:', Object.keys(enrollmentData).length);
+                console.log('   Sample:', Object.keys(enrollmentData).slice(0, 3));
 
                 // Also update census data if available
                 if (window.enrollmentDashboardData.censusData) {
                     censusData.quarters = window.enrollmentDashboardData.censusData.quarters;
                     censusData.headcount = window.enrollmentDashboardData.censusData.headcount;
+                    censusData.totalEnrollments = window.enrollmentDashboardData.censusData.totalEnrollments || [];
                     console.log('✅ Using dynamic census data from JSON file');
+                    console.log('   Quarters:', censusData.quarters.length);
+                    console.log('   Total Enrollments:', censusData.totalEnrollments.length);
                 }
             } else {
                 console.log('⚠️ Using hardcoded enrollment data (fallback)');
+                console.log('   Courses in fallback:', Object.keys(enrollmentData).length);
             }
 
             // Render all visualizations
@@ -593,10 +636,14 @@
             renderTopCoursesChart();
             renderWinterTrendChart();
             renderProgramHeadcountChart();
+            renderCumulativeCreditsChart();
             renderFacultyWorkloadChart();
             renderCapacityUtilization();
             renderCourseTable();
             renderInsights();
+
+            // Trigger year filter to default to 2024-25
+            document.getElementById('academicYearFilter').dispatchEvent(new Event('change'));
         }
 
         function renderForecast() {
@@ -642,34 +689,120 @@
         function renderOverallTrendChart() {
             const ctx = document.getElementById('overallTrendChart').getContext('2d');
 
+            // Use real quarterly trends data if available
+            let labels = [];
+            let uniqueStudents = [];
+            let totalEnrollments = [];
+
+            if (window.enrollmentDashboardData && window.enrollmentDashboardData.censusData) {
+                labels = window.enrollmentDashboardData.censusData.quarters || [];
+                uniqueStudents = window.enrollmentDashboardData.censusData.headcount || [];
+                totalEnrollments = window.enrollmentDashboardData.censusData.totalEnrollments || [];
+            } else if (window.enrollmentDashboardData && window.enrollmentDashboardData.quarterlyTrends) {
+                // Fallback to quarterly trends
+                const sortedTrends = window.enrollmentDashboardData.quarterlyTrends.sort((a, b) => {
+                    const order = { 'Fall': 0, 'Winter': 1, 'Spring': 2 };
+                    const [seasonA, yearA] = a.quarter.split(' ');
+                    const [seasonB, yearB] = b.quarter.split(' ');
+                    if (yearA !== yearB) return parseInt(yearA) - parseInt(yearB);
+                    return order[seasonA] - order[seasonB];
+                });
+
+                labels = sortedTrends.map(t => t.quarter);
+                uniqueStudents = sortedTrends.map(t => t.headcount);
+            } else {
+                // Fallback to hardcoded data (should not happen if JSON loaded)
+                console.warn('⚠️ Using fallback enrollment data');
+                labels = ['Fall 2022', 'Winter 2023', 'Spring 2023', 'Fall 2023', 'Winter 2024', 'Spring 2024', 'Fall 2024', 'Winter 2025', 'Spring 2025'];
+                uniqueStudents = [75, 77, 85, 97, 86, 77, 75, 77, 80];
+            }
+
+            const datasets = [
+                {
+                    label: 'Unique Students',
+                    data: uniqueStudents,
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    borderWidth: 3,
+                    pointRadius: 5,
+                    yAxisID: 'y'
+                }
+            ];
+
+            // Add total enrollments if available
+            if (totalEnrollments.length > 0) {
+                datasets.push({
+                    label: 'Total Seat Enrollments',
+                    data: totalEnrollments,
+                    borderColor: '#51cf66',
+                    backgroundColor: 'rgba(81, 207, 102, 0.1)',
+                    tension: 0.4,
+                    fill: false,
+                    borderWidth: 3,
+                    pointRadius: 5,
+                    yAxisID: 'y1'
+                });
+            }
+
             new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['Fall 2022', 'Winter 2023', 'Spring 2023', 'Fall 2023', 'Winter 2024', 'Spring 2024', 'Fall 2024', 'Winter 2025', 'Spring 2025', 'Fall 2025'],
-                    datasets: [
-                        {
-                            label: 'Total Enrollment',
-                            data: [680, 620, 590, 650, 580, 560, 690, 570, 580, 710],
-                            borderColor: '#667eea',
-                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                            tension: 0.4,
-                            fill: true
-                        }
-                    ]
+                    labels: labels,
+                    datasets: datasets
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
                     plugins: {
                         legend: {
                             display: true,
                             position: 'top'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: ${context.parsed.y}`;
+                                }
+                            }
                         }
                     },
                     scales: {
                         y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
                             beginAtZero: false,
-                            min: 500
+                            title: {
+                                display: true,
+                                text: 'Unique Students',
+                                color: '#667eea'
+                            },
+                            ticks: {
+                                color: '#667eea'
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: totalEnrollments.length > 0,
+                            position: 'right',
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: 'Total Seat Enrollments',
+                                color: '#51cf66'
+                            },
+                            ticks: {
+                                color: '#51cf66'
+                            },
+                            grid: {
+                                drawOnChartArea: false
+                            }
                         }
                     }
                 }
@@ -694,7 +827,7 @@
                 data: {
                     labels: ['Foundation\n(100-200)', 'Intermediate\n(300-level)', 'Advanced\n(400-level)'],
                     datasets: [{
-                        label: 'Average Enrollment',
+                        label: 'Total Students (avg)',
                         data: [foundationTotal, intermediateTotal, advancedTotal],
                         backgroundColor: [
                             'rgba(102, 126, 234, 0.8)',
@@ -820,19 +953,33 @@
                     const w2023 = data.quarterly['winter-2023']?.total || data.quarterly['winter-2023'] || 0;
                     const w2024 = data.quarterly['winter-2024']?.total || data.quarterly['winter-2024'] || 0;
                     const w2025 = data.quarterly['winter-2025']?.total || data.quarterly['winter-2025'] || 0;
-                    return { code, w2023, w2024, w2025 };
+
+                    // Predict Winter 2026 based on average of last 3 years
+                    const w2026 = Math.round((w2023 + w2024 + w2025) / 3);
+
+                    return { code, w2023, w2024, w2025, w2026 };
                 });
 
             new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['Winter 2023', 'Winter 2024', 'Winter 2025'],
+                    labels: ['Winter 2023', 'Winter 2024', 'Winter 2025', 'Winter 2026 (Projected)'],
                     datasets: winterCourses.map((course, index) => ({
                         label: course.code,
-                        data: [course.w2023, course.w2024, course.w2025],
+                        data: [course.w2023, course.w2024, course.w2025, course.w2026],
                         borderColor: `hsl(${index * 120}, 70%, 50%)`,
                         backgroundColor: `hsla(${index * 120}, 70%, 50%, 0.1)`,
-                        tension: 0.4
+                        tension: 0.4,
+                        borderDash: (context) => {
+                            // Make Winter 2026 dashed (index 3)
+                            return context.dataIndex === 3 ? [5, 5] : [];
+                        },
+                        segment: {
+                            borderDash: (context) => {
+                                // Dash the line between Winter 2025 and Winter 2026
+                                return context.p1DataIndex === 3 ? [5, 5] : [];
+                            }
+                        }
                     }))
                 },
                 options: {
@@ -856,8 +1003,12 @@
         function renderCourseTable() {
             const tbody = document.getElementById('courseTableBody');
 
+            console.log('renderCourseTable called, enrollmentData keys:', Object.keys(enrollmentData).length);
+
             const sortedCourses = Object.entries(enrollmentData)
                 .sort((a, b) => b[1].average - a[1].average);
+
+            console.log('Course rows to render:', sortedCourses.length);
 
             tbody.innerHTML = sortedCourses.map(([code, data]) => {
                 const trendClass = data.trend;
@@ -897,7 +1048,7 @@
                 data: {
                     labels: censusData.quarters,
                     datasets: [{
-                        label: 'Program Headcount (Unique Students)',
+                        label: 'Unique Students per Quarter',
                         data: censusData.headcount,
                         borderColor: '#667eea',
                         backgroundColor: 'rgba(102, 126, 234, 0.2)',
@@ -917,6 +1068,9 @@
                         },
                         tooltip: {
                             callbacks: {
+                                label: function(context) {
+                                    return `${context.parsed.y} students`;
+                                },
                                 afterLabel: function(context) {
                                     const index = context.dataIndex;
                                     if (index === 0) return '';
@@ -932,7 +1086,137 @@
                     scales: {
                         y: {
                             beginAtZero: false,
-                            min: 80
+                            suggestedMin: 60,
+                            suggestedMax: 100,
+                            title: {
+                                display: true,
+                                text: 'Unique Students'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderCumulativeCreditsChart() {
+            const ctx = document.getElementById('cumulativeCreditsChart').getContext('2d');
+
+            // Use actual total seat enrollments from census data
+            const academicYears = {
+                '2022-23': { fall: 0, winter: 0, spring: 0 },
+                '2023-24': { fall: 0, winter: 0, spring: 0 },
+                '2024-25': { fall: 0, winter: 0, spring: 0 },
+                '2025-26': { fall: 0, winter: 0, spring: 0 }
+            };
+
+            // Map census data to academic years (Fall YYYY starts academic year YYYY-YY+1)
+            censusData.quarters.forEach((quarter, index) => {
+                const totalEnrollments = censusData.totalEnrollments[index];
+
+                // Parse quarter name to determine academic year
+                // Academic year runs Fall → Winter → Spring (e.g., Fall 2022 → Winter 2023 → Spring 2023)
+                if (quarter.includes('Fall 2022')) academicYears['2022-23'].fall = totalEnrollments;
+                else if (quarter.includes('Winter 2023')) academicYears['2022-23'].winter = totalEnrollments;
+                else if (quarter.includes('Spring 2023')) academicYears['2022-23'].spring = totalEnrollments;
+                else if (quarter.includes('Fall 2023')) academicYears['2023-24'].fall = totalEnrollments;
+                else if (quarter.includes('Winter 2024')) academicYears['2023-24'].winter = totalEnrollments;
+                else if (quarter.includes('Spring 2024')) academicYears['2023-24'].spring = totalEnrollments;
+                else if (quarter.includes('Fall 2024')) academicYears['2024-25'].fall = totalEnrollments;
+                else if (quarter.includes('Winter 2025')) academicYears['2024-25'].winter = totalEnrollments;
+                else if (quarter.includes('Spring 2025')) academicYears['2024-25'].spring = totalEnrollments;
+                else if (quarter.includes('Fall 2025')) academicYears['2025-26'].fall = totalEnrollments;
+                else if (quarter.includes('Winter 2026')) academicYears['2025-26'].winter = totalEnrollments;
+                else if (quarter.includes('Spring 2026')) academicYears['2025-26'].spring = totalEnrollments;
+            });
+
+            // Create cumulative progression for each year
+            const createCumulativeData = (year) => {
+                const data = academicYears[year];
+                return [
+                    data.fall,                              // After Fall
+                    data.fall + data.winter,                // After Fall + Winter
+                    data.fall + data.winter + data.spring   // After Fall + Winter + Spring (full year)
+                ];
+            };
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['After Fall', 'After Winter', 'After Spring'],
+                    datasets: [
+                        {
+                            label: '2022-23',
+                            data: createCumulativeData('2022-23'),
+                            borderColor: '#667eea',
+                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                            tension: 0.3,
+                            fill: false,
+                            borderWidth: 3,
+                            pointRadius: 6
+                        },
+                        {
+                            label: '2023-24',
+                            data: createCumulativeData('2023-24'),
+                            borderColor: '#51cf66',
+                            backgroundColor: 'rgba(81, 207, 102, 0.1)',
+                            tension: 0.3,
+                            fill: false,
+                            borderWidth: 3,
+                            pointRadius: 6
+                        },
+                        {
+                            label: '2024-25',
+                            data: createCumulativeData('2024-25'),
+                            borderColor: '#ffa726',
+                            backgroundColor: 'rgba(255, 167, 38, 0.1)',
+                            tension: 0.3,
+                            fill: false,
+                            borderWidth: 3,
+                            pointRadius: 6
+                        },
+                        {
+                            label: '2025-26 (In Progress)',
+                            data: createCumulativeData('2025-26'),
+                            borderColor: '#ff6b6b',
+                            backgroundColor: 'rgba(255, 107, 107, 0.1)',
+                            tension: 0.3,
+                            fill: false,
+                            borderWidth: 3,
+                            pointRadius: 6,
+                            borderDash: [5, 5]  // Dashed line for current year
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.parsed.y;
+                                    return `${context.dataset.label}: ${value ? value.toLocaleString() : '0'} seat enrollments`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Cumulative Seat Enrollments'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Academic Year Progress'
+                            }
                         }
                     }
                 }
@@ -942,35 +1226,69 @@
         function renderFacultyWorkloadChart() {
             const ctx = document.getElementById('facultyWorkloadChart').getContext('2d');
 
-            // NOTE: Faculty workload is now dynamically calculated from actual schedule data
-            // Run: node scripts/process-enrollment-data.js to generate enrollment-dashboard-data.json
-            // This data will be auto-loaded if available
-
-            // Load dynamic data if available, otherwise use placeholder
+            // Use capacity planning data for faculty capacity visualization
             let facultyData = [];
+            let academicYear = '2025-26'; // Default to current year
 
-            // Check if dynamic data is loaded
-            if (window.enrollmentDashboardData && window.enrollmentDashboardData.facultyWorkload) {
-                facultyData = Object.entries(window.enrollmentDashboardData.facultyWorkload)
-                    .map(([name, data]) => ({
-                        name,
-                        students: data.students,
-                        sections: data.sections
-                    }))
-                    .sort((a, b) => b.students - a.students);
+            // Check if capacity planning data is available
+            if (window.enrollmentDashboardData && window.enrollmentDashboardData.capacityPlanning) {
+                const capacityData = window.enrollmentDashboardData.capacityPlanning[academicYear];
+
+                if (capacityData && capacityData.fullTimeFaculty) {
+                    // Build faculty data from capacity planning
+                    facultyData = capacityData.fullTimeFaculty.map(faculty => ({
+                        name: faculty.name,
+                        capacity: faculty.capacity,
+                        isFullTime: true
+                    }));
+
+                    // Sort by capacity (descending)
+                    facultyData.sort((a, b) => b.capacity - a.capacity);
+
+                    // Add adjunct indicator if any adjuncts are being used
+                    if (capacityData.adjunctCount > 0) {
+                        facultyData.push({
+                            name: `Adjunct Pool (${capacityData.adjunctCount})`,
+                            capacity: 0,
+                            isFullTime: false,
+                            note: 'Over-capacity demand'
+                        });
+                    }
+
+                    // Update capacity info box with dynamic data
+                    const infoBox = document.getElementById('capacityPlanningInfo');
+                    if (infoBox) {
+                        const netAvailable = capacityData.netAvailable || 0;
+                        const totalCapacity = capacityData.totalFullTimeCapacity || 0;
+                        const totalDemand = capacityData.totalDemand || 0;
+
+                        let statusMessage = '';
+                        if (netAvailable < 0) {
+                            statusMessage = `<span style="color: #ff6b6b;">Program is <strong>${Math.abs(netAvailable).toFixed(1)} credits OVER baseline capacity</strong>.</span>`;
+                        } else {
+                            statusMessage = `<span style="color: #51cf66;">Net available capacity: <strong>${netAvailable.toFixed(1)} credits</strong></span>`;
+                        }
+
+                        infoBox.innerHTML = `
+                            <strong>📊 Capacity Planning:</strong> This chart shows baseline teaching capacity for full-time faculty only.
+                            <strong>Adjunct capacity = 0</strong> for planning purposes - any adjunct teaching indicates over-capacity demand beyond full-time faculty baseline.
+                            <br><br>
+                            Total baseline capacity for ${academicYear}: <strong>${totalCapacity} credits/quarter</strong>. ${statusMessage}
+                        `;
+                    }
+                }
             } else {
-                // Placeholder data - THESE ARE ESTIMATES AND MAY BE INACCURATE
-                // Run process-enrollment-data.js to get accurate dynamic workload
-                console.warn('⚠️ Using placeholder faculty data. Run process-enrollment-data.js for accurate workload.');
-
+                // Fallback: Show full-time faculty list with standard capacities
+                console.warn('⚠️ No capacity planning data available');
                 facultyData = [
-                    { name: 'A.Sopu', students: 315, sections: 9 },
-                    { name: 'M.Lybbert', students: 143, sections: 8 },
-                    { name: 'S.Mills', students: 141, sections: 7 },
-                    { name: 'S.Durr', students: 132, sections: 8 },
-                    { name: 'C.Manikoth', students: 125, sections: 7 },
-                    { name: 'G.Hustrulid', students: 77, sections: 4 }, // Updated from 31 - was incorrect
-                    { name: 'T.Masingale', students: 72, sections: 4 }
+                    { name: 'Sonja Durr', capacity: 45, isFullTime: true },
+                    { name: 'Simeon Mills', capacity: 45, isFullTime: true },
+                    { name: 'Meg Lybbert', capacity: 45, isFullTime: true },
+                    { name: 'Ariel Sopu', capacity: 45, isFullTime: true },
+                    { name: 'Travis Masingale', capacity: 36, isFullTime: true },
+                    { name: 'Colin Manikoth', capacity: 36, isFullTime: true },
+                    { name: 'Ginelle Hustrulid', capacity: 36, isFullTime: true },
+                    { name: 'Melinda Breen (Chair)', capacity: 5, isFullTime: true }
                 ];
             }
 
@@ -979,17 +1297,19 @@
                 data: {
                     labels: facultyData.map(f => f.name),
                     datasets: [{
-                        label: 'Total Students Taught',
-                        data: facultyData.map(f => f.students),
+                        label: 'Baseline Capacity (Credits/Quarter)',
+                        data: facultyData.map(f => f.capacity),
                         backgroundColor: facultyData.map(f =>
-                            f.students > 200 ? 'rgba(255, 107, 107, 0.8)' :
-                            f.students > 100 ? 'rgba(255, 215, 61, 0.8)' :
-                            'rgba(81, 207, 102, 0.8)'
+                            !f.isFullTime ? 'rgba(255, 107, 107, 0.8)' :
+                            f.capacity >= 45 ? 'rgba(81, 207, 102, 0.8)' :
+                            f.capacity >= 36 ? 'rgba(100, 181, 246, 0.8)' :
+                            'rgba(255, 215, 61, 0.8)'
                         ),
                         borderColor: facultyData.map(f =>
-                            f.students > 200 ? '#ff6b6b' :
-                            f.students > 100 ? '#ffd93d' :
-                            '#51cf66'
+                            !f.isFullTime ? '#ff6b6b' :
+                            f.capacity >= 45 ? '#51cf66' :
+                            f.capacity >= 36 ? '#64b5f6' :
+                            '#ffd93d'
                         ),
                         borderWidth: 2
                     }]
@@ -1004,16 +1324,38 @@
                         },
                         tooltip: {
                             callbacks: {
+                                label: function(context) {
+                                    const index = context.dataIndex;
+                                    const faculty = facultyData[index];
+                                    if (!faculty.isFullTime) {
+                                        return 'Adjunct capacity = 0 (over-capacity indicator)';
+                                    }
+                                    return `Baseline Capacity: ${faculty.capacity} credits/quarter`;
+                                },
                                 afterLabel: function(context) {
                                     const index = context.dataIndex;
-                                    return `Sections: ${facultyData[index].sections}`;
+                                    const faculty = facultyData[index];
+                                    if (faculty.note) {
+                                        return faculty.note;
+                                    }
+                                    return null;
                                 }
                             }
+                        },
+                        title: {
+                            display: true,
+                            text: `Full-Time Faculty Baseline Capacity (${academicYear})`,
+                            font: { size: 14, weight: 'normal' },
+                            padding: { bottom: 10 }
                         }
                     },
                     scales: {
                         x: {
-                            beginAtZero: true
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Credits per Quarter'
+                            }
                         }
                     }
                 }
@@ -1024,6 +1366,8 @@
             const grid = document.getElementById('capacityGrid');
             const capacity = 24; // Standard room capacity
 
+            console.log('renderCapacityUtilization called, enrollmentData keys:', Object.keys(enrollmentData).length);
+
             const courses = Object.entries(enrollmentData)
                 .filter(([_, data]) => !data.isNew)
                 .map(([code, data]) => {
@@ -1033,6 +1377,8 @@
                     return { code, courseNum, ...data, utilization, status };
                 })
                 .sort((a, b) => b.courseNum - a.courseNum); // Sort by course number descending (490 to 100)
+
+            console.log('Capacity cards to render:', courses.length);
 
             grid.innerHTML = courses.map(course => {
                 const icon = course.status === 'over' ? '🔴' : course.status === 'near' ? '🟡' : '🟢';
@@ -1106,12 +1452,14 @@
                 if (window.enrollmentDashboardData && window.enrollmentDashboardData.censusData) {
                     censusData.quarters = window.enrollmentDashboardData.censusData.quarters;
                     censusData.headcount = window.enrollmentDashboardData.censusData.headcount;
+                    censusData.totalEnrollments = window.enrollmentDashboardData.censusData.totalEnrollments || [];
                 }
             } else {
                 // Filter census data by selected year
                 if (window.enrollmentDashboardData && window.enrollmentDashboardData.censusData) {
                     const originalQuarters = window.enrollmentDashboardData.censusData.quarters;
                     const originalHeadcount = window.enrollmentDashboardData.censusData.headcount;
+                    const originalTotalEnrollments = window.enrollmentDashboardData.censusData.totalEnrollments || [];
 
                     const filtered = originalQuarters.reduce((acc, quarter, index) => {
                         // Check if quarter belongs to selected academic year
@@ -1124,18 +1472,21 @@
                             if (quarter.includes(startYear) || quarter.includes(endYear)) {
                                 acc.quarters.push(quarter);
                                 acc.headcount.push(originalHeadcount[index]);
+                                acc.totalEnrollments.push(originalTotalEnrollments[index]);
                             }
                         }
                         return acc;
-                    }, { quarters: [], headcount: [] });
+                    }, { quarters: [], headcount: [], totalEnrollments: [] });
 
                     censusData.quarters = filtered.quarters;
                     censusData.headcount = filtered.headcount;
+                    censusData.totalEnrollments = filtered.totalEnrollments;
                 }
             }
 
             // Re-render program headcount chart with filtered data
             renderProgramHeadcountChart();
+            renderCumulativeCreditsChart();
 
             // Show filtered status in subtitle
             const subtitle = document.querySelector('.subtitle');
