@@ -850,7 +850,151 @@
                 align-items: stretch;
             }
         }
+
+        /* Edit Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: white;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #6b7280;
+            padding: 0;
+            line-height: 1;
+        }
+        .modal-close:hover {
+            color: #1f2937;
+        }
+        .modal-body {
+            padding: 24px;
+        }
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            padding: 16px 24px;
+            border-top: 1px solid #e5e7eb;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #374151;
+            font-size: 0.9rem;
+        }
+        .form-input, .form-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+        }
+        .form-input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+        .course-details-content {
+            padding: 20px 24px;
+        }
+        .course-details-content p {
+            margin: 8px 0;
+            color: #4b5563;
+        }
+        .course-details-content strong {
+            color: #1f2937;
+        }
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1f2937;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1100;
+        }
+        .toast.visible {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
     </style>
+
+    <!-- Schedule Manager Scripts -->
+    <script src="js/config/constants.js"></script>
+    <script src="js/schedule-manager.js"></script>
+    <script src="js/data-loader.js"></script>
 </head>
 <body>
     <div class="container">
@@ -921,9 +1065,10 @@
 
             <button onclick="highlightConflicts()">Highlight Conflicts</button>
             <button onclick="exportReport()">Export Report</button>
-            <button onclick="window.location.href='enrollment-dashboard.html'" style="background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);">📊 Enrollment Trends</button>
-            <button onclick="window.location.href='pages/workload-dashboard.html'" style="background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);">👥 Faculty Workload</button>
-            <button onclick="window.location.href='pages/applied-learning-dashboard.html'" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">📚 Applied Learning</button>
+            <button onclick="window.location.href='pages/schedule-editor.html'" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">Edit Schedule</button>
+            <button onclick="window.location.href='enrollment-dashboard.html'" style="background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);">Enrollment Trends</button>
+            <button onclick="window.location.href='pages/workload-dashboard.html'" style="background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);">Faculty Workload</button>
+            <button onclick="window.location.href='pages/applied-learning-dashboard.html'" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Applied Learning</button>
         </div>
 
         <div style="background: #e7f5ff; border-left: 4px solid #339af0; padding: 12px 16px; margin: 20px; border-radius: 8px; font-size: 0.9em;">
@@ -1436,17 +1581,19 @@
             const grid = document.getElementById('scheduleGrid');
             const data = scheduleData[quarter];
 
-            grid.innerHTML = '';
+            // Clear grid safely
+            while (grid.firstChild) {
+                grid.removeChild(grid.firstChild);
+            }
 
-            // Header row
-            grid.innerHTML += '<div class="grid-header">Time</div>';
-            grid.innerHTML += '<div class="grid-header">206 UX Lab</div>';
-            grid.innerHTML += '<div class="grid-header">207 Media Lab</div>';
-            grid.innerHTML += '<div class="grid-header">209 Mac Lab</div>';
-            grid.innerHTML += '<div class="grid-header">210 Mac Lab</div>';
-            grid.innerHTML += '<div class="grid-header">212 Project Lab</div>';
-            grid.innerHTML += '<div class="grid-header">CEB 102</div>';
-            grid.innerHTML += '<div class="grid-header">CEB 104</div>';
+            // Header row - create elements safely
+            const headers = ['Time', '206 UX Lab', '207 Media Lab', '209 Mac Lab', '210 Mac Lab', '212 Project Lab', 'CEB 102', 'CEB 104'];
+            headers.forEach(text => {
+                const header = document.createElement('div');
+                header.className = 'grid-header';
+                header.textContent = text;
+                grid.appendChild(header);
+            });
 
             const times = ['10:00-12:00', '13:00-15:00', '16:00-18:00'];
             const days = ['MW', 'TR'];
@@ -1454,20 +1601,26 @@
 
             days.forEach((day, dayIndex) => {
                 // Add divider for each day section
-                if (dayIndex === 0) {
-                    grid.innerHTML += '<div class="day-divider mw"></div>';
-                } else if (dayIndex === 1) {
-                    grid.innerHTML += '<div class="day-divider tr"></div>';
-                }
+                const divider = document.createElement('div');
+                divider.className = 'day-divider ' + (dayIndex === 0 ? 'mw' : 'tr');
+                grid.appendChild(divider);
 
                 times.forEach(time => {
-                    grid.innerHTML += `<div class="time-slot">${day}<br>${time}</div>`;
+                    const timeSlot = document.createElement('div');
+                    timeSlot.className = 'time-slot';
+                    timeSlot.textContent = day;
+                    timeSlot.appendChild(document.createElement('br'));
+                    timeSlot.appendChild(document.createTextNode(time));
+                    grid.appendChild(timeSlot);
 
                     rooms.forEach(room => {
                         const courses = data[day] && data[day][time] ?
                             data[day][time].filter(c => c.room === room) : [];
 
-                        const cellContent = courses.map(course => {
+                        const cell = document.createElement('div');
+                        cell.className = 'schedule-cell';
+
+                        courses.forEach(course => {
                             const conflictLevel = courses.length > 2 ? 0 : courses.length > 1 ? 1 : 2;
                             const facultyClass = getFacultyClass(course.instructor);
                             const enrollment = getEnrollmentData(course.code);
@@ -1478,37 +1631,71 @@
                                                    quarter === 'spring' ? 'spring-2025' : null;
 
                             let displayEnrollment = enrollment.average; // fallback
-                            let tooltipText = `Avg enrollment: ${enrollment.average}`;
+                            let tooltipText = 'Avg enrollment: ' + enrollment.average;
+                            let showYearIndicator = false;
 
-                            let yearIndicator = '';
                             if (prevYearQuarter && enrollment.quarterly && enrollment.quarterly[prevYearQuarter]) {
                                 const prevYearData = enrollment.quarterly[prevYearQuarter];
                                 displayEnrollment = typeof prevYearData === 'object' ? prevYearData.total : prevYearData;
-                                tooltipText = `${quarter.charAt(0).toUpperCase() + quarter.slice(1)} 2025: ${displayEnrollment} students`;
-                                yearIndicator = " <span style='font-size: 0.75em; opacity: 0.8;'>('25)</span>";
+                                tooltipText = quarter.charAt(0).toUpperCase() + quarter.slice(1) + ' 2025: ' + displayEnrollment + ' students';
+                                showYearIndicator = true;
                             } else if (enrollment.isNew) {
                                 displayEnrollment = 'NEW';
                                 tooltipText = 'New course - no historical data';
-                            } else {
-                                tooltipText = `Avg enrollment: ${enrollment.average}`;
                             }
 
                             const enrollmentLevel = typeof displayEnrollment === 'number' ? getEnrollmentLevel(displayEnrollment) : 'medium';
-                            const trendClass = `trend-${enrollment.trend}`;
+                            const trendClass = 'trend-' + enrollment.trend;
 
-                            return `
-                                <div class="course-block conflict-${conflictLevel} ${facultyClass} ${trendClass}"
-                                     onclick="showCourseDetails('${course.code}', '${course.name}', '${course.instructor}', ${course.credits}, '${course.room}')"
-                                     title="${tooltipText} | Peak: ${enrollment.peak} | Trend: ${enrollment.trend}">
-                                    ${courses.length > 1 ? `<span class="conflict-badge">${courses.length}</span>` : ''}
-                                    <div class="course-name">${course.code} <span class="enrollment-badge enrollment-${enrollmentLevel}">👥 ${displayEnrollment}${yearIndicator}</span></div>
-                                    <div class="course-details">${course.name}</div>
-                                    <div class="course-details">${course.instructor}</div>
-                                </div>
-                            `;
-                        }).join('');
+                            // Generate a course ID for editing
+                            const courseId = '2025-26-' + quarter + '-' + course.code.replace(/\s+/g, '').toLowerCase() + '-001';
 
-                        grid.innerHTML += `<div class="schedule-cell">${cellContent}</div>`;
+                            const block = document.createElement('div');
+                            block.className = 'course-block conflict-' + conflictLevel + ' ' + facultyClass + ' ' + trendClass;
+                            block.dataset.courseId = courseId;
+                            block.dataset.quarter = quarter;
+                            block.title = tooltipText + ' | Peak: ' + enrollment.peak + ' | Trend: ' + enrollment.trend;
+                            block.onclick = function() {
+                                showCourseDetails(course.code, course.name, course.instructor, course.credits, course.room, courseId, quarter);
+                            };
+
+                            if (courses.length > 1) {
+                                const badge = document.createElement('span');
+                                badge.className = 'conflict-badge';
+                                badge.textContent = courses.length;
+                                block.appendChild(badge);
+                            }
+
+                            const nameDiv = document.createElement('div');
+                            nameDiv.className = 'course-name';
+                            nameDiv.textContent = course.code + ' ';
+                            const enrollBadge = document.createElement('span');
+                            enrollBadge.className = 'enrollment-badge enrollment-' + enrollmentLevel;
+                            enrollBadge.textContent = '👥 ' + displayEnrollment;
+                            if (showYearIndicator) {
+                                const yearSpan = document.createElement('span');
+                                yearSpan.style.fontSize = '0.75em';
+                                yearSpan.style.opacity = '0.8';
+                                yearSpan.textContent = " ('25)";
+                                enrollBadge.appendChild(yearSpan);
+                            }
+                            nameDiv.appendChild(enrollBadge);
+
+                            const titleDiv = document.createElement('div');
+                            titleDiv.className = 'course-details';
+                            titleDiv.textContent = course.name;
+
+                            const instructorDiv = document.createElement('div');
+                            instructorDiv.className = 'course-details';
+                            instructorDiv.textContent = course.instructor;
+
+                            block.appendChild(nameDiv);
+                            block.appendChild(titleDiv);
+                            block.appendChild(instructorDiv);
+                            cell.appendChild(block);
+                        });
+
+                        grid.appendChild(cell);
                     });
                 });
             });
@@ -1518,77 +1705,200 @@
             const onlineSection = document.getElementById('onlineSection');
             const data = scheduleData[quarter];
 
+            // Clear section safely
+            while (onlineSection.firstChild) {
+                onlineSection.removeChild(onlineSection.firstChild);
+            }
+
             if (!data['ONLINE']) {
-                onlineSection.innerHTML = '';
                 return;
             }
 
             const onlineCourses = data['ONLINE']['async'] || [];
 
             if (onlineCourses.length === 0) {
-                onlineSection.innerHTML = '';
                 return;
             }
 
-            onlineSection.innerHTML = `
-                <div class="online-section">
-                    <h3>📱 Online Courses (Asynchronous)</h3>
-                    <div class="online-courses">
-                        ${onlineCourses.map(course => {
-                            const facultyClass = getFacultyClass(course.instructor);
-                            return `
-                                <div class="online-course-block ${facultyClass}">
-                                    <div class="course-name" style="color: white; font-size: 1em; margin-bottom: 5px;">${course.code}</div>
-                                    <div class="course-details" style="color: rgba(255,255,255,0.9);">${course.name}</div>
-                                    <div class="course-details" style="color: rgba(255,255,255,0.9);">${course.instructor}</div>
-                                    <div class="course-details" style="color: rgba(255,255,255,0.9); margin-top: 5px;">${course.credits} credits</div>
-                                </div>
-                            `;
-                        }).join('')}
-                    </div>
-                </div>
-            `;
+            const section = document.createElement('div');
+            section.className = 'online-section';
+
+            const heading = document.createElement('h3');
+            heading.textContent = '📱 Online Courses (Asynchronous)';
+            section.appendChild(heading);
+
+            const coursesContainer = document.createElement('div');
+            coursesContainer.className = 'online-courses';
+
+            onlineCourses.forEach(course => {
+                const facultyClass = getFacultyClass(course.instructor);
+                const block = document.createElement('div');
+                block.className = 'online-course-block ' + facultyClass;
+
+                const nameDiv = document.createElement('div');
+                nameDiv.className = 'course-name';
+                nameDiv.style.cssText = 'color: white; font-size: 1em; margin-bottom: 5px;';
+                nameDiv.textContent = course.code;
+
+                const titleDiv = document.createElement('div');
+                titleDiv.className = 'course-details';
+                titleDiv.style.color = 'rgba(255,255,255,0.9)';
+                titleDiv.textContent = course.name;
+
+                const instructorDiv = document.createElement('div');
+                instructorDiv.className = 'course-details';
+                instructorDiv.style.color = 'rgba(255,255,255,0.9)';
+                instructorDiv.textContent = course.instructor;
+
+                const creditsDiv = document.createElement('div');
+                creditsDiv.className = 'course-details';
+                creditsDiv.style.cssText = 'color: rgba(255,255,255,0.9); margin-top: 5px;';
+                creditsDiv.textContent = course.credits + ' credits';
+
+                block.appendChild(nameDiv);
+                block.appendChild(titleDiv);
+                block.appendChild(instructorDiv);
+                block.appendChild(creditsDiv);
+                coursesContainer.appendChild(block);
+            });
+
+            section.appendChild(coursesContainer);
+            onlineSection.appendChild(section);
         }
 
         function renderArrangedCourses(quarter) {
             const arrangedSection = document.getElementById('arrangedSection');
             const data = scheduleData[quarter];
 
+            // Clear section safely
+            while (arrangedSection.firstChild) {
+                arrangedSection.removeChild(arrangedSection.firstChild);
+            }
+
             if (!data['ARRANGED']) {
-                arrangedSection.innerHTML = '';
                 return;
             }
 
             const arrangedCourses = data['ARRANGED']['arranged'] || [];
 
             if (arrangedCourses.length === 0) {
-                arrangedSection.innerHTML = '';
                 return;
             }
 
-            arrangedSection.innerHTML = `
-                <div class="arranged-section">
-                    <h3>✈️ Arranged Courses (Study Abroad & Independent Study)</h3>
-                    <div class="arranged-courses">
-                        ${arrangedCourses.map(course => {
-                            const facultyClass = getFacultyClass(course.instructor);
-                            return `
-                                <div class="arranged-course-block ${facultyClass}">
-                                    <div class="course-name" style="color: white; font-size: 1em; margin-bottom: 5px;">${course.code}</div>
-                                    <div class="course-details" style="color: rgba(255,255,255,0.9);">${course.name}</div>
-                                    <div class="course-details" style="color: rgba(255,255,255,0.9);">${course.instructor}</div>
-                                    <div class="course-details" style="color: rgba(255,255,255,0.9); margin-top: 5px;">${course.credits} credits</div>
-                                </div>
-                            `;
-                        }).join('')}
-                    </div>
-                </div>
-            `;
+            const section = document.createElement('div');
+            section.className = 'arranged-section';
+
+            const heading = document.createElement('h3');
+            heading.textContent = '✈️ Arranged Courses (Study Abroad & Independent Study)';
+            section.appendChild(heading);
+
+            const coursesContainer = document.createElement('div');
+            coursesContainer.className = 'arranged-courses';
+
+            arrangedCourses.forEach(course => {
+                const facultyClass = getFacultyClass(course.instructor);
+                const block = document.createElement('div');
+                block.className = 'arranged-course-block ' + facultyClass;
+
+                const nameDiv = document.createElement('div');
+                nameDiv.className = 'course-name';
+                nameDiv.style.cssText = 'color: white; font-size: 1em; margin-bottom: 5px;';
+                nameDiv.textContent = course.code;
+
+                const titleDiv = document.createElement('div');
+                titleDiv.className = 'course-details';
+                titleDiv.style.color = 'rgba(255,255,255,0.9)';
+                titleDiv.textContent = course.name;
+
+                const instructorDiv = document.createElement('div');
+                instructorDiv.className = 'course-details';
+                instructorDiv.style.color = 'rgba(255,255,255,0.9)';
+                instructorDiv.textContent = course.instructor;
+
+                const creditsDiv = document.createElement('div');
+                creditsDiv.className = 'course-details';
+                creditsDiv.style.cssText = 'color: rgba(255,255,255,0.9); margin-top: 5px;';
+                creditsDiv.textContent = course.credits + ' credits';
+
+                block.appendChild(nameDiv);
+                block.appendChild(titleDiv);
+                block.appendChild(instructorDiv);
+                block.appendChild(creditsDiv);
+                coursesContainer.appendChild(block);
+            });
+
+            section.appendChild(coursesContainer);
+            arrangedSection.appendChild(section);
+        }
+
+        // Helper: Create quarter data cell content
+        function createQuarterCell(data, isNew) {
+            const cell = document.createElement('td');
+            if (isNew) {
+                const span = document.createElement('span');
+                span.style.cssText = 'color: #9b59b6; font-weight: 600;';
+                span.textContent = 'NEW';
+                cell.appendChild(span);
+            } else if (!data) {
+                cell.textContent = '-';
+            } else if (typeof data === 'object' && data.total !== undefined) {
+                const numSpan = document.createElement('span');
+                numSpan.className = 'enrollment-number';
+                numSpan.textContent = data.total;
+                cell.appendChild(numSpan);
+                cell.appendChild(document.createElement('br'));
+                const splitSpan = document.createElement('span');
+                splitSpan.className = 'enrollment-split';
+                splitSpan.textContent = '(' + (data.online || '-') + ' online, ' + (data.inPerson || '-') + ' in-person)';
+                cell.appendChild(splitSpan);
+            } else {
+                const numSpan = document.createElement('span');
+                numSpan.className = 'enrollment-number';
+                numSpan.textContent = data;
+                cell.appendChild(numSpan);
+            }
+            return cell;
+        }
+
+        // Helper: Create enrollment category section
+        function createEnrollmentCategory(title, subtitle, courses, type, formatFn) {
+            const section = document.createElement('div');
+            section.className = 'enrollment-category';
+
+            const h3 = document.createElement('h3');
+            h3.textContent = title;
+
+            const p = document.createElement('p');
+            p.style.cssText = 'color: #666; font-size: 0.9em; margin-bottom: 10px;';
+            p.textContent = subtitle;
+
+            const list = document.createElement('div');
+            list.className = 'enrollment-course-list';
+
+            courses.forEach(c => {
+                const tag = document.createElement('div');
+                tag.className = 'enrollment-course-tag ' + type;
+                const strong = document.createElement('strong');
+                strong.textContent = c.code;
+                tag.appendChild(strong);
+                tag.appendChild(document.createTextNode(' - ' + formatFn(c)));
+                list.appendChild(tag);
+            });
+
+            section.appendChild(h3);
+            section.appendChild(p);
+            section.appendChild(list);
+            return section;
         }
 
         function renderEnrollmentAnalytics(quarter) {
             const analyticsPanel = document.getElementById('enrollmentAnalytics');
             const data = scheduleData[quarter];
+
+            // Clear safely
+            while (analyticsPanel.firstChild) {
+                analyticsPanel.removeChild(analyticsPanel.firstChild);
+            }
 
             // Collect all courses from the quarter
             let allCourses = [];
@@ -1602,7 +1912,6 @@
                 }
             });
 
-            // Add online and arranged courses
             if (data['ONLINE'] && data['ONLINE']['async']) {
                 allCourses = allCourses.concat(data['ONLINE']['async']);
             }
@@ -1614,191 +1923,227 @@
 
             allCourses.forEach(course => {
                 const enrollment = getEnrollmentData(course.code);
-                if (enrollment.average >= 30) {
-                    highEnrollment.push({ ...course, enrollment });
-                }
-                if (enrollment.average < 15 && enrollment.average > 0) {
-                    lowEnrollment.push({ ...course, enrollment });
-                }
-                if (enrollment.trend === 'declining') {
-                    decliningTrend.push({ ...course, enrollment });
-                }
+                if (enrollment.average >= 30) highEnrollment.push({ ...course, enrollment });
+                if (enrollment.average < 15 && enrollment.average > 0) lowEnrollment.push({ ...course, enrollment });
+                if (enrollment.trend === 'declining') decliningTrend.push({ ...course, enrollment });
             });
 
-            // Build quarterly enrollment history section - show ALL courses for selected quarter
             const coursesWithHistory = allCourses
                 .reduce((unique, course) => {
-                    if (!unique.find(c => c.code === course.code)) {
-                        unique.push(course);
-                    }
+                    if (!unique.find(c => c.code === course.code)) unique.push(course);
                     return unique;
                 }, [])
-                .sort((a, b) => {
-                    // Sort by course number
-                    const numA = parseInt(a.code.split(' ')[1]);
-                    const numB = parseInt(b.code.split(' ')[1]);
-                    return numA - numB;
+                .sort((a, b) => parseInt(a.code.split(' ')[1]) - parseInt(b.code.split(' ')[1]));
+
+            const quarterName = quarter.charAt(0).toUpperCase() + quarter.slice(1);
+            const q2023Key = quarter + '-2023';
+            const q2024Key = quarter + '-2024';
+            const q2025Key = quarter + '-2025';
+
+            // Main container
+            const container = document.createElement('div');
+            container.className = 'enrollment-analytics';
+
+            const mainTitle = document.createElement('h2');
+            mainTitle.textContent = '📊 Enrollment Analytics - ' + quarterName + ' 2026';
+            container.appendChild(mainTitle);
+
+            // Per-Class Enrollment History (collapsible)
+            if (coursesWithHistory.length > 0) {
+                const historySection = document.createElement('div');
+                historySection.className = 'quarterly-enrollment';
+
+                const accordionHeader = document.createElement('h3');
+                accordionHeader.style.cssText = 'cursor: pointer; user-select: none; padding: 10px; background: #f8f9fa; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;';
+
+                const headerText = document.createElement('span');
+                headerText.textContent = '📈 Per-Class Enrollment History ';
+                const countSpan = document.createElement('span');
+                countSpan.style.cssText = 'font-size: 0.8em; color: #666; font-weight: normal;';
+                countSpan.textContent = '(' + coursesWithHistory.length + ' courses)';
+                headerText.appendChild(countSpan);
+
+                const arrow = document.createElement('span');
+                arrow.className = 'accordion-arrow';
+                arrow.style.fontSize = '0.8em';
+                arrow.textContent = '▶';
+
+                accordionHeader.appendChild(headerText);
+                accordionHeader.appendChild(arrow);
+
+                const contentDiv = document.createElement('div');
+                contentDiv.style.display = 'none';
+
+                accordionHeader.onclick = function() {
+                    if (contentDiv.style.display === 'none') {
+                        contentDiv.style.display = 'block';
+                        arrow.textContent = '▼';
+                    } else {
+                        contentDiv.style.display = 'none';
+                        arrow.textContent = '▶';
+                    }
+                };
+
+                const historyDesc = document.createElement('p');
+                historyDesc.style.cssText = 'color: #666; font-size: 0.9em; margin-bottom: 15px;';
+                historyDesc.textContent = 'Historical enrollment data for ' + quarterName + ' quarter courses';
+
+                const table = document.createElement('table');
+                table.className = 'enrollment-history-table';
+
+                const thead = document.createElement('thead');
+                const headerRow = document.createElement('tr');
+                ['Course', 'Course Name', 'Instructor', quarterName + ' 2023', quarterName + ' 2024', quarterName + ' 2025', 'Trend'].forEach(text => {
+                    const th = document.createElement('th');
+                    th.textContent = text;
+                    headerRow.appendChild(th);
+                });
+                thead.appendChild(headerRow);
+
+                const tbody = document.createElement('tbody');
+                coursesWithHistory.forEach(c => {
+                    const enrollment = getEnrollmentData(c.code);
+                    const quarterly = enrollment.quarterly || {};
+                    const row = document.createElement('tr');
+
+                    // Course code cell
+                    const codeCell = document.createElement('td');
+                    const codeStrong = document.createElement('strong');
+                    codeStrong.textContent = c.code;
+                    codeCell.appendChild(codeStrong);
+                    if (enrollment.isNew) {
+                        const badge = document.createElement('span');
+                        badge.className = 'course-note-badge';
+                        badge.textContent = 'NEW';
+                        codeCell.appendChild(badge);
+                    }
+
+                    const nameCell = document.createElement('td');
+                    nameCell.textContent = c.name;
+
+                    const instructorCell = document.createElement('td');
+                    instructorCell.textContent = c.instructor;
+
+                    const trendCell = document.createElement('td');
+                    const trendIcon = enrollment.trend === 'declining' ? '📉' : enrollment.trend === 'growing' ? '📈' : enrollment.trend === 'new' ? '✨' : '➡️';
+                    trendCell.textContent = trendIcon + ' ' + enrollment.trend;
+
+                    row.appendChild(codeCell);
+                    row.appendChild(nameCell);
+                    row.appendChild(instructorCell);
+                    row.appendChild(createQuarterCell(quarterly[q2023Key], enrollment.isNew));
+                    row.appendChild(createQuarterCell(quarterly[q2024Key], enrollment.isNew));
+                    row.appendChild(createQuarterCell(quarterly[q2025Key], enrollment.isNew));
+                    row.appendChild(trendCell);
+                    tbody.appendChild(row);
                 });
 
-            // Determine which historical quarters to show based on selected quarter
-            const quarterName = quarter.charAt(0).toUpperCase() + quarter.slice(1);
-            const q2023Key = `${quarter}-2023`;
-            const q2024Key = `${quarter}-2024`;
-            const q2025Key = `${quarter}-2025`;
+                table.appendChild(thead);
+                table.appendChild(tbody);
+                contentDiv.appendChild(historyDesc);
+                contentDiv.appendChild(table);
+                historySection.appendChild(accordionHeader);
+                historySection.appendChild(contentDiv);
+                container.appendChild(historySection);
+            }
 
-            analyticsPanel.innerHTML = `
-                <div class="enrollment-analytics">
-                    <h2>📊 Enrollment Analytics - ${quarterName} 2026</h2>
+            // High Demand section
+            if (highEnrollment.length > 0) {
+                container.appendChild(createEnrollmentCategory(
+                    '🔴 High Demand Courses (30+ students)',
+                    'These courses may need larger rooms or additional sections',
+                    highEnrollment,
+                    'high',
+                    c => 'Avg: ' + c.enrollment.average + ' | Peak: ' + c.enrollment.peak
+                ));
+            }
 
-                    ${coursesWithHistory.length > 0 ? `
-                    <div class="quarterly-enrollment">
-                        <h3 style="cursor: pointer; user-select: none; padding: 10px; background: #f8f9fa; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;"
-                            onclick="
-                                const content = this.nextElementSibling;
-                                const arrow = this.querySelector('.accordion-arrow');
-                                if (content.style.display === 'none') {
-                                    content.style.display = 'block';
-                                    arrow.textContent = '▼';
-                                } else {
-                                    content.style.display = 'none';
-                                    arrow.textContent = '▶';
-                                }
-                            ">
-                            <span>📈 Per-Class Enrollment History <span style="font-size: 0.8em; color: #666; font-weight: normal;">(${coursesWithHistory.length} courses)</span></span>
-                            <span class="accordion-arrow" style="font-size: 0.8em;">▶</span>
-                        </h3>
-                        <div style="display: none;">
-                            <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;">Historical enrollment data for ${quarterName} quarter courses</p>
-                            <table class="enrollment-history-table">
-                            <thead>
-                                <tr>
-                                    <th>Course</th>
-                                    <th>Course Name</th>
-                                    <th>Instructor</th>
-                                    <th>${quarterName} 2023</th>
-                                    <th>${quarterName} 2024</th>
-                                    <th>${quarterName} 2025</th>
-                                    <th>Trend</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${coursesWithHistory.map(c => {
-                                    const enrollment = getEnrollmentData(c.code);
-                                    const quarterly = enrollment.quarterly || {};
+            // Low Enrollment section
+            if (lowEnrollment.length > 0) {
+                container.appendChild(createEnrollmentCategory(
+                    '🟢 Low Enrollment Courses (<15 students)',
+                    'Consider consolidation or review offering frequency',
+                    lowEnrollment,
+                    'low',
+                    c => 'Avg: ' + c.enrollment.average + ' | Instructor: ' + c.instructor
+                ));
+            }
 
-                                    let q2023 = '-', q2024 = '-', q2025 = '-';
+            // Declining Trend section
+            if (decliningTrend.length > 0) {
+                container.appendChild(createEnrollmentCategory(
+                    '⚠️ Declining Enrollment Trends',
+                    'Courses showing declining enrollment patterns',
+                    decliningTrend,
+                    'declining',
+                    c => 'Avg: ' + c.enrollment.average + ' | Trend: ' + c.enrollment.trend + ' ↘'
+                ));
+            }
 
-                                    if (enrollment.isNew) {
-                                        q2023 = q2024 = q2025 = '<span style="color: #9b59b6; font-weight: 600;">NEW</span>';
-                                    } else {
-                                        // Handle quarterly data - can be either a number or object with {total, online, inPerson}
-                                        const data2023 = quarterly[q2023Key];
-                                        const data2024 = quarterly[q2024Key];
-                                        const data2025 = quarterly[q2025Key];
-
-                                        // Format each quarter's data
-                                        const formatQuarterData = (data) => {
-                                            if (!data) return '-';
-                                            if (typeof data === 'object' && data.total !== undefined) {
-                                                // DESN 216 style with split data
-                                                return `<span class="enrollment-number">${data.total}</span><br><span class="enrollment-split">(${data.online || '-'} online, ${data.inPerson || '-'} in-person)</span>`;
-                                            }
-                                            // Regular number
-                                            return `<span class="enrollment-number">${data}</span>`;
-                                        };
-
-                                        q2023 = formatQuarterData(data2023);
-                                        q2024 = formatQuarterData(data2024);
-                                        q2025 = formatQuarterData(data2025);
-                                    }
-
-                                    const trendIcon = enrollment.trend === 'declining' ? '📉' : enrollment.trend === 'growing' ? '📈' : enrollment.trend === 'new' ? '✨' : '➡️';
-
-                                    return `
-                                        <tr>
-                                            <td><strong>${c.code}</strong>${enrollment.isNew ? '<span class="course-note-badge">NEW</span>' : ''}</td>
-                                            <td>${c.name}</td>
-                                            <td>${c.instructor}</td>
-                                            <td>${q2023}</td>
-                                            <td>${q2024}</td>
-                                            <td>${q2025}</td>
-                                            <td>${trendIcon} ${enrollment.trend}</td>
-                                        </tr>
-                                    `;
-                                }).join('')}
-                            </tbody>
-                        </table>
-                        </div>
-                    </div>
-                    ` : ''}
-
-                    ${highEnrollment.length > 0 ? `
-                    <div class="enrollment-category">
-                        <h3>🔴 High Demand Courses (30+ students)</h3>
-                        <p style="color: #666; font-size: 0.9em; margin-bottom: 10px;">These courses may need larger rooms or additional sections</p>
-                        <div class="enrollment-course-list">
-                            ${highEnrollment.map(c => `
-                                <div class="enrollment-course-tag high">
-                                    <strong>${c.code}</strong> - Avg: ${c.enrollment.average} | Peak: ${c.enrollment.peak}
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                    ` : ''}
-
-                    ${lowEnrollment.length > 0 ? `
-                    <div class="enrollment-category">
-                        <h3>🟢 Low Enrollment Courses (<15 students)</h3>
-                        <p style="color: #666; font-size: 0.9em; margin-bottom: 10px;">Consider consolidation or review offering frequency</p>
-                        <div class="enrollment-course-list">
-                            ${lowEnrollment.map(c => `
-                                <div class="enrollment-course-tag low">
-                                    <strong>${c.code}</strong> - Avg: ${c.enrollment.average} | Instructor: ${c.instructor}
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                    ` : ''}
-
-                    ${decliningTrend.length > 0 ? `
-                    <div class="enrollment-category">
-                        <h3>⚠️ Declining Enrollment Trends</h3>
-                        <p style="color: #666; font-size: 0.9em; margin-bottom: 10px;">Courses showing declining enrollment patterns</p>
-                        <div class="enrollment-course-list">
-                            ${decliningTrend.map(c => `
-                                <div class="enrollment-course-tag declining">
-                                    <strong>${c.code}</strong> - Avg: ${c.enrollment.average} | Trend: ${c.enrollment.trend} ↘
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                    ` : ''}
-                </div>
-            `;
+            analyticsPanel.appendChild(container);
         }
 
         function renderConflicts(quarter) {
             const conflictsList = document.getElementById('conflictsList');
             const conflicts = conflictData[quarter] || [];
 
+            // Clear safely
+            while (conflictsList.firstChild) {
+                conflictsList.removeChild(conflictsList.firstChild);
+            }
+
             if (conflicts.length === 0) {
-                conflictsList.innerHTML = '<p style="color: #51cf66; font-weight: 600;">No major conflicts detected for this quarter!</p>';
+                const noConflicts = document.createElement('p');
+                noConflicts.style.cssText = 'color: #51cf66; font-weight: 600;';
+                noConflicts.textContent = 'No major conflicts detected for this quarter!';
+                conflictsList.appendChild(noConflicts);
                 return;
             }
 
-            conflictsList.innerHTML = conflicts.map(conflict => `
-                <div class="conflict-item ${conflict.severity}">
-                    <div class="conflict-header">
-                        <span class="conflict-time">${conflict.time}</span>
-                        <span class="severity-badge ${conflict.severity}">${conflict.severity}</span>
-                    </div>
-                    <p style="margin: 10px 0; color: #495057;">${conflict.impact}</p>
-                    <p style="margin: 10px 0; color: #6c757d; font-size: 0.9em;"><strong>Students Affected:</strong> ${conflict.affected}</p>
-                    <div class="conflict-courses">
-                        ${conflict.courses.map(course => `<span class="conflict-course-tag">${course}</span>`).join('')}
-                    </div>
-                </div>
-            `).join('');
+            conflicts.forEach(conflict => {
+                const item = document.createElement('div');
+                item.className = 'conflict-item ' + conflict.severity;
+
+                const header = document.createElement('div');
+                header.className = 'conflict-header';
+
+                const timeSpan = document.createElement('span');
+                timeSpan.className = 'conflict-time';
+                timeSpan.textContent = conflict.time;
+
+                const severityBadge = document.createElement('span');
+                severityBadge.className = 'severity-badge ' + conflict.severity;
+                severityBadge.textContent = conflict.severity;
+
+                header.appendChild(timeSpan);
+                header.appendChild(severityBadge);
+
+                const impactP = document.createElement('p');
+                impactP.style.cssText = 'margin: 10px 0; color: #495057;';
+                impactP.textContent = conflict.impact;
+
+                const affectedP = document.createElement('p');
+                affectedP.style.cssText = 'margin: 10px 0; color: #6c757d; font-size: 0.9em;';
+                const affectedStrong = document.createElement('strong');
+                affectedStrong.textContent = 'Students Affected:';
+                affectedP.appendChild(affectedStrong);
+                affectedP.appendChild(document.createTextNode(' ' + conflict.affected));
+
+                const coursesDiv = document.createElement('div');
+                coursesDiv.className = 'conflict-courses';
+                conflict.courses.forEach(course => {
+                    const tag = document.createElement('span');
+                    tag.className = 'conflict-course-tag';
+                    tag.textContent = course;
+                    coursesDiv.appendChild(tag);
+                });
+
+                item.appendChild(header);
+                item.appendChild(impactP);
+                item.appendChild(affectedP);
+                item.appendChild(coursesDiv);
+                conflictsList.appendChild(item);
+            });
         }
 
         function renderConflictSolver(quarter) {
@@ -1857,23 +2202,29 @@
                 });
             }
 
+            // Clear safely
+            while (solverList.firstChild) {
+                solverList.removeChild(solverList.firstChild);
+            }
+
             if (conflictsToSolve.length === 0) {
-                solverList.innerHTML = '<p style="color: #51cf66; font-weight: 600;">✓ No urgent conflicts requiring automated resolution for this quarter.</p>';
+                const noConflicts = document.createElement('p');
+                noConflicts.style.cssText = 'color: #51cf66; font-weight: 600;';
+                noConflicts.textContent = '✓ No urgent conflicts requiring automated resolution for this quarter.';
+                solverList.appendChild(noConflicts);
                 return;
             }
 
             // Analyze solutions for each conflict
-            solverList.innerHTML = conflictsToSolve.map(conflict => {
+            conflictsToSolve.forEach(conflict => {
                 const solutions = conflict.alternativeSlots.map(slot => {
                     const existingCourses = scheduleMatrix[slot] || [];
                     const roomsUsed = existingCourses.length;
-                    const roomsAvailable = 6 - roomsUsed; // 6 total rooms (excluding 207)
+                    const roomsAvailable = 6 - roomsUsed;
 
-                    // Check if this creates a conflict
-                    const wouldCreateConflict = roomsUsed >= 4; // 4+ courses = likely conflict
+                    const wouldCreateConflict = roomsUsed >= 4;
                     const hasSpace = roomsAvailable > 0;
 
-                    // Check if instructor has conflict at this time
                     const instructorConflict = existingCourses.some(course =>
                         course.includes(conflict.instructor) ||
                         course.includes(conflict.instructor.split('.')[1])
@@ -1895,68 +2246,129 @@
                         recommendation = '✅ BEST OPTION';
                     }
 
-                    return {
-                        slot,
-                        existingCourses,
-                        roomsAvailable,
-                        status,
-                        recommendation,
-                        instructorConflict
-                    };
+                    return { slot, existingCourses, roomsAvailable, status, recommendation, instructorConflict };
                 }).sort((a, b) => {
-                    // Sort best options first
                     if (a.status === 'viable' && b.status !== 'viable') return -1;
                     if (b.status === 'viable' && a.status !== 'viable') return 1;
                     return b.roomsAvailable - a.roomsAvailable;
                 });
 
-                return `
-                    <div class="conflict-solution-card">
-                        <h3>${conflict.name}</h3>
-                        <p style="color: #666; margin-bottom: 15px;">
-                            <strong>Impact:</strong> ${conflict.affectedStudents} students affected<br>
-                            <strong>Issue:</strong> ${conflict.description}<br>
-                            <strong>Current Slot:</strong> ${conflict.currentSlot}
-                        </p>
+                const card = document.createElement('div');
+                card.className = 'conflict-solution-card';
 
-                        <h4 style="margin-top: 15px; margin-bottom: 10px; color: #495057;">Automated Solutions Analysis:</h4>
-                        <p style="font-size: 0.9em; color: #666; margin-bottom: 15px;">
-                            Matrix analysis for moving <strong>${conflict.courseToMove}</strong> (${conflict.instructor}):
-                        </p>
+                const title = document.createElement('h3');
+                title.textContent = conflict.name;
 
-                        ${solutions.map((sol, index) => `
-                            <div class="solution-option ${sol.status === 'blocked' ? 'creates-conflict' : sol.status === 'warning' ? 'warning' : ''}">
-                                <div class="solution-recommendation">
-                                    ${sol.recommendation} Move to ${sol.slot}
-                                </div>
-                                <div class="solution-details">
-                                    <strong>Currently scheduled:</strong> ${sol.existingCourses.length > 0 ? sol.existingCourses.join(', ') : 'EMPTY SLOT'}<br>
-                                    <strong>Rooms available:</strong> ${sol.roomsAvailable} of 6<br>
-                                    ${sol.instructorConflict ? '<span style="color: #ff6b6b;">⚠️ Instructor already teaching at this time</span>' : ''}
-                                    ${sol.status === 'viable' && sol.roomsAvailable >= 4 ? '<span style="color: #51cf66;">✓ Minimal impact, plenty of space</span>' : ''}
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            }).join('');
+                const infoP = document.createElement('p');
+                infoP.style.cssText = 'color: #666; margin-bottom: 15px;';
+                const impactStrong = document.createElement('strong');
+                impactStrong.textContent = 'Impact:';
+                infoP.appendChild(impactStrong);
+                infoP.appendChild(document.createTextNode(' ' + conflict.affectedStudents + ' students affected'));
+                infoP.appendChild(document.createElement('br'));
+                const issueStrong = document.createElement('strong');
+                issueStrong.textContent = 'Issue:';
+                infoP.appendChild(issueStrong);
+                infoP.appendChild(document.createTextNode(' ' + conflict.description));
+                infoP.appendChild(document.createElement('br'));
+                const slotStrong = document.createElement('strong');
+                slotStrong.textContent = 'Current Slot:';
+                infoP.appendChild(slotStrong);
+                infoP.appendChild(document.createTextNode(' ' + conflict.currentSlot));
+
+                const analysisH4 = document.createElement('h4');
+                analysisH4.style.cssText = 'margin-top: 15px; margin-bottom: 10px; color: #495057;';
+                analysisH4.textContent = 'Automated Solutions Analysis:';
+
+                const matrixP = document.createElement('p');
+                matrixP.style.cssText = 'font-size: 0.9em; color: #666; margin-bottom: 15px;';
+                matrixP.appendChild(document.createTextNode('Matrix analysis for moving '));
+                const courseStrong = document.createElement('strong');
+                courseStrong.textContent = conflict.courseToMove;
+                matrixP.appendChild(courseStrong);
+                matrixP.appendChild(document.createTextNode(' (' + conflict.instructor + '):'));
+
+                card.appendChild(title);
+                card.appendChild(infoP);
+                card.appendChild(analysisH4);
+                card.appendChild(matrixP);
+
+                solutions.forEach(sol => {
+                    const option = document.createElement('div');
+                    option.className = 'solution-option' + (sol.status === 'blocked' ? ' creates-conflict' : sol.status === 'warning' ? ' warning' : '');
+
+                    const recDiv = document.createElement('div');
+                    recDiv.className = 'solution-recommendation';
+                    recDiv.textContent = sol.recommendation + ' Move to ' + sol.slot;
+
+                    const detailsDiv = document.createElement('div');
+                    detailsDiv.className = 'solution-details';
+                    const schedStrong = document.createElement('strong');
+                    schedStrong.textContent = 'Currently scheduled:';
+                    detailsDiv.appendChild(schedStrong);
+                    detailsDiv.appendChild(document.createTextNode(' ' + (sol.existingCourses.length > 0 ? sol.existingCourses.join(', ') : 'EMPTY SLOT')));
+                    detailsDiv.appendChild(document.createElement('br'));
+                    const roomsStrong = document.createElement('strong');
+                    roomsStrong.textContent = 'Rooms available:';
+                    detailsDiv.appendChild(roomsStrong);
+                    detailsDiv.appendChild(document.createTextNode(' ' + sol.roomsAvailable + ' of 6'));
+                    detailsDiv.appendChild(document.createElement('br'));
+
+                    if (sol.instructorConflict) {
+                        const warnSpan = document.createElement('span');
+                        warnSpan.style.color = '#ff6b6b';
+                        warnSpan.textContent = '⚠️ Instructor already teaching at this time';
+                        detailsDiv.appendChild(warnSpan);
+                    }
+                    if (sol.status === 'viable' && sol.roomsAvailable >= 4) {
+                        const okSpan = document.createElement('span');
+                        okSpan.style.color = '#51cf66';
+                        okSpan.textContent = '✓ Minimal impact, plenty of space';
+                        detailsDiv.appendChild(okSpan);
+                    }
+
+                    option.appendChild(recDiv);
+                    option.appendChild(detailsDiv);
+                    card.appendChild(option);
+                });
+
+                solverList.appendChild(card);
+            });
         }
 
         function renderRecommendations(quarter) {
             const recList = document.getElementById('recommendationsList');
             const recs = recommendations[quarter] || [];
 
+            // Clear safely
+            while (recList.firstChild) {
+                recList.removeChild(recList.firstChild);
+            }
+
             if (recs.length === 0) {
-                recList.innerHTML = '<p>No specific recommendations for this quarter.</p>';
+                const noRecs = document.createElement('p');
+                noRecs.textContent = 'No specific recommendations for this quarter.';
+                recList.appendChild(noRecs);
                 return;
             }
 
-            recList.innerHTML = recs.map(rec => `
-                <div class="recommendation-item ${rec.priority === 'critical' ? 'priority-critical' : rec.priority === 'high' ? 'priority-high' : ''}">
-                    <h3>${rec.title}</h3>
-                    <p>${rec.description}</p>
-                </div>
-            `).join('');
+            recs.forEach(rec => {
+                const item = document.createElement('div');
+                let className = 'recommendation-item';
+                if (rec.priority === 'critical') className += ' priority-critical';
+                else if (rec.priority === 'high') className += ' priority-high';
+                item.className = className;
+
+                const title = document.createElement('h3');
+                title.textContent = rec.title;
+
+                const desc = document.createElement('p');
+                desc.textContent = rec.description;
+
+                item.appendChild(title);
+                item.appendChild(desc);
+                recList.appendChild(item);
+            });
         }
 
         function updateStats(quarter) {
@@ -2010,54 +2422,92 @@
 
         function displayMinorInfo(minorKey) {
             const panel = document.getElementById('minorInfoPanel');
+
+            // Clear safely
+            while (panel.firstChild) {
+                panel.removeChild(panel.firstChild);
+            }
+
             if (minorKey === 'all') {
-                panel.innerHTML = '';
                 return;
             }
 
             const minor = minors[minorKey];
-            panel.innerHTML = `
-                <div class="minor-info-panel">
-                    <h3>${minor.name}</h3>
-                    <p>Required Courses:</p>
-                    <div class="minor-courses">
-                        ${minor.courses.map(course => `<div class="minor-course-tag">${course}</div>`).join('')}
-                    </div>
-                    ${minor.note ? `<div class="minor-note">${minor.note}</div>` : ''}
-                </div>
-            `;
+
+            const infoPanel = document.createElement('div');
+            infoPanel.className = 'minor-info-panel';
+
+            const title = document.createElement('h3');
+            title.textContent = minor.name;
+
+            const reqText = document.createElement('p');
+            reqText.textContent = 'Required Courses:';
+
+            const coursesDiv = document.createElement('div');
+            coursesDiv.className = 'minor-courses';
+            minor.courses.forEach(course => {
+                const tag = document.createElement('div');
+                tag.className = 'minor-course-tag';
+                tag.textContent = course;
+                coursesDiv.appendChild(tag);
+            });
+
+            infoPanel.appendChild(title);
+            infoPanel.appendChild(reqText);
+            infoPanel.appendChild(coursesDiv);
+
+            if (minor.note) {
+                const noteDiv = document.createElement('div');
+                noteDiv.className = 'minor-note';
+                noteDiv.textContent = minor.note;
+                infoPanel.appendChild(noteDiv);
+            }
+
+            panel.appendChild(infoPanel);
         }
 
         function displayTrackSuggestions(trackKey) {
             const panel = document.getElementById('trackSuggestionsPanel');
+
+            // Clear safely
+            while (panel.firstChild) {
+                panel.removeChild(panel.firstChild);
+            }
+
             if (trackKey === 'all') {
-                panel.innerHTML = '';
                 return;
             }
 
             const track = studentTracks[trackKey];
             const suggestedMinors = track.suggestedMinors.map(minorKey => {
                 const minor = minors[minorKey];
-                const isTypical = minor.typical;
                 return {
                     key: minorKey,
                     name: minor.name,
-                    typical: isTypical
+                    typical: minor.typical
                 };
             });
 
-            panel.innerHTML = `
-                <div class="suggested-minors">
-                    <h3>Suggested Minors for ${track.name} Students</h3>
-                    <div class="minor-list">
-                        ${suggestedMinors.map(m => `
-                            <div class="minor-chip ${!m.typical ? 'not-typical' : ''}" onclick="selectMinor('${m.key}')">
-                                ${m.name}
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
+            const container = document.createElement('div');
+            container.className = 'suggested-minors';
+
+            const title = document.createElement('h3');
+            title.textContent = 'Suggested Minors for ' + track.name + ' Students';
+
+            const list = document.createElement('div');
+            list.className = 'minor-list';
+
+            suggestedMinors.forEach(m => {
+                const chip = document.createElement('div');
+                chip.className = 'minor-chip' + (!m.typical ? ' not-typical' : '');
+                chip.textContent = m.name;
+                chip.onclick = function() { selectMinor(m.key); };
+                list.appendChild(chip);
+            });
+
+            container.appendChild(title);
+            container.appendChild(list);
+            panel.appendChild(container);
         }
 
         function selectMinor(minorKey) {
@@ -2081,8 +2531,138 @@
             }
         }
 
-        function showCourseDetails(code, name, instructor, credits, room) {
-            alert(`${code}: ${name}\n\nInstructor: ${instructor}\nCredits: ${credits}\nRoom: ${room}`);
+        // Current course being viewed/edited
+        let currentCourseData = null;
+
+        function showCourseDetails(code, name, instructor, credits, room, courseId, quarter) {
+            // Store course data for edit modal
+            currentCourseData = { code, name, instructor, credits, room, courseId, quarter };
+
+            // Build details content
+            const content = document.getElementById('courseDetailsContent');
+            content.innerHTML = `
+                <p><strong>Course:</strong> ${code} - ${name || 'N/A'}</p>
+                <p><strong>Instructor:</strong> ${instructor || 'TBD'}</p>
+                <p><strong>Credits:</strong> ${credits || 'N/A'}</p>
+                <p><strong>Room:</strong> ${room || 'TBD'}</p>
+            `;
+
+            document.getElementById('detailsModalTitle').textContent = code;
+            document.getElementById('courseDetailsModal').classList.add('active');
+        }
+
+        function closeCourseDetailsModal() {
+            document.getElementById('courseDetailsModal').classList.remove('active');
+            currentCourseData = null;
+        }
+
+        function openEditModal() {
+            if (!currentCourseData) return;
+
+            // Close details modal
+            document.getElementById('courseDetailsModal').classList.remove('active');
+
+            // Fill edit form with current data
+            document.getElementById('editCourseId').value = currentCourseData.courseId || '';
+            document.getElementById('editQuarter').value = currentCourseData.quarter || '';
+            document.getElementById('editCourseCode').value = currentCourseData.code || '';
+            document.getElementById('editSection').value = '001';
+            document.getElementById('editCredits').value = currentCourseData.credits || 5;
+            document.getElementById('editEnrollmentCap').value = '';
+            document.getElementById('editFaculty').value = currentCourseData.instructor || '';
+            document.getElementById('editRoom').value = currentCourseData.room || '';
+            document.getElementById('editStartTime').value = '';
+            document.getElementById('editEndTime').value = '';
+            document.getElementById('editNotes').value = '';
+
+            // Clear day checkboxes
+            ['M', 'T', 'W', 'Th', 'F'].forEach(day => {
+                const cb = document.getElementById('editDay' + day);
+                if (cb) cb.checked = false;
+            });
+
+            // Try to get more data from ScheduleManager if available
+            if (typeof ScheduleManager !== 'undefined' && currentCourseData.courseId) {
+                const schedule = ScheduleManager.getQuarterSchedule('2025-26', currentCourseData.quarter);
+                const course = schedule.find(c => c.id === currentCourseData.courseId);
+                if (course) {
+                    document.getElementById('editSection').value = course.section || '001';
+                    document.getElementById('editEnrollmentCap').value = course.enrollmentCap || '';
+                    document.getElementById('editStartTime').value = course.startTime || '';
+                    document.getElementById('editEndTime').value = course.endTime || '';
+                    document.getElementById('editNotes').value = course.notes || '';
+                    if (course.days && Array.isArray(course.days)) {
+                        course.days.forEach(day => {
+                            const cb = document.getElementById('editDay' + day);
+                            if (cb) cb.checked = true;
+                        });
+                    }
+                }
+            }
+
+            // Open edit modal
+            document.getElementById('courseEditModal').classList.add('active');
+        }
+
+        function closeEditModal() {
+            document.getElementById('courseEditModal').classList.remove('active');
+        }
+
+        function getEditSelectedDays() {
+            const days = [];
+            ['M', 'T', 'W', 'Th', 'F'].forEach(day => {
+                const cb = document.getElementById('editDay' + day);
+                if (cb && cb.checked) days.push(day);
+            });
+            return days;
+        }
+
+        function handleEditFormSubmit(e) {
+            e.preventDefault();
+
+            const courseId = document.getElementById('editCourseId').value;
+            const quarter = document.getElementById('editQuarter').value;
+
+            const updates = {
+                section: document.getElementById('editSection').value,
+                credits: parseInt(document.getElementById('editCredits').value) || 5,
+                enrollmentCap: parseInt(document.getElementById('editEnrollmentCap').value) || null,
+                assignedFaculty: document.getElementById('editFaculty').value || null,
+                room: document.getElementById('editRoom').value || null,
+                days: getEditSelectedDays(),
+                startTime: document.getElementById('editStartTime').value || null,
+                endTime: document.getElementById('editEndTime').value || null,
+                notes: document.getElementById('editNotes').value || null
+            };
+
+            if (typeof ScheduleManager !== 'undefined' && courseId) {
+                const result = ScheduleManager.updateCourseAssignment('2025-26', quarter, courseId, updates);
+                if (result.success) {
+                    showToast('Course updated successfully');
+                    closeEditModal();
+                    // Refresh the schedule view
+                    const currentQuarter = document.getElementById('quarterSelect').value;
+                    renderSchedule(currentQuarter);
+                    renderOnlineCourses(currentQuarter);
+                    renderArrangedCourses(currentQuarter);
+                } else {
+                    showToast(result.errors.join(', '), 'error');
+                }
+            } else {
+                showToast('Changes saved locally');
+                closeEditModal();
+            }
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            toastMessage.textContent = message;
+            toast.style.background = type === 'error' ? '#dc3545' : '#1f2937';
+            toast.classList.add('visible');
+            setTimeout(() => {
+                toast.classList.remove('visible');
+            }, 3000);
         }
 
         function highlightConflicts() {
@@ -2128,6 +2708,12 @@
         async function init() {
             await loadEnrollmentData();
 
+            // Initialize ScheduleManager for editing
+            if (typeof ScheduleManager !== 'undefined') {
+                await ScheduleManager.init({ catalogPath: 'data/course-catalog.json' });
+                console.log('ScheduleManager initialized');
+            }
+
             // Initial render
             renderSchedule('spring');
             renderOnlineCourses('spring');
@@ -2142,5 +2728,119 @@
         // Start the app when page loads
         init();
     </script>
+
+    <!-- Course Details Modal -->
+    <div class="modal-overlay" id="courseDetailsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="detailsModalTitle">Course Details</h2>
+                <button class="modal-close" onclick="closeCourseDetailsModal()">&times;</button>
+            </div>
+            <div class="course-details-content" id="courseDetailsContent">
+                <!-- Filled dynamically -->
+            </div>
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="closeCourseDetailsModal()">Close</button>
+                <button class="btn-primary" id="editCourseBtn" onclick="openEditModal()">Edit Course</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Course Modal -->
+    <div class="modal-overlay" id="courseEditModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Edit Course</h2>
+                <button class="modal-close" onclick="closeEditModal()">&times;</button>
+            </div>
+
+            <form id="editCourseForm" onsubmit="handleEditFormSubmit(event)">
+                <input type="hidden" id="editCourseId">
+                <input type="hidden" id="editQuarter">
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Course Code</label>
+                        <input type="text" id="editCourseCode" class="form-input" readonly style="background: #f3f4f6;">
+                    </div>
+
+                    <div class="form-input-group">
+                        <div class="form-group">
+                            <label for="editSection" class="form-label">Section</label>
+                            <input type="text" id="editSection" class="form-input" maxlength="3">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="editCredits" class="form-label">Credits</label>
+                            <input type="number" id="editCredits" class="form-input" min="1" max="15" step="1">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editEnrollmentCap" class="form-label">Enrollment Cap</label>
+                        <input type="number" id="editEnrollmentCap" class="form-input" min="1" max="100" step="1">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editFaculty" class="form-label">Faculty</label>
+                        <input type="text" id="editFaculty" class="form-input" placeholder="Instructor name">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Days</label>
+                        <div style="display: flex; gap: 12px; margin-top: 6px;">
+                            <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                                <input type="checkbox" id="editDayM" value="M"> M
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                                <input type="checkbox" id="editDayT" value="T"> T
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                                <input type="checkbox" id="editDayW" value="W"> W
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                                <input type="checkbox" id="editDayTh" value="Th"> Th
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                                <input type="checkbox" id="editDayF" value="F"> F
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-input-group">
+                        <div class="form-group">
+                            <label for="editStartTime" class="form-label">Start Time</label>
+                            <input type="time" id="editStartTime" class="form-input">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="editEndTime" class="form-label">End Time</label>
+                            <input type="time" id="editEndTime" class="form-input">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editRoom" class="form-label">Room</label>
+                        <input type="text" id="editRoom" class="form-input" placeholder="e.g., CEB 242">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editNotes" class="form-label">Notes</label>
+                        <textarea id="editNotes" class="form-input" rows="2" placeholder="Optional notes..."></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeEditModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <span id="toastMessage">Changes saved</span>
+    </div>
 </body>
 </html>

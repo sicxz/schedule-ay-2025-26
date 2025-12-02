@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule Editor - EWU Design</title>
+
+    <!-- External Stylesheets -->
+    <link rel="stylesheet" href="../css/shared.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/schedule-editor.css">
+
+    <!-- Utility Scripts -->
+    <script src="../js/config/constants.js"></script>
+    <script src="../js/dom-utils.js"></script>
+    <script src="../js/validators.js"></script>
+    <script src="../js/state-manager.js"></script>
+    <script src="../js/release-time-manager.js"></script>
+    <script src="../js/schedule-manager.js"></script>
+    <script src="../js/backup-manager.js"></script>
+    <script src="../js/data-loader.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="editor-header">
+            <div>
+                <a href="../index.html" class="back-link">← Back to Schedule</a>
+                <h1 class="editor-title">Schedule Editor</h1>
+                <p class="subtitle">EWU Design Department - Drag & Drop Course Scheduling</p>
+            </div>
+            <div class="editor-actions">
+                <button id="undoBtn" class="btn-secondary" disabled title="Undo (Ctrl+Z)">↩ Undo</button>
+                <button id="redoBtn" class="btn-secondary" disabled title="Redo (Ctrl+Y)">↪ Redo</button>
+                <button id="exportBtn" class="btn-secondary">Export JSON</button>
+                <button id="saveBtn" class="btn-primary">Save Changes</button>
+            </div>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="academicYearFilter">Academic Year:</label>
+                <select id="academicYearFilter">
+                    <!-- Populated dynamically -->
+                </select>
+            </div>
+
+            <button id="newYearBtn" class="btn-primary" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">+ New Year</button>
+
+            <button onclick="window.location.href='workload-dashboard.html'">Workload</button>
+            <button onclick="window.location.href='release-time-dashboard.html'">Release Time</button>
+            <button onclick="window.location.href='capacity-planning-dashboard.html'">Capacity</button>
+        </div>
+
+        <!-- Quarter Tabs -->
+        <div class="quarter-tabs" id="quarterTabs">
+            <button class="quarter-tab active" data-quarter="Fall">Fall</button>
+            <button class="quarter-tab" data-quarter="Winter">Winter</button>
+            <button class="quarter-tab" data-quarter="Spring">Spring</button>
+            <button class="quarter-tab" data-quarter="Summer">Summer</button>
+        </div>
+
+        <!-- Main Editor Grid -->
+        <div class="schedule-editor">
+            <!-- Left Panel: Course Pool -->
+            <div class="course-pool" id="coursePool">
+                <div class="course-pool-header">
+                    <h3 class="course-pool-title">Unassigned Courses</h3>
+                    <span class="course-pool-count" id="unassignedCount">0</span>
+                </div>
+
+                <!-- Search/Filter -->
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <input type="text" id="courseSearch" class="form-input" placeholder="Search courses...">
+                </div>
+
+                <!-- Course List -->
+                <div id="unassignedCourses" class="course-list">
+                    <!-- Course cards will be rendered here -->
+                </div>
+
+                <!-- Add New Course Button -->
+                <button class="add-course-btn" id="addCourseBtn">+ Add New Course</button>
+            </div>
+
+            <!-- Right Panel: Faculty Assignments -->
+            <div class="faculty-panel" id="facultyPanel">
+                <!-- Faculty cards will be rendered here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Course Modal -->
+    <div class="modal-overlay" id="courseModalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="courseModalTitle">Add Course</h2>
+                <button class="modal-close" onclick="closeCourseModal()">&times;</button>
+            </div>
+
+            <form id="courseForm" onsubmit="handleCourseFormSubmit(event)">
+                <input type="hidden" id="editCourseId">
+
+                <div class="form-group">
+                    <label for="courseCodeSelect" class="form-label">Course</label>
+                    <select id="courseCodeSelect" class="form-select" required>
+                        <option value="">Select Course...</option>
+                    </select>
+                </div>
+
+                <div class="form-input-group">
+                    <div class="form-group">
+                        <label for="sectionInput" class="form-label">Section</label>
+                        <input type="text" id="sectionInput" class="form-input" placeholder="001" required maxlength="3">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="creditsInput" class="form-label">Credits</label>
+                        <input type="number" id="creditsInput" class="form-input" min="1" max="15" step="1" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="enrollmentCapInput" class="form-label">Enrollment Cap</label>
+                    <input type="number" id="enrollmentCapInput" class="form-input" min="1" max="100" step="1">
+                </div>
+
+                <div class="form-group">
+                    <label for="facultyAssignSelect" class="form-label">Assign to Faculty (Optional)</label>
+                    <select id="facultyAssignSelect" class="form-select">
+                        <option value="">Unassigned</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Days</label>
+                    <div style="display: flex; gap: 12px; margin-top: 6px;">
+                        <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                            <input type="checkbox" id="dayM" value="M"> M
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                            <input type="checkbox" id="dayT" value="T"> T
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                            <input type="checkbox" id="dayW" value="W"> W
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                            <input type="checkbox" id="dayTh" value="Th"> Th
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                            <input type="checkbox" id="dayF" value="F"> F
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-input-group">
+                    <div class="form-group">
+                        <label for="startTimeInput" class="form-label">Start Time</label>
+                        <input type="time" id="startTimeInput" class="form-input">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="endTimeInput" class="form-label">End Time</label>
+                        <input type="time" id="endTimeInput" class="form-input">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="roomInput" class="form-label">Room</label>
+                    <input type="text" id="roomInput" class="form-input" placeholder="ART 304">
+                </div>
+
+                <div class="form-group">
+                    <label for="notesInput" class="form-label">Notes (Optional)</label>
+                    <textarea id="notesInput" class="form-input" rows="2" placeholder="Special requirements, linked sections, etc."></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeCourseModal()">Cancel</button>
+                    <button type="submit" class="btn-primary" id="courseSubmitBtn">Add Course</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Assignment Modal (for quick faculty assignment) -->
+    <div class="modal-overlay" id="assignModalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Assign Course</h2>
+                <button class="modal-close" onclick="closeAssignModal()">&times;</button>
+            </div>
+
+            <form id="assignForm" onsubmit="handleAssignFormSubmit(event)">
+                <input type="hidden" id="assignCourseId">
+
+                <div class="course-info-display" id="assignCourseInfo">
+                    <!-- Course details will be shown here -->
+                </div>
+
+                <div class="form-group">
+                    <label for="assignFacultySelect" class="form-label">Assign to Faculty</label>
+                    <select id="assignFacultySelect" class="form-select" required>
+                        <option value="">Select Faculty...</option>
+                    </select>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeAssignModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Assign</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <span id="toastMessage">Changes saved</span>
+    </div>
+
+    <!-- Undo Bar -->
+    <div class="undo-bar" id="undoBar" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #1f2937; color: white; padding: 12px 24px; border-radius: 30px; display: none; align-items: center; gap: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); z-index: 900;">
+        <span id="undoMessage">Action completed</span>
+        <button onclick="handleUndo()" style="background: #3b82f6; color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: 500;">Undo</button>
+        <button onclick="hideUndoBar()" style="background: transparent; border: none; color: white; padding: 8px; cursor: pointer;">&times;</button>
+    </div>
+
+    <!-- Create New Year Modal -->
+    <div class="modal-overlay" id="createYearModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Create New Academic Year</h2>
+                <button class="modal-close" onclick="closeCreateYearModal()">&times;</button>
+            </div>
+
+            <form id="createYearForm" onsubmit="handleCreateYearSubmit(event)">
+                <div class="form-group">
+                    <label for="newYearInput" class="form-label">New Academic Year</label>
+                    <input type="text" id="newYearInput" class="form-input" placeholder="2026-27" pattern="\d{4}-\d{2}" required>
+                    <small style="color: #6b7280; font-size: 0.85em;">Format: YYYY-YY (e.g., 2026-27)</small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Start From</label>
+                    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 8px;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="radio" name="yearSource" value="template" id="sourceTemplate" checked>
+                            <span>Copy from existing year:</span>
+                            <select id="templateYearSelect" class="form-select" style="flex: 1;">
+                                <!-- Populated dynamically -->
+                            </select>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="radio" name="yearSource" value="blank" id="sourceBlank">
+                            <span>Start with blank schedule</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeCreateYearModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Create Year</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="schedule-editor.js"></script>
+</body>
+</html>

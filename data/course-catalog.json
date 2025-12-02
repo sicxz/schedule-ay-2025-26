@@ -1,0 +1,358 @@
+{
+  "version": "1.0",
+  "lastModified": "2025-12-01",
+  "department": "Design",
+  "courses": [
+    {
+      "code": "DESN 100",
+      "title": "Introduction to Design",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 25,
+      "level": "100",
+      "offeredQuarters": ["Fall", "Winter", "Spring"]
+    },
+    {
+      "code": "DESN 200",
+      "title": "Visual Communication I",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 20,
+      "level": "200",
+      "offeredQuarters": ["Fall", "Winter", "Spring"]
+    },
+    {
+      "code": "DESN 216",
+      "title": "Digital Tools for Design",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 20,
+      "level": "200",
+      "offeredQuarters": ["Fall", "Winter", "Spring"]
+    },
+    {
+      "code": "DESN 243",
+      "title": "Typography I",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 20,
+      "level": "200",
+      "offeredQuarters": ["Fall", "Winter", "Spring"]
+    },
+    {
+      "code": "DESN 263",
+      "title": "User Experience Design I",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 20,
+      "level": "200",
+      "offeredQuarters": ["Fall", "Winter", "Spring"]
+    },
+    {
+      "code": "DESN 301",
+      "title": "Visual Communication II",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 20,
+      "level": "300",
+      "offeredQuarters": ["Fall", "Winter", "Spring"]
+    },
+    {
+      "code": "DESN 305",
+      "title": "Design History",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 30,
+      "level": "300",
+      "offeredQuarters": ["Fall", "Winter"]
+    },
+    {
+      "code": "DESN 325",
+      "title": "Motion Graphics I",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 20,
+      "level": "300",
+      "offeredQuarters": ["Fall", "Winter", "Spring"]
+    },
+    {
+      "code": "DESN 326",
+      "title": "Motion Graphics II",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 20,
+      "level": "300",
+      "offeredQuarters": ["Winter", "Spring"]
+    },
+    {
+      "code": "DESN 335",
+      "title": "Web Design I",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 20,
+      "level": "300",
+      "offeredQuarters": ["Fall", "Winter", "Spring"]
+    },
+    {
+      "code": "DESN 336",
+      "title": "Web Design II",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 20,
+      "level": "300",
+      "offeredQuarters": ["Winter", "Spring"]
+    },
+    {
+      "code": "DESN 338",
+      "title": "Interactive Design",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 20,
+      "level": "300",
+      "offeredQuarters": ["Fall", "Winter"]
+    },
+    {
+      "code": "DESN 343",
+      "title": "Typography II",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 20,
+      "level": "300",
+      "offeredQuarters": ["Fall", "Winter", "Spring"]
+    },
+    {
+      "code": "DESN 345",
+      "title": "Publication Design",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 20,
+      "level": "300",
+      "offeredQuarters": ["Fall", "Spring"]
+    },
+    {
+      "code": "DESN 348",
+      "title": "Packaging Design",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 20,
+      "level": "300",
+      "offeredQuarters": ["Winter"]
+    },
+    {
+      "code": "DESN 350",
+      "title": "Brand Identity Design",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 20,
+      "level": "300",
+      "offeredQuarters": ["Fall", "Winter", "Spring"]
+    },
+    {
+      "code": "DESN 351",
+      "title": "Advanced Brand Identity",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 20,
+      "level": "300",
+      "offeredQuarters": ["Spring"]
+    },
+    {
+      "code": "DESN 355",
+      "title": "Environmental Graphics",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 20,
+      "level": "300",
+      "offeredQuarters": ["Winter"]
+    },
+    {
+      "code": "DESN 359",
+      "title": "Design Studio I",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 18,
+      "level": "300",
+      "offeredQuarters": ["Fall", "Winter", "Spring"]
+    },
+    {
+      "code": "DESN 360",
+      "title": "Design Studio II",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 18,
+      "level": "300",
+      "offeredQuarters": ["Fall", "Winter", "Spring"]
+    },
+    {
+      "code": "DESN 363",
+      "title": "User Experience Design II",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 20,
+      "level": "300",
+      "offeredQuarters": ["Fall", "Winter", "Spring"]
+    },
+    {
+      "code": "DESN 365",
+      "title": "UX Research Methods",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 20,
+      "level": "300",
+      "offeredQuarters": ["Fall", "Winter"]
+    },
+    {
+      "code": "DESN 366",
+      "title": "UI Design",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 20,
+      "level": "300",
+      "offeredQuarters": ["Winter", "Spring"]
+    },
+    {
+      "code": "DESN 368",
+      "title": "Interaction Design",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 20,
+      "level": "300",
+      "offeredQuarters": ["Fall", "Spring"]
+    },
+    {
+      "code": "DESN 369",
+      "title": "Advanced UX",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 20,
+      "level": "300",
+      "offeredQuarters": ["Spring"]
+    },
+    {
+      "code": "DESN 374",
+      "title": "Design for Social Good",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 20,
+      "level": "300",
+      "offeredQuarters": ["Winter"]
+    },
+    {
+      "code": "DESN 378",
+      "title": "Data Visualization",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 20,
+      "level": "300",
+      "offeredQuarters": ["Fall", "Spring"]
+    },
+    {
+      "code": "DESN 379",
+      "title": "Advanced Data Visualization",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 20,
+      "level": "300",
+      "offeredQuarters": ["Spring"]
+    },
+    {
+      "code": "DESN 384",
+      "title": "Design Business Practices",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 25,
+      "level": "300",
+      "offeredQuarters": ["Winter", "Spring"]
+    },
+    {
+      "code": "DESN 385",
+      "title": "Design Portfolio",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 20,
+      "level": "300",
+      "offeredQuarters": ["Winter", "Spring"]
+    },
+    {
+      "code": "DESN 396",
+      "title": "Special Topics",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 20,
+      "level": "300",
+      "offeredQuarters": ["Fall", "Winter", "Spring"]
+    },
+    {
+      "code": "DESN 399",
+      "title": "Directed Study",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 5,
+      "level": "300",
+      "offeredQuarters": ["Fall", "Winter", "Spring"],
+      "isVariable": true
+    },
+    {
+      "code": "DESN 401",
+      "title": "Senior Design Studio",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 18,
+      "level": "400",
+      "offeredQuarters": ["Fall", "Winter", "Spring"]
+    },
+    {
+      "code": "DESN 458",
+      "title": "Advanced Design Topics",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 20,
+      "level": "400",
+      "offeredQuarters": ["Fall", "Winter"]
+    },
+    {
+      "code": "DESN 463",
+      "title": "User Experience Design III",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 20,
+      "level": "400",
+      "offeredQuarters": ["Fall", "Winter", "Spring"]
+    },
+    {
+      "code": "DESN 468",
+      "title": "Advanced Interaction Design",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 20,
+      "level": "400",
+      "offeredQuarters": ["Winter", "Spring"]
+    },
+    {
+      "code": "DESN 480",
+      "title": "Design Capstone",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 18,
+      "level": "400",
+      "offeredQuarters": ["Spring"]
+    },
+    {
+      "code": "DESN 490",
+      "title": "Senior Seminar",
+      "defaultCredits": 2,
+      "typicalEnrollmentCap": 25,
+      "level": "400",
+      "offeredQuarters": ["Fall", "Winter", "Spring"]
+    },
+    {
+      "code": "DESN 491",
+      "title": "Practicum",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 10,
+      "level": "400",
+      "offeredQuarters": ["Fall", "Winter", "Spring"],
+      "isVariable": true,
+      "workloadMultiplier": 0.15
+    },
+    {
+      "code": "DESN 493",
+      "title": "Senior Project",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 15,
+      "level": "400",
+      "offeredQuarters": ["Fall", "Winter", "Spring"]
+    },
+    {
+      "code": "DESN 495",
+      "title": "Internship",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 15,
+      "level": "400",
+      "offeredQuarters": ["Fall", "Winter", "Spring", "Summer"],
+      "isVariable": true,
+      "workloadMultiplier": 0.1
+    },
+    {
+      "code": "DESN 496",
+      "title": "Experimental Topics",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 20,
+      "level": "400",
+      "offeredQuarters": ["Fall", "Winter", "Spring"]
+    },
+    {
+      "code": "DESN 499",
+      "title": "Independent Study",
+      "defaultCredits": 5,
+      "typicalEnrollmentCap": 10,
+      "level": "400",
+      "offeredQuarters": ["Fall", "Winter", "Spring", "Summer"],
+      "isVariable": true,
+      "workloadMultiplier": 0.2
+    }
+  ]
+}
