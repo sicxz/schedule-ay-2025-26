@@ -70,36 +70,44 @@
 
         <!-- Main Content -->
         <div class="builder-content" id="builderContent" style="display: none;">
-            <!-- Recommendations Panel -->
-            <div class="recommendations-panel">
-                <div class="panel-header">
-                    <h2>Recommended Sections</h2>
-                    <div class="panel-actions">
-                        <select id="sortBy" onchange="sortRecommendations()">
-                            <option value="priority">Sort by Priority</option>
-                            <option value="demand">Sort by Demand</option>
-                            <option value="code">Sort by Course Code</option>
-                        </select>
+            <!-- Schedule Grid View -->
+            <div class="grid-section">
+                <div class="section-header">
+                    <h2 id="gridTitle">Schedule Grid - Fall 2026</h2>
+                    <div class="view-toggle">
+                        <button class="view-btn active" onclick="setView('grid')" id="gridViewBtn">Grid View</button>
+                        <button class="view-btn" onclick="setView('list')" id="listViewBtn">List View</button>
                     </div>
                 </div>
-                <div class="recommendations-list" id="recommendationsList">
+
+                <!-- Grid View -->
+                <div class="schedule-grid" id="scheduleGrid">
                     <!-- Dynamically populated -->
+                </div>
+
+                <!-- List View (hidden by default) -->
+                <div class="list-view" id="listView" style="display: none;">
+                    <div class="recommendations-list" id="recommendationsList">
+                        <!-- Dynamically populated -->
+                    </div>
                 </div>
             </div>
 
-            <!-- Preview Panel -->
-            <div class="preview-panel">
-                <div class="panel-header">
-                    <h2>Schedule Preview</h2>
-                    <span class="preview-count" id="previewCount">0 sections</span>
+            <!-- Sidebar with Unassigned and Summary -->
+            <div class="sidebar-panel">
+                <div class="panel-section">
+                    <h3>Unassigned Courses</h3>
+                    <p class="helper-text">Drag courses to the grid to assign time slots</p>
+                    <div class="unassigned-list" id="unassignedList">
+                        <!-- Dynamically populated -->
+                    </div>
                 </div>
-                <div class="preview-tabs">
-                    <button class="tab-btn active" onclick="showPreviewTab('byLevel')">By Level</button>
-                    <button class="tab-btn" onclick="showPreviewTab('byFaculty')">By Faculty</button>
-                    <button class="tab-btn" onclick="showPreviewTab('unassigned')">Unassigned</button>
-                </div>
-                <div class="preview-content" id="previewContent">
-                    <!-- Dynamically populated -->
+
+                <div class="panel-section">
+                    <h3>Faculty Workload</h3>
+                    <div class="faculty-summary" id="facultySummary">
+                        <!-- Dynamically populated -->
+                    </div>
                 </div>
             </div>
         </div>
