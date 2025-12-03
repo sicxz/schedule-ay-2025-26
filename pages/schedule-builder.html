@@ -68,6 +68,41 @@
             <p>Analyzing enrollment patterns and generating schedule...</p>
         </div>
 
+        <!-- Projected Demand Section (shown after generation) -->
+        <div class="projected-demand-section" id="projectedDemandSection" style="display: none;">
+            <div class="demand-header">
+                <h2>Projected Demand - <span id="demandQuarterYear">Fall 2026</span></h2>
+            </div>
+            <div class="demand-grid">
+                <!-- High Demand Courses -->
+                <div class="demand-card high-demand">
+                    <h3>🔥 High Demand Courses</h3>
+                    <p class="card-subtitle">Predicted enrollment &gt;90% capacity</p>
+                    <div class="demand-list" id="highDemandList">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+
+                <!-- Case-by-Case Courses -->
+                <div class="demand-card case-by-case">
+                    <h3>📋 Case-by-Case Courses</h3>
+                    <p class="card-subtitle">Not scheduled in grid - handled individually</p>
+                    <div class="demand-list" id="caseByeCaseList">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+
+                <!-- Curriculum Recommendations -->
+                <div class="demand-card recommendations">
+                    <h3>💡 Curriculum Recommendations</h3>
+                    <p class="card-subtitle">Based on faculty capacity and program needs</p>
+                    <div class="recommendation-list" id="curriculumRecommendations">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Main Content -->
         <div class="builder-content" id="builderContent" style="display: none;">
             <!-- Schedule Grid View -->

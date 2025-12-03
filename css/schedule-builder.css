@@ -875,6 +875,168 @@ body {
     opacity: 1;
 }
 
+/* Projected Demand Section */
+.projected-demand-section {
+    margin-bottom: 24px;
+}
+
+.demand-header {
+    margin-bottom: 16px;
+}
+
+.demand-header h2 {
+    font-size: 1.3em;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.demand-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.demand-card {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.demand-card h3 {
+    font-size: 1em;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.demand-card .card-subtitle {
+    font-size: 0.8em;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+}
+
+.demand-card.high-demand {
+    border-left: 4px solid var(--danger-color);
+}
+
+.demand-card.case-by-case {
+    border-left: 4px solid var(--secondary-color);
+}
+
+.demand-card.recommendations {
+    border-left: 4px solid var(--warning-color);
+}
+
+.demand-list {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.demand-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    background: var(--bg-primary);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 0.9em;
+}
+
+.demand-item:last-child {
+    margin-bottom: 0;
+}
+
+.demand-item .course-code {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.demand-item .course-info {
+    font-size: 0.85em;
+    color: var(--text-secondary);
+}
+
+.demand-item .sections-badge {
+    background: var(--danger-color);
+    color: white;
+    font-size: 0.75em;
+    padding: 2px 8px;
+    border-radius: 10px;
+    white-space: nowrap;
+}
+
+.demand-item.case-by-case-item .sections-badge {
+    background: var(--secondary-color);
+}
+
+.recommendation-list {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.recommendation-item {
+    padding: 12px;
+    background: var(--bg-primary);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border-left: 3px solid var(--warning-color);
+}
+
+.recommendation-item:last-child {
+    margin-bottom: 0;
+}
+
+.recommendation-item .rec-title {
+    font-weight: 600;
+    font-size: 0.9em;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.recommendation-item .rec-description {
+    font-size: 0.8em;
+    color: var(--text-secondary);
+}
+
+.recommendation-item .rec-impact {
+    font-size: 0.75em;
+    color: var(--success-color);
+    margin-top: 6px;
+    font-style: italic;
+}
+
+/* Campus Headers in Grid */
+.campus-header {
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    color: white;
+    padding: 10px 12px;
+    font-weight: 700;
+    text-align: center;
+    font-size: 0.85em;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.campus-header.cheney {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.campus-divider {
+    background: #1f2937;
+    width: 3px;
+}
+
+/* Room type badges */
+.room-type-badge {
+    display: block;
+    font-size: 0.65em;
+    font-weight: 400;
+    opacity: 0.8;
+    margin-top: 2px;
+}
+
 /* Responsive */
 @media (max-width: 1200px) {
     .builder-content {
@@ -883,6 +1045,10 @@ body {
 
     .summary-cards {
         grid-template-columns: repeat(2, 1fr);
+    }
+
+    .demand-grid {
+        grid-template-columns: 1fr;
     }
 }
 
