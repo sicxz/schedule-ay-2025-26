@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Schedule - EWU Design</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="../css/schedule-builder.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="builder-header">
+            <a href="../index.html" class="back-link">&larr; Back to Schedule</a>
+            <h1>Create New Schedule</h1>
+            <p class="subtitle">AI-Powered Schedule Generation Based on Enrollment Trends</p>
+        </header>
+
+        <!-- Controls -->
+        <div class="controls-bar">
+            <div class="control-group">
+                <label for="academicYear">Academic Year</label>
+                <select id="academicYear">
+                    <option value="2026-27">2026-27 (New)</option>
+                    <option value="2025-26">2025-26</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="targetQuarter">Quarter</label>
+                <select id="targetQuarter">
+                    <option value="Fall">Fall</option>
+                    <option value="Winter">Winter</option>
+                    <option value="Spring">Spring</option>
+                </select>
+            </div>
+            <button id="generateBtn" class="btn-primary" onclick="handleGenerate()">
+                Generate Schedule
+            </button>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="summary-cards" id="summaryCards">
+            <div class="summary-card">
+                <div class="card-icon">📚</div>
+                <div class="card-value" id="totalSections">--</div>
+                <div class="card-label">Total Sections</div>
+            </div>
+            <div class="summary-card">
+                <div class="card-icon">👨‍🏫</div>
+                <div class="card-value" id="facultyCapacity">--</div>
+                <div class="card-label">Faculty Assigned</div>
+            </div>
+            <div class="summary-card">
+                <div class="card-icon">🔥</div>
+                <div class="card-value" id="highDemand">--</div>
+                <div class="card-label">High Demand</div>
+            </div>
+            <div class="summary-card warning">
+                <div class="card-icon">⚠️</div>
+                <div class="card-value" id="warnings">--</div>
+                <div class="card-label">Capacity Warnings</div>
+            </div>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div class="loading-container" id="loadingContainer" style="display: none;">
+            <div class="loading-spinner"></div>
+            <p>Analyzing enrollment patterns and generating schedule...</p>
+        </div>
+
+        <!-- Main Content -->
+        <div class="builder-content" id="builderContent" style="display: none;">
+            <!-- Recommendations Panel -->
+            <div class="recommendations-panel">
+                <div class="panel-header">
+                    <h2>Recommended Sections</h2>
+                    <div class="panel-actions">
+                        <select id="sortBy" onchange="sortRecommendations()">
+                            <option value="priority">Sort by Priority</option>
+                            <option value="demand">Sort by Demand</option>
+                            <option value="code">Sort by Course Code</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="recommendations-list" id="recommendationsList">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+
+            <!-- Preview Panel -->
+            <div class="preview-panel">
+                <div class="panel-header">
+                    <h2>Schedule Preview</h2>
+                    <span class="preview-count" id="previewCount">0 sections</span>
+                </div>
+                <div class="preview-tabs">
+                    <button class="tab-btn active" onclick="showPreviewTab('byLevel')">By Level</button>
+                    <button class="tab-btn" onclick="showPreviewTab('byFaculty')">By Faculty</button>
+                    <button class="tab-btn" onclick="showPreviewTab('unassigned')">Unassigned</button>
+                </div>
+                <div class="preview-content" id="previewContent">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState">
+            <div class="empty-icon">📅</div>
+            <h2>Ready to Build Your Schedule</h2>
+            <p>Select an academic year and quarter, then click "Generate Schedule" to get AI-powered recommendations based on:</p>
+            <ul class="features-list">
+                <li>📊 3+ years of enrollment history</li>
+                <li>🔗 Prerequisite flow patterns</li>
+                <li>👨‍🏫 Historical faculty assignments</li>
+                <li>📈 Course demand predictions</li>
+            </ul>
+        </div>
+
+        <!-- Action Bar -->
+        <div class="action-bar" id="actionBar" style="display: none;">
+            <button class="btn-secondary" onclick="saveDraft()">
+                💾 Save Draft
+            </button>
+            <button class="btn-secondary" onclick="exportJSON()">
+                📥 Export JSON
+            </button>
+            <button class="btn-primary" onclick="exportToEditor()">
+                Open in Schedule Editor →
+            </button>
+        </div>
+
+        <!-- Toast Notification -->
+        <div class="toast" id="toast">
+            <span id="toastMessage"></span>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/prerequisite-graph.js"></script>
+    <script src="../js/demand-predictor.js"></script>
+    <script src="../js/schedule-generator.js"></script>
+    <script src="schedule-builder.js"></script>
+</body>
+</html>

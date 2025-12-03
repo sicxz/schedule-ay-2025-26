@@ -989,6 +989,393 @@
             opacity: 1;
             transform: translateX(-50%) translateY(0);
         }
+
+        /* Drag and Drop Styles */
+        .course-block[draggable="true"] {
+            cursor: grab;
+        }
+        .course-block[draggable="true"]:active {
+            cursor: grabbing;
+        }
+        .course-block.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .schedule-cell.drop-zone {
+            transition: all 0.2s ease;
+        }
+        .schedule-cell.drag-over {
+            background: #e7f5ff !important;
+            border: 2px dashed #339af0;
+            box-shadow: inset 0 0 10px rgba(51, 154, 240, 0.2);
+        }
+        .schedule-cell.drop-highlight {
+            background: #d3f9d8 !important;
+            border: 2px solid #51cf66;
+        }
+        .drag-ghost {
+            position: fixed;
+            pointer-events: none;
+            z-index: 2000;
+            opacity: 0.9;
+            transform: rotate(3deg);
+        }
+        .drop-indicator {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 500;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 1500;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+        .drop-indicator.active {
+            display: flex;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp {
+            from { transform: translateX(-50%) translateY(20px); opacity: 0; }
+            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+
+        /* Displaced Course Tray Sidebar */
+        .displaced-tray {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 280px;
+            background: white;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.15);
+            z-index: 1000;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .displaced-tray.open {
+            transform: translateX(0);
+        }
+        .displaced-tray-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .displaced-tray-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .displaced-count {
+            background: rgba(255,255,255,0.2);
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+        }
+        .displaced-tray-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+            opacity: 0.8;
+        }
+        .displaced-tray-close:hover {
+            opacity: 1;
+        }
+        .displaced-tray-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+        .displaced-course-card {
+            background: #f8f9fa;
+            border: 1px solid #e5e7eb;
+            border-left: 4px solid #667eea;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            cursor: grab;
+            transition: all 0.2s;
+        }
+        .displaced-course-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        .displaced-course-card.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+        .displaced-course-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+        .displaced-course-code {
+            font-weight: 600;
+            color: #1f2937;
+        }
+        .displaced-course-remove {
+            background: none;
+            border: none;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 2px;
+            font-size: 1rem;
+            line-height: 1;
+        }
+        .displaced-course-remove:hover {
+            color: #ef4444;
+        }
+        .displaced-course-name {
+            font-size: 0.85rem;
+            color: #4b5563;
+            margin-bottom: 6px;
+        }
+        .displaced-course-origin {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            background: #f3f4f6;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .displaced-tray-actions {
+            padding: 16px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .displaced-tray-actions button {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        .btn-add-course {
+            color: white;
+            border: none;
+            font-weight: 600;
+        }
+        .btn-clear-all {
+            background: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+        .btn-clear-all:hover {
+            background: #fecaca;
+        }
+        /* Swap Mode Toggle Switch */
+        .swap-toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f8f9fa;
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+        .swap-toggle-label {
+            font-size: 0.85rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+        .swap-toggle-label.active {
+            color: #059669;
+            font-weight: 600;
+        }
+        .swap-toggle {
+            position: relative;
+            width: 50px;
+            height: 26px;
+            cursor: pointer;
+        }
+        .swap-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .swap-toggle-slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #e5e7eb;
+            border-radius: 26px;
+            transition: 0.3s;
+        }
+        .swap-toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background: white;
+            border-radius: 50%;
+            transition: 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .swap-toggle input:checked + .swap-toggle-slider {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        .swap-toggle input:checked + .swap-toggle-slider:before {
+            transform: translateX(24px);
+        }
+        .displaced-tray.drag-over {
+            background: #ecfdf5;
+            box-shadow: 4px 0 20px rgba(16, 185, 129, 0.3);
+        }
+        .displaced-tray.drag-over .displaced-tray-content {
+            border: 2px dashed #10b981;
+            border-radius: 8px;
+            margin: 8px;
+        }
+        .displaced-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: #9ca3af;
+        }
+        .displaced-empty-icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+        }
+        /* Toggle button when tray is closed */
+        .displaced-tray-toggle {
+            position: fixed;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 8px;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+            z-index: 999;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-size: 0.85rem;
+            font-weight: 500;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+            display: none;
+        }
+        .displaced-tray-toggle.visible {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .displaced-tray-toggle .toggle-count {
+            background: #ef4444;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            writing-mode: horizontal-tb;
+        }
+        /* Delete button on course blocks */
+        .course-block .delete-btn {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            border: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            font-size: 12px;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+        .course-block:hover .delete-btn {
+            opacity: 1;
+        }
+        .course-block .delete-btn:hover {
+            background: #dc2626;
+            transform: scale(1.1);
+        }
+        /* Confirmation Modal */
+        .confirm-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        .confirm-modal.active {
+            display: flex;
+        }
+        .confirm-dialog {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .confirm-dialog h3 {
+            margin: 0 0 12px 0;
+            color: #1f2937;
+        }
+        .confirm-dialog p {
+            color: #6b7280;
+            margin: 0 0 20px 0;
+        }
+        .confirm-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+        .confirm-actions button {
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .btn-confirm-delete {
+            background: #ef4444;
+            color: white;
+            border: none;
+        }
+        .btn-confirm-delete:hover {
+            background: #dc2626;
+        }
+        .btn-confirm-cancel {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
     </style>
 
     <!-- Schedule Manager Scripts -->
@@ -997,6 +1384,46 @@
     <script src="js/data-loader.js"></script>
 </head>
 <body>
+    <!-- Displaced Course Tray Sidebar -->
+    <div class="displaced-tray" id="displacedTray" ondragover="handleTrayDragOver(event)" ondragleave="handleTrayDragLeave(event)" ondrop="handleTrayDrop(event)">
+        <div class="displaced-tray-header">
+            <div class="displaced-tray-title">
+                Displaced Courses
+                <span class="displaced-count" id="displacedCount">0</span>
+            </div>
+            <button class="displaced-tray-close" onclick="closeDisplacedTray()">&times;</button>
+        </div>
+        <div class="displaced-tray-content" id="displacedContent">
+            <div class="displaced-empty">
+                <div class="displaced-empty-icon">📦</div>
+                <p>No displaced courses</p>
+                <p style="font-size: 0.8rem;">Drag courses here or bump them from slots</p>
+            </div>
+        </div>
+        <div class="displaced-tray-actions">
+            <button class="btn-add-course" onclick="openAddCourseModal()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); margin-bottom: 8px;">+ Add Course</button>
+            <button class="btn-clear-all" onclick="clearAllDisplaced()">Clear All</button>
+        </div>
+    </div>
+
+    <!-- Toggle button for closed tray -->
+    <button class="displaced-tray-toggle" id="displacedToggle" onclick="openDisplacedTray()">
+        <span class="toggle-count" id="toggleCount">0</span>
+        Displaced
+    </button>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="confirm-modal" id="deleteConfirmModal">
+        <div class="confirm-dialog">
+            <h3>Delete Course</h3>
+            <p id="deleteConfirmText">Are you sure you want to remove this course from the schedule?</p>
+            <div class="confirm-actions">
+                <button class="btn-confirm-cancel" onclick="closeDeleteConfirm()">Cancel</button>
+                <button class="btn-confirm-delete" onclick="confirmDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <header>
             <h1>EWU Design Schedule Conflict Analyzer</h1>
@@ -1069,6 +1496,8 @@
             <button onclick="window.location.href='enrollment-dashboard.html'" style="background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);">Enrollment Trends</button>
             <button onclick="window.location.href='pages/workload-dashboard.html'" style="background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);">Faculty Workload</button>
             <button onclick="window.location.href='pages/applied-learning-dashboard.html'" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Applied Learning</button>
+            <button onclick="window.location.href='pages/demand-planning-dashboard.html'" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">Demand Planning</button>
+            <button onclick="window.location.href='pages/schedule-builder.html'" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">Create Schedule</button>
         </div>
 
         <div style="background: #e7f5ff; border-left: 4px solid #339af0; padding: 12px 16px; margin: 20px; border-radius: 8px; font-size: 0.9em;">
@@ -1171,7 +1600,22 @@
 
             <div id="enrollmentAnalytics"></div>
 
-            <h2 style="margin-bottom: 20px; color: #495057;">Schedule Grid - <span id="quarterTitle">Spring 2026</span></h2>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                <h2 style="margin: 0; color: #495057;">Schedule Grid - <span id="quarterTitle">Spring 2026</span></h2>
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <div class="swap-toggle-container" title="When ON: Dropping a course onto an occupied slot swaps them. When OFF: The existing course goes to the displaced tray.">
+                        <span class="swap-toggle-label" id="displaceLabel">Displace</span>
+                        <label class="swap-toggle">
+                            <input type="checkbox" id="swapModeToggle" onchange="updateSwapModeLabels()">
+                            <span class="swap-toggle-slider"></span>
+                        </label>
+                        <span class="swap-toggle-label" id="swapLabel">Swap</span>
+                    </div>
+                    <button onclick="openAddCourseModal()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                        <span style="font-size: 1.2em;">+</span> Add Course
+                    </button>
+                </div>
+            </div>
             <div class="schedule-grid" id="scheduleGrid"></div>
 
             <div id="onlineSection"></div>
@@ -1618,7 +2062,10 @@
                             data[day][time].filter(c => c.room === room) : [];
 
                         const cell = document.createElement('div');
-                        cell.className = 'schedule-cell';
+                        cell.className = 'schedule-cell drop-zone';
+                        cell.dataset.day = day;
+                        cell.dataset.time = time;
+                        cell.dataset.room = room;
 
                         courses.forEach(course => {
                             const conflictLevel = courses.length > 2 ? 0 : courses.length > 1 ? 1 : 2;
@@ -1654,9 +2101,17 @@
                             block.className = 'course-block conflict-' + conflictLevel + ' ' + facultyClass + ' ' + trendClass;
                             block.dataset.courseId = courseId;
                             block.dataset.quarter = quarter;
-                            block.title = tooltipText + ' | Peak: ' + enrollment.peak + ' | Trend: ' + enrollment.trend;
-                            block.onclick = function() {
-                                showCourseDetails(course.code, course.name, course.instructor, course.credits, course.room, courseId, quarter);
+                            block.dataset.courseCode = course.code;
+                            block.dataset.day = day;
+                            block.dataset.time = time;
+                            block.dataset.room = room;
+                            block.draggable = true;
+                            block.title = tooltipText + ' | Peak: ' + enrollment.peak + ' | Trend: ' + enrollment.trend + ' | Drag to move';
+                            block.onclick = function(e) {
+                                // Don't trigger click if we're dragging
+                                if (!block.classList.contains('dragging')) {
+                                    showCourseDetails(course.code, course.name, course.instructor, course.credits, course.room, courseId, quarter, day, time);
+                                }
                             };
 
                             if (courses.length > 1) {
@@ -1665,6 +2120,17 @@
                                 badge.textContent = courses.length;
                                 block.appendChild(badge);
                             }
+
+                            // Add delete button
+                            const deleteBtn = document.createElement('button');
+                            deleteBtn.className = 'delete-btn';
+                            deleteBtn.innerHTML = '&times;';
+                            deleteBtn.title = 'Click to delete, Shift+Click to move to tray';
+                            deleteBtn.onclick = function(e) {
+                                e.stopPropagation();
+                                deleteCourse(course.code, day, time, course.room, e.shiftKey);
+                            };
+                            block.appendChild(deleteBtn);
 
                             const nameDiv = document.createElement('div');
                             nameDiv.className = 'course-name';
@@ -1699,6 +2165,280 @@
                     });
                 });
             });
+
+            // Setup drag-and-drop after grid is rendered
+            setupDragAndDrop();
+        }
+
+        // ============================================
+        // DRAG AND DROP FUNCTIONALITY
+        // ============================================
+
+        let draggedCourse = null;
+
+        function setupDragAndDrop() {
+            // Setup draggable course blocks
+            document.querySelectorAll('.course-block[draggable="true"]').forEach(block => {
+                block.addEventListener('dragstart', handleDragStart);
+                block.addEventListener('dragend', handleDragEnd);
+            });
+
+            // Setup drop zones (schedule cells)
+            document.querySelectorAll('.schedule-cell.drop-zone').forEach(cell => {
+                cell.addEventListener('dragover', handleDragOver);
+                cell.addEventListener('dragleave', handleDragLeave);
+                cell.addEventListener('drop', handleDrop);
+            });
+        }
+
+        function handleDragStart(e) {
+            draggedCourse = {
+                element: this,
+                courseId: this.dataset.courseId,
+                courseCode: this.dataset.courseCode,
+                quarter: this.dataset.quarter,
+                originalDay: this.dataset.day,
+                originalTime: this.dataset.time,
+                originalRoom: this.dataset.room
+            };
+
+            this.classList.add('dragging');
+
+            // Set transfer data
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', JSON.stringify({
+                courseId: draggedCourse.courseId,
+                courseCode: draggedCourse.courseCode,
+                quarter: draggedCourse.quarter
+            }));
+
+            // Show drop indicator
+            const indicator = document.getElementById('dropIndicator');
+            document.getElementById('dropIndicatorText').textContent =
+                'Dragging ' + draggedCourse.courseCode + ' - Drop on any time slot to move';
+            indicator.classList.add('active');
+
+            // Highlight all drop zones
+            document.querySelectorAll('.schedule-cell.drop-zone').forEach(cell => {
+                cell.style.opacity = '1';
+            });
+        }
+
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+            draggedCourse = null;
+
+            // Hide drop indicator
+            document.getElementById('dropIndicator').classList.remove('active');
+
+            // Remove all drag-over classes
+            document.querySelectorAll('.schedule-cell').forEach(cell => {
+                cell.classList.remove('drag-over');
+                cell.style.opacity = '';
+            });
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+
+            if (!this.classList.contains('drag-over')) {
+                // Remove highlight from other cells
+                document.querySelectorAll('.schedule-cell.drag-over').forEach(cell => {
+                    cell.classList.remove('drag-over');
+                });
+                this.classList.add('drag-over');
+
+                // Update indicator with target info
+                const day = this.dataset.day;
+                const time = this.dataset.time;
+                const room = this.dataset.room;
+                document.getElementById('dropIndicatorText').textContent =
+                    'Drop to move to ' + day + ' ' + time + ' in Room ' + room;
+            }
+        }
+
+        function handleDragLeave(e) {
+            // Only remove if we're actually leaving this cell
+            if (!this.contains(e.relatedTarget)) {
+                this.classList.remove('drag-over');
+            }
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            this.classList.remove('drag-over');
+
+            if (!draggedCourse) return;
+
+            const targetDay = this.dataset.day;
+            const targetTime = this.dataset.time;
+            const targetRoom = this.dataset.room;
+            const quarter = document.getElementById('quarterSelect').value;
+            const data = scheduleData[quarter];
+
+            // Check if dropping from displaced tray
+            if (draggedCourse.isFromDisplacedTray) {
+                // Check if target cell has existing courses with same room
+                if (data[targetDay] && data[targetDay][targetTime]) {
+                    const existingInRoom = data[targetDay][targetTime].filter(c => c.room === targetRoom);
+                    // Move existing courses to displaced tray
+                    existingInRoom.forEach(existing => {
+                        addToDisplacedTray({
+                            code: existing.code,
+                            name: existing.name,
+                            instructor: existing.instructor,
+                            credits: existing.credits,
+                            originalDay: targetDay,
+                            originalTime: targetTime,
+                            originalRoom: targetRoom
+                        });
+                        const idx = data[targetDay][targetTime].findIndex(c => c.code === existing.code && c.room === existing.room);
+                        if (idx > -1) data[targetDay][targetTime].splice(idx, 1);
+                    });
+                }
+
+                // Add course from displaced tray to schedule
+                if (!data[targetDay]) data[targetDay] = {};
+                if (!data[targetDay][targetTime]) data[targetDay][targetTime] = [];
+                data[targetDay][targetTime].push({
+                    code: draggedCourse.courseCode,
+                    name: draggedCourse.courseName,
+                    instructor: draggedCourse.instructor || 'TBD',
+                    credits: draggedCourse.credits || 5,
+                    room: targetRoom
+                });
+
+                // Remove from displaced tray
+                removeFromDisplacedTray(draggedCourse.displacedIndex);
+
+                renderSchedule(quarter);
+                renderConflicts(quarter);
+                updateStats(quarter);
+                showToast('Placed ' + draggedCourse.courseCode + ' at ' + targetDay + ' ' + targetTime);
+                return;
+            }
+
+            // Don't do anything if dropped in the same cell (for regular drag)
+            if (targetDay === draggedCourse.originalDay &&
+                targetTime === draggedCourse.originalTime &&
+                targetRoom === draggedCourse.originalRoom) {
+                showToast('Course already in this slot');
+                return;
+            }
+
+            // Move the course (handles displacement)
+            moveCourse(draggedCourse, targetDay, targetTime, targetRoom);
+        }
+
+        function moveCourse(course, newDay, newTime, newRoom) {
+            const quarter = document.getElementById('quarterSelect').value;
+
+            // Update local schedule data
+            const data = scheduleData[quarter];
+
+            // Find and remove from original location
+            if (data[course.originalDay] && data[course.originalDay][course.originalTime]) {
+                const originalCourses = data[course.originalDay][course.originalTime];
+                const courseIndex = originalCourses.findIndex(c => c.code === course.courseCode);
+
+                if (courseIndex > -1) {
+                    const movedCourse = originalCourses.splice(courseIndex, 1)[0];
+
+                    // Update course with new location
+                    movedCourse.room = newRoom;
+
+                    // Check for existing courses in target room and displace them
+                    if (!data[newDay]) data[newDay] = {};
+                    if (!data[newDay][newTime]) data[newDay][newTime] = [];
+
+                    const existingInRoom = data[newDay][newTime].filter(c => c.room === newRoom);
+                    const hasExisting = existingInRoom.length > 0;
+                    let swappedCourse = null;
+
+                    if (hasExisting) {
+                        if (swapMode) {
+                            // SWAP MODE: Move existing course to the original location
+                            existingInRoom.forEach(existing => {
+                                swappedCourse = { ...existing }; // Copy for toast message
+
+                                // First, remove from target location (before changing room)
+                                const idx = data[newDay][newTime].findIndex(c => c.code === existing.code && c.room === newRoom);
+                                if (idx > -1) {
+                                    const removedCourse = data[newDay][newTime].splice(idx, 1)[0];
+                                    // Update the removed course's room to original room
+                                    removedCourse.room = course.originalRoom;
+                                    // Add to original location
+                                    if (!data[course.originalDay]) data[course.originalDay] = {};
+                                    if (!data[course.originalDay][course.originalTime]) data[course.originalDay][course.originalTime] = [];
+                                    data[course.originalDay][course.originalTime].push(removedCourse);
+                                }
+                            });
+                        } else {
+                            // DISPLACE MODE: Move existing course to displaced tray
+                            existingInRoom.forEach(existing => {
+                                addToDisplacedTray({
+                                    code: existing.code,
+                                    name: existing.name,
+                                    instructor: existing.instructor,
+                                    credits: existing.credits,
+                                    originalDay: newDay,
+                                    originalTime: newTime,
+                                    originalRoom: newRoom
+                                });
+                                // Remove from schedule
+                                const idx = data[newDay][newTime].findIndex(c => c.code === existing.code && c.room === existing.room);
+                                if (idx > -1) data[newDay][newTime].splice(idx, 1);
+                            });
+                        }
+                    }
+
+                    // Add to new location
+                    data[newDay][newTime].push(movedCourse);
+
+                    // Also update ScheduleManager if available
+                    if (typeof ScheduleManager !== 'undefined') {
+                        const updates = {
+                            room: newRoom,
+                            days: newDay === 'MW' ? ['M', 'W'] : ['T', 'Th'],
+                            startTime: convertTimeSlotToStart(newTime),
+                            endTime: convertTimeSlotToEnd(newTime)
+                        };
+
+                        ScheduleManager.updateCourseAssignment('2025-26', quarter, course.courseId, updates);
+                    }
+
+                    // Re-render the schedule
+                    renderSchedule(quarter);
+                    renderConflicts(quarter);
+                    renderConflictSolver(quarter);
+                    updateStats(quarter);
+
+                    let toastMsg = 'Moved ' + course.courseCode + ' to ' + newDay + ' ' + newTime + ' Room ' + newRoom;
+                    if (hasExisting) {
+                        if (swapMode && swappedCourse) {
+                            toastMsg += ' (swapped with ' + swappedCourse.code + ')';
+                        } else {
+                            toastMsg += ' (' + existingInRoom.length + ' course' + (existingInRoom.length > 1 ? 's' : '') + ' displaced)';
+                        }
+                    }
+                    showToast(toastMsg);
+                } else {
+                    showToast('Could not find course to move', 'error');
+                }
+            } else {
+                showToast('Could not find original course location', 'error');
+            }
+        }
+
+        function convertTimeSlotToStart(timeSlot) {
+            const start = timeSlot.split('-')[0];
+            return start + ':00';
+        }
+
+        function convertTimeSlotToEnd(timeSlot) {
+            const end = timeSlot.split('-')[1];
+            return end + ':00';
         }
 
         function renderOnlineCourses(quarter) {
@@ -2534,9 +3274,13 @@
         // Current course being viewed/edited
         let currentCourseData = null;
 
-        function showCourseDetails(code, name, instructor, credits, room, courseId, quarter) {
+        function showCourseDetails(code, name, instructor, credits, room, courseId, quarter, day, time) {
             // Store course data for edit modal
-            currentCourseData = { code, name, instructor, credits, room, courseId, quarter };
+            currentCourseData = { code, name, instructor, credits, room, courseId, quarter, day, time };
+
+            // Format day/time for display
+            const dayDisplay = day || 'TBD';
+            const timeDisplay = time || 'TBD';
 
             // Build details content
             const content = document.getElementById('courseDetailsContent');
@@ -2544,6 +3288,8 @@
                 <p><strong>Course:</strong> ${code} - ${name || 'N/A'}</p>
                 <p><strong>Instructor:</strong> ${instructor || 'TBD'}</p>
                 <p><strong>Credits:</strong> ${credits || 'N/A'}</p>
+                <p><strong>Days:</strong> ${dayDisplay}</p>
+                <p><strong>Time:</strong> ${timeDisplay}</p>
                 <p><strong>Room:</strong> ${room || 'TBD'}</p>
             `;
 
@@ -2564,22 +3310,110 @@
 
             // Fill edit form with current data
             document.getElementById('editCourseId').value = currentCourseData.courseId || '';
-            document.getElementById('editQuarter').value = currentCourseData.quarter || '';
             document.getElementById('editCourseCode').value = currentCourseData.code || '';
             document.getElementById('editSection').value = '001';
             document.getElementById('editCredits').value = currentCourseData.credits || 5;
-            document.getElementById('editEnrollmentCap').value = '';
-            document.getElementById('editFaculty').value = currentCourseData.instructor || '';
+
+            // Set year and quarter
+            document.getElementById('editYear').value = '2025-26'; // Current academic year
+            document.getElementById('editQuarter').value = currentCourseData.quarter || 'spring';
+
+            // Default enrollment cap is 24 for most courses
+            const specialCaps = { 'DESN 399': 5, 'DESN 491': 10, 'DESN 495': 15, 'DESN 499': 10 };
+            const defaultCap = specialCaps[currentCourseData.code] || 24;
+            document.getElementById('editEnrollmentCap').value = defaultCap;
             document.getElementById('editRoom').value = currentCourseData.room || '';
-            document.getElementById('editStartTime').value = '';
-            document.getElementById('editEndTime').value = '';
             document.getElementById('editNotes').value = '';
 
-            // Clear day checkboxes
+            // Parse time slot (e.g., "10:00-12:00" -> start: "10:00", end: "12:00")
+            let startTime = '';
+            let endTime = '';
+            if (currentCourseData.time) {
+                const timeParts = currentCourseData.time.split('-');
+                if (timeParts.length === 2) {
+                    startTime = timeParts[0];
+                    endTime = timeParts[1];
+                }
+            }
+            document.getElementById('editStartTime').value = startTime;
+            document.getElementById('editEndTime').value = endTime;
+
+            // Clear day checkboxes first
             ['M', 'T', 'W', 'Th', 'F'].forEach(day => {
                 const cb = document.getElementById('editDay' + day);
                 if (cb) cb.checked = false;
             });
+
+            // Set day checkboxes based on current day pattern (e.g., "MW" -> M, W checked)
+            if (currentCourseData.day) {
+                const dayPattern = currentCourseData.day;
+                if (dayPattern === 'MW') {
+                    document.getElementById('editDayM').checked = true;
+                    document.getElementById('editDayW').checked = true;
+                } else if (dayPattern === 'TR') {
+                    document.getElementById('editDayT').checked = true;
+                    document.getElementById('editDayTh').checked = true;
+                } else {
+                    // Handle other patterns by checking matching days
+                    if (dayPattern.includes('M')) document.getElementById('editDayM').checked = true;
+                    if (dayPattern.includes('T') && !dayPattern.includes('Th')) document.getElementById('editDayT').checked = true;
+                    if (dayPattern.includes('W')) document.getElementById('editDayW').checked = true;
+                    if (dayPattern.includes('Th')) document.getElementById('editDayTh').checked = true;
+                    if (dayPattern.includes('F')) document.getElementById('editDayF').checked = true;
+                }
+            }
+
+            // Set faculty dropdown - find matching option
+            const facultySelect = document.getElementById('editFaculty');
+            const instructorValue = currentCourseData.instructor || '';
+            let facultyFound = false;
+
+            // Normalize instructor name for matching (handle various formats)
+            const normalizeInstructor = (name) => {
+                if (!name) return '';
+                return name.toLowerCase().replace(/[^a-z]/g, '');
+            };
+
+            const normalizedInstructor = normalizeInstructor(instructorValue);
+
+            for (let i = 0; i < facultySelect.options.length; i++) {
+                const optionValue = facultySelect.options[i].value;
+                const optionText = facultySelect.options[i].text;
+
+                // Try exact match first
+                if (optionValue === instructorValue || optionText === instructorValue) {
+                    facultySelect.selectedIndex = i;
+                    facultyFound = true;
+                    break;
+                }
+
+                // Try normalized match (handles "T.Masingale" vs "Travis Masingale")
+                const normalizedOption = normalizeInstructor(optionValue);
+                const normalizedOptionText = normalizeInstructor(optionText);
+
+                if (normalizedOption && normalizedInstructor.includes(normalizedOption.slice(-6)) ||
+                    normalizedOptionText && normalizedInstructor.includes(normalizedOptionText.slice(-6))) {
+                    facultySelect.selectedIndex = i;
+                    facultyFound = true;
+                    break;
+                }
+
+                // Check if last names match
+                const instructorLastName = instructorValue.split(' ').pop()?.toLowerCase() || '';
+                const optionLastName = optionText.split(' ').pop()?.toLowerCase() || '';
+                if (instructorLastName && optionLastName && instructorLastName === optionLastName) {
+                    facultySelect.selectedIndex = i;
+                    facultyFound = true;
+                    break;
+                }
+            }
+
+            // If still not found, try to add the instructor as a custom option
+            if (!facultyFound && instructorValue && instructorValue !== 'TBD') {
+                console.log('Instructor not found in dropdown:', instructorValue);
+                // Set to first matching partial or leave as placeholder
+                facultySelect.selectedIndex = 0;
+            }
 
             // Try to get more data from ScheduleManager if available
             if (typeof ScheduleManager !== 'undefined' && currentCourseData.courseId) {
@@ -2587,11 +3421,20 @@
                 const course = schedule.find(c => c.id === currentCourseData.courseId);
                 if (course) {
                     document.getElementById('editSection').value = course.section || '001';
-                    document.getElementById('editEnrollmentCap').value = course.enrollmentCap || '';
-                    document.getElementById('editStartTime').value = course.startTime || '';
-                    document.getElementById('editEndTime').value = course.endTime || '';
+                    // Only override enrollment cap if ScheduleManager has one set
+                    if (course.enrollmentCap) {
+                        document.getElementById('editEnrollmentCap').value = course.enrollmentCap;
+                    }
                     document.getElementById('editNotes').value = course.notes || '';
+                    // Override with ScheduleManager data if available
+                    if (course.startTime) document.getElementById('editStartTime').value = course.startTime;
+                    if (course.endTime) document.getElementById('editEndTime').value = course.endTime;
                     if (course.days && Array.isArray(course.days)) {
+                        // Clear and reset days
+                        ['M', 'T', 'W', 'Th', 'F'].forEach(day => {
+                            const cb = document.getElementById('editDay' + day);
+                            if (cb) cb.checked = false;
+                        });
                         course.days.forEach(day => {
                             const cb = document.getElementById('editDay' + day);
                             if (cb) cb.checked = true;
@@ -2621,12 +3464,15 @@
             e.preventDefault();
 
             const courseId = document.getElementById('editCourseId').value;
-            const quarter = document.getElementById('editQuarter').value;
+            const year = document.getElementById('editYear').value;
+            // Capitalize quarter to match ScheduleManager format (e.g., "fall" -> "Fall")
+            const quarterRaw = document.getElementById('editQuarter').value;
+            const quarter = quarterRaw.charAt(0).toUpperCase() + quarterRaw.slice(1);
 
             const updates = {
                 section: document.getElementById('editSection').value,
                 credits: parseInt(document.getElementById('editCredits').value) || 5,
-                enrollmentCap: parseInt(document.getElementById('editEnrollmentCap').value) || null,
+                enrollmentCap: parseInt(document.getElementById('editEnrollmentCap').value) || 24,
                 assignedFaculty: document.getElementById('editFaculty').value || null,
                 room: document.getElementById('editRoom').value || null,
                 days: getEditSelectedDays(),
@@ -2636,7 +3482,7 @@
             };
 
             if (typeof ScheduleManager !== 'undefined' && courseId) {
-                const result = ScheduleManager.updateCourseAssignment('2025-26', quarter, courseId, updates);
+                const result = ScheduleManager.updateCourseAssignment(year, quarter, courseId, updates);
                 if (result.success) {
                     showToast('Course updated successfully');
                     closeEditModal();
@@ -2704,15 +3550,405 @@
             displayTrackSuggestions(trackKey);
         });
 
+        // ============================================
+        // DISPLACED COURSES TRAY
+        // ============================================
+
+        let displacedCourses = [];
+        let courseToDelete = null;
+        let swapMode = false; // false = displace, true = swap
+
+        // Update swap mode labels when toggle changes
+        function updateSwapModeLabels() {
+            swapMode = document.getElementById('swapModeToggle').checked;
+            document.getElementById('displaceLabel').classList.toggle('active', !swapMode);
+            document.getElementById('swapLabel').classList.toggle('active', swapMode);
+            // Save preference
+            localStorage.setItem('swapMode', swapMode ? 'true' : 'false');
+        }
+
+        // Load swap mode preference
+        function loadSwapMode() {
+            const saved = localStorage.getItem('swapMode');
+            swapMode = saved === 'true';
+            document.getElementById('swapModeToggle').checked = swapMode;
+            updateSwapModeLabels();
+        }
+
+        // Load displaced courses from localStorage
+        function loadDisplacedCourses() {
+            const saved = localStorage.getItem('displacedCourses');
+            if (saved) {
+                displacedCourses = JSON.parse(saved);
+                updateDisplacedTray();
+            }
+        }
+
+        // Save displaced courses to localStorage
+        function saveDisplacedCourses() {
+            localStorage.setItem('displacedCourses', JSON.stringify(displacedCourses));
+        }
+
+        // Add a course to the displaced tray
+        function addToDisplacedTray(course) {
+            displacedCourses.push(course);
+            saveDisplacedCourses();
+            updateDisplacedTray();
+            openDisplacedTray();
+        }
+
+        // Remove a course from displaced tray
+        function removeFromDisplacedTray(index) {
+            displacedCourses.splice(index, 1);
+            saveDisplacedCourses();
+            updateDisplacedTray();
+        }
+
+        // Clear all displaced courses
+        function clearAllDisplaced() {
+            displacedCourses = [];
+            saveDisplacedCourses();
+            updateDisplacedTray();
+            closeDisplacedTray();
+        }
+
+        // Update the displaced tray display
+        function updateDisplacedTray() {
+            const content = document.getElementById('displacedContent');
+            const countBadge = document.getElementById('displacedCount');
+            const toggleCount = document.getElementById('toggleCount');
+            const toggle = document.getElementById('displacedToggle');
+
+            countBadge.textContent = displacedCourses.length;
+            toggleCount.textContent = displacedCourses.length;
+
+            // Show/hide toggle button
+            if (displacedCourses.length > 0) {
+                toggle.classList.add('visible');
+            } else {
+                toggle.classList.remove('visible');
+            }
+
+            if (displacedCourses.length === 0) {
+                content.innerHTML = `
+                    <div class="displaced-empty">
+                        <div class="displaced-empty-icon">📦</div>
+                        <p>No displaced courses</p>
+                        <p style="font-size: 0.8rem;">Courses bumped from their slots will appear here</p>
+                    </div>
+                `;
+                return;
+            }
+
+            content.innerHTML = displacedCourses.map((course, index) => `
+                <div class="displaced-course-card" draggable="true"
+                     data-displaced-index="${index}"
+                     data-course-code="${course.code}"
+                     ondragstart="handleDisplacedDragStart(event, ${index})"
+                     ondragend="handleDisplacedDragEnd(event)">
+                    <div class="displaced-course-header">
+                        <span class="displaced-course-code">${course.code}</span>
+                        <button class="displaced-course-remove" onclick="removeFromDisplacedTray(${index})" title="Remove">&times;</button>
+                    </div>
+                    <div class="displaced-course-name">${course.name || ''}</div>
+                    <div class="displaced-course-origin">was at: ${course.originalDay} ${course.originalTime}, Room ${course.originalRoom}</div>
+                </div>
+            `).join('');
+        }
+
+        // Open displaced tray
+        function openDisplacedTray() {
+            document.getElementById('displacedTray').classList.add('open');
+            document.getElementById('displacedToggle').classList.remove('visible');
+        }
+
+        // Close displaced tray
+        function closeDisplacedTray() {
+            document.getElementById('displacedTray').classList.remove('open');
+            if (displacedCourses.length > 0) {
+                document.getElementById('displacedToggle').classList.add('visible');
+            }
+        }
+
+        // Handle drag start from displaced tray
+        function handleDisplacedDragStart(e, index) {
+            const course = displacedCourses[index];
+            e.target.classList.add('dragging');
+
+            draggedCourse = {
+                element: e.target,
+                courseCode: course.code,
+                courseName: course.name,
+                instructor: course.instructor,
+                credits: course.credits,
+                isFromDisplacedTray: true,
+                displacedIndex: index,
+                originalDay: course.originalDay,
+                originalTime: course.originalTime,
+                originalRoom: course.originalRoom
+            };
+
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', JSON.stringify(draggedCourse));
+
+            // Show drop indicator
+            const indicator = document.getElementById('dropIndicator');
+            document.getElementById('dropIndicatorText').textContent =
+                'Dragging ' + course.code + ' - Drop on schedule to place';
+            indicator.classList.add('active');
+        }
+
+        // Handle drag end from displaced tray
+        function handleDisplacedDragEnd(e) {
+            e.target.classList.remove('dragging');
+            document.getElementById('dropIndicator').classList.remove('active');
+            document.querySelectorAll('.schedule-cell').forEach(cell => {
+                cell.classList.remove('drag-over');
+            });
+        }
+
+        // Handle drag over the displaced tray (to drop courses into it)
+        function handleTrayDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            document.getElementById('displacedTray').classList.add('drag-over');
+            // Auto-open tray when dragging over
+            openDisplacedTray();
+        }
+
+        // Handle drag leave from displaced tray
+        function handleTrayDragLeave(e) {
+            // Only remove if leaving the tray entirely
+            if (!e.currentTarget.contains(e.relatedTarget)) {
+                document.getElementById('displacedTray').classList.remove('drag-over');
+            }
+        }
+
+        // Handle drop onto displaced tray
+        function handleTrayDrop(e) {
+            e.preventDefault();
+            document.getElementById('displacedTray').classList.remove('drag-over');
+
+            if (!draggedCourse || draggedCourse.isFromDisplacedTray) return;
+
+            const quarter = document.getElementById('quarterSelect').value;
+            const data = scheduleData[quarter];
+
+            // Remove course from schedule and add to tray
+            if (data[draggedCourse.originalDay] && data[draggedCourse.originalDay][draggedCourse.originalTime]) {
+                const courses = data[draggedCourse.originalDay][draggedCourse.originalTime];
+                const courseIndex = courses.findIndex(c => c.code === draggedCourse.courseCode);
+
+                if (courseIndex > -1) {
+                    const course = courses.splice(courseIndex, 1)[0];
+                    addToDisplacedTray({
+                        code: course.code,
+                        name: course.name,
+                        instructor: course.instructor,
+                        credits: course.credits,
+                        originalDay: draggedCourse.originalDay,
+                        originalTime: draggedCourse.originalTime,
+                        originalRoom: draggedCourse.originalRoom
+                    });
+
+                    renderSchedule(quarter);
+                    renderConflicts(quarter);
+                    updateStats(quarter);
+                    showToast(course.code + ' moved to displaced tray');
+                }
+            }
+
+            // Clear dragged course
+            draggedCourse = null;
+            document.getElementById('dropIndicator').classList.remove('active');
+        }
+
+        // ============================================
+        // DELETE COURSE FUNCTIONALITY
+        // ============================================
+
+        function deleteCourse(courseCode, day, time, room, shiftKey) {
+            if (shiftKey) {
+                // Shift+Click: Move to displaced tray
+                const data = scheduleData[document.getElementById('quarterSelect').value];
+                if (data[day] && data[day][time]) {
+                    const courseIndex = data[day][time].findIndex(c => c.code === courseCode && c.room === room);
+                    if (courseIndex > -1) {
+                        const course = data[day][time][courseIndex];
+                        addToDisplacedTray({
+                            code: course.code,
+                            name: course.name,
+                            instructor: course.instructor,
+                            credits: course.credits,
+                            originalDay: day,
+                            originalTime: time,
+                            originalRoom: room
+                        });
+                        data[day][time].splice(courseIndex, 1);
+                        renderSchedule(document.getElementById('quarterSelect').value);
+                        showToast(courseCode + ' moved to displaced tray');
+                    }
+                }
+            } else {
+                // Regular click: Show confirmation dialog
+                courseToDelete = { courseCode, day, time, room };
+                document.getElementById('deleteConfirmText').textContent =
+                    'Are you sure you want to permanently remove ' + courseCode + ' from the schedule?';
+                document.getElementById('deleteConfirmModal').classList.add('active');
+            }
+        }
+
+        function confirmDelete() {
+            if (!courseToDelete) return;
+
+            const { courseCode, day, time, room } = courseToDelete;
+            const quarter = document.getElementById('quarterSelect').value;
+            const data = scheduleData[quarter];
+
+            if (data[day] && data[day][time]) {
+                const courseIndex = data[day][time].findIndex(c => c.code === courseCode && c.room === room);
+                if (courseIndex > -1) {
+                    data[day][time].splice(courseIndex, 1);
+                    renderSchedule(quarter);
+                    renderConflicts(quarter);
+                    updateStats(quarter);
+                    showToast(courseCode + ' removed from schedule');
+                }
+            }
+
+            closeDeleteConfirm();
+        }
+
+        function closeDeleteConfirm() {
+            document.getElementById('deleteConfirmModal').classList.remove('active');
+            courseToDelete = null;
+        }
+
+        // ============================================
+        // ADD COURSE FUNCTIONALITY
+        // ============================================
+
+        function openAddCourseModal() {
+            document.getElementById('addCourseForm').reset();
+            document.getElementById('addDayM').checked = true;
+            document.getElementById('addDayW').checked = true;
+            document.getElementById('addCourseModal').classList.add('active');
+        }
+
+        function closeAddCourseModal() {
+            document.getElementById('addCourseModal').classList.remove('active');
+        }
+
+        function getAddSelectedDays() {
+            const days = [];
+            ['M', 'T', 'W', 'Th', 'F'].forEach(day => {
+                const cb = document.getElementById('addDay' + day);
+                if (cb && cb.checked) days.push(day);
+            });
+            return days;
+        }
+
+        function handleAddCourseSubmit(e) {
+            e.preventDefault();
+
+            const courseCode = document.getElementById('addCourseCode').value;
+            const courseName = document.getElementById('addCourseCode').options[document.getElementById('addCourseCode').selectedIndex].text.split(' - ')[1] || '';
+            const section = document.getElementById('addSection').value;
+            const credits = parseInt(document.getElementById('addCredits').value);
+            const instructor = document.getElementById('addFaculty').value || 'TBD';
+            const days = getAddSelectedDays();
+            const startTime = document.getElementById('addStartTime').value;
+            const endTime = document.getElementById('addEndTime').value;
+            const room = document.getElementById('addRoom').value;
+
+            // Determine day pattern (MW or TR)
+            const dayPattern = (days.includes('M') || days.includes('W')) ? 'MW' : 'TR';
+            const timeSlot = startTime.replace(':', '') === '1000' ? '10:00-12:00' :
+                            startTime.replace(':', '') === '1300' ? '13:00-15:00' : '16:00-18:00';
+
+            const quarter = document.getElementById('quarterSelect').value;
+            const data = scheduleData[quarter];
+
+            // Ensure structure exists
+            if (!data[dayPattern]) data[dayPattern] = {};
+            if (!data[dayPattern][timeSlot]) data[dayPattern][timeSlot] = [];
+
+            // Add the course
+            data[dayPattern][timeSlot].push({
+                code: courseCode,
+                name: courseName,
+                instructor: instructor,
+                credits: credits,
+                room: room
+            });
+
+            closeAddCourseModal();
+            renderSchedule(quarter);
+            renderConflicts(quarter);
+            updateStats(quarter);
+            showToast(courseCode + ' added to schedule');
+        }
+
         // Initialize app - load data then render
+        // Faculty data from workload-data.json
+        let facultyList = [];
+
+        async function loadFacultyData() {
+            try {
+                const response = await fetch('workload-data.json');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.facultyWorkload) {
+                        facultyList = Object.keys(data.facultyWorkload).sort();
+                        populateFacultyDropdowns();
+                    }
+                }
+            } catch (error) {
+                console.warn('Could not load faculty data:', error);
+            }
+        }
+
+        function populateFacultyDropdowns() {
+            const addFacultySelect = document.getElementById('addFaculty');
+            const editFacultySelect = document.getElementById('editFaculty');
+
+            // Clear existing options except first placeholder
+            [addFacultySelect, editFacultySelect].forEach(select => {
+                if (!select) return;
+                // Keep first option (placeholder)
+                while (select.options.length > 1) {
+                    select.remove(1);
+                }
+                // Add faculty options
+                facultyList.forEach(name => {
+                    const option = document.createElement('option');
+                    option.value = name;
+                    option.textContent = name;
+                    select.appendChild(option);
+                });
+                // Add TBD option at end
+                const tbdOption = document.createElement('option');
+                tbdOption.value = 'TBD';
+                tbdOption.textContent = 'TBD';
+                select.appendChild(tbdOption);
+            });
+        }
+
         async function init() {
             await loadEnrollmentData();
+            await loadFacultyData();
 
             // Initialize ScheduleManager for editing
             if (typeof ScheduleManager !== 'undefined') {
                 await ScheduleManager.init({ catalogPath: 'data/course-catalog.json' });
                 console.log('ScheduleManager initialized');
             }
+
+            // Load displaced courses from localStorage
+            loadDisplacedCourses();
+
+            // Load swap mode preference
+            loadSwapMode();
 
             // Initial render
             renderSchedule('spring');
@@ -2756,18 +3992,36 @@
 
             <form id="editCourseForm" onsubmit="handleEditFormSubmit(event)">
                 <input type="hidden" id="editCourseId">
-                <input type="hidden" id="editQuarter">
 
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label class="form-label">Course Code</label>
-                        <input type="text" id="editCourseCode" class="form-input" readonly style="background: #f3f4f6;">
+                    <div class="form-input-group">
+                        <div class="form-group">
+                            <label class="form-label">Course Code</label>
+                            <input type="text" id="editCourseCode" class="form-input" readonly style="background: #f3f4f6;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="editSection" class="form-label">Section</label>
+                            <input type="text" id="editSection" class="form-input" maxlength="3">
+                        </div>
                     </div>
 
                     <div class="form-input-group">
                         <div class="form-group">
-                            <label for="editSection" class="form-label">Section</label>
-                            <input type="text" id="editSection" class="form-input" maxlength="3">
+                            <label for="editYear" class="form-label">Academic Year</label>
+                            <select id="editYear" class="form-select">
+                                <option value="2025-26">2025-26</option>
+                                <option value="2026-27">2026-27</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="editQuarter" class="form-label">Quarter</label>
+                            <select id="editQuarter" class="form-select">
+                                <option value="fall">Fall</option>
+                                <option value="winter">Winter</option>
+                                <option value="spring">Spring</option>
+                            </select>
                         </div>
 
                         <div class="form-group">
@@ -2783,7 +4037,9 @@
 
                     <div class="form-group">
                         <label for="editFaculty" class="form-label">Faculty</label>
-                        <input type="text" id="editFaculty" class="form-input" placeholder="Instructor name">
+                        <select id="editFaculty" class="form-select">
+                            <option value="">Select Instructor...</option>
+                        </select>
                     </div>
 
                     <div class="form-group">
@@ -2836,6 +4092,142 @@
                 </div>
             </form>
         </div>
+    </div>
+
+    <!-- Add Course Modal -->
+    <div class="modal-overlay" id="addCourseModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Add Course to Schedule</h2>
+                <button class="modal-close" onclick="closeAddCourseModal()">&times;</button>
+            </div>
+
+            <form id="addCourseForm" onsubmit="handleAddCourseSubmit(event)">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="addCourseCode" class="form-label">Course</label>
+                        <select id="addCourseCode" class="form-select" required>
+                            <option value="">Select Course...</option>
+                            <option value="DESN 100">DESN 100 - Drawing for Communication</option>
+                            <option value="DESN 200">DESN 200 - Visual Thinking + Making</option>
+                            <option value="DESN 216">DESN 216 - Digital Foundations</option>
+                            <option value="DESN 243">DESN 243 - Typography</option>
+                            <option value="DESN 263">DESN 263 - Visual Communication Design</option>
+                            <option value="DESN 301">DESN 301 - Visual Storytelling</option>
+                            <option value="DESN 326">DESN 326 - Introduction to Animation</option>
+                            <option value="DESN 338">DESN 338 - UX Design 1</option>
+                            <option value="DESN 348">DESN 348 - UX Design 2</option>
+                            <option value="DESN 355">DESN 355 - Motion Design</option>
+                            <option value="DESN 359">DESN 359 - Histories of Design</option>
+                            <option value="DESN 368">DESN 368 - Code + Design 1</option>
+                            <option value="DESN 369">DESN 369 - Web Development 1</option>
+                            <option value="DESN 378">DESN 378 - Code + Design 2</option>
+                            <option value="DESN 379">DESN 379 - Web Development 2</option>
+                            <option value="DESN 458">DESN 458 - UX Design 3</option>
+                            <option value="DESN 463">DESN 463 - Community-Driven Design</option>
+                            <option value="DESN 468">DESN 468 - Code + Design 3</option>
+                            <option value="DESN 480">DESN 480 - Professional Practice</option>
+                            <option value="DESN 490">DESN 490 - Senior Capstone</option>
+                        </select>
+                    </div>
+
+                    <div class="form-input-group">
+                        <div class="form-group">
+                            <label for="addSection" class="form-label">Section</label>
+                            <input type="text" id="addSection" class="form-input" value="001" maxlength="3" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="addCredits" class="form-label">Credits</label>
+                            <input type="number" id="addCredits" class="form-input" value="5" min="1" max="15" step="1" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="addFaculty" class="form-label">Instructor</label>
+                        <select id="addFaculty" class="form-select">
+                            <option value="">Select Instructor...</option>
+                            <option value="T.Masingale">T.Masingale</option>
+                            <option value="S.Durr">S.Durr</option>
+                            <option value="C.Manikoth">C.Manikoth</option>
+                            <option value="S.Mills">S.Mills</option>
+                            <option value="M.Lybbert">M.Lybbert</option>
+                            <option value="G.Hustrulid">G.Hustrulid</option>
+                            <option value="A.Sopu">A.Sopu</option>
+                            <option value="E.Norris">E.Norris</option>
+                            <option value="J.Braukmann">J.Braukmann</option>
+                            <option value="S.Allison">S.Allison</option>
+                            <option value="TBD">TBD</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Days</label>
+                        <div style="display: flex; gap: 12px; margin-top: 6px;">
+                            <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                                <input type="checkbox" id="addDayM" value="M" checked> M
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                                <input type="checkbox" id="addDayT" value="T"> T
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                                <input type="checkbox" id="addDayW" value="W" checked> W
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                                <input type="checkbox" id="addDayTh" value="Th"> Th
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                                <input type="checkbox" id="addDayF" value="F"> F
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-input-group">
+                        <div class="form-group">
+                            <label for="addStartTime" class="form-label">Start Time</label>
+                            <select id="addStartTime" class="form-select" required>
+                                <option value="10:00">10:00 AM</option>
+                                <option value="13:00">1:00 PM</option>
+                                <option value="16:00">4:00 PM</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="addEndTime" class="form-label">End Time</label>
+                            <select id="addEndTime" class="form-select" required>
+                                <option value="12:00">12:00 PM</option>
+                                <option value="15:00">3:00 PM</option>
+                                <option value="18:00">6:00 PM</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="addRoom" class="form-label">Room</label>
+                        <select id="addRoom" class="form-select" required>
+                            <option value="">Select Room...</option>
+                            <option value="206">206 - UX Lab</option>
+                            <option value="207">207 - Media Lab</option>
+                            <option value="209">209 - Mac Lab</option>
+                            <option value="210">210 - Mac Lab</option>
+                            <option value="212">212 - Project Lab</option>
+                            <option value="CEB 102">CEB 102</option>
+                            <option value="CEB 104">CEB 104</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeAddCourseModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Add to Schedule</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Drop Indicator -->
+    <div class="drop-indicator" id="dropIndicator">
+        <span id="dropIndicatorText">Drop to move course</span>
     </div>
 
     <!-- Toast Notification -->
