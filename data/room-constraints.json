@@ -14,7 +14,8 @@
           "name": "207 Media Lab",
           "type": "flex-space",
           "capacity": 24,
-          "preferredCourses": ["DESN 326", "DESN 336", "DESN 355"]
+          "excludeFromGrid": true,
+          "note": "Not used for scheduled courses"
         },
         {
           "id": "209",
@@ -34,7 +35,9 @@
           "type": "project-space",
           "capacity": 24,
           "hasComputers": false,
-          "preferredCourses": ["DESN 359", "DESN 100", "DESN 301", "DESN 401"]
+          "allowedCourses": ["DESN 301", "DESN 359", "DESN 401"],
+          "overflowCourses": ["DESN 100", "DESN 200"],
+          "note": "100/200 only when CEB rooms are full"
         }
       ]
     },
@@ -59,34 +62,34 @@
   "courseRoomRules": {
     "cheneyOnly": {
       "courses": ["DESN 100", "DESN 200", "DESN 216"],
-      "reason": "Freshman/sophomore courses taken on main campus, transfer students completing general courses",
-      "validRooms": ["CEB 102", "CEB 104"]
+      "reason": "Freshman/sophomore courses taken on main campus",
+      "validRooms": ["CEB 102", "CEB 104"],
+      "overflowRoom": "212",
+      "overflowNote": "Use 212 only when CEB rooms are full"
     },
-    "mediaLab": {
-      "courses": ["DESN 326", "DESN 336", "DESN 355"],
-      "reason": "Flex space for media/motion courses",
-      "validRooms": ["207"]
-    },
-    "projectLab": {
-      "courses": ["DESN 301", "DESN 401"],
-      "reason": "Project-based courses, no computers needed",
+    "room212Only": {
+      "courses": ["DESN 301", "DESN 359", "DESN 401"],
+      "reason": "Project-based courses assigned to Room 212",
       "validRooms": ["212"]
     },
-    "specialRules": {
-      "DESN 359": {
-        "default": ["CEB 102", "CEB 104"],
-        "Winter": ["212"],
-        "reason": "Offered at Catalyst in Winter quarter only"
-      }
+    "excludeFromGrid": {
+      "rooms": ["207"],
+      "reason": "Room 207 is not used for scheduled courses"
+    },
+    "itcsCheneyOnly": {
+      "pattern": "ITCS",
+      "reason": "All ITCS courses can only be offered in Cheney",
+      "validRooms": ["CEB 102", "CEB 104"]
     }
   },
   "caseByCase": {
-    "courses": ["DESN 495", "DESN 491", "DESN 499", "DESN 399"],
+    "courses": ["DESN 495", "DESN 491", "DESN 499", "DESN 399", "DESN 396"],
     "descriptions": {
       "DESN 495": "Internship",
       "DESN 491": "Practicum",
       "DESN 499": "Independent Study",
-      "DESN 399": "Directed Study"
+      "DESN 399": "Directed Study",
+      "DESN 396": "Experimental Courses (added manually)"
     },
     "reason": "Not scheduled in regular grid - handled individually per student"
   },

@@ -1,0 +1,617 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "generatedFrom": "ewu-design-catalog/COURSE-INDEX.md",
+    "lastUpdated": "2025-12-02"
+  },
+  "courses": {
+    "DESN-100": {
+      "code": "DESN-100",
+      "title": "Drawing for Communication",
+      "credits": 5,
+      "level": 100,
+      "prerequisites": [],
+      "unlocks": ["DESN-243", "DESN-263", "DESN-301"],
+      "tracks": ["foundations", "game-design"],
+      "isCriticalGatekeeper": false
+    },
+    "DESN-200": {
+      "code": "DESN-200",
+      "title": "Visual Thinking + Making",
+      "credits": 5,
+      "level": 200,
+      "prerequisites": [],
+      "unlocks": ["DESN-326", "DESN-355", "DESN-360"],
+      "tracks": ["foundations", "animation"],
+      "isCriticalGatekeeper": false,
+      "notes": "BACR: humanities/arts"
+    },
+    "DESN-210": {
+      "code": "DESN-210",
+      "title": "Design Lab",
+      "credits": 2,
+      "level": 200,
+      "prerequisites": [],
+      "unlocks": [],
+      "tracks": ["professional"],
+      "isCriticalGatekeeper": false
+    },
+    "DESN-213": {
+      "code": "DESN-213",
+      "title": "Photoshop",
+      "credits": 2,
+      "level": 200,
+      "prerequisites": [],
+      "unlocks": [],
+      "tracks": ["adobe-tools"],
+      "isCriticalGatekeeper": false,
+      "notes": "Self-paced"
+    },
+    "DESN-214": {
+      "code": "DESN-214",
+      "title": "Illustrator",
+      "credits": 2,
+      "level": 200,
+      "prerequisites": [],
+      "unlocks": [],
+      "tracks": ["adobe-tools"],
+      "isCriticalGatekeeper": false,
+      "notes": "Self-paced"
+    },
+    "DESN-215": {
+      "code": "DESN-215",
+      "title": "InDesign",
+      "credits": 2,
+      "level": 200,
+      "prerequisites": [],
+      "unlocks": [],
+      "tracks": ["adobe-tools"],
+      "isCriticalGatekeeper": false,
+      "notes": "Self-paced"
+    },
+    "DESN-216": {
+      "code": "DESN-216",
+      "title": "Digital Foundations",
+      "credits": 5,
+      "level": 200,
+      "prerequisites": [],
+      "unlocks": ["DESN-243", "DESN-263", "DESN-305", "DESN-325", "DESN-326", "DESN-355", "DESN-368", "DESN-369", "DESN-374", "DESN-375"],
+      "tracks": ["foundations"],
+      "isCriticalGatekeeper": true,
+      "notes": "Gateway course - unlocks most 300-level courses"
+    },
+    "DESN-217": {
+      "code": "DESN-217",
+      "title": "Figma",
+      "credits": 2,
+      "level": 200,
+      "prerequisites": [],
+      "unlocks": [],
+      "tracks": ["adobe-tools"],
+      "isCriticalGatekeeper": false,
+      "notes": "Self-paced"
+    },
+    "DESN-243": {
+      "code": "DESN-243",
+      "title": "Typography",
+      "credits": 5,
+      "level": 200,
+      "prerequisites": ["DESN-100", "DESN-216"],
+      "unlocks": ["DESN-343", "DESN-366", "DESN-463"],
+      "tracks": ["typography", "foundations"],
+      "isCriticalGatekeeper": true
+    },
+    "DESN-263": {
+      "code": "DESN-263",
+      "title": "Visual Communication Design",
+      "credits": 5,
+      "level": 200,
+      "prerequisites": ["DESN-100", "DESN-216"],
+      "unlocks": ["DESN-366", "DESN-463"],
+      "tracks": ["foundations"],
+      "isCriticalGatekeeper": false
+    },
+    "DESN-301": {
+      "code": "DESN-301",
+      "title": "Visual Storytelling",
+      "credits": 5,
+      "level": 300,
+      "prerequisites": ["DESN-100"],
+      "unlocks": ["DESN-345", "DESN-401"],
+      "tracks": ["game-design"],
+      "isCriticalGatekeeper": false
+    },
+    "DESN-305": {
+      "code": "DESN-305",
+      "title": "Social Media Design and Management",
+      "credits": 5,
+      "level": 300,
+      "prerequisites": ["DESN-216"],
+      "unlocks": [],
+      "tracks": ["professional"],
+      "isCriticalGatekeeper": false
+    },
+    "DESN-325": {
+      "code": "DESN-325",
+      "title": "Emergent Design",
+      "credits": 5,
+      "level": 300,
+      "prerequisites": ["DESN-216"],
+      "unlocks": [],
+      "tracks": ["ai-emergent"],
+      "isCriticalGatekeeper": false,
+      "notes": "Repeatable"
+    },
+    "DESN-326": {
+      "code": "DESN-326",
+      "title": "Introduction to Animation",
+      "credits": 5,
+      "level": 300,
+      "prerequisites": ["DESN-200", "DESN-216"],
+      "unlocks": ["DESN-336", "DESN-345"],
+      "tracks": ["animation"],
+      "isCriticalGatekeeper": true
+    },
+    "DESN-335": {
+      "code": "DESN-335",
+      "title": "Board Game Design",
+      "credits": 5,
+      "level": 300,
+      "prerequisites": [],
+      "unlocks": [],
+      "tracks": ["game-design"],
+      "standingRequired": "junior",
+      "isCriticalGatekeeper": false
+    },
+    "DESN-336": {
+      "code": "DESN-336",
+      "title": "3D Animation",
+      "credits": 5,
+      "level": 300,
+      "prerequisites": ["DESN-326"],
+      "unlocks": ["DESN-446"],
+      "tracks": ["animation"],
+      "isCriticalGatekeeper": false
+    },
+    "DESN-338": {
+      "code": "DESN-338",
+      "title": "User Experience Design 1",
+      "credits": 5,
+      "level": 300,
+      "prerequisites": [],
+      "unlocks": ["DESN-348"],
+      "tracks": ["ux-interaction"],
+      "isCriticalGatekeeper": false
+    },
+    "DESN-343": {
+      "code": "DESN-343",
+      "title": "Typography 2",
+      "credits": 5,
+      "level": 300,
+      "prerequisites": ["DESN-243"],
+      "unlocks": [],
+      "tracks": ["typography"],
+      "isCriticalGatekeeper": false
+    },
+    "DESN-345": {
+      "code": "DESN-345",
+      "title": "Digital Game Design",
+      "credits": 5,
+      "level": 300,
+      "prerequisites": ["DESN-301", "DESN-326"],
+      "unlocks": [],
+      "tracks": ["game-design"],
+      "isCriticalGatekeeper": false
+    },
+    "DESN-348": {
+      "code": "DESN-348",
+      "title": "User Experience Design 2",
+      "credits": 5,
+      "level": 300,
+      "prerequisites": ["DESN-338"],
+      "unlocks": ["DESN-458"],
+      "tracks": ["ux-interaction"],
+      "isCriticalGatekeeper": false
+    },
+    "DESN-350": {
+      "code": "DESN-350",
+      "title": "Digital Photography",
+      "credits": 5,
+      "level": 300,
+      "prerequisites": [],
+      "unlocks": ["DESN-351"],
+      "tracks": ["photography"],
+      "standingRequired": "junior",
+      "isCriticalGatekeeper": false
+    },
+    "DESN-351": {
+      "code": "DESN-351",
+      "title": "Advanced Photography",
+      "credits": 5,
+      "level": 300,
+      "prerequisites": ["DESN-350"],
+      "unlocks": [],
+      "tracks": ["photography"],
+      "isCriticalGatekeeper": false
+    },
+    "DESN-355": {
+      "code": "DESN-355",
+      "title": "Motion Design",
+      "credits": 5,
+      "level": 300,
+      "prerequisites": ["DESN-200", "DESN-216"],
+      "unlocks": ["DESN-365"],
+      "tracks": ["animation", "motion"],
+      "isCriticalGatekeeper": false
+    },
+    "DESN-359": {
+      "code": "DESN-359",
+      "title": "Histories of Design",
+      "credits": 5,
+      "level": 300,
+      "prerequisites": ["ENGL-201"],
+      "unlocks": [],
+      "tracks": ["foundations"],
+      "isCriticalGatekeeper": false,
+      "notes": "Diversity requirement"
+    },
+    "DESN-360": {
+      "code": "DESN-360",
+      "title": "Zine and Publication Design",
+      "credits": 5,
+      "level": 300,
+      "prerequisites": ["DESN-200"],
+      "unlocks": [],
+      "tracks": ["typography", "publication"],
+      "isCriticalGatekeeper": false
+    },
+    "DESN-365": {
+      "code": "DESN-365",
+      "title": "Motion Design 2",
+      "credits": 5,
+      "level": 300,
+      "prerequisites": ["DESN-355"],
+      "unlocks": ["DESN-446"],
+      "tracks": ["animation", "motion"],
+      "isCriticalGatekeeper": false
+    },
+    "DESN-366": {
+      "code": "DESN-366",
+      "title": "Production Design",
+      "credits": 5,
+      "level": 300,
+      "prerequisites": ["DESN-243", "DESN-263"],
+      "unlocks": [],
+      "tracks": ["professional"],
+      "isCriticalGatekeeper": false
+    },
+    "DESN-368": {
+      "code": "DESN-368",
+      "title": "Code + Design 1",
+      "credits": 5,
+      "level": 300,
+      "prerequisites": ["DESN-216"],
+      "unlocks": ["DESN-369", "DESN-378", "DESN-490"],
+      "tracks": ["web-development"],
+      "isCriticalGatekeeper": true,
+      "isRequired": true,
+      "notes": "Required course starting 2026-27. Required for senior capstone."
+    },
+    "DESN-369": {
+      "code": "DESN-369",
+      "title": "Web Development 1",
+      "credits": 5,
+      "level": 300,
+      "prerequisites": ["DESN-216", "DESN-368"],
+      "unlocks": ["DESN-379"],
+      "tracks": ["web-development"],
+      "isCriticalGatekeeper": false,
+      "notes": "Requires DESN-368 (Fall→Winter sequence) starting 2026-27"
+    },
+    "DESN-374": {
+      "code": "DESN-374",
+      "title": "AI + Design",
+      "credits": 5,
+      "level": 300,
+      "prerequisites": ["DESN-216"],
+      "unlocks": [],
+      "tracks": ["ai-emergent"],
+      "isCriticalGatekeeper": false
+    },
+    "DESN-375": {
+      "code": "DESN-375",
+      "title": "Digital Video",
+      "credits": 5,
+      "level": 300,
+      "prerequisites": ["DESN-216"],
+      "unlocks": [],
+      "tracks": ["photography", "video"],
+      "isCriticalGatekeeper": false
+    },
+    "DESN-378": {
+      "code": "DESN-378",
+      "title": "Code + Design 2",
+      "credits": 5,
+      "level": 300,
+      "prerequisites": ["DESN-368"],
+      "unlocks": ["DESN-468"],
+      "tracks": ["web-development"],
+      "isCriticalGatekeeper": false
+    },
+    "DESN-379": {
+      "code": "DESN-379",
+      "title": "Web Development 2",
+      "credits": 5,
+      "level": 300,
+      "prerequisites": ["DESN-369"],
+      "unlocks": ["DESN-469"],
+      "tracks": ["web-development"],
+      "isCriticalGatekeeper": false
+    },
+    "DESN-384": {
+      "code": "DESN-384",
+      "title": "Digital Sound",
+      "credits": 5,
+      "level": 300,
+      "prerequisites": [],
+      "unlocks": [],
+      "tracks": ["audio"],
+      "standingRequired": "junior",
+      "isCriticalGatekeeper": false
+    },
+    "DESN-401": {
+      "code": "DESN-401",
+      "title": "Imaginary Worlds",
+      "credits": 5,
+      "level": 400,
+      "prerequisites": ["DESN-301"],
+      "unlocks": [],
+      "tracks": ["game-design"],
+      "isCriticalGatekeeper": false
+    },
+    "DESN-446": {
+      "code": "DESN-446",
+      "title": "4D Animation",
+      "credits": 5,
+      "level": 400,
+      "prerequisites": ["DESN-336", "DESN-365"],
+      "unlocks": [],
+      "tracks": ["animation"],
+      "isCriticalGatekeeper": false
+    },
+    "DESN-458": {
+      "code": "DESN-458",
+      "title": "User Experience Design 3",
+      "credits": 5,
+      "level": 400,
+      "prerequisites": ["DESN-348"],
+      "unlocks": [],
+      "tracks": ["ux-interaction"],
+      "isCriticalGatekeeper": false
+    },
+    "DESN-463": {
+      "code": "DESN-463",
+      "title": "Community-Driven Design",
+      "credits": 5,
+      "level": 400,
+      "prerequisites": ["DESN-243", "DESN-263"],
+      "unlocks": [],
+      "tracks": ["professional"],
+      "isCriticalGatekeeper": false
+    },
+    "DESN-468": {
+      "code": "DESN-468",
+      "title": "Code + Design 3",
+      "credits": 5,
+      "level": 400,
+      "prerequisites": ["DESN-378"],
+      "unlocks": [],
+      "tracks": ["web-development"],
+      "isCriticalGatekeeper": false
+    },
+    "DESN-469": {
+      "code": "DESN-469",
+      "title": "Web Development 3",
+      "credits": 5,
+      "level": 400,
+      "prerequisites": ["DESN-379"],
+      "unlocks": [],
+      "tracks": ["web-development"],
+      "isCriticalGatekeeper": false
+    },
+    "DESN-480": {
+      "code": "DESN-480",
+      "title": "Professional Practice",
+      "credits": 5,
+      "level": 400,
+      "prerequisites": [],
+      "unlocks": [],
+      "tracks": ["professional"],
+      "standingRequired": "senior",
+      "isCriticalGatekeeper": false
+    },
+    "DESN-490": {
+      "code": "DESN-490",
+      "title": "Senior Capstone",
+      "credits": 5,
+      "level": 400,
+      "prerequisites": ["DESN-368"],
+      "unlocks": [],
+      "tracks": ["professional"],
+      "standingRequired": "senior",
+      "isCriticalGatekeeper": false,
+      "notes": "Capstone requirement"
+    },
+    "DESN-493": {
+      "code": "DESN-493",
+      "title": "Portfolio Practice",
+      "credits": 2,
+      "level": 400,
+      "prerequisites": [],
+      "unlocks": [],
+      "tracks": ["professional"],
+      "isCriticalGatekeeper": false,
+      "notes": "Repeatable"
+    },
+    "DESN-495": {
+      "code": "DESN-495",
+      "title": "Internship",
+      "credits": "2-15",
+      "level": 400,
+      "prerequisites": [],
+      "unlocks": [],
+      "tracks": ["professional"],
+      "standingRequired": "junior",
+      "isCriticalGatekeeper": false,
+      "notes": "Pass/Fail"
+    }
+  },
+  "tracks": {
+    "foundations": {
+      "name": "Foundations",
+      "courses": ["DESN-100", "DESN-200", "DESN-216", "DESN-263", "DESN-359"],
+      "description": "Core design thinking and history"
+    },
+    "web-development": {
+      "name": "Web Development",
+      "courses": ["DESN-368", "DESN-378", "DESN-468", "DESN-369", "DESN-379", "DESN-469"],
+      "sequences": [
+        ["DESN-216", "DESN-368", "DESN-378", "DESN-468", "DESN-490"],
+        ["DESN-216", "DESN-369", "DESN-379", "DESN-469", "DESN-490"]
+      ],
+      "description": "Complete web development sequence"
+    },
+    "ai-emergent": {
+      "name": "AI & Emergent",
+      "courses": ["DESN-325", "DESN-374"],
+      "description": "Cutting-edge technology integration"
+    },
+    "animation": {
+      "name": "Animation & Motion",
+      "courses": ["DESN-326", "DESN-336", "DESN-355", "DESN-365", "DESN-446"],
+      "sequences": [
+        ["DESN-326", "DESN-336", "DESN-446"],
+        ["DESN-355", "DESN-365", "DESN-446"]
+      ],
+      "description": "Moving image design and production"
+    },
+    "ux-interaction": {
+      "name": "UX & Interaction",
+      "courses": ["DESN-338", "DESN-348", "DESN-458"],
+      "sequences": [
+        ["DESN-338", "DESN-348", "DESN-458"]
+      ],
+      "description": "User experience design progression"
+    },
+    "game-design": {
+      "name": "Game Design",
+      "courses": ["DESN-301", "DESN-335", "DESN-345", "DESN-401"],
+      "sequences": [
+        ["DESN-100", "DESN-301", "DESN-345"],
+        ["DESN-100", "DESN-301", "DESN-401"]
+      ],
+      "description": "Physical and digital game creation"
+    },
+    "typography": {
+      "name": "Typography & Publication",
+      "courses": ["DESN-243", "DESN-343", "DESN-360"],
+      "sequences": [
+        ["DESN-100", "DESN-216", "DESN-243", "DESN-343"]
+      ],
+      "description": "Type design and editorial work"
+    },
+    "photography": {
+      "name": "Photography & Video",
+      "courses": ["DESN-350", "DESN-351", "DESN-375"],
+      "sequences": [
+        ["DESN-350", "DESN-351"]
+      ],
+      "description": "Still and moving image capture"
+    },
+    "professional": {
+      "name": "Professional",
+      "courses": ["DESN-210", "DESN-305", "DESN-366", "DESN-463", "DESN-480", "DESN-490", "DESN-493", "DESN-495"],
+      "description": "Career preparation and real-world work"
+    }
+  },
+  "criticalGatekeepers": [
+    {
+      "code": "DESN-216",
+      "reason": "Required for most 300-level courses",
+      "unlockCount": 10
+    },
+    {
+      "code": "DESN-368",
+      "reason": "Required for senior capstone (490)",
+      "unlockCount": 2
+    },
+    {
+      "code": "DESN-243",
+      "reason": "Required for 343, 366, 463",
+      "unlockCount": 3
+    },
+    {
+      "code": "DESN-326",
+      "reason": "Required for 336, 345",
+      "unlockCount": 2
+    }
+  ],
+  "flowRates": {
+    "description": "Estimated flow rates based on historical enrollment patterns. These percentages represent how many students taking a prerequisite typically proceed to each subsequent course.",
+    "DESN-216": {
+      "to_DESN-368": 0.45,
+      "to_DESN-369": 0.30,
+      "to_DESN-338": 0.35,
+      "to_DESN-326": 0.25,
+      "to_DESN-355": 0.20,
+      "to_DESN-374": 0.15,
+      "to_DESN-325": 0.10,
+      "to_DESN-305": 0.15,
+      "to_DESN-375": 0.10
+    },
+    "DESN-368": {
+      "to_DESN-378": 0.75,
+      "to_DESN-490": 0.85
+    },
+    "DESN-378": {
+      "to_DESN-468": 0.70
+    },
+    "DESN-369": {
+      "to_DESN-379": 0.70
+    },
+    "DESN-379": {
+      "to_DESN-469": 0.65
+    },
+    "DESN-338": {
+      "to_DESN-348": 0.75
+    },
+    "DESN-348": {
+      "to_DESN-458": 0.70
+    },
+    "DESN-326": {
+      "to_DESN-336": 0.60,
+      "to_DESN-345": 0.30
+    },
+    "DESN-336": {
+      "to_DESN-446": 0.55
+    },
+    "DESN-355": {
+      "to_DESN-365": 0.65
+    },
+    "DESN-365": {
+      "to_DESN-446": 0.50
+    },
+    "DESN-243": {
+      "to_DESN-343": 0.50,
+      "to_DESN-366": 0.30,
+      "to_DESN-463": 0.25
+    },
+    "DESN-301": {
+      "to_DESN-345": 0.40,
+      "to_DESN-401": 0.35
+    },
+    "DESN-350": {
+      "to_DESN-351": 0.55
+    }
+  }
+}

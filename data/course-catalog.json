@@ -193,7 +193,9 @@
       "defaultCredits": 5,
       "typicalEnrollmentCap": 24,
       "level": "300",
-      "offeredQuarters": ["Fall", "Spring"]
+      "offeredQuarters": ["Fall"],
+      "required": true,
+      "notes": "Required course starting 2026-27 academic year"
     },
     {
       "code": "DESN 369",
@@ -201,7 +203,9 @@
       "defaultCredits": 5,
       "typicalEnrollmentCap": 24,
       "level": "300",
-      "offeredQuarters": ["Spring"]
+      "offeredQuarters": ["Winter"],
+      "prerequisites": ["DESN 368"],
+      "notes": "Requires DESN 368 (Fall→Winter sequence)"
     },
     {
       "code": "DESN 374",

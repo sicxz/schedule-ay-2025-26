@@ -368,6 +368,16 @@ body {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
+.course-block.dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.course-block[draggable="true"] {
+    cursor: grab;
+}
+
 .course-block.priority-high {
     background: #fee2e2;
     border-left-color: #ef4444;
@@ -1073,4 +1083,262 @@ body {
     .action-bar {
         flex-direction: column;
     }
+}
+
+/* Quarter Tabs */
+.quarter-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    padding: 8px;
+    background: var(--bg-card);
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.quarter-tab {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    background: var(--bg-primary);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.quarter-tab:hover {
+    background: #e5e7eb;
+    color: var(--text-primary);
+}
+
+.quarter-tab.active {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+}
+
+.quarter-tab .tab-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 6px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    font-size: 0.8em;
+    font-weight: 700;
+}
+
+.quarter-tab:not(.active) .tab-count {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.quarter-tab .tab-warning {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 4px;
+    background: var(--danger-color);
+    border-radius: 10px;
+    font-size: 0.75em;
+    font-weight: 700;
+    color: white;
+}
+
+@media (max-width: 600px) {
+    .quarter-tabs {
+        flex-direction: column;
+    }
+}
+
+/* ========================================
+   Analysis Dashboard Styles
+   ======================================== */
+
+.analysis-dashboard {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.analysis-header {
+    margin-bottom: 20px;
+}
+
+.analysis-header h2 {
+    color: var(--text-primary);
+    font-size: 1.5em;
+    margin-bottom: 4px;
+}
+
+.analysis-subtitle {
+    color: var(--text-secondary);
+    font-size: 0.9em;
+}
+
+.analysis-summary {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.analysis-stat {
+    flex: 1;
+    background: #f3f4f6;
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+}
+
+.analysis-stat.warning {
+    background: #fef3c7;
+}
+
+.analysis-stat.success {
+    background: #d1fae5;
+}
+
+.analysis-stat .stat-value {
+    display: block;
+    font-size: 2em;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.analysis-stat .stat-label {
+    font-size: 0.85em;
+    color: var(--text-secondary);
+}
+
+.recommendations-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.recommendation-section {
+    background: #f9fafb;
+    border-radius: 10px;
+    padding: 16px;
+    border: 1px solid var(--border-color);
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.section-title h3 {
+    flex: 1;
+    font-size: 1em;
+    color: var(--text-primary);
+}
+
+.section-icon {
+    font-size: 1.2em;
+}
+
+.section-count {
+    background: var(--primary-color);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    font-weight: 600;
+}
+
+.recommendation-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.recommendation-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    transition: all 0.2s;
+}
+
+.recommendation-item:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 2px 6px rgba(245, 158, 11, 0.15);
+}
+
+.recommendation-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    cursor: pointer;
+    accent-color: var(--primary-color);
+}
+
+.recommendation-content {
+    flex: 1;
+}
+
+.recommendation-title {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.recommendation-detail {
+    font-size: 0.85em;
+    color: var(--text-secondary);
+}
+
+.recommendation-badge {
+    font-size: 0.75em;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+.recommendation-badge.add {
+    background: #d1fae5;
+    color: #059669;
+}
+
+.recommendation-badge.warning {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.recommendation-badge.required {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.analysis-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-color);
+}
+
+.no-recommendations {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 20px;
+    font-style: italic;
 }

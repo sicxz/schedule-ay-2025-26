@@ -19,22 +19,21 @@
         <!-- Controls -->
         <div class="controls-bar">
             <div class="control-group">
-                <label for="academicYear">Academic Year</label>
-                <select id="academicYear">
-                    <option value="2026-27">2026-27 (New)</option>
-                    <option value="2025-26">2025-26</option>
+                <label for="sourceYear">Copy From Year</label>
+                <select id="sourceYear">
+                    <option value="2025-26">2025-26 (Current)</option>
+                    <option value="2024-25">2024-25</option>
+                    <option value="2023-24">2023-24</option>
                 </select>
             </div>
             <div class="control-group">
-                <label for="targetQuarter">Quarter</label>
-                <select id="targetQuarter">
-                    <option value="Fall">Fall</option>
-                    <option value="Winter">Winter</option>
-                    <option value="Spring">Spring</option>
+                <label for="academicYear">Target Year</label>
+                <select id="academicYear">
+                    <option value="2026-27">2026-27 (New)</option>
                 </select>
             </div>
-            <button id="generateBtn" class="btn-primary" onclick="handleGenerate()">
-                Generate Schedule
+            <button id="generateBtn" class="btn-primary" onclick="handleLoadAndAnalyze()">
+                Load & Analyze
             </button>
         </div>
 
@@ -65,7 +64,78 @@
         <!-- Loading Indicator -->
         <div class="loading-container" id="loadingContainer" style="display: none;">
             <div class="loading-spinner"></div>
-            <p>Analyzing enrollment patterns and generating schedule...</p>
+            <p>Loading previous year schedule and analyzing...</p>
+        </div>
+
+        <!-- Analysis Dashboard (shown after loading) -->
+        <div class="analysis-dashboard" id="analysisDashboard" style="display: none;">
+            <div class="analysis-header">
+                <h2>Schedule Analysis - <span id="analysisSourceYear">2025-26</span> to <span id="analysisTargetYear">2026-27</span></h2>
+                <p class="analysis-subtitle">Review recommendations before proceeding to grid editing</p>
+            </div>
+
+            <!-- Analysis Summary Cards -->
+            <div class="analysis-summary">
+                <div class="analysis-stat">
+                    <span class="stat-value" id="totalIssues">0</span>
+                    <span class="stat-label">Issues Found</span>
+                </div>
+                <div class="analysis-stat warning">
+                    <span class="stat-value" id="capacityWarnings">0</span>
+                    <span class="stat-label">Capacity Warnings</span>
+                </div>
+                <div class="analysis-stat success">
+                    <span class="stat-value" id="coursesLoaded">0</span>
+                    <span class="stat-label">Courses Loaded</span>
+                </div>
+            </div>
+
+            <!-- Recommendations with Toggles -->
+            <div class="recommendations-panel">
+                <!-- Enrollment Recommendations -->
+                <div class="recommendation-section" id="enrollmentSection">
+                    <div class="section-title">
+                        <span class="section-icon">📈</span>
+                        <h3>Enrollment Recommendations</h3>
+                        <span class="section-count" id="enrollmentCount">0</span>
+                    </div>
+                    <div class="recommendation-list" id="enrollmentRecommendations">
+                        <!-- Dynamically populated with checkboxes -->
+                    </div>
+                </div>
+
+                <!-- Conflict Warnings -->
+                <div class="recommendation-section" id="conflictSection">
+                    <div class="section-title">
+                        <span class="section-icon">⚠️</span>
+                        <h3>Conflict Warnings</h3>
+                        <span class="section-count" id="conflictCount">0</span>
+                    </div>
+                    <div class="recommendation-list" id="conflictRecommendations">
+                        <!-- Dynamically populated with checkboxes -->
+                    </div>
+                </div>
+
+                <!-- Missing Courses -->
+                <div class="recommendation-section" id="missingSection">
+                    <div class="section-title">
+                        <span class="section-icon">➕</span>
+                        <h3>Missing/Required Courses</h3>
+                        <span class="section-count" id="missingCount">0</span>
+                    </div>
+                    <div class="recommendation-list" id="missingRecommendations">
+                        <!-- Dynamically populated with checkboxes -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="analysis-actions">
+                <button class="btn-secondary" onclick="selectAllRecommendations()">Select All</button>
+                <button class="btn-secondary" onclick="deselectAllRecommendations()">Deselect All</button>
+                <button class="btn-primary" onclick="applySelectedRecommendations()">Apply Selected</button>
+                <button class="btn-primary" onclick="proceedToGrid()">Proceed to Grid</button>
+            </div>
         </div>
 
         <!-- Projected Demand Section (shown after generation) -->
@@ -169,7 +239,7 @@
                 📥 Export JSON
             </button>
             <button class="btn-primary" onclick="exportToEditor()">
-                Open in Schedule Editor →
+                Open in Main Schedule →
             </button>
         </div>
 
@@ -183,6 +253,7 @@
     <script src="../js/prerequisite-graph.js"></script>
     <script src="../js/demand-predictor.js"></script>
     <script src="../js/schedule-generator.js"></script>
+    <script src="../js/schedule-analyzer.js"></script>
     <script src="schedule-builder.js"></script>
 </body>
 </html>
