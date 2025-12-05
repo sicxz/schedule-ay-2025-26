@@ -44,6 +44,9 @@ const DAYS = ['MW', 'TR'];
 // Evening time slot (for safety pairing rule)
 const EVENING_TIME = '4:00 PM - 6:20 PM';
 
+// Store courses from database for constraints
+let dbCourses = [];
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', async function() {
     console.log('Initializing Schedule Builder...');
@@ -63,6 +66,16 @@ document.addEventListener('DOMContentLoaded', async function() {
             console.log('Course catalog loaded:', courseCatalog.courses?.length, 'courses');
         }
 
+        // Load courses from database for constraints (if dbService is available)
+        if (typeof dbService !== 'undefined') {
+            try {
+                dbCourses = await dbService.getCourses();
+                console.log('Database courses loaded:', dbCourses?.length || 0, 'courses');
+            } catch (err) {
+                console.warn('Could not load courses from database:', err);
+            }
+        }
+
         if (typeof ScheduleGenerator !== 'undefined') {
             await ScheduleGenerator.init({
                 workloadPath: '../workload-data.json',
@@ -77,6 +90,16 @@ document.addEventListener('DOMContentLoaded', async function() {
                 enrollmentPath: '../enrollment-dashboard-data.json',
                 catalogPath: '../data/course-catalog.json'
             });
+        }
+
+        // Initialize constraints engine
+        if (typeof ConstraintsEngine !== 'undefined') {
+            await ConstraintsEngine.init('../data/scheduling-rules.json');
+            // Pass database courses to constraints engine
+            if (dbCourses.length > 0) {
+                ConstraintsEngine.setCoursesData(dbCourses);
+            }
+            console.log('Constraints engine initialized');
         }
 
         console.log('Schedule Builder modules initialized');
@@ -656,7 +679,10 @@ function buildRecommendations(courses, quarter) {
             sectionsNeeded: group.sections.length,
             predictedDemand: Math.round(avgEnrollment),
             utilization: Math.round((avgEnrollment / 24) * 100),
-            priority: avgEnrollment > 20 ? 'high' : avgEnrollment > 15 ? 'medium' : 'low',
+            // Color coding: red (<6), orange (6-15), yellow (16-20), green (21+)
+            priority: avgEnrollment < 6 ? 'critical' :
+                      avgEnrollment <= 15 ? 'low' :
+                      avgEnrollment <= 20 ? 'medium' : 'high',
             level: group.level,
             assignedFaculty: group.sections.map((s, i) => ({
                 name: s.facultyName || 'TBD',
@@ -748,11 +774,12 @@ function renderQuarterTabs() {
     tabsContainer.innerHTML = quarters.map(q => {
         const courseCount = Object.values(allQuartersSchedule[q]?.assignedCourses || {}).flat().length;
         const unassignedCount = allQuartersSchedule[q]?.assignedCourses?.['unassigned']?.length || 0;
+        const assignedCount = courseCount - unassignedCount;
         return `
             <button class="quarter-tab ${q === activeQuarter ? 'active' : ''}"
                     onclick="switchQuarter('${q}')">
                 ${q}
-                <span class="tab-count">${courseCount - unassignedCount}</span>
+                <span class="tab-count">${assignedCount} courses</span>
                 ${unassignedCount > 0 ? `<span class="tab-warning">${unassignedCount}</span>` : ''}
             </button>
         `;
@@ -791,8 +818,8 @@ function getValidRooms(courseCode, quarter, slotUsage = {}) {
         return ['212'];
     }
 
-    // ITCS courses - Cheney ONLY (all ITCS courses)
-    if (courseCode.startsWith('ITCS')) {
+    // ITGS courses - Cheney ONLY, no evening classes (all ITGS courses)
+    if (courseCode.startsWith('ITGS')) {
         return ['CEB 102', 'CEB 104'];
     }
 
@@ -866,23 +893,25 @@ function autoAssignToGrid(recommendations, quarter) {
             // Sort days by count (prefer less-used day for balance)
             const sortedDays = [...DAYS].sort((a, b) => dayCounts[a] - dayCounts[b]);
 
-            // Sort time slots by usage (prefer less-used time slots for balance)
-            // Creates array of {idx, count} sorted by count ascending
-            const sortedTimeIndices = [0, 1, 2]
-                .map(idx => ({ idx, count: timeSlotCounts[idx] }))
-                .sort((a, b) => a.count - b.count)
-                .map(item => item.idx);
+            // Time slot priority: morning (0), afternoon (1), then evening (2) last
+            // This prioritizes daytime slots before evening
+            const sortedTimeIndices = [0, 1, 2]; // Fixed order: 10am, 1pm, 4pm
 
             for (const day of sortedDays) {
                 if (assigned) break;
 
-                // Iterate through time slots in balanced order (least used first)
+                // Iterate through time slots in priority order (morning/afternoon before evening)
                 for (const timeIdx of sortedTimeIndices) {
                     if (assigned) break;
                     const timeKey = TIME_KEYS[timeIdx];
                     const timeDisplay = TIMES[timeIdx];
 
                     for (const room of validRooms) {
+                        // No evening classes in Cheney (CEB rooms)
+                        if (timeIdx === 2 && (room === 'CEB 102' || room === 'CEB 104')) {
+                            continue;
+                        }
+
                         const key = `${day}-${timeKey}-${room}`;
                         if (!slotUsage[key]) slotUsage[key] = 0;
 
@@ -1222,6 +1251,17 @@ function createCourseBlock(course) {
         <div class="course-faculty">${course.facultyName}</div>
     `;
 
+    // Add delete button
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'course-delete-btn';
+    deleteBtn.innerHTML = '×';
+    deleteBtn.title = 'Remove course from schedule';
+    deleteBtn.onclick = (e) => {
+        e.stopPropagation();
+        deleteCourse(course.courseCode, course.section, course.day, course.time, course.room);
+    };
+    block.appendChild(deleteBtn);
+
     // Drag handlers using addEventListener for better event handling
     block.addEventListener('dragstart', (e) => {
         e.stopPropagation();
@@ -1250,7 +1290,24 @@ function createCourseBlock(course) {
 }
 
 /**
- * Handle drop on grid cell
+ * Delete a course from the schedule
+ */
+function deleteCourse(courseCode, section, day, time, room) {
+    const key = `${day}-${time}-${room}`;
+    const courses = assignedCourses[key];
+    if (!courses) return;
+
+    const index = courses.findIndex(c => c.courseCode === courseCode && c.section === section);
+    if (index > -1) {
+        courses.splice(index, 1);
+        showToast(`${courseCode}-${section} removed from schedule`);
+        renderScheduleGrid();
+        renderUnassignedList();
+    }
+}
+
+/**
+ * Handle drop on grid cell - with automatic swap
  */
 function handleDrop(e, toDay, toTime, toRoom) {
     e.preventDefault();
@@ -1275,7 +1332,33 @@ function handleDrop(e, toDay, toTime, toRoom) {
         }
 
         if (movedCourse) {
-            // Update course location
+            // Check if target has existing courses - SWAP them to source location
+            let swappedCourse = null;
+            if (assignedCourses[toKey] && assignedCourses[toKey].length > 0) {
+                // Find first course in same room at target
+                const targetIdx = assignedCourses[toKey].findIndex(c => c.room === toRoom);
+                if (targetIdx > -1) {
+                    swappedCourse = assignedCourses[toKey].splice(targetIdx, 1)[0];
+
+                    // Move swapped course to source location (only if source wasn't unassigned)
+                    if (fromKey !== 'unassigned' && data.fromDay) {
+                        swappedCourse.day = data.fromDay;
+                        swappedCourse.time = data.fromTime;
+                        swappedCourse.room = data.fromRoom;
+                        if (!assignedCourses[fromKey]) assignedCourses[fromKey] = [];
+                        assignedCourses[fromKey].push(swappedCourse);
+                    } else {
+                        // If source was unassigned, move swapped course to unassigned
+                        if (!assignedCourses['unassigned']) assignedCourses['unassigned'] = [];
+                        swappedCourse.day = null;
+                        swappedCourse.time = null;
+                        swappedCourse.room = null;
+                        assignedCourses['unassigned'].push(swappedCourse);
+                    }
+                }
+            }
+
+            // Update moved course location
             movedCourse.day = toDay;
             movedCourse.time = toTime;
             movedCourse.room = toRoom;
@@ -1288,7 +1371,12 @@ function handleDrop(e, toDay, toTime, toRoom) {
             renderScheduleGrid();
             renderUnassignedList();
 
-            showToast(`Moved ${data.courseCode}-${data.section} to ${toDay} ${toTime}`);
+            // Show appropriate toast
+            if (swappedCourse) {
+                showToast(`Swapped ${data.courseCode} with ${swappedCourse.courseCode}`);
+            } else {
+                showToast(`Moved ${data.courseCode}-${data.section} to ${toDay} ${toTime}`);
+            }
         }
     } catch (err) {
         console.error('Drop error:', err);
@@ -1537,6 +1625,193 @@ function loadDraft() {
     }
 }
 
+// ============================================
+// DATABASE SAVE/LOAD FUNCTIONS
+// ============================================
+
+/**
+ * Save schedule to Supabase database
+ */
+async function saveToDatabase() {
+    if (!currentSchedule) {
+        showToast('No schedule to save', 'error');
+        return;
+    }
+
+    if (!isSupabaseConfigured()) {
+        showToast('Database not configured', 'error');
+        return;
+    }
+
+    try {
+        showToast('Saving to database...');
+
+        // Initialize database service
+        await dbService.initialize();
+
+        // Get or create academic year
+        const yearRecord = await dbService.getOrCreateYear(currentSchedule.year);
+        if (!yearRecord) {
+            showToast('Failed to get academic year', 'error');
+            return;
+        }
+
+        // Clear existing schedule for this year/quarter
+        const { error: deleteError } = await supabase
+            .from('scheduled_courses')
+            .delete()
+            .eq('academic_year_id', yearRecord.id)
+            .eq('quarter', currentSchedule.quarter);
+
+        if (deleteError) {
+            console.error('Error clearing old schedule:', deleteError);
+        }
+
+        // Build records to insert
+        const records = [];
+
+        for (const [key, courses] of Object.entries(assignedCourses)) {
+            if (key === 'unassigned') continue;
+
+            const [dayPattern, timeSlot, room] = key.split('-');
+
+            for (const course of courses) {
+                // Look up IDs
+                const courseId = await dbService.lookupCourseId(course.courseCode);
+                const facultyId = course.facultyName && course.facultyName !== 'TBD' && course.facultyName !== 'Adjunct'
+                    ? await dbService.lookupFacultyId(course.facultyName)
+                    : null;
+                const roomId = await dbService.lookupRoomId(room);
+
+                records.push({
+                    academic_year_id: yearRecord.id,
+                    course_id: courseId,
+                    faculty_id: facultyId,
+                    room_id: roomId,
+                    quarter: currentSchedule.quarter,
+                    day_pattern: dayPattern,
+                    time_slot: timeSlot,
+                    section: course.section || '001',
+                    projected_enrollment: course.predictedDemand || null
+                });
+            }
+        }
+
+        // Insert all records
+        if (records.length > 0) {
+            const { data, error } = await supabase
+                .from('scheduled_courses')
+                .insert(records)
+                .select();
+
+            if (error) {
+                console.error('Error saving schedule:', error);
+                showToast('Error saving to database', 'error');
+                return;
+            }
+
+            showToast(`Saved ${records.length} courses to database`);
+        } else {
+            showToast('No courses to save');
+        }
+
+    } catch (error) {
+        console.error('Database save error:', error);
+        showToast('Error saving to database', 'error');
+    }
+}
+
+/**
+ * Load schedule from Supabase database
+ */
+async function loadFromDatabase() {
+    if (!isSupabaseConfigured()) {
+        showToast('Database not configured', 'error');
+        return null;
+    }
+
+    try {
+        await dbService.initialize();
+
+        const yearString = document.getElementById('sourceYear')?.value || '2025-26';
+        const quarter = activeQuarter || 'Fall';
+
+        // Get academic year ID
+        const yearRecord = await dbService.getOrCreateYear(yearString);
+        if (!yearRecord) {
+            return null;
+        }
+
+        // Fetch schedule
+        const schedule = await dbService.getSchedule(yearRecord.id, quarter);
+
+        if (!schedule || schedule.length === 0) {
+            console.log('No schedule found in database for', yearString, quarter);
+            return null;
+        }
+
+        // Convert to assignedCourses format
+        const loaded = { unassigned: [] };
+
+        for (const record of schedule) {
+            const key = `${record.day_pattern}-${record.time_slot}-${record.room?.room_code || 'TBD'}`;
+
+            if (!loaded[key]) {
+                loaded[key] = [];
+            }
+
+            loaded[key].push({
+                courseCode: record.course?.code || 'Unknown',
+                courseTitle: record.course?.title || '',
+                section: record.section,
+                credits: record.course?.default_credits || 5,
+                facultyName: record.faculty?.name || 'TBD',
+                predictedDemand: record.projected_enrollment,
+                priority: record.projected_enrollment < 6 ? 'critical' :
+                         record.projected_enrollment <= 15 ? 'low' :
+                         record.projected_enrollment <= 20 ? 'medium' : 'high'
+            });
+        }
+
+        showToast(`Loaded ${schedule.length} courses from database`);
+        return loaded;
+
+    } catch (error) {
+        console.error('Database load error:', error);
+        showToast('Error loading from database', 'error');
+        return null;
+    }
+}
+
+/**
+ * Check if a schedule exists in the database
+ */
+async function checkDatabaseSchedule(yearString, quarter) {
+    if (!isSupabaseConfigured()) {
+        return false;
+    }
+
+    try {
+        await dbService.initialize();
+
+        const yearRecord = await dbService.getOrCreateYear(yearString);
+        if (!yearRecord) return false;
+
+        const { count, error } = await supabase
+            .from('scheduled_courses')
+            .select('id', { count: 'exact', head: true })
+            .eq('academic_year_id', yearRecord.id)
+            .eq('quarter', quarter);
+
+        if (error) return false;
+        return count > 0;
+
+    } catch (error) {
+        console.error('Error checking database:', error);
+        return false;
+    }
+}
+
 /**
  * Export to JSON file
  */
@@ -1678,4 +1953,427 @@ function showToast(message, type = 'success') {
     setTimeout(() => {
         toast.classList.remove('visible');
     }, 3000);
+}
+
+/**
+ * Open Add Course modal
+ */
+function openAddCourseModal() {
+    populateCourseDropdown();
+    populateFacultyDropdown();
+    document.getElementById('addCourseModal').classList.add('active');
+    document.getElementById('addCourseSection').value = '001';
+}
+
+/**
+ * Close Add Course modal
+ */
+function closeAddCourseModal() {
+    document.getElementById('addCourseModal').classList.remove('active');
+    document.getElementById('addCourseForm').reset();
+}
+
+/**
+ * Handle course selection in Add Course modal - pre-populate based on preferences
+ */
+function handleCourseSelection() {
+    const courseCode = document.getElementById('addCourseCode').value;
+    if (!courseCode) return;
+
+    // Get preferences from constraints engine (reads from database courses)
+    if (typeof ConstraintsEngine !== 'undefined' && ConstraintsEngine.getCoursePreferences) {
+        const prefs = ConstraintsEngine.getCoursePreferences(courseCode);
+
+        // Pre-populate day pattern (select first preferred day)
+        const daysSelect = document.getElementById('addCourseDays');
+        if (prefs.preferredDays && prefs.preferredDays.length > 0) {
+            // Check if first preferred day is a valid option
+            const preferredDay = prefs.preferredDays[0];
+            if ([...daysSelect.options].some(opt => opt.value === preferredDay)) {
+                daysSelect.value = preferredDay;
+            }
+        }
+
+        // Pre-populate time slot based on preferred times
+        const timeSelect = document.getElementById('addCourseTime');
+        if (prefs.preferredTimes && prefs.preferredTimes.length > 0) {
+            // Map time preferences to actual time keys
+            const timeMapping = {
+                'morning': '10:00-12:20',
+                'afternoon': '13:00-15:20',
+                'evening': '16:00-18:20'
+            };
+            // Select first preferred time that's valid
+            for (const timePref of prefs.preferredTimes) {
+                const timeKey = timeMapping[timePref];
+                if (timeKey && [...timeSelect.options].some(opt => opt.value === timeKey)) {
+                    timeSelect.value = timeKey;
+                    break;
+                }
+            }
+        }
+
+        // Pre-populate room based on allowed rooms or campus
+        const roomSelect = document.getElementById('addCourseRoom');
+        if (prefs.allowedRooms && prefs.allowedRooms.length > 0) {
+            // Select first allowed room
+            const preferredRoom = prefs.allowedRooms[0];
+            if ([...roomSelect.options].some(opt => opt.value === preferredRoom)) {
+                roomSelect.value = preferredRoom;
+            }
+        } else if (prefs.allowedCampus) {
+            // Select first room on allowed campus
+            const campusRooms = {
+                'catalyst': ['206', '209', '210', '212'],
+                'cheney': ['CEB 102', 'CEB 104']
+            };
+            const rooms = campusRooms[prefs.allowedCampus] || [];
+            for (const room of rooms) {
+                if ([...roomSelect.options].some(opt => opt.value === room)) {
+                    roomSelect.value = room;
+                    break;
+                }
+            }
+        }
+
+        // Show indicator if course has hard constraints
+        updateConstraintIndicators(prefs);
+    }
+}
+
+/**
+ * Update UI to show constraint indicators on the Add Course modal
+ */
+function updateConstraintIndicators(prefs) {
+    // Remove existing indicators
+    document.querySelectorAll('.constraint-indicator').forEach(el => el.remove());
+
+    // Add indicator for time constraints
+    if (prefs.timeConstraintHard) {
+        const timeLabel = document.querySelector('label[for="addCourseTime"]');
+        if (timeLabel) {
+            const indicator = document.createElement('span');
+            indicator.className = 'constraint-indicator hard';
+            indicator.textContent = ' (Required)';
+            indicator.title = 'This course has a hard time constraint';
+            timeLabel.appendChild(indicator);
+        }
+    }
+
+    // Add indicator for room constraints
+    if (prefs.roomConstraintHard) {
+        const roomLabel = document.querySelector('label[for="addCourseRoom"]');
+        if (roomLabel) {
+            const indicator = document.createElement('span');
+            indicator.className = 'constraint-indicator hard';
+            indicator.textContent = ' (Required)';
+            indicator.title = 'This course has a hard room/campus constraint';
+            roomLabel.appendChild(indicator);
+        }
+    }
+
+    // Add indicator for case-by-case courses
+    if (prefs.isCaseByCase) {
+        const courseLabel = document.querySelector('label[for="addCourseCode"]');
+        if (courseLabel) {
+            const indicator = document.createElement('span');
+            indicator.className = 'constraint-indicator case-by-case';
+            indicator.textContent = ' ⚠️ Case-by-case';
+            indicator.title = 'This course is typically scheduled individually, not on the grid';
+            courseLabel.appendChild(indicator);
+        }
+    }
+}
+
+/**
+ * Populate course dropdown with available courses
+ */
+function populateCourseDropdown() {
+    const select = document.getElementById('addCourseCode');
+    select.innerHTML = '<option value="">Select a course...</option>';
+
+    // Add onchange handler for preference pre-population
+    select.onchange = handleCourseSelection;
+
+    // Get courses from catalog or use default list
+    const courses = courseCatalog?.courses || [
+        { code: 'DESN 100', title: 'Introduction to Design' },
+        { code: 'DESN 200', title: 'Typography' },
+        { code: 'DESN 216', title: 'Drawing for Design' },
+        { code: 'DESN 263', title: 'Digital Imaging' },
+        { code: 'DESN 265', title: 'Digital Illustration' },
+        { code: 'DESN 267', title: 'Visual Storytelling' },
+        { code: 'DESN 301', title: 'Senior Thesis I' },
+        { code: 'DESN 311', title: 'UX I' },
+        { code: 'DESN 313', title: 'UX II' },
+        { code: 'DESN 326', title: 'Motion Design I' },
+        { code: 'DESN 336', title: 'Motion Design II' },
+        { code: 'DESN 350', title: 'Design History' },
+        { code: 'DESN 355', title: 'Web Design' },
+        { code: 'DESN 357', title: 'Print Design' },
+        { code: 'DESN 359', title: 'Design Studio I' },
+        { code: 'DESN 360', title: 'Design Studio II' },
+        { code: 'DESN 384', title: 'Professional Practice' },
+        { code: 'DESN 401', title: 'Senior Thesis II' }
+    ];
+
+    courses.forEach(course => {
+        const option = document.createElement('option');
+        option.value = course.code;
+        option.textContent = `${course.code} - ${course.title}`;
+        select.appendChild(option);
+    });
+}
+
+/**
+ * Populate faculty dropdown - Full-time faculty only + Adjunct option
+ */
+async function populateFacultyDropdown() {
+    const select = document.getElementById('addCourseFaculty');
+    select.innerHTML = '<option value="">TBD</option><option value="Adjunct">Adjunct</option>';
+
+    // Load workload data to get full-time faculty
+    try {
+        const response = await fetch('../workload-data.json');
+        const data = await response.json();
+        const currentYear = '2025-26';
+        const yearData = data.workloadByYear?.byYear?.[currentYear];
+
+        if (yearData?.fullTime) {
+            Object.keys(yearData.fullTime).sort().forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                option.textContent = name;
+                select.appendChild(option);
+            });
+        }
+    } catch (err) {
+        console.error('Error loading faculty:', err);
+        // Fallback: get from current schedule
+        const facultyNames = new Set();
+        Object.values(assignedCourses).forEach(courses => {
+            courses.forEach(course => {
+                if (course.facultyName && course.facultyName !== 'TBD' && course.facultyName !== 'Adjunct') {
+                    facultyNames.add(course.facultyName);
+                }
+            });
+        });
+        [...facultyNames].sort().forEach(name => {
+            const option = document.createElement('option');
+            option.value = name;
+            option.textContent = name;
+            select.appendChild(option);
+        });
+    }
+}
+
+/**
+ * Handle Add Course form submission
+ */
+function handleAddCourse(e) {
+    e.preventDefault();
+
+    const courseCode = document.getElementById('addCourseCode').value;
+    const section = document.getElementById('addCourseSection').value || '001';
+    const days = document.getElementById('addCourseDays').value;
+    const time = document.getElementById('addCourseTime').value;
+    const room = document.getElementById('addCourseRoom').value;
+    const faculty = document.getElementById('addCourseFaculty').value || 'TBD';
+
+    if (!courseCode) {
+        showToast('Please select a course', 'error');
+        return;
+    }
+
+    const key = `${days}-${time}-${room}`;
+
+    // Get course info
+    const courseInfo = courseCatalog?.courses?.find(c => c.code === courseCode) || {};
+    const courseTitle = courseInfo.title || getCourseTitle(courseCode);
+
+    // Create new course object
+    const newCourse = {
+        courseCode: courseCode,
+        courseTitle: courseTitle,
+        section: section.padStart(3, '0'),
+        credits: courseInfo.defaultCredits || 5,
+        facultyName: faculty,
+        predictedDemand: 20,
+        priority: 'medium',
+        day: days,
+        time: time,
+        room: room,
+        timeDisplay: TIMES[TIME_KEYS.indexOf(time)] || time
+    };
+
+    // Add to assigned courses
+    if (!assignedCourses[key]) assignedCourses[key] = [];
+    assignedCourses[key].push(newCourse);
+
+    // Close modal and refresh grid
+    closeAddCourseModal();
+    renderScheduleGrid();
+    renderUnassignedList();
+    renderFacultySummary();
+
+    showToast(`${courseCode}-${newCourse.section} added to schedule`);
+}
+
+// ============================================
+// FACULTY PREFERENCES MODAL FUNCTIONS
+// ============================================
+
+let currentFacultyId = null;
+
+/**
+ * Open the Faculty Preferences modal
+ */
+async function openFacultyPreferencesModal() {
+    const modal = document.getElementById('facultyPreferencesModal');
+    const select = document.getElementById('prefFacultyName');
+
+    // Clear and populate faculty dropdown
+    select.innerHTML = '<option value="">Select faculty...</option>';
+
+    try {
+        // Try to load from database first
+        if (isSupabaseConfigured()) {
+            await dbService.initialize();
+            const faculty = await dbService.getFullTimeFaculty();
+            faculty.forEach(f => {
+                const option = document.createElement('option');
+                option.value = f.id;
+                option.textContent = f.name;
+                select.appendChild(option);
+            });
+        } else {
+            // Fallback to workload data
+            const response = await fetch('../workload-data.json');
+            const data = await response.json();
+            const yearData = data.workloadByYear?.byYear?.['2025-26'];
+
+            if (yearData?.fullTime) {
+                Object.keys(yearData.fullTime).sort().forEach(name => {
+                    const option = document.createElement('option');
+                    option.value = name;
+                    option.textContent = name;
+                    select.appendChild(option);
+                });
+            }
+        }
+    } catch (err) {
+        console.error('Error loading faculty:', err);
+    }
+
+    // Reset form
+    document.getElementById('facultyPreferencesForm').reset();
+    currentFacultyId = null;
+
+    modal.classList.add('active');
+}
+
+/**
+ * Close the Faculty Preferences modal
+ */
+function closeFacultyPreferencesModal() {
+    document.getElementById('facultyPreferencesModal').classList.remove('active');
+    currentFacultyId = null;
+}
+
+/**
+ * Load preferences when faculty is selected
+ */
+async function loadFacultyPreferences() {
+    const select = document.getElementById('prefFacultyName');
+    const facultyId = select.value;
+
+    if (!facultyId) {
+        document.getElementById('facultyPreferencesForm').reset();
+        select.value = '';
+        return;
+    }
+
+    currentFacultyId = facultyId;
+
+    if (!isSupabaseConfigured()) {
+        showToast('Database not configured - preferences won\'t be saved', 'warning');
+        return;
+    }
+
+    try {
+        const prefs = await dbService.getFacultyPreferences(facultyId);
+
+        if (prefs) {
+            // Set time preferences
+            document.querySelectorAll('input[name="timePref"]').forEach(cb => {
+                cb.checked = (prefs.time_preferred || []).includes(cb.value);
+            });
+            document.querySelectorAll('input[name="timeBlocked"]').forEach(cb => {
+                cb.checked = (prefs.time_blocked || []).includes(cb.value);
+            });
+
+            // Set day preferences
+            document.querySelectorAll('input[name="dayPref"]').forEach(cb => {
+                cb.checked = (prefs.day_preferred || []).includes(cb.value);
+            });
+            document.querySelectorAll('input[name="dayBlocked"]').forEach(cb => {
+                cb.checked = (prefs.day_blocked || []).includes(cb.value);
+            });
+
+            // Set campus and notes
+            document.getElementById('prefCampus').value = prefs.campus_assignment || 'any';
+            document.getElementById('prefNotes').value = prefs.notes || '';
+
+            showToast('Preferences loaded');
+        }
+    } catch (error) {
+        console.error('Error loading preferences:', error);
+    }
+}
+
+/**
+ * Save faculty preferences to database
+ */
+async function handleSaveFacultyPreferences(e) {
+    e.preventDefault();
+
+    if (!currentFacultyId) {
+        showToast('Please select a faculty member', 'error');
+        return;
+    }
+
+    if (!isSupabaseConfigured()) {
+        showToast('Database not configured', 'error');
+        return;
+    }
+
+    try {
+        // Gather form data
+        const timePreferred = Array.from(document.querySelectorAll('input[name="timePref"]:checked'))
+            .map(cb => cb.value);
+        const timeBlocked = Array.from(document.querySelectorAll('input[name="timeBlocked"]:checked'))
+            .map(cb => cb.value);
+        const dayPreferred = Array.from(document.querySelectorAll('input[name="dayPref"]:checked'))
+            .map(cb => cb.value);
+        const dayBlocked = Array.from(document.querySelectorAll('input[name="dayBlocked"]:checked'))
+            .map(cb => cb.value);
+        const campusAssignment = document.getElementById('prefCampus').value;
+        const notes = document.getElementById('prefNotes').value;
+
+        await dbService.saveFacultyPreferences(currentFacultyId, {
+            timePreferred,
+            timeBlocked,
+            dayPreferred,
+            dayBlocked,
+            campusAssignment,
+            notes
+        });
+
+        showToast('Preferences saved');
+        closeFacultyPreferencesModal();
+
+    } catch (error) {
+        console.error('Error saving preferences:', error);
+        showToast('Error saving preferences', 'error');
+    }
 }

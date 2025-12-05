@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Constraints - Design Scheduler</title>
+    <link rel="stylesheet" href="../css/constraints-dashboard.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <a href="../index.html" class="back-link">&larr; Back to Schedule</a>
+            <h1>Scheduling Constraints</h1>
+            <p class="subtitle">Manage room, time, and faculty scheduling rules</p>
+        </header>
+
+        <!-- Action Bar -->
+        <div class="action-bar">
+            <div class="action-group">
+                <span class="status-text" id="statusText">All changes saved</span>
+            </div>
+            <div class="action-group">
+                <button class="btn-secondary" onclick="resetToDefaults()">Reset to Defaults</button>
+                <button class="btn-primary" onclick="saveRules()">Save Changes</button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="dashboard-content">
+            <!-- Course Constraints Section -->
+            <section class="constraint-section">
+                <div class="section-header">
+                    <h2>Course Constraints</h2>
+                    <button class="btn-add" onclick="showAddCourseConstraint()">+ Add Rule</button>
+                </div>
+                <p class="section-description">Define which rooms and times specific courses can use</p>
+
+                <div class="constraints-list" id="courseConstraintsList">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Faculty Constraints Section -->
+            <section class="constraint-section">
+                <div class="section-header">
+                    <h2>Faculty Constraints</h2>
+                </div>
+                <p class="section-description">Global rules that apply to all faculty scheduling</p>
+
+                <div class="constraints-list" id="facultyConstraintsList">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Faculty Preferences Section -->
+            <section class="constraint-section">
+                <div class="section-header">
+                    <h2>Faculty Preferences</h2>
+                    <button class="btn-add" onclick="showAddFacultyPreference()">+ Add Faculty</button>
+                </div>
+                <p class="section-description">Individual faculty time/day preferences, campus assignments, and course qualifications</p>
+
+                <!-- Faculty Selector -->
+                <div class="faculty-selector">
+                    <label for="facultyDropdown">Select Faculty:</label>
+                    <select id="facultyDropdown" onchange="filterFacultyPreferences()">
+                        <option value="all">All Faculty</option>
+                        <!-- Populated by JavaScript -->
+                    </select>
+                </div>
+
+                <div class="constraints-list" id="facultyPreferencesList">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Room Constraints Section -->
+            <section class="constraint-section">
+                <div class="section-header">
+                    <h2>Room Constraints</h2>
+                </div>
+                <p class="section-description">Room-specific restrictions and assignments</p>
+
+                <div class="constraints-list" id="roomConstraintsList">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Case-by-Case Courses Section -->
+            <section class="constraint-section">
+                <div class="section-header">
+                    <h2>Case-by-Case Courses</h2>
+                    <button class="btn-add" onclick="showAddCaseByCase()">+ Add Course</button>
+                </div>
+                <p class="section-description">Courses not scheduled in the regular grid - handled individually</p>
+
+                <div class="case-by-case-list" id="caseByeCaseList">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Validation Panel -->
+            <section class="validation-section">
+                <div class="section-header">
+                    <h2>Validation</h2>
+                    <button class="btn-secondary" onclick="runValidation()">Run Check</button>
+                </div>
+
+                <div class="validation-results" id="validationResults">
+                    <div class="validation-success">
+                        <span class="icon">&#10003;</span>
+                        <span>No rule conflicts detected</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Add/Edit Modal -->
+        <div class="modal-overlay" id="modalOverlay" style="display: none;">
+            <div class="modal" id="constraintModal">
+                <div class="modal-header">
+                    <h3 id="modalTitle">Add Course Constraint</h3>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <!-- Form content populated by JavaScript -->
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button class="btn-primary" id="modalSaveBtn" onclick="saveConstraint()">Save</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notification -->
+        <div class="toast" id="toast">
+            <span id="toastMessage"></span>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/constraints-engine.js"></script>
+    <script src="constraints-dashboard.js"></script>
+</body>
+</html>

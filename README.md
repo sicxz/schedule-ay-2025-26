@@ -69,6 +69,42 @@ Detailed faculty workload analysis:
 - Applied learning supervision hours
 - Historical workload trends by academic year
 
+### Recommendations Dashboard
+**`pages/recommendations-dashboard.html`**
+
+Data-driven insights and actionable recommendations:
+- Faculty workload recommendations with priority levels
+- Enrollment and capacity optimization suggestions
+- Schedule optimization recommendations
+- Strategic planning insights (hiring, policy development)
+- Executive summary with impact metrics
+- Automated analysis of overloaded faculty and declining courses
+- Export capability for recommendation reports
+
+**Priority Levels:**
+- 🔴 Critical: Immediate action required
+- 🟠 High: Address within quarter
+- 🟡 Medium: Plan for next academic year
+- 🟢 Low: Monitor and optimize
+
+### Course Optimizer Dashboard
+**`pages/course-optimizer-dashboard.html`**
+
+Course health scoring and optimization analysis:
+- Automated health scores (0-100) for all courses
+- Health distribution visualization by rating level
+- Course-level metrics (enrollment, trends, capacity utilization)
+- Filterable by course level (Foundation, Intermediate, Advanced)
+- Health-based recommendations for each course
+- Visual indicators for courses needing attention
+- Capacity utilization analysis
+
+**Health Score Factors:**
+- Enrollment levels (30 points)
+- Enrollment trends (30 points)
+- Capacity utilization (20 points)
+- Offering consistency (20 points)
+
 ## 📁 Project Structure
 
 ```
@@ -81,7 +117,9 @@ schedule/
 │   ├── applied-learning-dashboard.html
 │   ├── applied-learning-dashboard.js
 │   ├── workload-dashboard.html
-│   └── workload-dashboard.js
+│   ├── workload-dashboard.js
+│   ├── recommendations-dashboard.html
+│   └── course-optimizer-dashboard.html
 ├── css/
 │   ├── shared.css                  # Shared styles across dashboards
 │   └── dashboard.css               # Dashboard-specific styles
@@ -93,6 +131,7 @@ schedule/
 ├── scripts/
 │   ├── process-enrollment-data.js  # Data processing pipeline
 │   ├── workload-calculator.js      # Faculty workload calculations
+│   ├── validate-enrollment.js      # CSV data validation
 │   ├── faculty-mapping.json        # Faculty configuration
 │   └── transform-corrected-csv.js  # CSV transformation tools
 ├── enrollment-data/
@@ -104,14 +143,43 @@ schedule/
 
 ## 🔧 Data Processing
 
+### Validating Enrollment Data
+
+Before processing new enrollment data, validate it for consistency and accuracy:
+
+```bash
+# Validate a single CSV file
+node scripts/validate-enrollment.js enrollment-data/new-data.csv
+
+# Validate all CSV files in a directory
+node scripts/validate-enrollment.js enrollment-data/processed/
+```
+
+**Validation Checks:**
+- **Required fields**: AcademicYear, Quarter, CourseCode, Capacity, Enrolled
+- **Numeric validation**: Capacity, Enrolled, SeatsRemaining, Waitlist, Credits
+- **Capacity math**: Verifies Capacity = Enrolled + SeatsRemaining
+- **Format validation**: Course codes (DESN XXX), Academic year (YYYY-YY)
+- **Quarter validation**: Fall, Winter, Spring, Summer
+- **Enrollment warnings**: Zero enrollment, over-enrollment, discontinued courses
+
+The validator outputs:
+- ✅ Valid records count
+- ❌ Critical errors (must fix before processing)
+- ⚠️ Warnings (review but not blocking)
+
 ### Updating Enrollment Data
 
 1. Add new enrollment CSV to `enrollment-data/processed/`
-2. Run the data processor:
+2. Validate the data:
+   ```bash
+   node scripts/validate-enrollment.js enrollment-data/processed/corrected-all-quarters.csv
+   ```
+3. If validation passes, run the data processor:
    ```bash
    node scripts/process-enrollment-data.js
    ```
-3. This regenerates:
+4. This regenerates:
    - `enrollment-dashboard-data.json`
    - `workload-data.json`
 
@@ -202,10 +270,11 @@ System tracks and visualizes:
    - Automatic capacity adjustment calculations
    - Release reason tracking (sabbatical, chair, research, etc.)
 
-2. **Course Recommendations Engine**
-   - AI-powered course scheduling suggestions
-   - Enrollment prediction improvements
-   - Faculty assignment optimization
+2. **Enhanced Recommendations Engine**
+   - AI-powered course scheduling suggestions (currently rule-based)
+   - Machine learning enrollment prediction models
+   - Automated faculty assignment optimization
+   - Integration with course optimizer health scores
 
 3. **Real-time Data Integration**
    - Direct integration with institutional databases

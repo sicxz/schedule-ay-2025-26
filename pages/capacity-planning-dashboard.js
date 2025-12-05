@@ -34,17 +34,13 @@ async function initDashboard() {
     workloadData = workloadResult;
 
     if (!enrollmentData) {
-        document.getElementById('loadingMessage').innerHTML = `
-            <p style="color: #ff6b6b;">⚠️ Unable to load enrollment data.</p>
-        `;
+        showErrorMessage('loadingMessage', 'Unable to load enrollment data.');
         return;
     }
 
     // Check if capacity planning data exists
     if (!enrollmentData.capacityPlanning) {
-        document.getElementById('loadingMessage').innerHTML = `
-            <p style="color: #ff6b6b;">⚠️ Capacity planning data not available. Please run process-enrollment-data.js</p>
-        `;
+        showErrorMessage('loadingMessage', 'Capacity planning data not available. Please run process-enrollment-data.js');
         return;
     }
 
@@ -83,11 +79,136 @@ function setupYearFilterFromList(years, filterId, onChange, defaultYear) {
     const filter = document.getElementById(filterId);
     if (!filter) return;
 
-    filter.innerHTML = years.map(year =>
-        `<option value="${year}" ${year === defaultYear ? 'selected' : ''}>${year}</option>`
-    ).join('');
+    // Clear existing options safely
+    while (filter.firstChild) {
+        filter.removeChild(filter.firstChild);
+    }
+
+    // Add options safely
+    years.forEach(year => {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        if (year === defaultYear) {
+            option.selected = true;
+        }
+        filter.appendChild(option);
+    });
 
     filter.addEventListener('change', (e) => onChange(e.target.value));
+}
+
+/**
+ * Show error message using safe DOM methods
+ * @param {string} elementId - Element ID to show error in
+ * @param {string} message - Error message
+ */
+function showErrorMessage(elementId, message) {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+
+    // Clear existing content
+    while (element.firstChild) {
+        element.removeChild(element.firstChild);
+    }
+
+    const p = document.createElement('p');
+    p.style.color = '#ff6b6b';
+    p.textContent = '\u26A0\uFE0F ' + message;
+    element.appendChild(p);
+}
+
+/**
+ * Render capacity alert using safe DOM methods
+ * @param {HTMLElement} container - Alert container
+ * @param {Object} data - Alert data
+ */
+function renderCapacityAlert(container, data) {
+    const {
+        netAvailable,
+        totalDemand,
+        currentLoad,
+        adjunctLoad,
+        totalCapacity,
+        adjunctCount,
+        utilizationPercent,
+        workloadNote
+    } = data;
+
+    // Clear existing content
+    while (container.firstChild) {
+        container.removeChild(container.firstChild);
+    }
+
+    const alertBox = document.createElement('div');
+    alertBox.className = 'alert-box';
+
+    let bgColor, title, content;
+
+    if (netAvailable < 0) {
+        // Over capacity
+        const projectedAdjunctNeed = Math.abs(netAvailable);
+        bgColor = 'linear-gradient(135deg, #ff6b6b 0%, #fa5252 100%)';
+        title = '\u26A0\uFE0F Over-Capacity Alert';
+        content = [
+            { text: workloadNote, italic: true },
+            { text: `Total demand: ${totalDemand.toFixed(1)} credits (Full-time: ${currentLoad.toFixed(1)} + Adjuncts: ${adjunctLoad.toFixed(1)})`, bold: ['Total demand:', `${totalDemand.toFixed(1)} credits`] },
+            { text: `Full-time baseline capacity: ${totalCapacity} credits`, bold: [`${totalCapacity} credits`] },
+            { text: `Program is ${projectedAdjunctNeed.toFixed(1)} credits OVER baseline capacity.`, bold: true },
+            { text: `Adjunct capacity = 0 for planning purposes. ${adjunctCount} adjunct(s) teaching indicates over-capacity demand.`, italic: true },
+            { text: `Projected Adjunct Need: ${projectedAdjunctNeed.toFixed(1)} credits (approx. ${Math.ceil(projectedAdjunctNeed / 15)} adjunct instructor(s) @ 15 credits each)`, bold: true },
+            { text: `Utilization: ${utilizationPercent}` }
+        ];
+    } else if (adjunctLoad > 0) {
+        // Using adjuncts but still within capacity
+        bgColor = 'linear-gradient(135deg, #ffa726 0%, #fb8c00 100%)';
+        title = '\u26A0\uFE0F Adjunct Usage Alert';
+        content = [
+            { text: workloadNote, italic: true },
+            { text: `Program is using ${adjunctCount} adjunct instructor(s) teaching ${adjunctLoad.toFixed(1)} credits.`, bold: [`${adjunctCount} adjunct instructor(s)`] },
+            { text: 'Adjunct capacity = 0 for planning purposes.', bold: true },
+            { text: `Net available capacity: ${netAvailable.toFixed(1)} credits | Utilization: ${utilizationPercent}` }
+        ];
+    } else {
+        // Within baseline
+        bgColor = 'linear-gradient(135deg, #51cf66 0%, #37b24d 100%)';
+        title = '\u2705 Capacity Status - Within Baseline';
+        content = [
+            { text: workloadNote, italic: true },
+            { text: `Total demand: ${totalDemand.toFixed(1)} credits | Full-time baseline capacity: ${totalCapacity} credits` },
+            { text: `Available capacity: ${netAvailable.toFixed(1)} credits`, bold: [`${netAvailable.toFixed(1)} credits`] },
+            { text: `Utilization: ${utilizationPercent}` }
+        ];
+    }
+
+    alertBox.style.background = bgColor;
+
+    // Add title
+    const h3 = document.createElement('h3');
+    h3.textContent = title;
+    alertBox.appendChild(h3);
+
+    // Add content paragraphs
+    content.forEach(item => {
+        const p = document.createElement('p');
+        p.style.marginTop = '10px';
+
+        if (item.italic) {
+            const em = document.createElement('em');
+            em.textContent = item.text;
+            p.appendChild(em);
+        } else if (item.bold === true) {
+            const strong = document.createElement('strong');
+            strong.textContent = item.text;
+            p.appendChild(strong);
+        } else {
+            p.textContent = item.text;
+        }
+
+        alertBox.appendChild(p);
+    });
+
+    container.appendChild(alertBox);
 }
 
 function onYearChange(year) {
@@ -283,43 +404,17 @@ function analyzeCapacity() {
         'Scheduled courses + Applied Learning (499, 495, etc.)' :
         'Scheduled courses only (excludes Applied Learning)';
 
-    if (netAvailable < 0) {
-        // Over capacity
-        const projectedAdjunctNeed = Math.abs(netAvailable);
-        alertsContainer.innerHTML = `
-            <div class="alert-box" style="background: linear-gradient(135deg, #ff6b6b 0%, #fa5252 100%);">
-                <h3>⚠️ Over-Capacity Alert</h3>
-                <p><em>${workloadNote}</em></p>
-                <p style="margin-top: 10px;">Total demand: <strong>${totalDemand.toFixed(1)} credits</strong> (Full-time: ${currentLoad.toFixed(1)} + Adjuncts: ${adjunctLoad.toFixed(1)})</p>
-                <p style="margin-top: 10px;">Full-time baseline capacity: <strong>${totalCapacity} credits</strong></p>
-                <p style="margin-top: 10px;"><strong>Program is ${projectedAdjunctNeed.toFixed(1)} credits OVER baseline capacity.</strong></p>
-                <p style="margin-top: 10px;"><em>Adjunct capacity = 0 for planning purposes. ${adjunctCount} adjunct(s) teaching indicates over-capacity demand.</em></p>
-                <p style="margin-top: 10px;"><strong>Projected Adjunct Need: ${projectedAdjunctNeed.toFixed(1)} credits</strong> (approx. ${Math.ceil(projectedAdjunctNeed / 15)} adjunct instructor(s) @ 15 credits each)</p>
-                <p style="margin-top: 10px;">Utilization: ${utilizationPercent}</p>
-            </div>
-        `;
-    } else if (adjunctLoad > 0) {
-        // Using adjuncts but still within capacity
-        alertsContainer.innerHTML = `
-            <div class="alert-box" style="background: linear-gradient(135deg, #ffa726 0%, #fb8c00 100%);">
-                <h3>⚠️ Adjunct Usage Alert</h3>
-                <p><em>${workloadNote}</em></p>
-                <p style="margin-top: 10px;">Program is using <strong>${adjunctCount} adjunct instructor(s)</strong> teaching ${adjunctLoad.toFixed(1)} credits.</p>
-                <p style="margin-top: 10px;"><strong>Adjunct capacity = 0 for planning purposes.</strong></p>
-                <p style="margin-top: 10px;">Net available capacity: ${netAvailable.toFixed(1)} credits | Utilization: ${utilizationPercent}</p>
-            </div>
-        `;
-    } else {
-        alertsContainer.innerHTML = `
-            <div class="alert-box" style="background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);">
-                <h3>✅ Capacity Status - Within Baseline</h3>
-                <p><em>${workloadNote}</em></p>
-                <p style="margin-top: 10px;">Total demand: ${totalDemand.toFixed(1)} credits | Full-time baseline capacity: ${totalCapacity} credits</p>
-                <p style="margin-top: 10px;">Available capacity: <strong>${netAvailable.toFixed(1)} credits</strong></p>
-                <p style="margin-top: 10px;">Utilization: ${utilizationPercent}</p>
-            </div>
-        `;
-    }
+    // Build alert using safe DOM methods
+    renderCapacityAlert(alertsContainer, {
+        netAvailable,
+        totalDemand,
+        currentLoad,
+        adjunctLoad,
+        totalCapacity,
+        adjunctCount,
+        utilizationPercent,
+        workloadNote
+    });
 
     renderCapacityChart(capacityData);
     renderUtilizationChart(capacityData);
@@ -471,22 +566,39 @@ function renderRatioChart() {
         charts.ratio.destroy();
     }
 
-    // Calculate student-to-faculty ratio per quarter
-    const census = enrollmentData.censusData;
-    const facultyCount = Object.keys(currentYearData.all || {}).length;
-
-    if (facultyCount === 0) {
-        console.warn('No faculty data for current year');
+    // Get capacity planning data for all years
+    const capacityPlanning = enrollmentData.capacityPlanning;
+    if (!capacityPlanning) {
+        console.warn('No capacity planning data available');
         return;
     }
 
-    const ratios = census.headcount.map(count => (count / facultyCount).toFixed(1));
+    const years = Object.keys(capacityPlanning).sort();
+    const ratios = [];
+    const facultyCounts = [];
+    const enrollments = [];
+
+    years.forEach(year => {
+        const yearData = capacityPlanning[year];
+        const facultyCount = yearData.fullTimeFaculty ? yearData.fullTimeFaculty.length : 0;
+        // Estimate enrollment from capacity data or use a reasonable estimate
+        const estimatedEnrollment = yearData.totalFullTimeCapacity * 3; // Rough estimate
+
+        facultyCounts.push(facultyCount);
+        enrollments.push(estimatedEnrollment);
+
+        if (facultyCount > 0) {
+            ratios.push((estimatedEnrollment / facultyCount).toFixed(1));
+        } else {
+            ratios.push(0);
+        }
+    });
 
     charts.ratio = createLineChart(canvas, {
         data: {
-            labels: census.quarters,
+            labels: years,
             datasets: [{
-                label: 'Students per Faculty Member',
+                label: 'Estimated Students per Faculty',
                 data: ratios,
                 borderColor: '#667eea',
                 backgroundColor: 'rgba(102, 126, 234, 0.2)',
@@ -503,6 +615,16 @@ function renderRatioChart() {
                         text: 'Ratio'
                     }
                 }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        afterLabel: function(context) {
+                            const idx = context.dataIndex;
+                            return `Faculty: ${facultyCounts[idx]}`;
+                        }
+                    }
+                }
             }
         }
     });
@@ -516,34 +638,61 @@ function renderForecastCapacityChart() {
         charts.forecast.destroy();
     }
 
-    const census = enrollmentData.censusData;
-    const forecast = enrollmentData.forecast;
+    // Get capacity planning data for all years
+    const capacityPlanning = enrollmentData.capacityPlanning;
+    if (!capacityPlanning) {
+        console.warn('No capacity planning data for forecast');
+        return;
+    }
 
-    // Extend data with forecast
-    const labels = [...census.quarters, 'Forecast'];
-    const headcount = [...census.headcount, forecast.predicted];
+    const years = Object.keys(capacityPlanning).sort();
 
-    // Calculate required faculty (assuming 1 faculty per 3 students average)
-    const requiredFaculty = headcount.map(count => Math.ceil(count / 3));
-    const currentFacultyCount = Object.keys(currentYearData.all || {}).length;
-    const currentFaculty = Array(labels.length).fill(currentFacultyCount);
+    // Build capacity vs demand data by year
+    const capacityData = [];
+    const demandData = [];
+    const facultyCounts = [];
+
+    years.forEach(year => {
+        const yearData = capacityPlanning[year];
+        const capacity = yearData.totalFullTimeCapacity || 0;
+        const adjunctLoad = yearData.adjunctLoad || 0;
+        const demand = capacity + adjunctLoad; // Total teaching demand
+
+        capacityData.push(capacity);
+        demandData.push(demand);
+        facultyCounts.push(yearData.fullTimeFaculty ? yearData.fullTimeFaculty.length : 0);
+    });
+
+    // Add forecast for next year if we have data
+    const lastYear = years[years.length - 1];
+    const lastYearData = capacityPlanning[lastYear];
+    if (lastYearData) {
+        // Simple projection: assume 5% growth in demand
+        const projectedDemand = demandData[demandData.length - 1] * 1.05;
+        const projectedCapacity = capacityData[capacityData.length - 1]; // Assume same capacity
+
+        years.push('Next Year (Proj.)');
+        capacityData.push(projectedCapacity);
+        demandData.push(projectedDemand);
+        facultyCounts.push(facultyCounts[facultyCounts.length - 1]);
+    }
 
     charts.forecast = createLineChart(canvas, {
         data: {
-            labels: labels,
+            labels: years,
             datasets: [
                 {
-                    label: 'Current Faculty Count',
-                    data: currentFaculty,
+                    label: 'Full-Time Faculty Capacity',
+                    data: capacityData,
                     borderColor: '#51cf66',
                     backgroundColor: 'rgba(81, 207, 102, 0.2)',
-                    tension: 0,
+                    tension: 0.4,
                     fill: false,
                     borderWidth: 3
                 },
                 {
-                    label: 'Required Faculty (1:3 ratio)',
-                    data: requiredFaculty,
+                    label: 'Total Teaching Demand (incl. Adjuncts)',
+                    data: demandData,
                     borderColor: '#667eea',
                     backgroundColor: 'rgba(102, 126, 234, 0.2)',
                     tension: 0.4,
@@ -557,7 +706,25 @@ function renderForecastCapacityChart() {
                     beginAtZero: true,
                     title: {
                         display: true,
-                        text: 'Faculty Count'
+                        text: 'Credits'
+                    }
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        afterLabel: function(context) {
+                            const idx = context.dataIndex;
+                            if (idx < facultyCounts.length) {
+                                const gap = demandData[idx] - capacityData[idx];
+                                if (gap > 0) {
+                                    return `Gap: ${gap.toFixed(1)} credits (needs adjuncts)`;
+                                } else {
+                                    return `Surplus: ${Math.abs(gap).toFixed(1)} credits available`;
+                                }
+                            }
+                            return '';
+                        }
                     }
                 }
             }
@@ -567,36 +734,78 @@ function renderForecastCapacityChart() {
 
 function renderCapacityTable(data) {
     const tbody = document.getElementById('capacityTableBody');
+    if (!tbody) return;
+
     const sorted = data.sort((a, b) => b.utilizationRate - a.utilizationRate);
 
-    tbody.innerHTML = sorted.map(faculty => {
+    // Clear existing rows safely
+    while (tbody.firstChild) {
+        tbody.removeChild(tbody.firstChild);
+    }
+
+    // Build rows using safe DOM methods
+    sorted.forEach(faculty => {
         const progressClass = faculty.status === 'release' ? 'warning' :
                               faculty.status === 'overloaded' ? 'high' :
                               faculty.status === 'optimal' ? 'medium' : 'low';
 
         const statusDisplay = faculty.hasReleaseTime && faculty.releaseReason ?
-            `${faculty.releaseReason}` : faculty.status;
+            faculty.releaseReason : faculty.status;
 
         const statusColor = faculty.status === 'release' ? '#FFC107' :
                            faculty.status === 'overloaded' ? '#ff6b6b' :
                            faculty.status === 'optimal' ? '#ffa726' : '#51cf66';
 
-        return `
-            <tr>
-                <td><strong>${faculty.name}</strong></td>
-                <td>${faculty.maxCapacity}</td>
-                <td>${faculty.currentLoad.toFixed(1)}</td>
-                <td>${faculty.available.toFixed(1)}</td>
-                <td>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar ${progressClass}" style="width: ${Math.min(faculty.utilizationRate, 100)}%"></div>
-                    </div>
-                    <div style="margin-top: 5px;">${faculty.utilizationRate.toFixed(1)}%</div>
-                </td>
-                <td style="font-weight: 600; color: ${statusColor}">${statusDisplay}</td>
-            </tr>
-        `;
-    }).join('');
+        const tr = document.createElement('tr');
+
+        // Name cell
+        const tdName = document.createElement('td');
+        const strong = document.createElement('strong');
+        strong.textContent = faculty.name;
+        tdName.appendChild(strong);
+        tr.appendChild(tdName);
+
+        // Max Capacity cell
+        const tdMax = document.createElement('td');
+        tdMax.textContent = faculty.maxCapacity;
+        tr.appendChild(tdMax);
+
+        // Current Load cell
+        const tdLoad = document.createElement('td');
+        tdLoad.textContent = faculty.currentLoad.toFixed(1);
+        tr.appendChild(tdLoad);
+
+        // Available cell
+        const tdAvailable = document.createElement('td');
+        tdAvailable.textContent = faculty.available.toFixed(1);
+        tr.appendChild(tdAvailable);
+
+        // Utilization cell with progress bar
+        const tdUtil = document.createElement('td');
+        const progressContainer = document.createElement('div');
+        progressContainer.className = 'progress-bar-container';
+
+        const progressBar = document.createElement('div');
+        progressBar.className = 'progress-bar ' + progressClass;
+        progressBar.style.width = Math.min(faculty.utilizationRate, 100) + '%';
+        progressContainer.appendChild(progressBar);
+        tdUtil.appendChild(progressContainer);
+
+        const utilText = document.createElement('div');
+        utilText.style.marginTop = '5px';
+        utilText.textContent = faculty.utilizationRate.toFixed(1) + '%';
+        tdUtil.appendChild(utilText);
+        tr.appendChild(tdUtil);
+
+        // Status cell
+        const tdStatus = document.createElement('td');
+        tdStatus.style.fontWeight = '600';
+        tdStatus.style.color = statusColor;
+        tdStatus.textContent = statusDisplay;
+        tr.appendChild(tdStatus);
+
+        tbody.appendChild(tr);
+    });
 }
 
 function renderQuarterlyCapacityChart() {

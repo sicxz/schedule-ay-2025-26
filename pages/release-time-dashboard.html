@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Release Time - Design Scheduler</title>
+
+    <!-- External Stylesheets -->
+    <link rel="stylesheet" href="../css/shared.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- Utility Scripts -->
+    <script src="../js/config/constants.js"></script>
+    <script src="../js/dom-utils.js"></script>
+    <script src="../js/validators.js"></script>
+    <script src="../js/state-manager.js"></script>
+    <script src="../js/release-time-manager.js"></script>
+    <script src="../js/backup-manager.js"></script>
+    <script src="../js/data-loader.js"></script>
+
+    <style>
+        /* Release Time Specific Styles */
+        .release-time-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .faculty-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .faculty-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+
+        .faculty-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .faculty-name {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .release-total {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .allocation-list {
+            margin-top: 15px;
+        }
+
+        .allocation-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            margin: 6px 0;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+
+        .allocation-category {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .category-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .allocation-credits {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .allocation-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-icon {
+            width: 28px;
+            height: 28px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-edit {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .btn-edit:hover {
+            background: #bbdefb;
+        }
+
+        .btn-delete {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .btn-delete:hover {
+            background: #ffcdd2;
+        }
+
+        .btn-add {
+            width: 100%;
+            padding: 10px;
+            margin-top: 15px;
+            background: #f0f7ff;
+            border: 2px dashed #667eea;
+            border-radius: 8px;
+            color: #667eea;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-add:hover {
+            background: #e3ecff;
+            border-style: solid;
+        }
+
+        /* Summary Cards */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .summary-card-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .summary-card-label {
+            color: #6b7280;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #6b7280;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .form-group select,
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.2s;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .quarter-checkboxes {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .quarter-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .quarter-checkbox input {
+            width: auto;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 14px;
+            background: #f3f4f6;
+            color: #374151;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        /* Undo Bar */
+        .undo-bar {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2937;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            display: none;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 900;
+        }
+
+        .undo-bar.visible {
+            display: flex;
+        }
+
+        .undo-bar button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .undo-bar .dismiss {
+            background: transparent;
+            padding: 8px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6b7280;
+        }
+
+        .empty-state-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            color: #374151;
+            margin-bottom: 10px;
+        }
+
+        /* Category Legend */
+        .category-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="../index.html" class="back-link">← Back to Schedule</a>
+            <h1>📋 Release Time Dashboard</h1>
+            <p class="subtitle">EWU Design Department - Faculty Release Time Management</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="academicYearFilter">Academic Year:</label>
+                <select id="academicYearFilter">
+                    <option value="2025-26">2025-26</option>
+                    <option value="2024-25">2024-25</option>
+                    <option value="2023-24">2023-24</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="categoryFilter">Filter by Type:</label>
+                <select id="categoryFilter">
+                    <option value="all">All Types</option>
+                </select>
+            </div>
+
+            <button id="addNewBtn" class="btn-primary" style="width: auto; padding: 10px 20px;">+ Add Release Time</button>
+            <button id="undoBtn" style="background: #f3f4f6; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer;" disabled>↩ Undo</button>
+            <button id="redoBtn" style="background: #f3f4f6; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer;" disabled>↪ Redo</button>
+
+            <button onclick="window.location.href='schedule-editor.html'">Edit Schedule</button>
+            <button onclick="window.location.href='workload-dashboard.html'">Workload</button>
+            <button onclick="window.location.href='capacity-planning-dashboard.html'">Capacity</button>
+        </div>
+
+        <div class="content">
+            <!-- Summary Statistics -->
+            <div class="summary-grid" id="summaryGrid">
+                <div class="summary-card">
+                    <div class="summary-card-value" id="totalCredits">0</div>
+                    <div class="summary-card-label">Total Credits</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-card-value" id="facultyCount">0</div>
+                    <div class="summary-card-label">Faculty with Release</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-card-value" id="avgCredits">0</div>
+                    <div class="summary-card-label">Avg per Faculty</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-card-value" id="allocationCount">0</div>
+                    <div class="summary-card-label">Total Allocations</div>
+                </div>
+            </div>
+
+            <!-- Category Legend -->
+            <div class="category-legend" id="categoryLegend"></div>
+
+            <!-- Charts -->
+            <div class="grid-2">
+                <div class="chart-container">
+                    <h2>Release Time by Category</h2>
+                    <div class="chart-wrapper">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h2>Release Time by Quarter</h2>
+                    <div class="chart-wrapper">
+                        <canvas id="quarterChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Faculty Cards -->
+            <h2 style="margin: 30px 0 20px;">Faculty Release Time Allocations</h2>
+            <div id="facultyGrid" class="release-time-grid">
+                <!-- Faculty cards will be rendered here -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <div class="empty-state-icon">📋</div>
+                <h3>No Release Time Allocations</h3>
+                <p>Add release time allocations for faculty members to track sabbaticals, chair duties, advising, and more.</p>
+                <button class="btn-primary" style="width: auto; margin-top: 20px; padding: 12px 24px;" onclick="openAddModal()">+ Add First Allocation</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Add Release Time</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+
+            <form id="releaseTimeForm" onsubmit="handleFormSubmit(event)">
+                <input type="hidden" id="editAllocationId">
+                <input type="hidden" id="editFacultyName">
+
+                <div class="form-group">
+                    <label for="facultySelect">Faculty Member</label>
+                    <select id="facultySelect" required>
+                        <option value="">Select Faculty...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="categorySelect">Release Type</label>
+                    <select id="categorySelect" required>
+                        <option value="">Select Type...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="creditsInput">Credits</label>
+                    <input type="number" id="creditsInput" min="1" max="45" step="1" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Quarters</label>
+                    <div class="quarter-checkboxes" id="quarterCheckboxes">
+                        <!-- Will be populated dynamically -->
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="descriptionInput">Description (Optional)</label>
+                    <textarea id="descriptionInput" rows="3" placeholder="Additional notes..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-primary" id="submitBtn">Add Allocation</button>
+                <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Undo Bar -->
+    <div class="undo-bar" id="undoBar">
+        <span id="undoMessage">Action completed</span>
+        <button onclick="handleUndo()">Undo</button>
+        <button class="dismiss" onclick="hideUndoBar()">&times;</button>
+    </div>
+
+    <script src="release-time-dashboard.js"></script>
+</body>
+</html>

@@ -4,6 +4,91 @@
  */
 
 /**
+ * Get release time data for a faculty member
+ * Uses ReleaseTimeManager if available
+ * @param {string} facultyName - Faculty name
+ * @param {string} academicYear - Academic year (e.g., '2025-26')
+ * @returns {Object} Release time info with totalCredits and allocations
+ */
+function getFacultyReleaseTime(facultyName, academicYear) {
+    // Check if ReleaseTimeManager is available
+    if (typeof ReleaseTimeManager !== 'undefined') {
+        const allocations = ReleaseTimeManager.getFacultyAllocations(facultyName, academicYear);
+        const totalCredits = ReleaseTimeManager.getFacultyTotalCredits(facultyName, academicYear);
+        return {
+            totalCredits: totalCredits,
+            allocations: allocations
+        };
+    }
+    return { totalCredits: 0, allocations: [] };
+}
+
+/**
+ * Apply release time adjustments to faculty data
+ * This modifies the available capacity based on release time
+ * @param {Object} facultyData - Original faculty workload data
+ * @param {string} academicYear - Academic year for release time lookup
+ * @returns {Object} Adjusted faculty data with release time applied
+ */
+function applyReleaseTimeToFacultyData(facultyData, academicYear) {
+    if (!facultyData || typeof ReleaseTimeManager === 'undefined') {
+        return facultyData;
+    }
+
+    const adjusted = {};
+
+    Object.entries(facultyData).forEach(([name, data]) => {
+        const releaseTime = getFacultyReleaseTime(name, academicYear);
+
+        // Copy original data
+        const adjustedData = { ...data };
+
+        // Apply release time reduction to capacity
+        if (releaseTime.totalCredits > 0) {
+            adjustedData.releaseTimeCredits = releaseTime.totalCredits;
+            adjustedData.releaseTimeAllocations = releaseTime.allocations;
+
+            // Reduce effective capacity by release time
+            adjustedData.effectiveMaxWorkload = Math.max(0, (data.maxWorkload || 0) - releaseTime.totalCredits);
+
+            // Recalculate utilization based on effective capacity
+            if (adjustedData.effectiveMaxWorkload > 0) {
+                adjustedData.effectiveUtilizationRate = Math.round(
+                    ((adjustedData.totalWorkloadCredits || 0) / adjustedData.effectiveMaxWorkload) * 100 * 10
+                ) / 10;
+            } else {
+                adjustedData.effectiveUtilizationRate = adjustedData.totalWorkloadCredits > 0 ? 999 : 0;
+            }
+
+            // Update status based on effective utilization
+            adjustedData.effectiveStatus = getUtilizationStatus(adjustedData.effectiveUtilizationRate);
+        }
+
+        adjusted[name] = adjustedData;
+    });
+
+    return adjusted;
+}
+
+/**
+ * Calculate department-wide release time impact
+ * @param {string} academicYear - Academic year
+ * @returns {Object} Department release time summary
+ */
+function calculateDepartmentReleaseTimeSummary(academicYear) {
+    if (typeof ReleaseTimeManager === 'undefined') {
+        return {
+            totalCredits: 0,
+            facultyCount: 0,
+            byCategory: {},
+            byQuarter: {}
+        };
+    }
+
+    return ReleaseTimeManager.getDepartmentSummary(academicYear);
+}
+
+/**
  * Get faculty by category (fullTime, adjunct, former)
  * @param {Object} yearData - Year-specific data from workload JSON
  * @param {string} category - Category: 'fullTime', 'adjunct', 'former', or 'all'

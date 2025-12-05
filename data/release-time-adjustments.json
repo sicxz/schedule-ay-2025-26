@@ -1,0 +1,200 @@
+{
+  "version": "1.0",
+  "lastModified": "2025-11-14T23:30:00.000Z",
+  "description": "Manual adjustments for faculty release time and applied learning projections",
+  "academicYears": {
+    "2025-26": {
+      "releaseTime": {
+        "Travis Masingale": {
+          "totalCredits": 9,
+          "categories": [
+            {
+              "type": "advising",
+              "credits": 4,
+              "notes": "40 advisees",
+              "quarters": ["Fall", "Winter", "Spring"]
+            },
+            {
+              "type": "committee",
+              "credits": 3,
+              "notes": "Faculty Senate",
+              "quarters": ["Fall", "Winter", "Spring"]
+            },
+            {
+              "type": "faculty_org",
+              "credits": 2,
+              "notes": "Faculty Organization Secretary",
+              "quarters": ["Winter", "Spring"]
+            }
+          ]
+        },
+        "Sonja Durr": {
+          "totalCredits": 5,
+          "categories": [
+            {
+              "type": "advising",
+              "credits": 5,
+              "notes": "Design Studies Coordinator",
+              "quarters": ["Fall", "Winter", "Spring"]
+            }
+          ]
+        },
+        "Simeon Mills": {
+          "totalCredits": 5,
+          "categories": [
+            {
+              "type": "advising",
+              "credits": 5,
+              "notes": "Graduate Program Coordinator",
+              "quarters": ["Fall", "Winter", "Spring"]
+            }
+          ]
+        }
+      },
+      "appliedLearningOverrides": {
+        "Simeon Mills": {
+          "DESN 499": {
+            "projected": {
+              "Fall": {
+                "students": 5,
+                "creditsPerStudent": 3,
+                "totalCredits": 15,
+                "workloadMultiplier": 0.2,
+                "workloadCredits": 3.0
+              },
+              "Winter": {
+                "students": 8,
+                "creditsPerStudent": 3,
+                "totalCredits": 24,
+                "workloadMultiplier": 0.2,
+                "workloadCredits": 4.8
+              },
+              "Spring": {
+                "students": 6,
+                "creditsPerStudent": 3,
+                "totalCredits": 18,
+                "workloadMultiplier": 0.2,
+                "workloadCredits": 3.6
+              }
+            },
+            "notes": "Higher than typical due to senior capstone demand"
+          },
+          "DESN 495": {
+            "projected": {
+              "Fall": {
+                "students": 2,
+                "creditsPerStudent": 5,
+                "totalCredits": 10,
+                "workloadMultiplier": 0.1,
+                "workloadCredits": 1.0
+              },
+              "Winter": {
+                "students": 3,
+                "creditsPerStudent": 5,
+                "totalCredits": 15,
+                "workloadMultiplier": 0.1,
+                "workloadCredits": 1.5
+              },
+              "Spring": {
+                "students": 1,
+                "creditsPerStudent": 5,
+                "totalCredits": 5,
+                "workloadMultiplier": 0.1,
+                "workloadCredits": 0.5
+              }
+            }
+          }
+        },
+        "Travis Masingale": {
+          "DESN 499": {
+            "projected": {
+              "Fall": {
+                "students": 4,
+                "creditsPerStudent": 3,
+                "totalCredits": 12,
+                "workloadMultiplier": 0.2,
+                "workloadCredits": 2.4
+              },
+              "Winter": {
+                "students": 5,
+                "creditsPerStudent": 3,
+                "totalCredits": 15,
+                "workloadMultiplier": 0.2,
+                "workloadCredits": 3.0
+              },
+              "Spring": {
+                "students": 4,
+                "creditsPerStudent": 3,
+                "totalCredits": 12,
+                "workloadMultiplier": 0.2,
+                "workloadCredits": 2.4
+              }
+            },
+            "notes": "Projected applied learning supervision"
+          }
+        }
+      }
+    },
+    "2024-25": {
+      "releaseTime": {},
+      "appliedLearningOverrides": {}
+    },
+    "2023-24": {
+      "releaseTime": {},
+      "appliedLearningOverrides": {}
+    },
+    "2022-23": {
+      "releaseTime": {},
+      "appliedLearningOverrides": {}
+    }
+  },
+  "releaseTimeCategories": [
+    {
+      "id": "advising",
+      "label": "Advising",
+      "color": "#3b82f6",
+      "description": "Academic advising and student support"
+    },
+    {
+      "id": "committee",
+      "label": "Committee Work",
+      "color": "#8b5cf6",
+      "description": "Faculty senate, search committees, etc."
+    },
+    {
+      "id": "faculty_org",
+      "label": "Faculty Organization",
+      "color": "#ec4899",
+      "description": "Faculty organization leadership"
+    },
+    {
+      "id": "chair",
+      "label": "Chair Duties",
+      "color": "#f59e0b",
+      "description": "Department chair responsibilities"
+    },
+    {
+      "id": "sabbatical",
+      "label": "Sabbatical",
+      "color": "#10b981",
+      "description": "Full or partial sabbatical leave"
+    },
+    {
+      "id": "research",
+      "label": "Research",
+      "color": "#06b6d4",
+      "description": "Research projects and grants"
+    },
+    {
+      "id": "other",
+      "label": "Other",
+      "color": "#6b7280",
+      "description": "Other release time"
+    }
+  ],
+  "appliedLearningMultipliers": {
+    "DESN 499": 0.2,
+    "DESN 495": 0.1,
+    "DESN 490": 0.15
+  }
+}

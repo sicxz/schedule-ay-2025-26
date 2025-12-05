@@ -310,11 +310,16 @@ function renderInstructorSummaryChart() {
 }
 
 /**
- * Render annual breakdown table
+ * Render annual breakdown table using safe DOM methods
  */
 function renderAnnualBreakdownTable() {
     const tbody = document.querySelector('#annualBreakdownTable tbody');
-    tbody.innerHTML = '';
+    if (!tbody) return;
+
+    // Clear existing rows
+    while (tbody.firstChild) {
+        tbody.removeChild(tbody.firstChild);
+    }
 
     // Get all instructors across all years
     const instructors = new Set();
@@ -335,7 +340,12 @@ function renderAnnualBreakdownTable() {
 
         let totalCredits = 0;
 
-        let html = `<td><strong>${instructor}</strong></td>`;
+        // Name cell
+        const tdName = document.createElement('td');
+        const strong = document.createElement('strong');
+        strong.textContent = instructor;
+        tdName.appendChild(strong);
+        row.appendChild(tdName);
 
         // For each year
         ['2022-23', '2023-24', '2024-25', '2025-26'].forEach(year => {
@@ -348,141 +358,152 @@ function renderAnnualBreakdownTable() {
 
                 totalCredits += credits499 + credits495 + credits491;
 
-                html += `
-                    <td>${credits499 || '-'}</td>
-                    <td>${credits495 || '-'}</td>
-                    <td>${credits491 || '-'}</td>
-                `;
+                [credits499, credits495, credits491].forEach(val => {
+                    const td = document.createElement('td');
+                    td.textContent = val || '-';
+                    row.appendChild(td);
+                });
             } else {
-                html += `<td>-</td><td>-</td><td>-</td>`;
+                for (let i = 0; i < 3; i++) {
+                    const td = document.createElement('td');
+                    td.textContent = '-';
+                    row.appendChild(td);
+                }
             }
         });
 
-        html += `<td><strong>${totalCredits}</strong></td>`;
+        // Total cell
+        const tdTotal = document.createElement('td');
+        const totalStrong = document.createElement('strong');
+        totalStrong.textContent = totalCredits;
+        tdTotal.appendChild(totalStrong);
+        row.appendChild(tdTotal);
 
-        row.innerHTML = html;
         tbody.appendChild(row);
     });
 }
 
 /**
- * Render current year details
+ * Render current year details using safe DOM methods
  */
 function renderCurrentYearDetails() {
+    const details499 = document.getElementById('desn499Details');
+    const details495 = document.getElementById('desn495Details');
+    const details491 = document.getElementById('desn491Details');
+
+    // Helper to clear and set message
+    function setMessage(element, message) {
+        if (!element) return;
+        while (element.firstChild) {
+            element.removeChild(element.firstChild);
+        }
+        const p = document.createElement('p');
+        p.textContent = message;
+        element.appendChild(p);
+    }
+
+    // Helper to create metric div
+    function createMetric(label, value) {
+        const div = document.createElement('div');
+        div.className = 'card-metric';
+
+        const labelSpan = document.createElement('span');
+        labelSpan.className = 'card-metric-label';
+        labelSpan.textContent = label;
+        div.appendChild(labelSpan);
+
+        const valueSpan = document.createElement('span');
+        valueSpan.className = 'card-metric-value';
+        valueSpan.textContent = value;
+        div.appendChild(valueSpan);
+
+        return div;
+    }
+
+    // Helper to render course details
+    function renderCourseDetails(element, courseData, multiplierText) {
+        if (!element) return;
+
+        while (element.firstChild) {
+            element.removeChild(element.firstChild);
+        }
+
+        element.appendChild(createMetric('Total Students:', courseData.students));
+        element.appendChild(createMetric('Total Credits:', courseData.totalCredits));
+        element.appendChild(createMetric('Sections:', courseData.sections));
+
+        if (courseData.workloadCredits !== undefined) {
+            element.appendChild(createMetric('Workload Equivalent:',
+                courseData.workloadCredits.toFixed(1) + ' (' + multiplierText + ')'));
+        }
+
+        if (courseData.supervisors && Object.keys(courseData.supervisors).length > 0) {
+            const h4 = document.createElement('h4');
+            h4.style.marginTop = '15px';
+            h4.style.marginBottom = '10px';
+            h4.textContent = 'Supervisors:';
+            element.appendChild(h4);
+
+            Object.entries(courseData.supervisors).forEach(([name, data]) => {
+                element.appendChild(createMetric(name + ':',
+                    data.credits + ' credits (' + data.sections + ' sections)'));
+            });
+        }
+    }
+
     if (currentYear === 'all') {
-        document.getElementById('desn499Details').innerHTML = '<p>Select a specific year to view details.</p>';
-        document.getElementById('desn495Details').innerHTML = '<p>Select a specific year to view details.</p>';
-        document.getElementById('desn491Details').innerHTML = '<p>Select a specific year to view details.</p>';
+        setMessage(details499, 'Select a specific year to view details.');
+        setMessage(details495, 'Select a specific year to view details.');
+        setMessage(details491, 'Select a specific year to view details.');
         return;
     }
 
     const yearData = workloadData.appliedLearningTrends.trends[currentYear];
 
     if (!yearData) {
-        document.getElementById('desn499Details').innerHTML = '<p>No data available for this year.</p>';
-        document.getElementById('desn495Details').innerHTML = '<p>No data available for this year.</p>';
-        document.getElementById('desn491Details').innerHTML = '<p>No data available for this year.</p>';
+        setMessage(details499, 'No data available for this year.');
+        setMessage(details495, 'No data available for this year.');
+        setMessage(details491, 'No data available for this year.');
         return;
     }
 
     // DESN 499 Details
-    const desn499 = yearData['DESN 499'];
-    let html499 = `
-        <div class="card-metric">
-            <span class="card-metric-label">Total Students:</span>
-            <span class="card-metric-value">${desn499.students}</span>
-        </div>
-        <div class="card-metric">
-            <span class="card-metric-label">Total Credits:</span>
-            <span class="card-metric-value">${desn499.totalCredits}</span>
-        </div>
-        <div class="card-metric">
-            <span class="card-metric-label">Sections:</span>
-            <span class="card-metric-value">${desn499.sections}</span>
-        </div>
-        <div class="card-metric">
-            <span class="card-metric-label">Workload Equivalent:</span>
-            <span class="card-metric-value">${desn499.workloadCredits.toFixed(1)} (0.2× multiplier)</span>
-        </div>
-        <h4 style="margin-top: 15px; margin-bottom: 10px;">Supervisors:</h4>
-    `;
-
-    Object.entries(desn499.supervisors || {}).forEach(([name, data]) => {
-        html499 += `
-            <div class="card-metric">
-                <span class="card-metric-label">${name}:</span>
-                <span class="card-metric-value">${data.credits} credits (${data.sections} sections)</span>
-            </div>
-        `;
-    });
-
-    document.getElementById('desn499Details').innerHTML = html499;
+    renderCourseDetails(details499, yearData['DESN 499'], '0.2× multiplier');
 
     // DESN 495 Details
-    const desn495 = yearData['DESN 495'];
-    let html495 = `
-        <div class="card-metric">
-            <span class="card-metric-label">Total Students:</span>
-            <span class="card-metric-value">${desn495.students}</span>
-        </div>
-        <div class="card-metric">
-            <span class="card-metric-label">Total Credits:</span>
-            <span class="card-metric-value">${desn495.totalCredits}</span>
-        </div>
-        <div class="card-metric">
-            <span class="card-metric-label">Sections:</span>
-            <span class="card-metric-value">${desn495.sections}</span>
-        </div>
-        <div class="card-metric">
-            <span class="card-metric-label">Workload Equivalent:</span>
-            <span class="card-metric-value">${desn495.workloadCredits.toFixed(1)} (0.1× multiplier)</span>
-        </div>
-        <h4 style="margin-top: 15px; margin-bottom: 10px;">Supervisors:</h4>
-    `;
-
-    Object.entries(desn495.supervisors || {}).forEach(([name, data]) => {
-        html495 += `
-            <div class="card-metric">
-                <span class="card-metric-label">${name}:</span>
-                <span class="card-metric-value">${data.credits} credits (${data.sections} sections)</span>
-            </div>
-        `;
-    });
-
-    document.getElementById('desn495Details').innerHTML = html495;
+    renderCourseDetails(details495, yearData['DESN 495'], '0.1× multiplier');
 
     // DESN 491 Details
     const desn491 = yearData['DESN 491'] || { students: 0, totalCredits: 0, sections: 0, supervisors: {} };
-    let html491 = `
-        <div class="card-metric">
-            <span class="card-metric-label">Total Students:</span>
-            <span class="card-metric-value">${desn491.students || 0}</span>
-        </div>
-        <div class="card-metric">
-            <span class="card-metric-label">Total Credits:</span>
-            <span class="card-metric-value">${desn491.totalCredits || 0}</span>
-        </div>
-        <div class="card-metric">
-            <span class="card-metric-label">Sections:</span>
-            <span class="card-metric-value">${desn491.sections || 0}</span>
-        </div>
-    `;
 
-    if (desn491.supervisors && Object.keys(desn491.supervisors).length > 0) {
-        html491 += '<h4 style="margin-top: 15px; margin-bottom: 10px;">Supervisors:</h4>';
-        Object.entries(desn491.supervisors).forEach(([name, data]) => {
-            html491 += `
-                <div class="card-metric">
-                    <span class="card-metric-label">${name}:</span>
-                    <span class="card-metric-value">${data.credits} credits (${data.sections} sections)</span>
-                </div>
-            `;
-        });
-    } else {
-        html491 += '<p style="margin-top: 15px; color: #6c757d;">No DESN 491 data available for this year.</p>';
+    if (details491) {
+        while (details491.firstChild) {
+            details491.removeChild(details491.firstChild);
+        }
+
+        details491.appendChild(createMetric('Total Students:', desn491.students || 0));
+        details491.appendChild(createMetric('Total Credits:', desn491.totalCredits || 0));
+        details491.appendChild(createMetric('Sections:', desn491.sections || 0));
+
+        if (desn491.supervisors && Object.keys(desn491.supervisors).length > 0) {
+            const h4 = document.createElement('h4');
+            h4.style.marginTop = '15px';
+            h4.style.marginBottom = '10px';
+            h4.textContent = 'Supervisors:';
+            details491.appendChild(h4);
+
+            Object.entries(desn491.supervisors).forEach(([name, data]) => {
+                details491.appendChild(createMetric(name + ':',
+                    data.credits + ' credits (' + data.sections + ' sections)'));
+            });
+        } else {
+            const p = document.createElement('p');
+            p.style.marginTop = '15px';
+            p.style.color = '#6c757d';
+            p.textContent = 'No DESN 491 data available for this year.';
+            details491.appendChild(p);
+        }
     }
-
-    document.getElementById('desn491Details').innerHTML = html491;
 }
 
 // Initialize on page load

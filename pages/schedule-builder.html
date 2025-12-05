@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Schedule - EWU Design</title>
+    <title>Schedule Builder - Design Scheduler</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <link rel="stylesheet" href="../css/schedule-builder.css">
 </head>
@@ -47,7 +47,7 @@
             <div class="summary-card">
                 <div class="card-icon">👨‍🏫</div>
                 <div class="card-value" id="facultyCapacity">--</div>
-                <div class="card-label">Faculty Assigned</div>
+                <div class="card-label">Sections Assigned</div>
             </div>
             <div class="summary-card">
                 <div class="card-icon">🔥</div>
@@ -179,9 +179,12 @@
             <div class="grid-section">
                 <div class="section-header">
                     <h2 id="gridTitle">Schedule Grid - Fall 2026</h2>
-                    <div class="view-toggle">
-                        <button class="view-btn active" onclick="setView('grid')" id="gridViewBtn">Grid View</button>
-                        <button class="view-btn" onclick="setView('list')" id="listViewBtn">List View</button>
+                    <div style="display: flex; gap: 12px; align-items: center;">
+                        <button class="btn-add-course" onclick="openAddCourseModal()">+ Add Course</button>
+                        <div class="view-toggle">
+                            <button class="view-btn active" onclick="setView('grid')" id="gridViewBtn">Grid View</button>
+                            <button class="view-btn" onclick="setView('list')" id="listViewBtn">List View</button>
+                        </div>
                     </div>
                 </div>
 
@@ -209,7 +212,10 @@
                 </div>
 
                 <div class="panel-section">
-                    <h3>Faculty Workload</h3>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <h3 style="margin: 0;">Faculty Workload</h3>
+                        <button class="btn-small" onclick="openFacultyPreferencesModal()">Edit Preferences</button>
+                    </div>
                     <div class="faculty-summary" id="facultySummary">
                         <!-- Dynamically populated -->
                     </div>
@@ -235,6 +241,9 @@
             <button class="btn-secondary" onclick="saveDraft()">
                 💾 Save Draft
             </button>
+            <button class="btn-primary" onclick="saveToDatabase()" id="saveToCloudBtn">
+                ☁️ Save to Cloud
+            </button>
             <button class="btn-secondary" onclick="exportJSON()">
                 📥 Export JSON
             </button>
@@ -247,9 +256,164 @@
         <div class="toast" id="toast">
             <span id="toastMessage"></span>
         </div>
+
+        <!-- Add Course Modal -->
+        <div class="modal-overlay" id="addCourseModal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h2 class="modal-title">Add Course to Schedule</h2>
+                    <button class="modal-close" onclick="closeAddCourseModal()">&times;</button>
+                </div>
+                <form id="addCourseForm" onsubmit="handleAddCourse(event)">
+                    <div class="form-group">
+                        <label for="addCourseCode">Course</label>
+                        <select id="addCourseCode" required>
+                            <option value="">Select a course...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="addCourseSection">Section</label>
+                        <input type="text" id="addCourseSection" placeholder="001" maxlength="3" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="addCourseDays">Days</label>
+                        <select id="addCourseDays" required>
+                            <option value="MW">Monday/Wednesday</option>
+                            <option value="TR">Tuesday/Thursday</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="addCourseTime">Time</label>
+                        <select id="addCourseTime" required>
+                            <option value="10:00-12:20">10:00 AM - 12:20 PM</option>
+                            <option value="13:00-15:20">1:00 PM - 3:20 PM</option>
+                            <option value="16:00-18:20">4:00 PM - 6:20 PM</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="addCourseRoom">Room</label>
+                        <select id="addCourseRoom" required>
+                            <optgroup label="Catalyst (Spokane)">
+                                <option value="206">206 - UX Lab</option>
+                                <option value="209">209 - Mac Lab</option>
+                                <option value="210">210 - Mac Lab</option>
+                                <option value="212">212 - Project Lab</option>
+                            </optgroup>
+                            <optgroup label="Cheney (Main)">
+                                <option value="CEB 102">CEB 102</option>
+                                <option value="CEB 104">CEB 104</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="addCourseFaculty">Faculty</label>
+                        <select id="addCourseFaculty">
+                            <option value="">TBD</option>
+                        </select>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn-secondary" onclick="closeAddCourseModal()">Cancel</button>
+                        <button type="submit" class="btn-primary">Add Course</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Faculty Preferences Modal -->
+        <div class="modal-overlay" id="facultyPreferencesModal">
+            <div class="modal" style="max-width: 600px;">
+                <div class="modal-header">
+                    <h2 class="modal-title">Faculty Preferences</h2>
+                    <button class="modal-close" onclick="closeFacultyPreferencesModal()">&times;</button>
+                </div>
+                <form id="facultyPreferencesForm" onsubmit="handleSaveFacultyPreferences(event)">
+                    <div class="form-group">
+                        <label for="prefFacultyName">Faculty Member</label>
+                        <select id="prefFacultyName" required onchange="loadFacultyPreferences()">
+                            <option value="">Select faculty...</option>
+                        </select>
+                    </div>
+
+                    <div class="preferences-grid">
+                        <div class="pref-section">
+                            <h4>Time Preferences</h4>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="timePref" value="morning"> Morning (10:00-12:20)
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="timePref" value="afternoon"> Afternoon (1:00-3:20)
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="timePref" value="evening"> Evening (4:00-6:20)
+                                </label>
+                            </div>
+                            <label class="small-label">Blocked Times</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label blocked">
+                                    <input type="checkbox" name="timeBlocked" value="morning"> Morning
+                                </label>
+                                <label class="checkbox-label blocked">
+                                    <input type="checkbox" name="timeBlocked" value="afternoon"> Afternoon
+                                </label>
+                                <label class="checkbox-label blocked">
+                                    <input type="checkbox" name="timeBlocked" value="evening"> Evening
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="pref-section">
+                            <h4>Day Preferences</h4>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="dayPref" value="MW"> Mon/Wed
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="dayPref" value="TR"> Tue/Thu
+                                </label>
+                            </div>
+                            <label class="small-label">Blocked Days</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label blocked">
+                                    <input type="checkbox" name="dayBlocked" value="MW"> Mon/Wed
+                                </label>
+                                <label class="checkbox-label blocked">
+                                    <input type="checkbox" name="dayBlocked" value="TR"> Tue/Thu
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="prefCampus">Campus Assignment</label>
+                        <select id="prefCampus">
+                            <option value="any">Any Campus</option>
+                            <option value="catalyst">Catalyst (Spokane) Only</option>
+                            <option value="cheney">Cheney Only</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="prefNotes">Notes</label>
+                        <textarea id="prefNotes" rows="3" placeholder="Any scheduling notes or constraints..."></textarea>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="btn-secondary" onclick="closeFacultyPreferencesModal()">Cancel</button>
+                        <button type="submit" class="btn-primary">Save Preferences</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
     <!-- Scripts -->
+    <!-- Supabase Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase-config.js"></script>
+    <script src="../js/db-service.js"></script>
+    <!-- Application Scripts -->
+    <script src="../js/constraints-engine.js"></script>
     <script src="../js/prerequisite-graph.js"></script>
     <script src="../js/demand-predictor.js"></script>
     <script src="../js/schedule-generator.js"></script>

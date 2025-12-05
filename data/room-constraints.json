@@ -76,10 +76,11 @@
       "rooms": ["207"],
       "reason": "Room 207 is not used for scheduled courses"
     },
-    "itcsCheneyOnly": {
-      "pattern": "ITCS",
-      "reason": "All ITCS courses can only be offered in Cheney",
-      "validRooms": ["CEB 102", "CEB 104"]
+    "itgsCheneyOnly": {
+      "pattern": "ITGS",
+      "reason": "All ITGS courses can only be offered in Cheney, no evening classes",
+      "validRooms": ["CEB 102", "CEB 104"],
+      "blockedTimes": ["evening"]
     }
   },
   "caseByCase": {

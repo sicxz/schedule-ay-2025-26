@@ -50,6 +50,12 @@ const ScheduleAnalyzer = (function() {
                 console.log('Prerequisite graph loaded for analyzer');
             }
 
+            // Initialize constraints engine if available
+            if (typeof ConstraintsEngine !== 'undefined') {
+                await ConstraintsEngine.init('../data/scheduling-rules.json');
+                console.log('Constraints engine loaded for analyzer');
+            }
+
             return true;
         } catch (err) {
             console.error('Error initializing analyzer:', err);
@@ -259,22 +265,37 @@ const ScheduleAnalyzer = (function() {
                 });
             });
 
-            // ITCS Cheney-only constraint check
+            // ITGS Cheney-only + no evening constraint check
             Object.entries(assignedCourses).forEach(([key, courses]) => {
                 if (key === 'unassigned') return;
                 const isCheneyRoom = key.includes('CEB');
+                const isEvening = key.includes('16:00') || key.includes('4:00');
                 courses.forEach(course => {
-                    if (course.courseCode.startsWith('ITCS') && !isCheneyRoom) {
-                        conflicts.push({
-                            id: `itcs-cheney-${quarter}-${course.courseCode}`,
-                            type: 'room-constraint',
-                            quarter: quarter,
-                            courseCode: course.courseCode,
-                            title: `ITCS must be in Cheney: ${course.courseCode}`,
-                            detail: `${course.courseCode} is in Spokane but ITCS courses can only be offered in Cheney (CEB 102/104)`,
-                            priority: 'high',
-                            action: { type: 'move-room', quarter, courseCode: course.courseCode, toRoom: 'CEB' }
-                        });
+                    if (course.courseCode.startsWith('ITGS')) {
+                        if (!isCheneyRoom) {
+                            conflicts.push({
+                                id: `itgs-cheney-${quarter}-${course.courseCode}`,
+                                type: 'room-constraint',
+                                quarter: quarter,
+                                courseCode: course.courseCode,
+                                title: `ITGS must be in Cheney: ${course.courseCode}`,
+                                detail: `${course.courseCode} is in Spokane but ITGS courses can only be offered in Cheney (CEB 102/104)`,
+                                priority: 'high',
+                                action: { type: 'move-room', quarter, courseCode: course.courseCode, toRoom: 'CEB' }
+                            });
+                        }
+                        if (isEvening) {
+                            conflicts.push({
+                                id: `itgs-evening-${quarter}-${course.courseCode}`,
+                                type: 'time-constraint',
+                                quarter: quarter,
+                                courseCode: course.courseCode,
+                                title: `ITGS no evenings: ${course.courseCode}`,
+                                detail: `${course.courseCode} is scheduled in evening but ITGS courses cannot be offered after 4pm`,
+                                priority: 'high',
+                                action: { type: 'move-time', quarter, courseCode: course.courseCode }
+                            });
+                        }
                     }
                 });
             });

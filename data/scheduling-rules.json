@@ -1,0 +1,107 @@
+{
+  "version": "1.1",
+  "lastModified": "2025-12-05",
+  "description": "Global scheduling constraints for EWU Design program. Course-specific constraints (room, time, day preferences) are now stored in the database on each course record.",
+
+  "courseConstraintsNote": "Course-level room/time/day constraints have been migrated to the database (courses table). Edit constraints via Course Management page.",
+
+  "facultyConstraints": [
+    {
+      "id": "campus-travel-buffer",
+      "type": "travel-time",
+      "rule": "no-back-to-back-different-campus",
+      "bufferMinutes": 30,
+      "reason": "30+ minute travel between Cheney and Spokane - faculty cannot be scheduled back-to-back at different campuses",
+      "enabled": true
+    },
+    {
+      "id": "evening-safety-pairing",
+      "type": "safety",
+      "rule": "minimum-instructors-evening",
+      "minimumCount": 2,
+      "afterTime": "16:00",
+      "reason": "Safety requires 2+ instructors present after 4pm on the same day",
+      "enabled": true
+    }
+  ],
+
+  "roomConstraints": [
+    {
+      "id": "room-207-excluded",
+      "room": "207",
+      "type": "exclude-from-grid",
+      "reason": "Room 207 (Media Lab) is not used for scheduled courses"
+    }
+  ],
+
+  "caseByCase": {
+    "note": "Database courses with is_case_by_case=true take precedence. This list serves as fallback.",
+    "courses": ["DESN 495", "DESN 491", "DESN 499", "DESN 399", "DESN 396"],
+    "descriptions": {
+      "DESN 495": "Internship",
+      "DESN 491": "Practicum",
+      "DESN 499": "Independent Study",
+      "DESN 399": "Directed Study",
+      "DESN 396": "Experimental Courses (added manually)"
+    },
+    "reason": "Not scheduled in regular grid - handled individually per student"
+  },
+
+  "timeSlots": {
+    "morning": {
+      "id": "morning",
+      "label": "Morning",
+      "start": "10:00",
+      "end": "12:20",
+      "key": "10:00-12:20"
+    },
+    "afternoon": {
+      "id": "afternoon",
+      "label": "Afternoon",
+      "start": "13:00",
+      "end": "15:20",
+      "key": "13:00-15:20"
+    },
+    "evening": {
+      "id": "evening",
+      "label": "Evening",
+      "start": "16:00",
+      "end": "18:20",
+      "key": "16:00-18:20"
+    }
+  },
+
+  "dayPatterns": {
+    "MW": {
+      "id": "MW",
+      "label": "Monday/Wednesday",
+      "days": ["Monday", "Wednesday"]
+    },
+    "TR": {
+      "id": "TR",
+      "label": "Tuesday/Thursday",
+      "days": ["Tuesday", "Thursday"]
+    }
+  },
+
+  "campuses": {
+    "catalyst": {
+      "id": "catalyst",
+      "name": "Catalyst (Spokane)",
+      "rooms": ["206", "207", "209", "210", "212"]
+    },
+    "cheney": {
+      "id": "cheney",
+      "name": "Cheney (Main Campus)",
+      "rooms": ["CEB 102", "CEB 104"]
+    }
+  },
+
+  "curriculumFlags": {
+    "DESN 384": {
+      "recommendation": "Consider removal from curriculum",
+      "reason": "Not a focus of any full-time faculty",
+      "impact": "Would free capacity for courses we value"
+    }
+  }
+}

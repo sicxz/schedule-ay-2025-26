@@ -29,6 +29,22 @@ async function initDashboard() {
         return;
     }
 
+    // Initialize ReleaseTimeManager if available
+    if (typeof ReleaseTimeManager !== 'undefined') {
+        ReleaseTimeManager.init();
+        console.log('📋 ReleaseTimeManager initialized');
+    }
+
+    // Initialize ScheduleManager if available
+    if (typeof ScheduleManager !== 'undefined') {
+        await ScheduleManager.init();
+        // Import workload data into ScheduleManager
+        if (workloadData) {
+            ScheduleManager.importFromWorkloadData(workloadData);
+        }
+        console.log('📝 ScheduleManager initialized');
+    }
+
     // Setup year filter with callback
     setupYearFilter(workloadData, onYearChange);
 
@@ -86,11 +102,18 @@ function refreshDashboard() {
     // Get faculty data based on category filter
     let facultyData = getFacultyByCategory(currentYearData, currentFilters.category);
 
+    // Apply release time adjustments if ReleaseTimeManager is available
+    if (typeof applyReleaseTimeToFacultyData === 'function') {
+        facultyData = applyReleaseTimeToFacultyData(facultyData, currentFilters.year);
+    }
+
     // Apply status filter if needed
     if (currentFilters.status !== 'all') {
         const filtered = {};
         Object.entries(facultyData).forEach(([name, data]) => {
-            if (data.status === currentFilters.status) {
+            // Use effective status if available, otherwise original status
+            const statusToCheck = data.effectiveStatus || data.status;
+            if (statusToCheck === currentFilters.status) {
                 filtered[name] = data;
             }
         });
@@ -103,6 +126,7 @@ function refreshDashboard() {
     renderUtilizationPie(currentYearData);
     renderFullTimeFaculty(currentYearData.fullTime || {});
     renderAdjunctFaculty(currentYearData.adjunct || {});
+    renderReleaseTimeStats(currentFilters.year, currentYearData);
     renderAppliedLearningStats(currentYearData.all || {});
 }
 
@@ -233,11 +257,16 @@ function renderAdjunctFaculty(adjunctData) {
 }
 
 /**
- * Render faculty table
+ * Render faculty table using safe DOM methods
  */
 function renderFacultyTable(facultyData, tableId, includeRank) {
     const tbody = document.querySelector(`#${tableId} tbody`);
-    tbody.innerHTML = '';
+    if (!tbody) return;
+
+    // Clear existing rows
+    while (tbody.firstChild) {
+        tbody.removeChild(tbody.firstChild);
+    }
 
     const faculty = Object.entries(facultyData)
         .sort((a, b) => b[1].totalWorkloadCredits - a[1].totalWorkloadCredits);
@@ -246,44 +275,109 @@ function renderFacultyTable(facultyData, tableId, includeRank) {
         const row = document.createElement('tr');
 
         if (includeRank) {
-            row.innerHTML = `
-                <td>${formatFacultyName(name, data)}</td>
-                <td>${data.rank || 'N/A'}</td>
-                <td>${data.scheduledCredits || 0}</td>
-                <td>${data.appliedLearningCredits || 0}
-                    <small>(${(data.appliedLearningWorkload || 0).toFixed(1)} weighted)</small>
-                </td>
-                <td><strong>${(data.totalWorkloadCredits || 0).toFixed(1)}</strong></td>
-                <td>${data.maxWorkload || 0}</td>
-                <td>
-                    <div class="progress-bar">
-                        <div class="progress-fill ${getUtilizationColorClass(data.status)}"
-                             style="width: ${Math.min(100, data.utilizationRate || 0)}%">
-                            ${(data.utilizationRate || 0).toFixed(1)}%
-                        </div>
-                    </div>
-                </td>
-                <td><span class="status-badge ${data.status}">${data.status || 'N/A'}</span></td>
-            `;
+            // Full-time faculty row with rank
+            row.appendChild(createTableCell(formatFacultyName(name, data)));
+            row.appendChild(createTableCell(data.rank || 'N/A'));
+            row.appendChild(createTableCell(data.scheduledCredits || 0));
+
+            // Applied learning cell with small text
+            const alCell = document.createElement('td');
+            alCell.textContent = (data.appliedLearningCredits || 0) + ' ';
+            const small = document.createElement('small');
+            small.textContent = '(' + (data.appliedLearningWorkload || 0).toFixed(1) + ' weighted)';
+            alCell.appendChild(small);
+            row.appendChild(alCell);
+
+            // Total workload (bold)
+            const totalCell = document.createElement('td');
+            const strong = document.createElement('strong');
+            strong.textContent = (data.totalWorkloadCredits || 0).toFixed(1);
+            totalCell.appendChild(strong);
+            row.appendChild(totalCell);
+
+            row.appendChild(createTableCell(data.maxWorkload || 0));
+
+            // Progress bar cell
+            row.appendChild(createProgressCell(data.utilizationRate || 0, data.status));
+
+            // Status badge cell
+            const statusCell = document.createElement('td');
+            const badge = document.createElement('span');
+            badge.className = 'status-badge ' + (data.status || '');
+            badge.textContent = data.status || 'N/A';
+            statusCell.appendChild(badge);
+            row.appendChild(statusCell);
+
+            // Actions cell
+            row.appendChild(createActionsCell(name));
         } else {
-            row.innerHTML = `
-                <td>${name}</td>
-                <td><strong>${(data.totalWorkloadCredits || 0).toFixed(1)}</strong></td>
-                <td>${data.maxWorkload || 15} (Adjunct limit)</td>
-                <td>
-                    <div class="progress-bar">
-                        <div class="progress-fill ${getUtilizationColorClass(data.status)}"
-                             style="width: ${Math.min(100, data.utilizationRate || 0)}%">
-                            ${(data.utilizationRate || 0).toFixed(1)}%
-                        </div>
-                    </div>
-                </td>
-                <td>${data.sections || 0}</td>
-            `;
+            // Adjunct faculty row (simpler)
+            row.appendChild(createTableCell(name));
+
+            const totalCell = document.createElement('td');
+            const strong = document.createElement('strong');
+            strong.textContent = (data.totalWorkloadCredits || 0).toFixed(1);
+            totalCell.appendChild(strong);
+            row.appendChild(totalCell);
+
+            row.appendChild(createTableCell((data.maxWorkload || 15) + ' (Adjunct limit)'));
+
+            // Progress bar cell
+            row.appendChild(createProgressCell(data.utilizationRate || 0, data.status));
+
+            row.appendChild(createTableCell(data.sections || 0));
+
+            // Actions cell
+            row.appendChild(createActionsCell(name));
         }
 
         tbody.appendChild(row);
     });
+}
+
+/**
+ * Helper to create actions cell with edit button
+ */
+function createActionsCell(facultyName) {
+    const td = document.createElement('td');
+
+    const editBtn = document.createElement('button');
+    editBtn.className = 'btn-icon btn-edit';
+    editBtn.title = 'Edit courses';
+    editBtn.textContent = '✏️';
+    editBtn.onclick = () => openFacultyEditModal(facultyName);
+
+    td.appendChild(editBtn);
+    return td;
+}
+
+/**
+ * Helper to create a simple table cell
+ */
+function createTableCell(content) {
+    const td = document.createElement('td');
+    td.textContent = String(content);
+    return td;
+}
+
+/**
+ * Helper to create a progress bar cell
+ */
+function createProgressCell(utilizationRate, status) {
+    const td = document.createElement('td');
+
+    const progressBar = document.createElement('div');
+    progressBar.className = 'progress-bar';
+
+    const progressFill = document.createElement('div');
+    progressFill.className = 'progress-fill ' + getUtilizationColorClass(status);
+    progressFill.style.width = Math.min(100, utilizationRate) + '%';
+    progressFill.textContent = utilizationRate.toFixed(1) + '%';
+
+    progressBar.appendChild(progressFill);
+    td.appendChild(progressBar);
+
+    return td;
 }
 
 /**
@@ -308,5 +402,212 @@ function renderAppliedLearningStats(facultyData) {
         `${summary.totalWorkload.toFixed(1)} workload credits`;
 }
 
+/**
+ * Render release time statistics section
+ */
+function renderReleaseTimeStats(academicYear, yearData) {
+    // Get release time summary
+    const releaseTimeSummary = calculateDepartmentReleaseTimeSummary(academicYear);
+
+    // Calculate full-time capacity for impact percentage
+    let fullTimeCapacity = 0;
+    if (yearData && yearData.fullTime) {
+        Object.values(yearData.fullTime).forEach(f => {
+            fullTimeCapacity += f.maxWorkload || 0;
+        });
+    }
+
+    // Update stats
+    document.getElementById('totalReleaseCredits').textContent = releaseTimeSummary.totalCredits;
+
+    document.getElementById('facultyWithRelease').textContent = releaseTimeSummary.totalFaculty;
+
+    // Build breakdown text from categories
+    const breakdownParts = [];
+    if (releaseTimeSummary.byCategory) {
+        Object.entries(releaseTimeSummary.byCategory).forEach(([cat, data]) => {
+            if (data.credits > 0) {
+                breakdownParts.push(`${cat}: ${data.credits}`);
+            }
+        });
+    }
+    document.getElementById('releaseBreakdown').textContent =
+        breakdownParts.length > 0 ? breakdownParts.slice(0, 3).join(', ') : 'No allocations';
+
+    // Calculate capacity impact percentage
+    const impactPercent = fullTimeCapacity > 0
+        ? Math.round((releaseTimeSummary.totalCredits / fullTimeCapacity) * 100 * 10) / 10
+        : 0;
+    document.getElementById('capacityImpact').textContent = impactPercent + '%';
+}
+
 // Initialize dashboard when page loads
 window.addEventListener('load', initDashboard);
+
+
+// ============================================
+// INLINE EDITING FUNCTIONS
+// ============================================
+
+/**
+ * Open faculty edit modal
+ */
+function openFacultyEditModal(facultyName) {
+    const modal = document.getElementById('facultyEditModal');
+    const titleEl = document.getElementById('editModalTitle');
+    const hiddenInput = document.getElementById('editFacultyName');
+
+    titleEl.textContent = `Edit Courses - ${facultyName}`;
+    hiddenInput.value = facultyName;
+
+    // Populate current courses
+    renderCurrentCourses(facultyName);
+
+    // Populate add course dropdown
+    populateAddCourseDropdown();
+
+    modal.classList.add('active');
+}
+
+/**
+ * Close faculty edit modal
+ */
+function closeFacultyEditModal() {
+    const modal = document.getElementById('facultyEditModal');
+    modal.classList.remove('active');
+    document.getElementById('newCourseDetails').style.display = 'none';
+}
+
+/**
+ * Render current courses for faculty in modal
+ */
+function renderCurrentCourses(facultyName) {
+    const container = document.getElementById('currentCoursesList');
+
+    // Get faculty's courses from ScheduleManager
+    let courses = [];
+    if (typeof ScheduleManager !== 'undefined') {
+        courses = ScheduleManager.getFacultySchedule(facultyName, currentFilters.year);
+    }
+
+    // If no ScheduleManager data, fall back to workload data
+    if (courses.length === 0 && currentYearData) {
+        const facultyData = currentYearData.all?.[facultyName];
+        if (facultyData && facultyData.courses) {
+            courses = facultyData.courses.map(c => ({
+                id: c.courseCode + '-' + (c.section || '001'),
+                courseCode: c.courseCode,
+                section: c.section || '001',
+                credits: c.credits,
+                quarter: c.quarter || 'Fall'
+            }));
+        }
+    }
+
+    if (courses.length === 0) {
+        container.innerHTML = '<div style="color: #6b7280; text-align: center; padding: 20px;">No courses assigned</div>';
+        return;
+    }
+
+    container.innerHTML = courses.map(course => `
+        <div class="course-edit-item" data-course-id="${course.id}">
+            <div class="course-edit-info">
+                <span class="course-edit-code">${course.courseCode}</span>
+                <span class="course-edit-credits">${course.credits} cr - ${course.quarter}</span>
+            </div>
+            <button type="button" class="btn-remove-course" onclick="removeCourseFromFaculty('${course.id}')" title="Remove">×</button>
+        </div>
+    `).join('');
+}
+
+/**
+ * Populate add course dropdown
+ */
+function populateAddCourseDropdown() {
+    const select = document.getElementById('addCourseSelect');
+    select.innerHTML = '<option value="">Select a course to add...</option>';
+
+    if (typeof ScheduleManager !== 'undefined') {
+        const catalog = ScheduleManager.getCourseCatalog();
+        catalog.forEach(course => {
+            const option = document.createElement('option');
+            option.value = course.code;
+            option.textContent = `${course.code} - ${course.title} (${course.defaultCredits} cr)`;
+            option.dataset.credits = course.defaultCredits;
+            select.appendChild(option);
+        });
+    }
+
+    // Show/hide new course details when selection changes
+    select.addEventListener('change', function() {
+        const detailsDiv = document.getElementById('newCourseDetails');
+        if (this.value) {
+            detailsDiv.style.display = 'block';
+            const selectedOption = this.options[this.selectedIndex];
+            document.getElementById('newCourseCredits').value = selectedOption.dataset.credits || 5;
+            document.getElementById('newCourseSection').value = '001';
+        } else {
+            detailsDiv.style.display = 'none';
+        }
+    });
+}
+
+/**
+ * Add course to faculty
+ */
+function addCourseToFaculty() {
+    const facultyName = document.getElementById('editFacultyName').value;
+    const courseCode = document.getElementById('addCourseSelect').value;
+    const section = document.getElementById('newCourseSection').value || '001';
+    const credits = parseInt(document.getElementById('newCourseCredits').value) || 5;
+
+    if (!courseCode) {
+        alert('Please select a course');
+        return;
+    }
+
+    if (typeof ScheduleManager !== 'undefined') {
+        // Add to Fall quarter by default (can be changed in full editor)
+        const result = ScheduleManager.addCourseAssignment(currentFilters.year, 'Fall', {
+            courseCode,
+            section,
+            credits,
+            assignedFaculty: facultyName
+        });
+
+        if (result.success) {
+            renderCurrentCourses(facultyName);
+            document.getElementById('addCourseSelect').value = '';
+            document.getElementById('newCourseDetails').style.display = 'none';
+            refreshDashboard();
+        } else {
+            alert('Error adding course: ' + result.errors.join(', '));
+        }
+    } else {
+        alert('Schedule Manager not available. Use the full Schedule Editor.');
+    }
+}
+
+/**
+ * Remove course from faculty
+ */
+function removeCourseFromFaculty(courseId) {
+    const facultyName = document.getElementById('editFacultyName').value;
+
+    if (typeof ScheduleManager !== 'undefined') {
+        // Try to find and remove from each quarter
+        ['Fall', 'Winter', 'Spring', 'Summer'].forEach(quarter => {
+            ScheduleManager.unassignFromFaculty(currentFilters.year, quarter, courseId);
+        });
+
+        renderCurrentCourses(facultyName);
+        refreshDashboard();
+    }
+}
+
+/**
+ * Open schedule editor page
+ */
+function openScheduleEditor() {
+    window.location.href = 'schedule-editor.html';
+}

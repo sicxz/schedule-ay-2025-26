@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EWU Design Schedule Conflict Analyzer</title>
+    <title>Design Scheduler - EWU</title>
     <style>
         * {
             margin: 0;
@@ -92,6 +92,362 @@
         button:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Dashboard Navigation Accordion */
+        .dashboard-nav {
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .nav-accordion-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .nav-accordion-toggle:hover {
+            opacity: 0.95;
+        }
+
+        .nav-accordion-toggle .toggle-icon {
+            transition: transform 0.3s;
+        }
+
+        .nav-accordion-toggle.collapsed .toggle-icon {
+            transform: rotate(-90deg);
+        }
+
+        .nav-accordion-content {
+            padding: 16px 24px;
+            display: block;
+        }
+
+        .nav-accordion-content.collapsed {
+            display: none;
+        }
+
+        .nav-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .nav-row:last-child {
+            border-bottom: none;
+        }
+
+        .nav-row-header {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #6b7280;
+            font-weight: 600;
+            min-width: 70px;
+        }
+
+        .nav-row-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #374151;
+            font-weight: 500;
+            font-size: 13px;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: 1px solid #e5e7eb;
+            background: white;
+        }
+
+        .nav-link:hover {
+            background: #f3f4f6;
+            border-color: #d1d5db;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .nav-link .icon {
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .nav-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .nav-row-header {
+                margin-bottom: 8px;
+            }
+        }
+
+        /* Faculty Modal */
+        .faculty-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .faculty-modal-overlay.visible {
+            display: flex;
+        }
+
+        .faculty-modal {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .faculty-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .faculty-modal-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .faculty-modal-header .faculty-color-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .faculty-modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #6b7280;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .faculty-modal-close:hover {
+            background: #f3f4f6;
+            color: #374151;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .faculty-modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            max-height: 60vh;
+        }
+
+        .faculty-section {
+            margin-bottom: 20px;
+        }
+
+        .faculty-section h3 {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #6b7280;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .faculty-schedule-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .faculty-schedule-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            background: #f9fafb;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .faculty-schedule-item .course-code {
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .faculty-schedule-item .course-details {
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .faculty-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .faculty-stat {
+            background: #f9fafb;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .faculty-stat .value {
+            font-size: 20px;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .faculty-stat .label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        .faculty-pref-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .faculty-pref-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #e0f2fe;
+            color: #0369a1;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .faculty-modal-section {
+            margin-bottom: 20px;
+        }
+
+        .faculty-modal-section h4 {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #6b7280;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .faculty-course-item {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 10px 12px;
+            background: #f9fafb;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .faculty-course-item .course-code {
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .faculty-course-item .course-title {
+            color: #374151;
+        }
+
+        .faculty-course-item .course-details {
+            color: #6b7280;
+            font-size: 13px;
+            width: 100%;
+        }
+
+        .faculty-modal-stats .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: #f9fafb;
+            border-radius: 6px;
+            margin-bottom: 6px;
+        }
+
+        .faculty-modal-stats .stat-item .stat-label {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .faculty-modal-stats .stat-item .stat-value {
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .faculty-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .pref-tag {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #f3f4f6;
+            color: #374151;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .pref-link {
+            display: inline-block;
+            color: #667eea;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .pref-link:hover {
+            text-decoration: underline;
+        }
+
+        .faculty-legend-item {
+            cursor: pointer;
+            transition: background 0.2s;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin: -4px -8px;
+        }
+
+        .faculty-legend-item:hover {
+            background: #f3f4f6;
         }
 
         .stats-bar {
@@ -248,17 +604,29 @@
             font-weight: bold;
         }
 
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 1000px) {
+            .analysis-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         .conflicts-panel {
             background: #f8f9fa;
             border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 30px;
+            padding: 20px;
         }
 
         .conflicts-panel h2 {
             color: #495057;
-            margin-bottom: 20px;
-            font-size: 1.5em;
+            margin-bottom: 15px;
+            font-size: 1.2em;
         }
 
         .conflict-item {
@@ -552,11 +920,24 @@
             color: white;
         }
 
+        .special-sections-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .special-sections-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         .online-section {
             background: linear-gradient(135deg, #74c0fc 0%, #4dabf7 100%);
             padding: 20px;
             border-radius: 10px;
-            margin-top: 20px;
+            margin-top: 0;
             color: white;
         }
 
@@ -567,8 +948,8 @@
 
         .online-courses {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
         }
 
         .online-course-block {
@@ -583,7 +964,7 @@
             background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
             padding: 20px;
             border-radius: 10px;
-            margin-top: 20px;
+            margin-top: 0;
             color: white;
         }
 
@@ -594,8 +975,8 @@
 
         .arranged-courses {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
         }
 
         .arranged-course-block {
@@ -782,14 +1163,13 @@
         .conflict-solver-panel {
             background: #f8f9fa;
             border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 30px;
+            padding: 20px;
         }
 
         .conflict-solver-panel h2 {
             color: #495057;
             margin-bottom: 10px;
-            font-size: 1.5em;
+            font-size: 1.2em;
         }
 
         .conflict-solution-card {
@@ -1426,7 +1806,7 @@
 
     <div class="container">
         <header>
-            <h1>EWU Design Schedule Conflict Analyzer</h1>
+            <h1>Design Scheduler</h1>
             <p class="subtitle">Visual Course Scheduling & Conflict Detection Tool</p>
         </header>
 
@@ -1490,14 +1870,47 @@
                 </select>
             </div>
 
-            <button onclick="highlightConflicts()">Highlight Conflicts</button>
-            <button onclick="exportReport()">Export Report</button>
-            <button onclick="window.location.href='pages/schedule-editor.html'" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">Edit Schedule</button>
-            <button onclick="window.location.href='enrollment-dashboard.html'" style="background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);">Enrollment Trends</button>
-            <button onclick="window.location.href='pages/workload-dashboard.html'" style="background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);">Faculty Workload</button>
-            <button onclick="window.location.href='pages/applied-learning-dashboard.html'" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Applied Learning</button>
-            <button onclick="window.location.href='pages/demand-planning-dashboard.html'" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">Demand Planning</button>
-            <button onclick="window.location.href='pages/schedule-builder.html'" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">Create Schedule</button>
+        </div>
+
+        <!-- Dashboard Navigation -->
+        <div class="dashboard-nav">
+            <div class="nav-accordion-toggle" onclick="toggleNavAccordion()">
+                <span>📌 Dashboards & Tools</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="nav-accordion-content" id="navAccordionContent">
+                <!-- Analytics Row -->
+                <div class="nav-row">
+                    <span class="nav-row-header">Analytics</span>
+                    <div class="nav-row-items">
+                        <a href="enrollment-dashboard.html" class="nav-link"><span class="icon">📊</span>Enrollment</a>
+                        <a href="pages/workload-dashboard.html" class="nav-link"><span class="icon">👥</span>Workload</a>
+                        <a href="pages/capacity-planning-dashboard.html" class="nav-link"><span class="icon">📈</span>Capacity</a>
+                        <a href="pages/applied-learning-dashboard.html" class="nav-link"><span class="icon">🎓</span>Applied Learning</a>
+                    </div>
+                </div>
+                <!-- Planning Row -->
+                <div class="nav-row">
+                    <span class="nav-row-header">Planning</span>
+                    <div class="nav-row-items">
+                        <a href="pages/schedule-builder.html" class="nav-link"><span class="icon">📅</span>Builder</a>
+                        <a href="pages/course-management.html" class="nav-link"><span class="icon">📚</span>Courses</a>
+                        <a href="pages/workload-dashboard.html" class="nav-link"><span class="icon">👥</span>Workload</a>
+                        <a href="pages/constraints-dashboard.html" class="nav-link"><span class="icon">🔒</span>Constraints</a>
+                        <a href="pages/demand-planning-dashboard.html" class="nav-link"><span class="icon">⚡</span>Demand</a>
+                    </div>
+                </div>
+                <!-- Tools Row -->
+                <div class="nav-row">
+                    <span class="nav-row-header">Tools</span>
+                    <div class="nav-row-items">
+                        <button onclick="highlightConflicts()" class="nav-link"><span class="icon">🔍</span>Conflicts</button>
+                        <button onclick="exportReport()" class="nav-link"><span class="icon">📋</span>Export</button>
+                        <a href="pages/release-time-dashboard.html" class="nav-link"><span class="icon">🔧</span>Release Time</a>
+                        <a href="pages/recommendations-dashboard.html" class="nav-link"><span class="icon">💡</span>Recommendations</a>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div style="background: #e7f5ff; border-left: 4px solid #339af0; padding: 12px 16px; margin: 20px; border-radius: 8px; font-size: 0.9em;">
@@ -1541,55 +1954,55 @@
             </div>
 
             <div class="faculty-legend">
-                <div class="faculty-legend-item">
+                <div class="faculty-legend-item" onclick="showFacultyModal('T.Masingale')">
                     <div class="faculty-color-bar" style="background: #667eea;"></div>
                     <span>T.Masingale</span>
                 </div>
-                <div class="faculty-legend-item">
+                <div class="faculty-legend-item" onclick="showFacultyModal('S.Durr')">
                     <div class="faculty-color-bar" style="background: #e67e22;"></div>
                     <span>S.Durr</span>
                 </div>
-                <div class="faculty-legend-item">
+                <div class="faculty-legend-item" onclick="showFacultyModal('C.Manikoth')">
                     <div class="faculty-color-bar" style="background: #27ae60;"></div>
                     <span>C.Manikoth</span>
                 </div>
-                <div class="faculty-legend-item">
+                <div class="faculty-legend-item" onclick="showFacultyModal('S.Mills')">
                     <div class="faculty-color-bar" style="background: #9b59b6;"></div>
                     <span>S.Mills</span>
                 </div>
-                <div class="faculty-legend-item">
+                <div class="faculty-legend-item" onclick="showFacultyModal('M.Lybbert')">
                     <div class="faculty-color-bar" style="background: #e74c3c;"></div>
                     <span>M.Lybbert</span>
                 </div>
-                <div class="faculty-legend-item">
+                <div class="faculty-legend-item" onclick="showFacultyModal('G.Hustrulid')">
                     <div class="faculty-color-bar" style="background: #f39c12;"></div>
                     <span>G.Hustrulid</span>
                 </div>
-                <div class="faculty-legend-item">
+                <div class="faculty-legend-item" onclick="showFacultyModal('A.Sopu')">
                     <div class="faculty-color-bar" style="background: #3498db;"></div>
                     <span>A.Sopu</span>
                 </div>
-                <div class="faculty-legend-item">
+                <div class="faculty-legend-item" onclick="showFacultyModal('E.Norris')">
                     <div class="faculty-color-bar" style="background: #1abc9c;"></div>
                     <span>E.Norris</span>
                 </div>
-                <div class="faculty-legend-item">
+                <div class="faculty-legend-item" onclick="showFacultyModal('J.Braukmann')">
                     <div class="faculty-color-bar" style="background: #34495e;"></div>
                     <span>J.Braukmann</span>
                 </div>
-                <div class="faculty-legend-item">
+                <div class="faculty-legend-item" onclick="showFacultyModal('S.Allison')">
                     <div class="faculty-color-bar" style="background: #d35400;"></div>
                     <span>S.Allison</span>
                 </div>
-                <div class="faculty-legend-item">
+                <div class="faculty-legend-item" onclick="showFacultyModal('Online')">
                     <div class="faculty-color-bar" style="background: #7f8c8d;"></div>
                     <span>Barton/Pettigrew (Online)</span>
                 </div>
-                <div class="faculty-legend-item">
+                <div class="faculty-legend-item" onclick="showFacultyModal('Adjunct')">
                     <div class="faculty-color-bar" style="background: #95a5a6;"></div>
                     <span>Adjunct</span>
                 </div>
-                <div class="faculty-legend-item">
+                <div class="faculty-legend-item" onclick="showFacultyModal('TBD')">
                     <div class="faculty-color-bar" style="background: #bdc3c7;"></div>
                     <span>TBD</span>
                 </div>
@@ -1618,24 +2031,28 @@
             </div>
             <div class="schedule-grid" id="scheduleGrid"></div>
 
-            <div id="onlineSection"></div>
-            <div id="arrangedSection"></div>
-
-            <div class="conflicts-panel">
-                <h2>Detected Schedule Conflicts</h2>
-                <div id="conflictsList"></div>
+            <div class="special-sections-grid">
+                <div id="onlineSection"></div>
+                <div id="arrangedSection"></div>
             </div>
 
-            <div class="conflict-solver-panel">
-                <h2>🔧 Automated Conflict Resolution Solver</h2>
-                <p style="color: #666; font-size: 0.9em; margin-bottom: 20px;">
-                    Analyzes schedule matrix to find solutions that won't create new conflicts
-                </p>
-                <div id="conflictSolverList"></div>
+            <div class="analysis-grid">
+                <div class="conflicts-panel">
+                    <h2>Detected Conflicts</h2>
+                    <div id="conflictsList" style="max-height: 400px; overflow-y: auto;"></div>
+                </div>
+
+                <div class="conflict-solver-panel">
+                    <h2>🔧 Resolution Options</h2>
+                    <p style="color: #666; font-size: 0.85em; margin-bottom: 15px;">
+                        Solutions that won't create new conflicts
+                    </p>
+                    <div id="conflictSolverList" style="max-height: 350px; overflow-y: auto;"></div>
+                </div>
             </div>
 
-            <div class="recommendations">
-                <h2>Optimization Recommendations</h2>
+            <div class="recommendations" style="padding: 20px;">
+                <h2 style="font-size: 1.2em;">Optimization Recommendations</h2>
                 <div id="recommendationsList"></div>
             </div>
         </div>
@@ -1663,6 +2080,83 @@
 
         function getFacultyClass(instructor) {
             return facultyColors[instructor]?.class || 'faculty-tbd';
+        }
+
+        // Navigation accordion toggle
+        function toggleNavAccordion() {
+            const toggle = document.querySelector('.nav-accordion-toggle');
+            const content = document.getElementById('navAccordionContent');
+            toggle.classList.toggle('collapsed');
+            content.classList.toggle('collapsed');
+        }
+
+        // Faculty modal functions
+        function showFacultyModal(facultyName) {
+            const overlay = document.getElementById('facultyModalOverlay');
+            const nameEl = document.getElementById('facultyModalName');
+            const scheduleEl = document.getElementById('facultyModalSchedule');
+            const statsEl = document.getElementById('facultyModalStats');
+            const prefsEl = document.getElementById('facultyModalPreferences');
+
+            // Set faculty name with color
+            const facultyInfo = facultyColors[facultyName] || { color: '#6b7280', name: facultyName };
+            nameEl.textContent = facultyInfo.name || facultyName;
+            nameEl.style.color = facultyInfo.color;
+
+            // Get current schedule from scheduleData
+            const facultyCourses = [];
+            if (typeof scheduleData !== 'undefined') {
+                const quarters = ['fall', 'winter', 'spring'];
+                quarters.forEach(quarter => {
+                    if (scheduleData[quarter]) {
+                        scheduleData[quarter].forEach(course => {
+                            if (course.instructor && (course.instructor.includes(facultyName) ||
+                                (facultyInfo.name && course.instructor.includes(facultyInfo.name)))) {
+                                facultyCourses.push({
+                                    ...course,
+                                    quarter: quarter.charAt(0).toUpperCase() + quarter.slice(1)
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+
+            // Populate schedule
+            if (facultyCourses.length > 0) {
+                scheduleEl.innerHTML = facultyCourses.map(course => `
+                    <div class="faculty-course-item">
+                        <span class="course-code">${course.code}</span>
+                        <span class="course-title">${course.title || ''}</span>
+                        <span class="course-details">${course.quarter} | ${course.days || ''} ${course.time || ''}</span>
+                    </div>
+                `).join('');
+            } else {
+                scheduleEl.innerHTML = '<p style="color: #6b7280; font-style: italic;">No scheduled courses found</p>';
+            }
+
+            // Calculate workload stats
+            const totalCredits = facultyCourses.reduce((sum, c) => sum + (parseInt(c.credits) || 5), 0);
+            const sectionCount = facultyCourses.length;
+            statsEl.innerHTML = `
+                <div class="stat-item"><span class="stat-label">Total Sections:</span> <span class="stat-value">${sectionCount}</span></div>
+                <div class="stat-item"><span class="stat-label">Total Credits:</span> <span class="stat-value">${totalCredits}</span></div>
+            `;
+
+            // Preferences placeholder - can be loaded from scheduling-rules.json
+            prefsEl.innerHTML = `
+                <div class="faculty-tags">
+                    <span class="pref-tag">See Constraints Dashboard for details</span>
+                </div>
+                <a href="pages/constraints-dashboard.html" class="pref-link">Manage Preferences →</a>
+            `;
+
+            overlay.classList.add('visible');
+        }
+
+        function closeFacultyModal(event) {
+            if (event && event.target !== document.getElementById('facultyModalOverlay')) return;
+            document.getElementById('facultyModalOverlay').classList.remove('visible');
         }
 
         // Minor data structure
@@ -2021,6 +2515,79 @@
             ]
         };
 
+        /**
+         * Check for imported schedule data from schedule builder
+         */
+        function checkForImportedSchedule() {
+            // Check URL params for import flag
+            const urlParams = new URLSearchParams(window.location.search);
+            if (!urlParams.get('import')) return;
+
+            const importedData = localStorage.getItem('importedScheduleData');
+            if (!importedData) {
+                console.log('No imported schedule data found');
+                return;
+            }
+
+            try {
+                const parsed = JSON.parse(importedData);
+                if (parsed.source !== 'schedule-builder') return;
+
+                console.log('Importing schedule from schedule builder:', parsed);
+
+                // Merge imported schedule data into scheduleData
+                ['fall', 'winter', 'spring'].forEach(quarter => {
+                    if (parsed.scheduleData[quarter]) {
+                        // Replace schedule data for this quarter
+                        scheduleData[quarter] = parsed.scheduleData[quarter];
+                    }
+                });
+
+                // Show import notification
+                showImportNotification(parsed.academicYear, parsed.generatedAt);
+
+                // Clear the import flag from URL without reloading
+                window.history.replaceState({}, document.title, window.location.pathname);
+
+                // Clear localStorage after import
+                localStorage.removeItem('importedScheduleData');
+
+            } catch (error) {
+                console.error('Error importing schedule:', error);
+            }
+        }
+
+        /**
+         * Show notification about imported schedule
+         */
+        function showImportNotification(year, generatedAt) {
+            const notification = document.createElement('div');
+            notification.className = 'import-notification';
+            notification.innerHTML = `
+                <div class="import-notification-content">
+                    <span class="import-icon">✓</span>
+                    <span>Schedule imported for ${year} (generated ${new Date(generatedAt).toLocaleString()})</span>
+                    <button onclick="this.parentElement.parentElement.remove()">×</button>
+                </div>
+            `;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #10b981;
+                color: white;
+                padding: 12px 16px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+            `;
+            document.body.appendChild(notification);
+
+            // Auto-remove after 5 seconds
+            setTimeout(() => notification.remove(), 5000);
+        }
+
         function renderSchedule(quarter) {
             const grid = document.getElementById('scheduleGrid');
             const data = scheduleData[quarter];
@@ -2312,6 +2879,7 @@
                 // Remove from displaced tray
                 removeFromDisplacedTray(draggedCourse.displacedIndex);
 
+                saveScheduleData(); // Persist changes
                 renderSchedule(quarter);
                 renderConflicts(quarter);
                 updateStats(quarter);
@@ -2408,7 +2976,8 @@
                         ScheduleManager.updateCourseAssignment('2025-26', quarter, course.courseId, updates);
                     }
 
-                    // Re-render the schedule
+                    // Save and re-render the schedule
+                    saveScheduleData(); // Persist changes
                     renderSchedule(quarter);
                     renderConflicts(quarter);
                     renderConflictSolver(quarter);
@@ -3785,6 +4354,7 @@
                             originalRoom: room
                         });
                         data[day][time].splice(courseIndex, 1);
+                        saveScheduleData(); // Persist changes
                         renderSchedule(document.getElementById('quarterSelect').value);
                         showToast(courseCode + ' moved to displaced tray');
                     }
@@ -3809,6 +4379,7 @@
                 const courseIndex = data[day][time].findIndex(c => c.code === courseCode && c.room === room);
                 if (courseIndex > -1) {
                     data[day][time].splice(courseIndex, 1);
+                    saveScheduleData(); // Persist changes
                     renderSchedule(quarter);
                     renderConflicts(quarter);
                     updateStats(quarter);
@@ -3883,10 +4454,46 @@
             });
 
             closeAddCourseModal();
+            saveScheduleData(); // Save to localStorage
             renderSchedule(quarter);
             renderConflicts(quarter);
             updateStats(quarter);
             showToast(courseCode + ' added to schedule');
+        }
+
+        // Schedule data persistence
+        function saveScheduleData() {
+            try {
+                localStorage.setItem('designSchedulerData', JSON.stringify(scheduleData));
+                console.log('Schedule data saved to localStorage');
+            } catch (e) {
+                console.warn('Could not save schedule data:', e);
+            }
+        }
+
+        function loadScheduleData() {
+            try {
+                const saved = localStorage.getItem('designSchedulerData');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    // Merge saved data into scheduleData
+                    for (const quarter of ['fall', 'winter', 'spring']) {
+                        if (parsed[quarter]) {
+                            scheduleData[quarter] = parsed[quarter];
+                        }
+                    }
+                    console.log('Schedule data loaded from localStorage');
+                    return true;
+                }
+            } catch (e) {
+                console.warn('Could not load schedule data:', e);
+            }
+            return false;
+        }
+
+        function clearScheduleData() {
+            localStorage.removeItem('designSchedulerData');
+            showToast('Schedule data cleared - refresh to reset');
         }
 
         // Initialize app - load data then render
@@ -3937,6 +4544,12 @@
         async function init() {
             await loadEnrollmentData();
             await loadFacultyData();
+
+            // Load saved schedule data from localStorage
+            loadScheduleData();
+
+            // Check for imported schedule from schedule builder
+            checkForImportedSchedule();
 
             // Initialize ScheduleManager for editing
             if (typeof ScheduleManager !== 'undefined') {
@@ -4228,6 +4841,36 @@
     <!-- Drop Indicator -->
     <div class="drop-indicator" id="dropIndicator">
         <span id="dropIndicatorText">Drop to move course</span>
+    </div>
+
+    <!-- Faculty Modal -->
+    <div class="faculty-modal-overlay" id="facultyModalOverlay" onclick="closeFacultyModal(event)">
+        <div class="faculty-modal" onclick="event.stopPropagation()">
+            <div class="faculty-modal-header">
+                <h3 id="facultyModalName">Faculty Name</h3>
+                <button class="faculty-modal-close" onclick="closeFacultyModal()">&times;</button>
+            </div>
+            <div class="faculty-modal-body">
+                <div class="faculty-modal-section">
+                    <h4>Current Schedule</h4>
+                    <div id="facultyModalSchedule">
+                        <!-- Schedule items will be populated by JavaScript -->
+                    </div>
+                </div>
+                <div class="faculty-modal-section">
+                    <h4>Workload Summary</h4>
+                    <div class="faculty-modal-stats" id="facultyModalStats">
+                        <!-- Stats will be populated by JavaScript -->
+                    </div>
+                </div>
+                <div class="faculty-modal-section">
+                    <h4>Preferences</h4>
+                    <div id="facultyModalPreferences">
+                        <!-- Preferences will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Toast Notification -->

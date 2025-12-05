@@ -1,0 +1,43 @@
+{
+  "name": "ewu-design-schedule-analyzer",
+  "version": "2.0.0",
+  "description": "EWU Design Department Schedule Analyzer - Faculty workload and enrollment analytics",
+  "main": "index.html",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "process-data": "node scripts/process-enrollment-data.js",
+    "calculate-workload": "node scripts/workload-calculator.js enrollment-data/processed",
+    "validate-data": "node scripts/validate-enrollment.js enrollment-data/processed/corrected-all-quarters.csv",
+    "serve": "python3 -m http.server 8080"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tmasingale/schedule.git"
+  },
+  "author": "Travis Masingale",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "roots": [
+      "<rootDir>/tests"
+    ],
+    "testMatch": [
+      "**/*.test.js"
+    ],
+    "collectCoverageFrom": [
+      "js/**/*.js",
+      "!js/config/**"
+    ],
+    "coverageDirectory": "coverage",
+    "verbose": true
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.86.2"
+  }
+}

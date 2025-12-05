@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EWU Design Enrollment Trends Dashboard</title>
+    <title>Enrollment Trends - Design Scheduler</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         * {
@@ -20,7 +20,7 @@
         }
 
         .container {
-            max-width: 1600px;
+            max-width: 1400px;
             margin: 0 auto;
             background: white;
             border-radius: 20px;
@@ -170,9 +170,15 @@
 
         .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
             margin-bottom: 30px;
+        }
+
+        @media (max-width: 1000px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .chart-container {
@@ -189,7 +195,11 @@
 
         .chart-wrapper {
             position: relative;
-            height: 300px;
+            height: 250px;
+        }
+
+        .chart-wrapper.tall {
+            height: 350px;
         }
 
         .full-width {
@@ -449,90 +459,75 @@
                     </p>
                 </div>
 
-                <div class="chart-container full-width">
-                    <h2>Top 10 Courses by Average Enrollment (2022-2025)</h2>
+                <div class="chart-container">
+                    <h2>Top 10 Courses by Avg Enrollment</h2>
                     <div class="chart-wrapper">
                         <canvas id="topCoursesChart"></canvas>
                     </div>
-                    <p style="color: #666; font-size: 0.9em; margin-top: 15px;">
-                        <strong>Note:</strong> Average students per section across all offerings Fall 2022 - Spring 2025.
-                    </p>
                 </div>
 
-                <div class="chart-container full-width">
-                    <h2>Winter Quarter Deep Dive - Completed Quarters Only</h2>
+                <div class="chart-container">
+                    <h2>Winter Quarter Deep Dive</h2>
                     <div class="chart-wrapper">
                         <canvas id="winterTrendChart"></canvas>
                     </div>
-                    <p style="color: #666; font-size: 0.9em; margin-top: 15px;">
-                        <strong>Note:</strong> Showing only completed winter quarters (2023-2025). Winter 2026 enrollment will be available after census date.
-                        Based on current trends, expect Winter 2026 enrollment to track similarly to Winter 2025 levels.
-                    </p>
                 </div>
 
-                <div class="chart-container full-width">
-                    <h2>Quarterly Course Participation - Unique Students</h2>
+                <div class="chart-container">
+                    <h2>Quarterly Participation</h2>
                     <div class="chart-wrapper">
                         <canvas id="programHeadcountChart"></canvas>
                     </div>
-                    <p style="color: #666; font-size: 0.9em; margin-top: 15px;">
-                        <strong>Note:</strong> This shows unique students enrolled in Design courses each quarter.
-                        Ranges from 66-97 students taking courses per quarter. Not all declared Design majors (124 students) take Design courses every quarter.
-                    </p>
                 </div>
 
-                <div class="chart-container full-width">
-                    <h2>Cumulative Seat Enrollments by Academic Year</h2>
+                <div class="chart-container">
+                    <h2>Cumulative Enrollments by AY</h2>
                     <div class="chart-wrapper">
                         <canvas id="cumulativeCreditsChart"></canvas>
                     </div>
-                    <p style="color: #666; font-size: 0.9em; margin-top: 15px;">
-                        <strong>Purpose:</strong> Track if current year is "on pace" with previous years.
-                        Shows cumulative total seat enrollments (sum of all students across all courses) through each quarter.
-                        Example: 2022-23 had 377 seats in Fall, 764 total after Winter, and 1,191 for the full year.
-                    </p>
                 </div>
 
                 <div class="chart-container full-width">
                     <h2>Faculty Capacity Planning</h2>
-                    <div class="chart-wrapper">
+                    <div class="chart-wrapper tall">
                         <canvas id="facultyWorkloadChart"></canvas>
                     </div>
-                    <div id="capacityPlanningInfo" style="background: #e7f5ff; border-left: 4px solid #339af0; padding: 12px 16px; margin-top: 16px; border-radius: 8px;">
-                        <strong>📊 Capacity Planning:</strong> This chart shows baseline teaching capacity for full-time faculty only.
-                        <strong>Adjunct capacity = 0</strong> for planning purposes - any adjunct teaching indicates over-capacity demand beyond full-time faculty baseline.
+                    <div id="capacityPlanningInfo" style="background: #e7f5ff; border-left: 4px solid #339af0; padding: 12px 16px; margin-top: 16px; border-radius: 8px; font-size: 0.85em;">
+                        <strong>📊 Capacity:</strong> Full-time faculty baseline. Adjunct capacity = 0 for planning.
                     </div>
                 </div>
             </div>
 
-            <div class="chart-container">
-                <h2>📊 Course Capacity Utilization</h2>
-                <p style="color: #666; font-size: 0.9em; margin-bottom: 10px;">
-                    Comparing enrollment to 24-seat standard room capacity.
-                    🔴 Over-capacity | 🟡 Near-capacity (90%+) | 🟢 Under-enrolled
-                </p>
-                <div class="capacity-grid" id="capacityGrid"></div>
+            <div class="dashboard-grid">
+                <div class="chart-container">
+                    <h2>📊 Capacity Utilization</h2>
+                    <p style="color: #666; font-size: 0.85em; margin-bottom: 10px;">
+                        🔴 Over | 🟡 Near (90%+) | 🟢 Under
+                    </p>
+                    <div class="capacity-grid" id="capacityGrid"></div>
+                </div>
+
+                <div class="chart-container">
+                    <h2>Course Data</h2>
+                    <div style="max-height: 400px; overflow-y: auto;">
+                        <table class="data-table" id="courseDataTable">
+                            <thead>
+                                <tr>
+                                    <th>Course</th>
+                                    <th>Avg</th>
+                                    <th>Peak</th>
+                                    <th>Trend</th>
+                                </tr>
+                            </thead>
+                            <tbody id="courseTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
-            <div class="chart-container">
-                <h2>Detailed Course Data</h2>
-                <table class="data-table" id="courseDataTable">
-                    <thead>
-                        <tr>
-                            <th>Course</th>
-                            <th>Average Enrollment</th>
-                            <th>Peak Enrollment</th>
-                            <th>Peak Quarter</th>
-                            <th>Trend</th>
-                        </tr>
-                    </thead>
-                    <tbody id="courseTableBody">
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="insights-panel">
-                <h2>💡 Key Insights & Recommendations</h2>
+            <div class="insights-panel" style="margin-top: 20px;">
+                <h2>💡 Key Insights</h2>
                 <div id="insightsList"></div>
             </div>
         </div>
@@ -1010,26 +1005,47 @@
 
             console.log('Course rows to render:', sortedCourses.length);
 
-            tbody.innerHTML = sortedCourses.map(([code, data]) => {
-                const trendClass = data.trend;
+            // Clear existing rows
+            while (tbody.firstChild) {
+                tbody.removeChild(tbody.firstChild);
+            }
+
+            // Build rows safely without innerHTML
+            sortedCourses.forEach(([code, data]) => {
                 const trendIcon = data.trend === 'declining' ? '📉' :
                                   data.trend === 'growing' ? '📈' :
                                   data.trend === 'new' ? '✨' : '➡️';
 
-                return `
-                    <tr>
-                        <td><strong>${code}</strong></td>
-                        <td>${data.average}</td>
-                        <td>${data.peak}</td>
-                        <td>${data.peakQuarter}</td>
-                        <td>
-                            <span class="trend-badge ${trendClass}">
-                                ${trendIcon} ${data.trend}
-                            </span>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
+                const row = document.createElement('tr');
+
+                const codeCell = document.createElement('td');
+                const codeStrong = document.createElement('strong');
+                codeStrong.textContent = code;
+                codeCell.appendChild(codeStrong);
+
+                const avgCell = document.createElement('td');
+                avgCell.textContent = data.average;
+
+                const peakCell = document.createElement('td');
+                peakCell.textContent = data.peak;
+
+                const quarterCell = document.createElement('td');
+                quarterCell.textContent = data.peakQuarter;
+
+                const trendCell = document.createElement('td');
+                const trendBadge = document.createElement('span');
+                trendBadge.className = 'trend-badge ' + data.trend;
+                trendBadge.textContent = trendIcon + ' ' + data.trend;
+                trendCell.appendChild(trendBadge);
+
+                row.appendChild(codeCell);
+                row.appendChild(avgCell);
+                row.appendChild(peakCell);
+                row.appendChild(quarterCell);
+                row.appendChild(trendCell);
+
+                tbody.appendChild(row);
+            });
         }
 
         // Store chart instance for destruction/recreation
@@ -1262,19 +1278,46 @@
                         const totalCapacity = capacityData.totalFullTimeCapacity || 0;
                         const totalDemand = capacityData.totalDemand || 0;
 
-                        let statusMessage = '';
-                        if (netAvailable < 0) {
-                            statusMessage = `<span style="color: #ff6b6b;">Program is <strong>${Math.abs(netAvailable).toFixed(1)} credits OVER baseline capacity</strong>.</span>`;
-                        } else {
-                            statusMessage = `<span style="color: #51cf66;">Net available capacity: <strong>${netAvailable.toFixed(1)} credits</strong></span>`;
+                        // Clear and rebuild info box safely
+                        while (infoBox.firstChild) {
+                            infoBox.removeChild(infoBox.firstChild);
                         }
 
-                        infoBox.innerHTML = `
-                            <strong>📊 Capacity Planning:</strong> This chart shows baseline teaching capacity for full-time faculty only.
-                            <strong>Adjunct capacity = 0</strong> for planning purposes - any adjunct teaching indicates over-capacity demand beyond full-time faculty baseline.
-                            <br><br>
-                            Total baseline capacity for ${academicYear}: <strong>${totalCapacity} credits/quarter</strong>. ${statusMessage}
-                        `;
+                        const intro = document.createElement('strong');
+                        intro.textContent = '📊 Capacity Planning:';
+                        infoBox.appendChild(intro);
+                        infoBox.appendChild(document.createTextNode(' This chart shows baseline teaching capacity for full-time faculty only. '));
+
+                        const adjunctNote = document.createElement('strong');
+                        adjunctNote.textContent = 'Adjunct capacity = 0';
+                        infoBox.appendChild(adjunctNote);
+                        infoBox.appendChild(document.createTextNode(' for planning purposes - any adjunct teaching indicates over-capacity demand beyond full-time faculty baseline.'));
+
+                        infoBox.appendChild(document.createElement('br'));
+                        infoBox.appendChild(document.createElement('br'));
+
+                        infoBox.appendChild(document.createTextNode('Total baseline capacity for ' + academicYear + ': '));
+                        const capacityStrong = document.createElement('strong');
+                        capacityStrong.textContent = totalCapacity + ' credits/quarter';
+                        infoBox.appendChild(capacityStrong);
+                        infoBox.appendChild(document.createTextNode('. '));
+
+                        const statusSpan = document.createElement('span');
+                        if (netAvailable < 0) {
+                            statusSpan.style.color = '#ff6b6b';
+                            statusSpan.appendChild(document.createTextNode('Program is '));
+                            const overStrong = document.createElement('strong');
+                            overStrong.textContent = Math.abs(netAvailable).toFixed(1) + ' credits OVER baseline capacity';
+                            statusSpan.appendChild(overStrong);
+                            statusSpan.appendChild(document.createTextNode('.'));
+                        } else {
+                            statusSpan.style.color = '#51cf66';
+                            statusSpan.appendChild(document.createTextNode('Net available capacity: '));
+                            const availStrong = document.createElement('strong');
+                            availStrong.textContent = netAvailable.toFixed(1) + ' credits';
+                            statusSpan.appendChild(availStrong);
+                        }
+                        infoBox.appendChild(statusSpan);
                     }
                 }
             } else {
@@ -1380,18 +1423,31 @@
 
             console.log('Capacity cards to render:', courses.length);
 
-            grid.innerHTML = courses.map(course => {
+            // Clear and rebuild grid safely
+            while (grid.firstChild) {
+                grid.removeChild(grid.firstChild);
+            }
+
+            courses.forEach(course => {
                 const icon = course.status === 'over' ? '🔴' : course.status === 'near' ? '🟡' : '🟢';
-                return `
-                    <div class="capacity-card ${course.status}">
-                        <div class="capacity-title">${icon} ${course.code}</div>
-                        <div class="capacity-details">
-                            ${course.average} students / ${capacity} capacity<br>
-                            ${Math.round(course.utilization)}% utilized
-                        </div>
-                    </div>
-                `;
-            }).join('');
+
+                const card = document.createElement('div');
+                card.className = 'capacity-card ' + course.status;
+
+                const title = document.createElement('div');
+                title.className = 'capacity-title';
+                title.textContent = icon + ' ' + course.code;
+
+                const details = document.createElement('div');
+                details.className = 'capacity-details';
+                details.textContent = course.average + ' students / ' + capacity + ' capacity';
+                details.appendChild(document.createElement('br'));
+                details.appendChild(document.createTextNode(Math.round(course.utilization) + '% utilized'));
+
+                card.appendChild(title);
+                card.appendChild(details);
+                grid.appendChild(card);
+            });
         }
 
         function renderInsights() {
@@ -1420,12 +1476,25 @@
                 }
             ];
 
-            insightsList.innerHTML = insights.map(insight => `
-                <div class="insight-item">
-                    <h3>${insight.title}</h3>
-                    <p>${insight.description}</p>
-                </div>
-            `).join('');
+            // Clear and rebuild insights list safely
+            while (insightsList.firstChild) {
+                insightsList.removeChild(insightsList.firstChild);
+            }
+
+            insights.forEach(insight => {
+                const item = document.createElement('div');
+                item.className = 'insight-item';
+
+                const titleEl = document.createElement('h3');
+                titleEl.textContent = insight.title;
+
+                const descEl = document.createElement('p');
+                descEl.textContent = insight.description;
+
+                item.appendChild(titleEl);
+                item.appendChild(descEl);
+                insightsList.appendChild(item);
+            });
         }
 
         function generateReport() {

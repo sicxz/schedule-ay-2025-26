@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Faculty Workload Dashboard - EWU Design</title>
+    <title>Faculty Workload - Design Scheduler</title>
 
     <!-- External Stylesheets -->
     <link rel="stylesheet" href="../css/shared.css">
@@ -13,10 +13,207 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
     <!-- Utility Scripts -->
+    <script src="../js/config/constants.js"></script>
     <script src="../js/data-loader.js"></script>
     <script src="../js/year-filter.js"></script>
     <script src="../js/faculty-utils.js"></script>
     <script src="../js/chart-utils.js"></script>
+    <script src="../js/release-time-manager.js"></script>
+    <script src="../js/schedule-manager.js"></script>
+
+    <style>
+        /* Inline Edit Styles */
+        .btn-icon {
+            width: 28px;
+            height: 28px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: background-color 0.2s;
+            margin-right: 4px;
+        }
+
+        .btn-edit {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .btn-edit:hover {
+            background: #bbdefb;
+        }
+
+        .btn-add-course {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .btn-add-course:hover {
+            background: #c8e6c9;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #6b7280;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.2s;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .btn-modal-primary {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-modal-secondary {
+            padding: 12px 24px;
+            background: #f3f4f6;
+            color: #374151;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        .course-list-edit {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 8px;
+            margin-bottom: 12px;
+        }
+
+        .course-edit-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            margin-bottom: 6px;
+        }
+
+        .course-edit-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .course-edit-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .course-edit-code {
+            font-weight: 600;
+        }
+
+        .course-edit-credits {
+            color: #6b7280;
+            font-size: 0.9em;
+        }
+
+        .btn-remove-course {
+            background: #ffebee;
+            color: #c62828;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .btn-remove-course:hover {
+            background: #ffcdd2;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -53,10 +250,12 @@
                 </select>
             </div>
 
-            <button onclick="window.location.href='../enrollment-dashboard.html'">📊 Enrollment Trends</button>
-            <button onclick="window.location.href='applied-learning-dashboard.html'">📚 Applied Learning</button>
-            <button onclick="window.location.href='recommendations-dashboard.html'">💡 Recommendations</button>
-            <button onclick="window.location.href='capacity-planning-dashboard.html'">📈 Capacity</button>
+            <button onclick="window.location.href='schedule-editor.html'">Edit Schedule</button>
+            <button onclick="window.location.href='../enrollment-dashboard.html'">Enrollment Trends</button>
+            <button onclick="window.location.href='applied-learning-dashboard.html'">Applied Learning</button>
+            <button onclick="window.location.href='release-time-dashboard.html'">Release Time</button>
+            <button onclick="window.location.href='recommendations-dashboard.html'">Recommendations</button>
+            <button onclick="window.location.href='capacity-planning-dashboard.html'">Capacity</button>
         </div>
 
         <div class="content">
@@ -131,6 +330,7 @@
                                 <th>Max Capacity</th>
                                 <th>Utilization</th>
                                 <th>Status</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -152,10 +352,35 @@
                                 <th>Max Capacity</th>
                                 <th>Utilization</th>
                                 <th>Sections</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
                     </table>
+                </div>
+
+                <!-- Release Time Section -->
+                <div class="section-header">
+                    <h2>📋 Release Time Impact</h2>
+                    <a href="release-time-dashboard.html" class="view-details-link">Manage Release Time →</a>
+                </div>
+
+                <div class="stats-bar" id="releaseTimeStats">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Release Credits</div>
+                        <div class="stat-value" id="totalReleaseCredits">0</div>
+                        <div class="stat-subtitle" id="releaseCreditsSubtitle">Faculty capacity reduction</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Faculty with Release</div>
+                        <div class="stat-value" id="facultyWithRelease">0</div>
+                        <div class="stat-subtitle" id="releaseBreakdown">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Capacity Impact</div>
+                        <div class="stat-value" id="capacityImpact">0%</div>
+                        <div class="stat-subtitle">Of full-time capacity</div>
+                    </div>
                 </div>
 
                 <!-- Applied Learning Section -->
@@ -181,6 +406,53 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Faculty Edit Modal -->
+    <div class="modal-overlay" id="facultyEditModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="editModalTitle">Edit Faculty Courses</h2>
+                <button class="modal-close" onclick="closeFacultyEditModal()">&times;</button>
+            </div>
+
+            <form id="facultyEditForm" onsubmit="handleFacultyEditSubmit(event)">
+                <input type="hidden" id="editFacultyName">
+
+                <div class="form-group">
+                    <label>Current Courses</label>
+                    <div class="course-list-edit" id="currentCoursesList">
+                        <!-- Course items will be rendered here -->
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="addCourseSelect">Add Course</label>
+                    <select id="addCourseSelect">
+                        <option value="">Select a course to add...</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="newCourseDetails" style="display: none;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <div>
+                            <label for="newCourseSection">Section</label>
+                            <input type="text" id="newCourseSection" placeholder="001" maxlength="3">
+                        </div>
+                        <div>
+                            <label for="newCourseCredits">Credits</label>
+                            <input type="number" id="newCourseCredits" min="1" max="15" step="1">
+                        </div>
+                    </div>
+                    <button type="button" class="btn-modal-primary" style="margin-top: 12px; width: 100%;" onclick="addCourseToFaculty()">Add Course</button>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-modal-secondary" onclick="closeFacultyEditModal()">Cancel</button>
+                    <button type="button" class="btn-modal-primary" onclick="openScheduleEditor()">Open Full Editor</button>
+                </div>
+            </form>
         </div>
     </div>
 
