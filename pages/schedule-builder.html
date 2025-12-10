@@ -244,11 +244,17 @@
             <button class="btn-primary" onclick="saveToDatabase()" id="saveToCloudBtn">
                 ☁️ Save to Cloud
             </button>
+            <button class="btn-ai" onclick="evaluateWithAI()">
+                ✨ Evaluate with AI
+            </button>
             <button class="btn-secondary" onclick="exportJSON()">
                 📥 Export JSON
             </button>
             <button class="btn-primary" onclick="exportToEditor()">
                 Open in Main Schedule →
+            </button>
+            <button class="btn-settings" onclick="openApiSettingsModal()" title="API Settings">
+                ⚙️
             </button>
         </div>
 
@@ -405,6 +411,88 @@
                 </form>
             </div>
         </div>
+
+        <!-- API Settings Modal -->
+        <div class="modal-overlay" id="apiSettingsModal">
+            <div class="modal" style="max-width: 500px;">
+                <div class="modal-header">
+                    <h2 class="modal-title">Claude API Settings</h2>
+                    <button class="modal-close" onclick="closeApiSettingsModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="apiKeyInput">API Key</label>
+                        <div class="api-key-input-group">
+                            <input type="password" id="apiKeyInput" placeholder="sk-ant-api..." autocomplete="off">
+                            <button type="button" class="btn-small" onclick="toggleApiKeyVisibility()">👁️</button>
+                        </div>
+                        <p class="helper-text">Get your API key from <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a></p>
+                    </div>
+                    <div id="apiKeyStatus" class="api-key-status"></div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-danger" onclick="clearApiKey()">Clear Key</button>
+                    <button type="button" class="btn-secondary" onclick="testApiConnection()">Test Connection</button>
+                    <button type="button" class="btn-primary" onclick="saveApiKey()">Save</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Analysis Results Panel -->
+        <div class="ai-results-panel" id="aiResultsPanel">
+            <div class="ai-results-header">
+                <h3>AI Schedule Analysis</h3>
+                <button class="panel-close" onclick="closeAiResultsPanel()">&times;</button>
+            </div>
+            <div class="ai-results-loading" id="aiResultsLoading" style="display: none;">
+                <div class="loading-spinner"></div>
+                <p>Analyzing schedule with Claude AI...</p>
+            </div>
+            <div class="ai-results-content" id="aiResultsContent">
+                <!-- Health Score -->
+                <div class="health-score-section" id="healthScoreSection">
+                    <div class="health-score-circle">
+                        <span class="health-score-value" id="healthScoreValue">--</span>
+                    </div>
+                    <p class="health-score-label">Schedule Health</p>
+                    <p class="health-score-assessment" id="healthScoreAssessment"></p>
+                </div>
+
+                <!-- Conflicts Section -->
+                <div class="ai-section" id="conflictsSection">
+                    <div class="ai-section-header">
+                        <span class="ai-section-icon">🔴</span>
+                        <h4>Conflicts</h4>
+                        <span class="ai-section-count" id="conflictsCount">0</span>
+                    </div>
+                    <div class="ai-section-items" id="conflictsList"></div>
+                </div>
+
+                <!-- Optimizations Section -->
+                <div class="ai-section" id="optimizationsSection">
+                    <div class="ai-section-header">
+                        <span class="ai-section-icon">🟡</span>
+                        <h4>Optimizations</h4>
+                        <span class="ai-section-count" id="optimizationsCount">0</span>
+                    </div>
+                    <div class="ai-section-items" id="optimizationsList"></div>
+                </div>
+
+                <!-- Workload Section -->
+                <div class="ai-section" id="workloadSection">
+                    <div class="ai-section-header">
+                        <span class="ai-section-icon">🟢</span>
+                        <h4>Workload</h4>
+                        <span class="ai-section-count" id="workloadCount">0</span>
+                    </div>
+                    <div class="ai-section-items" id="workloadList"></div>
+                </div>
+            </div>
+            <div class="ai-results-actions">
+                <button class="btn-secondary" onclick="closeAiResultsPanel()">Dismiss</button>
+                <button class="btn-primary" onclick="exportAiReport()">Export Report</button>
+            </div>
+        </div>
     </div>
 
     <!-- Scripts -->
@@ -412,6 +500,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/supabase-config.js"></script>
     <script src="../js/db-service.js"></script>
+    <!-- Claude AI Integration -->
+    <script src="../js/claude-service.js"></script>
+    <script src="../js/schedule-evaluator.js"></script>
     <!-- Application Scripts -->
     <script src="../js/constraints-engine.js"></script>
     <script src="../js/prerequisite-graph.js"></script>

@@ -10,12 +10,13 @@ let assignedCourses = {}; // { 'MW-10:00-12:00-206': [course1, course2], ... }
 let roomConstraints = null; // Loaded from room-constraints.json
 let caseByeCaseCourses = []; // Courses handled individually, not in grid
 
-// Room configuration - organized by campus (207 excluded from grid)
-const CATALYST_ROOMS = ['206', '209', '210', '212'];
+// Room configuration - organized by campus
+const CATALYST_ROOMS = ['206', '207', '209', '210', '212'];
 const CHENEY_ROOMS = ['CEB 102', 'CEB 104'];
 const ROOMS = [...CATALYST_ROOMS, ...CHENEY_ROOMS];
 const ROOM_NAMES = {
     '206': '206 UX Lab',
+    '207': '207 Project Room',
     '209': '209 Mac Lab',
     '210': '210 Mac Lab',
     '212': '212 Project Lab',
@@ -839,7 +840,7 @@ function getValidRooms(courseCode, quarter, slotUsage = {}) {
 
     // All other courses: Catalyst rooms except 212 (unless full)
     // 212 is restricted to specific courses only
-    return ['206', '209', '210', 'CEB 102', 'CEB 104'];
+    return ['206', '207', '209', '210', 'CEB 102', 'CEB 104'];
 }
 
 /**
@@ -2024,7 +2025,7 @@ function handleCourseSelection() {
         } else if (prefs.allowedCampus) {
             // Select first room on allowed campus
             const campusRooms = {
-                'catalyst': ['206', '209', '210', '212'],
+                'catalyst': ['206', '207', '209', '210', '212'],
                 'cheney': ['CEB 102', 'CEB 104']
             };
             const rooms = campusRooms[prefs.allowedCampus] || [];
@@ -2376,4 +2377,318 @@ async function handleSaveFacultyPreferences(e) {
         console.error('Error saving preferences:', error);
         showToast('Error saving preferences', 'error');
     }
+}
+
+// ============================================
+// CLAUDE AI INTEGRATION
+// ============================================
+
+let lastAiResults = null;
+
+/**
+ * Open API Settings Modal
+ */
+function openApiSettingsModal() {
+    const modal = document.getElementById('apiSettingsModal');
+    const input = document.getElementById('apiKeyInput');
+    const status = document.getElementById('apiKeyStatus');
+
+    // Show current key status
+    if (ClaudeService.hasApiKey()) {
+        const maskedKey = ClaudeService.maskApiKey(ClaudeService.getApiKey());
+        input.value = '';
+        input.placeholder = maskedKey;
+        status.innerHTML = '<span class="status-connected">API key configured</span>';
+    } else {
+        input.value = '';
+        input.placeholder = 'sk-ant-api...';
+        status.innerHTML = '<span class="status-disconnected">No API key configured</span>';
+    }
+
+    modal.classList.add('active');
+}
+
+/**
+ * Close API Settings Modal
+ */
+function closeApiSettingsModal() {
+    document.getElementById('apiSettingsModal').classList.remove('active');
+}
+
+/**
+ * Toggle API key visibility
+ */
+function toggleApiKeyVisibility() {
+    const input = document.getElementById('apiKeyInput');
+    input.type = input.type === 'password' ? 'text' : 'password';
+}
+
+/**
+ * Save API key
+ */
+function saveApiKey() {
+    const input = document.getElementById('apiKeyInput');
+    const key = input.value.trim();
+
+    if (!key && ClaudeService.hasApiKey()) {
+        // Keep existing key if no new one entered
+        showToast('API key unchanged');
+        closeApiSettingsModal();
+        return;
+    }
+
+    if (!key) {
+        showToast('Please enter an API key', 'error');
+        return;
+    }
+
+    if (!key.startsWith('sk-ant-')) {
+        showToast('Invalid API key format', 'error');
+        return;
+    }
+
+    try {
+        ClaudeService.setApiKey(key);
+        showToast('API key saved');
+        closeApiSettingsModal();
+    } catch (error) {
+        showToast('Error saving API key: ' + error.message, 'error');
+    }
+}
+
+/**
+ * Clear API key
+ */
+function clearApiKey() {
+    if (confirm('Are you sure you want to clear the API key?')) {
+        ClaudeService.clearApiKey();
+        document.getElementById('apiKeyInput').value = '';
+        document.getElementById('apiKeyInput').placeholder = 'sk-ant-api...';
+        document.getElementById('apiKeyStatus').innerHTML = '<span class="status-disconnected">No API key configured</span>';
+        showToast('API key cleared');
+    }
+}
+
+/**
+ * Test API connection
+ */
+async function testApiConnection() {
+    const status = document.getElementById('apiKeyStatus');
+
+    // Check if there's a new key in the input
+    const input = document.getElementById('apiKeyInput');
+    const newKey = input.value.trim();
+    if (newKey && newKey.startsWith('sk-ant-')) {
+        ClaudeService.setApiKey(newKey);
+    }
+
+    if (!ClaudeService.hasApiKey()) {
+        status.innerHTML = '<span class="status-error">No API key to test</span>';
+        return;
+    }
+
+    status.innerHTML = '<span class="status-testing">Testing connection...</span>';
+
+    try {
+        const result = await ClaudeService.testConnection();
+
+        if (result.success) {
+            status.innerHTML = '<span class="status-connected">Connection successful!</span>';
+        } else {
+            status.innerHTML = `<span class="status-error">Connection failed: ${result.error}</span>`;
+        }
+    } catch (error) {
+        status.innerHTML = `<span class="status-error">Error: ${error.message}</span>`;
+    }
+}
+
+/**
+ * Evaluate schedule with AI
+ */
+async function evaluateWithAI() {
+    if (!ClaudeService.hasApiKey()) {
+        openApiSettingsModal();
+        showToast('Please configure your Claude API key first', 'error');
+        return;
+    }
+
+    if (!currentSchedule || Object.keys(assignedCourses).length === 0) {
+        showToast('No schedule to evaluate. Load a schedule first.', 'error');
+        return;
+    }
+
+    // Show the results panel with loading state
+    const panel = document.getElementById('aiResultsPanel');
+    const loading = document.getElementById('aiResultsLoading');
+    const content = document.getElementById('aiResultsContent');
+
+    panel.classList.add('active');
+    loading.style.display = 'block';
+    content.style.display = 'none';
+
+    try {
+        // Load faculty data for analysis
+        let facultyData = {};
+        try {
+            const response = await fetch('../workload-data.json');
+            const data = await response.json();
+            facultyData = data.workloadByYear?.byYear?.['2025-26'] || {};
+        } catch (e) {
+            console.warn('Could not load faculty data:', e);
+        }
+
+        // Build and send prompt
+        const prompt = ScheduleEvaluator.buildPrompt(
+            allQuartersSchedule,
+            facultyData,
+            dbCourses,
+            { quarter: activeQuarter }
+        );
+
+        console.log('Sending to Claude API...');
+        const response = await ClaudeService.analyze(prompt, {
+            maxTokens: 4096,
+            temperature: 0.3
+        });
+
+        // Parse response
+        const parsed = ScheduleEvaluator.parseResponse(response);
+        const results = ScheduleEvaluator.formatResults(parsed);
+
+        // Store for export
+        lastAiResults = results;
+
+        // Display results
+        displayAiResults(results);
+
+        loading.style.display = 'none';
+        content.style.display = 'block';
+
+        showToast('Analysis complete');
+
+    } catch (error) {
+        console.error('AI evaluation error:', error);
+        loading.style.display = 'none';
+        content.style.display = 'block';
+        content.innerHTML = `
+            <div class="ai-error">
+                <p><strong>Analysis Failed</strong></p>
+                <p>${error.message}</p>
+                <p class="helper-text">Check your API key and try again.</p>
+            </div>
+        `;
+        showToast('AI analysis failed: ' + error.message, 'error');
+    }
+}
+
+/**
+ * Display AI analysis results
+ */
+function displayAiResults(results) {
+    if (results.error) {
+        document.getElementById('aiResultsContent').innerHTML = `
+            <div class="ai-error">
+                <p><strong>Could not parse results</strong></p>
+                <p>${results.message}</p>
+                ${results.rawText ? `<pre>${results.rawText.substring(0, 500)}...</pre>` : ''}
+            </div>
+        `;
+        return;
+    }
+
+    // Health Score
+    const scoreValue = document.getElementById('healthScoreValue');
+    const scoreAssessment = document.getElementById('healthScoreAssessment');
+    scoreValue.textContent = results.healthScore || '--';
+    scoreAssessment.textContent = results.overallAssessment || '';
+
+    // Color the score circle based on value
+    const scoreCircle = document.querySelector('.health-score-circle');
+    if (results.healthScore >= 80) {
+        scoreCircle.className = 'health-score-circle score-good';
+    } else if (results.healthScore >= 60) {
+        scoreCircle.className = 'health-score-circle score-medium';
+    } else {
+        scoreCircle.className = 'health-score-circle score-poor';
+    }
+
+    // Render each section
+    results.sections.forEach(section => {
+        const countEl = document.getElementById(`${section.id}Count`);
+        const listEl = document.getElementById(`${section.id}List`);
+
+        if (countEl) countEl.textContent = section.count;
+
+        if (listEl) {
+            if (section.items.length === 0) {
+                listEl.innerHTML = '<p class="no-items">No issues found</p>';
+            } else {
+                listEl.innerHTML = section.items.map(item => {
+                    const severityClass = item.severity
+                        ? ScheduleEvaluator.getSeverityClass(item.severity)
+                        : ScheduleEvaluator.getPriorityClass(item.priority);
+
+                    return `
+                        <div class="ai-item ${severityClass}">
+                            <div class="ai-item-header">
+                                <span class="ai-item-type">${item.type || ''}</span>
+                                <span class="ai-item-title">${item.title}</span>
+                            </div>
+                            <p class="ai-item-description">${item.description}</p>
+                            ${item.suggestion ? `
+                                <div class="ai-item-suggestion">
+                                    <strong>Suggestion:</strong> ${item.suggestion.action}
+                                    ${item.suggestion.details ? `<br><span class="suggestion-details">${item.suggestion.details}</span>` : ''}
+                                </div>
+                            ` : ''}
+                            ${item.faculty ? `
+                                <div class="ai-item-faculty">
+                                    ${item.faculty}: ${item.currentCredits}cr (target: ${item.targetCredits}cr) - ${item.status}
+                                    ${item.recommendation ? `<br><em>${item.recommendation}</em>` : ''}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+    });
+}
+
+/**
+ * Close AI Results Panel
+ */
+function closeAiResultsPanel() {
+    document.getElementById('aiResultsPanel').classList.remove('active');
+}
+
+/**
+ * Export AI Report
+ */
+function exportAiReport() {
+    if (!lastAiResults) {
+        showToast('No results to export', 'error');
+        return;
+    }
+
+    const report = {
+        generatedAt: new Date().toISOString(),
+        academicYear: currentSchedule?.year,
+        quarter: activeQuarter,
+        healthScore: lastAiResults.healthScore,
+        overallAssessment: lastAiResults.overallAssessment,
+        sections: lastAiResults.sections
+    };
+
+    const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `schedule-analysis-${activeQuarter.toLowerCase()}-${currentSchedule?.year || 'draft'}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    showToast('Report exported');
 }

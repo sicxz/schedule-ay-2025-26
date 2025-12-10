@@ -1342,6 +1342,114 @@
         .btn-secondary:hover {
             background: #e5e7eb;
         }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+            margin-left: auto;
+        }
+        .btn-save {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .btn-save:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+        .btn-evaluate {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .btn-evaluate:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+        .btn-ai {
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .btn-ai:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+        .btn-settings {
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+        .btn-settings:hover {
+            background: #e5e7eb;
+        }
+
+        /* Toggle Switch for Constraints */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cbd5e1;
+            transition: 0.3s;
+            border-radius: 24px;
+        }
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: #10b981;
+        }
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+
         .course-details-content {
             padding: 20px 24px;
         }
@@ -1758,10 +1866,19 @@
         }
     </style>
 
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+
     <!-- Schedule Manager Scripts -->
     <script src="js/config/constants.js"></script>
     <script src="js/schedule-manager.js"></script>
     <script src="js/data-loader.js"></script>
+
+    <!-- Constraints & Conflict Engine -->
+    <script src="js/constraints-service.js"></script>
+    <script src="js/conflict-engine.js"></script>
+    <script src="js/graduation-optimizer.js"></script>
 </head>
 <body>
     <!-- Displaced Course Tray Sidebar -->
@@ -1868,6 +1985,25 @@
                     <option value="motion">Motion Design</option>
                     <option value="photography">Photography</option>
                 </select>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="control-group action-buttons">
+                <button class="btn-save" onclick="saveScheduleChanges()">
+                    💾 Save Changes
+                </button>
+                <button class="btn-evaluate" onclick="runConflictDetection()">
+                    🔍 Detect Conflicts
+                </button>
+                <button class="btn-ai" onclick="evaluateScheduleWithAI()">
+                    ✨ AI Analysis
+                </button>
+                <button class="btn-settings" onclick="openConstraintsModal()" title="Scheduling Rules">
+                    📋 Rules
+                </button>
+                <button class="btn-settings" onclick="openApiSettingsModal()" title="API Settings">
+                    ⚙️
+                </button>
             </div>
 
         </div>
@@ -3693,8 +3829,8 @@
 
             const criticalConflicts = conflicts.filter(c => c.severity === 'critical').length;
 
-            // Calculate room utilization (excluding room 207 - Media Lab flex space)
-            const rooms = ['206', '209', '210', '212', 'CEB 102', 'CEB 104']; // Excluding 207
+            // Calculate room utilization (all scheduling rooms)
+            const rooms = ['206', '207', '209', '210', '212', 'CEB 102', 'CEB 104'];
             const times = ['10:00-12:00', '13:00-15:00', '16:00-18:00'];
             const days = ['MW', 'TR'];
 
@@ -4399,11 +4535,88 @@
         // ADD COURSE FUNCTIONALITY
         // ============================================
 
-        function openAddCourseModal() {
+        async function openAddCourseModal() {
             document.getElementById('addCourseForm').reset();
             document.getElementById('addDayM').checked = true;
             document.getElementById('addDayW').checked = true;
             document.getElementById('addCourseModal').classList.add('active');
+
+            // Load courses from Supabase
+            await loadCoursesFromSupabase();
+            // Load faculty from Supabase
+            await loadFacultyFromSupabase();
+        }
+
+        async function loadCoursesFromSupabase() {
+            const select = document.getElementById('addCourseCode');
+            if (!supabase) return; // Keep hardcoded fallback if Supabase not configured
+
+            try {
+                const { data: courses, error } = await supabase
+                    .from('courses')
+                    .select('code, title')
+                    .order('code');
+
+                if (error) throw error;
+
+                if (courses && courses.length > 0) {
+                    // Clear existing options except the placeholder
+                    select.innerHTML = '<option value="">Select Course...</option>';
+
+                    // Add courses from database
+                    courses.forEach(course => {
+                        const option = document.createElement('option');
+                        option.value = course.code;
+                        option.textContent = `${course.code} - ${course.title}`;
+                        select.appendChild(option);
+                    });
+                    console.log(`Loaded ${courses.length} courses from Supabase`);
+                }
+            } catch (err) {
+                console.warn('Could not load courses from Supabase, using fallback:', err.message);
+            }
+        }
+
+        async function loadFacultyFromSupabase() {
+            const select = document.getElementById('addFaculty');
+            if (!supabase) return; // Keep hardcoded fallback if Supabase not configured
+
+            try {
+                const { data: faculty, error } = await supabase
+                    .from('faculty')
+                    .select('name')
+                    .order('name');
+
+                if (error) throw error;
+
+                if (faculty && faculty.length > 0) {
+                    // Clear existing options except the placeholder
+                    select.innerHTML = '<option value="">Select Instructor...</option>';
+
+                    // Add faculty from database
+                    faculty.forEach(f => {
+                        const option = document.createElement('option');
+                        // Format name as "F.Lastname"
+                        const nameParts = f.name.split(', ');
+                        const shortName = nameParts.length > 1
+                            ? `${nameParts[1].charAt(0)}.${nameParts[0]}`
+                            : f.name;
+                        option.value = shortName;
+                        option.textContent = f.name;
+                        select.appendChild(option);
+                    });
+
+                    // Add TBD option
+                    const tbdOption = document.createElement('option');
+                    tbdOption.value = 'TBD';
+                    tbdOption.textContent = 'TBD';
+                    select.appendChild(tbdOption);
+
+                    console.log(`Loaded ${faculty.length} faculty from Supabase`);
+                }
+            } catch (err) {
+                console.warn('Could not load faculty from Supabase, using fallback:', err.message);
+            }
         }
 
         function closeAddCourseModal() {
@@ -4729,6 +4942,7 @@
                             <option value="DESN 301">DESN 301 - Visual Storytelling</option>
                             <option value="DESN 326">DESN 326 - Introduction to Animation</option>
                             <option value="DESN 338">DESN 338 - UX Design 1</option>
+                            <option value="DESN 345">DESN 345 - Digital Game Design</option>
                             <option value="DESN 348">DESN 348 - UX Design 2</option>
                             <option value="DESN 355">DESN 355 - Motion Design</option>
                             <option value="DESN 359">DESN 359 - Histories of Design</option>
@@ -4877,5 +5091,829 @@
     <div class="toast" id="toast">
         <span id="toastMessage">Changes saved</span>
     </div>
+
+    <!-- Scheduling Rules Panel -->
+    <div class="modal-overlay" id="constraintsModal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2>Scheduling Rules</h2>
+                <button class="modal-close" onclick="closeConstraintsModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="constraintsContent" style="max-height: 500px; overflow-y: auto;">
+                <p style="color: #6b7280; margin-bottom: 16px;">Toggle rules on/off to customize conflict detection. Changes are saved automatically.</p>
+                <div id="constraintsList">
+                    <!-- Populated by JavaScript -->
+                    <div style="text-align: center; padding: 20px; color: #6b7280;">Loading constraints...</div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="closeConstraintsModal()">Close</button>
+                <a href="https://supabase.com/dashboard" target="_blank" class="btn-secondary" style="text-decoration: none;">+ Add Rule in Supabase</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- API Settings Modal -->
+    <div class="modal-overlay" id="apiSettingsModal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2>Claude API Settings</h2>
+                <button class="modal-close" onclick="closeApiSettingsModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="apiKeyInput">API Key</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="password" id="apiKeyInput" placeholder="sk-ant-api..." style="flex: 1; font-family: monospace;">
+                        <button class="btn-secondary" onclick="toggleApiKeyVisibility()">👁️</button>
+                    </div>
+                    <p style="font-size: 12px; color: #6b7280; margin-top: 8px;">Get your key from <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a></p>
+                </div>
+                <div id="apiKeyStatus" style="margin-top: 12px;"></div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-secondary" style="background: #ef4444; color: white; border: none;" onclick="clearApiKey()">Clear Key</button>
+                <button class="btn-secondary" onclick="testApiConnection()">Test Connection</button>
+                <button class="btn-primary" onclick="saveApiKey()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Conflict Detection Results Panel -->
+    <div class="results-panel" id="conflictResultsPanel" style="display: none;">
+        <div class="results-panel-header">
+            <h3>🔍 Conflict Detection Results</h3>
+            <button class="modal-close" onclick="closeConflictResultsPanel()">&times;</button>
+        </div>
+        <div class="results-panel-content" id="conflictResultsContent">
+            <!-- Populated by JavaScript -->
+        </div>
+    </div>
+
+    <!-- AI Analysis Results Panel -->
+    <div class="results-panel ai-panel" id="aiResultsPanel" style="display: none;">
+        <div class="results-panel-header" style="background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);">
+            <h3>✨ AI Schedule Analysis</h3>
+            <button class="modal-close" onclick="closeAiResultsPanel()">&times;</button>
+        </div>
+        <div class="results-panel-loading" id="aiResultsLoading" style="display: none;">
+            <div class="loading-spinner"></div>
+            <p>Analyzing schedule with Claude AI...</p>
+        </div>
+        <div class="results-panel-content" id="aiResultsContent">
+            <!-- Populated by JavaScript -->
+        </div>
+    </div>
+
+    <style>
+        /* Results Panel Styles */
+        .results-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 450px;
+            height: 100vh;
+            background: white;
+            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        .results-panel.active {
+            transform: translateX(0);
+            display: flex;
+        }
+        .results-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+        }
+        .results-panel-header h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+        .results-panel-header .modal-close {
+            color: white;
+            font-size: 28px;
+        }
+        .results-panel-header .modal-close:hover {
+            color: rgba(255,255,255,0.8);
+        }
+        .results-panel-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .results-panel-loading {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            color: #6b7280;
+        }
+        .conflict-item {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-left: 4px solid #ef4444;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+        .conflict-item.warning {
+            background: #fffbeb;
+            border-color: #fde68a;
+            border-left-color: #f59e0b;
+        }
+        .conflict-item.info {
+            background: #eff6ff;
+            border-color: #bfdbfe;
+            border-left-color: #3b82f6;
+        }
+        .conflict-item h4 {
+            margin: 0 0 8px;
+            font-size: 14px;
+            color: #1f2937;
+        }
+        .conflict-item p {
+            margin: 0;
+            font-size: 13px;
+            color: #4b5563;
+        }
+        .conflict-suggestion {
+            margin-top: 8px;
+            padding: 8px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .no-conflicts {
+            text-align: center;
+            padding: 40px 20px;
+            color: #10b981;
+        }
+        .no-conflicts .icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+        .health-score {
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 16px;
+            background: #f9fafb;
+            border-radius: 12px;
+        }
+        .health-score-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            border: 4px solid #e5e7eb;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        .health-score-circle.good { border-color: #10b981; color: #10b981; }
+        .health-score-circle.medium { border-color: #f59e0b; color: #f59e0b; }
+        .health-score-circle.poor { border-color: #ef4444; color: #ef4444; }
+    </style>
+
+    <!-- Claude AI Integration Scripts -->
+    <script src="js/claude-service.js"></script>
+    <script src="js/schedule-evaluator.js"></script>
+
+    <script>
+        // ============================================
+        // SAVE, CONFLICT DETECTION & AI ANALYSIS
+        // ============================================
+
+        /**
+         * Save schedule changes to localStorage and optionally to database
+         */
+        function saveScheduleChanges() {
+            try {
+                // Get current schedule data
+                const quarter = document.getElementById('quarterSelect').value;
+                const scheduleData = {
+                    quarter: quarter,
+                    savedAt: new Date().toISOString(),
+                    courses: getCurrentScheduleData()
+                };
+
+                // Save to localStorage
+                localStorage.setItem(`schedule_${quarter}`, JSON.stringify(scheduleData));
+
+                showToast('Schedule saved successfully!');
+            } catch (error) {
+                console.error('Error saving schedule:', error);
+                showToast('Error saving schedule');
+            }
+        }
+
+        /**
+         * Get current schedule data from the grid
+         */
+        function getCurrentScheduleData() {
+            const courses = [];
+            // Get courses from the schedule grid (.course-block elements)
+            document.querySelectorAll('.course-block').forEach(block => {
+                courses.push({
+                    code: block.dataset.courseCode || '',
+                    section: '001',
+                    title: block.querySelector('.course-name')?.textContent?.trim()?.split(' ')[0] || '',
+                    instructor: block.querySelector('.instructor')?.textContent?.trim() || '',
+                    room: block.dataset.room || '',
+                    day: block.dataset.day || '',
+                    time: block.dataset.time || ''
+                });
+            });
+            return courses;
+        }
+
+        // Winter 2026 enrollment data for predictions
+        let winterEnrollmentData = null;
+
+        // Load Winter enrollment data on page load
+        fetch('data/winter-2026-enrollments.json')
+            .then(response => response.json())
+            .then(data => {
+                winterEnrollmentData = data;
+                console.log('Winter 2026 enrollment data loaded:', data.summary);
+            })
+            .catch(err => console.warn('Could not load winter enrollment data:', err));
+
+        /**
+         * Run conflict detection algorithm using database-driven constraints
+         */
+        async function runConflictDetection() {
+            const panel = document.getElementById('conflictResultsPanel');
+            const content = document.getElementById('conflictResultsContent');
+
+            // Get the currently selected quarter
+            const currentQuarter = document.getElementById('quarterSelect')?.value || 'Spring 2026';
+
+            // Show panel with loading state
+            panel.style.display = 'flex';
+            setTimeout(() => panel.classList.add('active'), 10);
+            content.innerHTML = '<div style="text-align: center; padding: 40px;"><div style="font-size: 2em;">Loading constraints...</div></div>';
+
+            // Clear old static conflict sections at bottom of page
+            clearOldConflictSections();
+
+            // Get all scheduled courses for the current quarter
+            const courses = getCurrentScheduleData();
+
+            // Load constraints from database (or fallback)
+            let constraints;
+            try {
+                constraints = await ConstraintsService.loadEnabledConstraints();
+            } catch (err) {
+                console.warn('Failed to load constraints, using fallback:', err);
+                constraints = ConstraintsService.getFallbackConstraints();
+            }
+
+            // Run the conflict engine
+            const results = ConflictEngine.evaluate(courses, constraints);
+            const conflicts = results.conflicts;
+            const warnings = results.warnings;
+            const suggestions = results.suggestions;
+            const enrollmentInsights = [];
+
+            // Enrollment-based predictions from Winter 2026 data
+            // NOTE: The "waitlist" field in data = REMAINING SEATS AVAILABLE, not students waiting
+            if (winterEnrollmentData && winterEnrollmentData.courses) {
+                const scheduledCodes = courses.map(c => c.code);
+
+                // High-demand courses = nearly full (few remaining seats)
+                // Filter for courses with 3 or fewer seats remaining
+                const highDemandCourses = winterEnrollmentData.courses.filter(c =>
+                    c.waitlist <= 3 && c.capacity >= 15 && c.enrolled >= 15
+                );
+                highDemandCourses.forEach(course => {
+                    const courseCode = course.code;
+                    const sectionsInSpring = scheduledCodes.filter(c => c === courseCode).length;
+                    const remainingSeats = course.waitlist;
+                    const fillRate = Math.round((course.enrolled / course.capacity) * 100);
+
+                    enrollmentInsights.push({
+                        type: 'high-demand',
+                        severity: 'info',
+                        title: `High Demand: ${courseCode}`,
+                        description: `${course.title} is ${fillRate}% full in Winter 2026 (${course.enrolled}/${course.capacity} enrolled, only ${remainingSeats} seat${remainingSeats !== 1 ? 's' : ''} remaining). ${sectionsInSpring > 0 ? `You have ${sectionsInSpring} section(s) in Spring.` : 'Not currently scheduled for Spring.'}`,
+                        suggestion: remainingSeats === 0 ? 'Consider adding an additional section for Spring' : 'Monitor enrollment closely'
+                    });
+                });
+
+                // Low enrollment courses - many empty seats
+                const lowEnrollmentCourses = winterEnrollmentData.courses.filter(c =>
+                    c.capacity >= 20 && c.enrolled <= 8 && c.scheduleType === 'Performance'
+                );
+                lowEnrollmentCourses.forEach(course => {
+                    const remainingSeats = course.waitlist;
+                    enrollmentInsights.push({
+                        type: 'low-enrollment',
+                        severity: 'warning',
+                        title: `Low Enrollment: ${course.code}`,
+                        description: `${course.title} has only ${course.enrolled}/${course.capacity} enrolled in Winter (${remainingSeats} seats still available)`,
+                        suggestion: 'Consider whether to offer in Spring or combine sections'
+                    });
+                });
+
+                // Full courses (0 remaining seats)
+                const fullCourses = winterEnrollmentData.courses.filter(c =>
+                    c.waitlist === 0 && c.capacity >= 15
+                );
+                fullCourses.forEach(course => {
+                    suggestions.push({
+                        type: 'capacity',
+                        severity: 'info',
+                        title: `At Capacity: ${course.code}`,
+                        description: `${course.title} is completely full in Winter (${course.enrolled}/${course.capacity}) - strong demand`,
+                        suggestion: 'Consider adding another section or increasing capacity for Spring'
+                    });
+                });
+
+                // Add summary from Winter data
+                if (winterEnrollmentData.summary) {
+                    const summary = winterEnrollmentData.summary;
+                    enrollmentInsights.unshift({
+                        type: 'summary',
+                        severity: 'info',
+                        title: 'Winter 2026 Overview',
+                        description: `Total enrolled: ${summary.totalEnrolled}/${summary.totalCapacity} (${summary.overallFillRate} fill rate). ${summary.fullCourses ? summary.fullCourses.length : 0} courses at capacity.`,
+                        suggestion: summary.highDemand && summary.highDemand.length > 0 ? `High demand: ${summary.highDemand.map(h => h.code).join(', ')}` : 'No critically full courses'
+                    });
+                }
+            }
+
+            // Run graduation pathway analysis
+            let pathwayResults = { conflicts: [], warnings: [], pathwayHealth: 100 };
+            if (typeof GraduationOptimizer !== 'undefined') {
+                pathwayResults = GraduationOptimizer.analyzePathways(scheduleData);
+            }
+
+            // Render results
+            const hasIssues = conflicts.length > 0 || warnings.length > 0 || pathwayResults.conflicts.length > 0;
+            const hasEnrollmentData = enrollmentInsights.length > 0 || suggestions.length > 0;
+            const hasPathwayIssues = pathwayResults.conflicts.length > 0 || pathwayResults.warnings.length > 0;
+
+            if (!hasIssues && !hasEnrollmentData && !hasPathwayIssues) {
+                content.innerHTML = `
+                    <div class="no-conflicts">
+                        <div class="icon">✅</div>
+                        <h4>No Conflicts Detected in ${currentQuarter}</h4>
+                        <p>Your schedule looks good! No room or faculty conflicts found.</p>
+                    </div>
+                `;
+            } else {
+                let html = '';
+
+                // Summary bar with current quarter and pathway health
+                html += `
+                    <div style="margin-bottom: 16px; padding: 12px; background: #1e293b; border-radius: 8px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <div style="font-weight: 600; color: #e2e8f0;">Analyzing: ${currentQuarter}</div>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <span style="color: #8b5cf6;">🎓 Pathway Health:</span>
+                                <span style="background: ${pathwayResults.pathwayHealth >= 80 ? '#10b981' : pathwayResults.pathwayHealth >= 60 ? '#f59e0b' : '#ef4444'}; color: white; padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 0.85em;">${pathwayResults.pathwayHealth}%</span>
+                            </div>
+                        </div>
+                        <div style="color: #94a3b8;">
+                            <strong style="color: #ef4444;">${conflicts.length + pathwayResults.conflicts.length}</strong> conflicts,
+                            <strong style="color: #f59e0b;">${warnings.length + pathwayResults.warnings.length}</strong> warnings,
+                            <strong style="color: #3b82f6;">${enrollmentInsights.length}</strong> enrollment insights
+                        </div>
+                    </div>
+                `;
+
+                // Conflicts section
+                if (conflicts.length > 0) {
+                    html += `<h4 style="color: #ef4444; margin: 16px 0 8px;">Critical Conflicts</h4>`;
+                    html += conflicts.map(c => {
+                        // Student scheduling conflicts have special rendering
+                        if (c.type === 'student-conflict') {
+                            return `
+                                <div class="conflict-item" style="padding: 16px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                                        <h4 style="margin: 0;">🔴 ${c.title}</h4>
+                                        <span style="background: #ef4444; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.75em; font-weight: 600;">CRITICAL</span>
+                                    </div>
+                                    <p style="margin-bottom: 8px;">${c.description}</p>
+                                    <p style="margin-bottom: 12px;"><strong>Students Affected:</strong> ${c.studentsAffected}</p>
+                                    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;">
+                                        ${c.courses.map(course => `
+                                            <span style="background: #fecaca; color: #991b1b; padding: 4px 12px; border-radius: 4px; font-size: 0.85em;">
+                                                ${course.code} - ${course.title}
+                                            </span>
+                                        `).join('')}
+                                    </div>
+                                    ${c.resolutions && c.resolutions.length > 0 ? `
+                                        <div style="background: #0f172a; padding: 12px; border-radius: 8px; margin-top: 12px;">
+                                            <h5 style="color: #10b981; margin: 0 0 12px 0;">Resolution Options</h5>
+                                            <p style="color: #94a3b8; font-size: 0.85em; margin-bottom: 12px;">Move one course to reduce the conflict:</p>
+                                            ${c.resolutions.map((r, i) => `
+                                                <div style="background: #1e293b; padding: 10px 12px; border-radius: 6px; margin-bottom: 8px; border-left: 3px solid ${i < 2 ? '#10b981' : '#3b82f6'};">
+                                                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                                                        ${i < 2 ? '<span style="color: #10b981;">✅</span>' : '<span style="color: #3b82f6;">📋</span>'}
+                                                        <strong style="color: #e2e8f0;">${i < 2 ? 'BEST OPTION: ' : ''}Move to ${r.dayName} ${r.time.replace('10:00-12:00', '10 AM - 12 PM').replace('13:00-15:00', '1 - 3 PM').replace('16:00-18:00', '4 - 6 PM')}</strong>
+                                                    </div>
+                                                    <div style="color: #94a3b8; font-size: 0.85em; margin-left: 24px;">
+                                                        <div><strong>Currently scheduled:</strong> ${r.currentCourses}</div>
+                                                        <div><strong>Rooms available:</strong> ${r.availableRooms} of 6</div>
+                                                        <div style="color: #10b981;">✓ ${r.impact}</div>
+                                                    </div>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            `;
+                        }
+                        // Regular conflicts
+                        return `
+                            <div class="conflict-item">
+                                <h4>🔴 ${c.title}</h4>
+                                <p>${c.description}</p>
+                                <div class="conflict-suggestion">💡 ${c.suggestion}</div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+
+                // Warnings section
+                if (warnings.length > 0) {
+                    html += `<h4 style="color: #f59e0b; margin: 16px 0 8px;">Warnings</h4>`;
+                    html += warnings.map(w => `
+                        <div class="conflict-item warning">
+                            <h4>🟡 ${w.title}</h4>
+                            <p>${w.description}</p>
+                            <div class="conflict-suggestion">💡 ${w.suggestion}</div>
+                        </div>
+                    `).join('');
+                }
+
+                // Enrollment insights section (Winter data to inform Spring planning)
+                if (enrollmentInsights.length > 0) {
+                    html += `<h4 style="color: #3b82f6; margin: 16px 0 8px;">Predictions Based on Winter 2026 Enrollment</h4>
+                             <p style="color: #94a3b8; font-size: 0.85em; margin-bottom: 12px;">Using Winter enrollment data to inform ${currentQuarter} planning</p>`;
+                    html += enrollmentInsights.map(e => `
+                        <div class="conflict-item" style="border-left-color: ${e.type === 'high-demand' ? '#10b981' : e.type === 'low-enrollment' ? '#f59e0b' : '#3b82f6'};">
+                            <h4>${e.type === 'high-demand' ? '📈' : e.type === 'low-enrollment' ? '📉' : 'ℹ️'} ${e.title}</h4>
+                            <p>${e.description}</p>
+                            <div class="conflict-suggestion">💡 ${e.suggestion}</div>
+                        </div>
+                    `).join('');
+                }
+
+                // Suggestions section
+                if (suggestions.length > 0) {
+                    html += `<h4 style="color: #10b981; margin: 16px 0 8px;">Capacity Suggestions</h4>`;
+                    html += suggestions.map(s => `
+                        <div class="conflict-item" style="border-left-color: #10b981;">
+                            <h4>✅ ${s.title}</h4>
+                            <p>${s.description}</p>
+                            <div class="conflict-suggestion">💡 ${s.suggestion}</div>
+                        </div>
+                    `).join('');
+                }
+
+                // Graduation Pathway Analysis (using already-computed results)
+                if (hasPathwayIssues) {
+                        html += `
+                            <div style="margin-top: 24px; padding-top: 16px; border-top: 2px solid #334155;">
+                                <h4 style="color: #8b5cf6; margin: 0 0 8px; display: flex; align-items: center; gap: 8px;">
+                                    🎓 Graduation Pathway Analysis
+                                    <span style="background: ${pathwayResults.pathwayHealth >= 80 ? '#10b981' : pathwayResults.pathwayHealth >= 60 ? '#f59e0b' : '#ef4444'}; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.75em;">${pathwayResults.pathwayHealth}% Health</span>
+                                </h4>
+                                <p style="color: #94a3b8; font-size: 0.85em; margin-bottom: 12px;">Analyzing course offerings against BDES degree requirements</p>
+                        `;
+
+                        // Critical pathway issues
+                        if (pathwayResults.conflicts.length > 0) {
+                            html += `<h5 style="color: #ef4444; margin: 12px 0 8px;">🚨 Critical Pathway Issues</h5>`;
+                            html += pathwayResults.conflicts.map(c => `
+                                <div class="conflict-item" style="border-left-color: #ef4444;">
+                                    <h4>🔴 ${c.title}</h4>
+                                    <p>${c.description}</p>
+                                    ${c.courses ? `<div style="margin: 8px 0;"><strong>Courses:</strong> ${c.courses.join(', ')}</div>` : ''}
+                                    <div class="conflict-suggestion">💡 ${c.recommendation}</div>
+                                </div>
+                            `).join('');
+                        }
+
+                        // Pathway warnings
+                        if (pathwayResults.warnings.length > 0) {
+                            html += `<h5 style="color: #f59e0b; margin: 12px 0 8px;">⚠️ Pathway Warnings</h5>`;
+                            html += pathwayResults.warnings.slice(0, 5).map(w => `
+                                <div class="conflict-item warning" style="border-left-color: ${w.type === 'pathway_conflict' ? '#f59e0b' : '#8b5cf6'};">
+                                    <h4>${w.type === 'pathway_conflict' ? '🟡' : '📚'} ${w.title}</h4>
+                                    <p>${w.description}</p>
+                                    ${w.courses ? `<div style="margin: 8px 0;"><strong>Courses:</strong> ${Array.isArray(w.courses) ? w.courses.join(', ') : w.courses}</div>` : ''}
+                                    <div class="conflict-suggestion">💡 ${w.recommendation}</div>
+                                </div>
+                            `).join('');
+
+                            if (pathwayResults.warnings.length > 5) {
+                                html += `<p style="color: #6b7280; font-size: 0.85em; margin-top: 8px;">+ ${pathwayResults.warnings.length - 5} more warnings</p>`;
+                            }
+                        }
+
+                    html += `</div>`;
+                }
+
+                content.innerHTML = html;
+            }
+        }
+
+        function closeConflictResultsPanel() {
+            const panel = document.getElementById('conflictResultsPanel');
+            panel.classList.remove('active');
+            setTimeout(() => panel.style.display = 'none', 300);
+        }
+
+        /**
+         * Clear the old static conflict sections at the bottom of the page
+         */
+        function clearOldConflictSections() {
+            const conflictsList = document.getElementById('conflictsList');
+            const conflictSolverList = document.getElementById('conflictSolverList');
+            const recommendationsList = document.getElementById('recommendationsList');
+
+            if (conflictsList) conflictsList.innerHTML = '<p style="color: #6b7280; padding: 10px;">See Detect Conflicts panel for current analysis</p>';
+            if (conflictSolverList) conflictSolverList.innerHTML = '';
+            if (recommendationsList) recommendationsList.innerHTML = '';
+        }
+
+        // ============================================
+        // SCHEDULING RULES/CONSTRAINTS
+        // ============================================
+
+        async function openConstraintsModal() {
+            const modal = document.getElementById('constraintsModal');
+            const list = document.getElementById('constraintsList');
+
+            modal.classList.add('active');
+            list.innerHTML = '<div style="text-align: center; padding: 20px; color: #6b7280;">Loading constraints...</div>';
+
+            // Load constraints from database
+            let constraints;
+            try {
+                constraints = await ConstraintsService.loadConstraints();
+            } catch (err) {
+                constraints = ConstraintsService.getFallbackConstraints();
+            }
+
+            // Render constraints list
+            if (constraints.length === 0) {
+                list.innerHTML = '<p style="color: #6b7280;">No scheduling rules configured yet.</p>';
+                return;
+            }
+
+            list.innerHTML = constraints.map(c => {
+                const severity = c.rule_details?.severity || 'info';
+                const severityColor = severity === 'critical' ? '#ef4444' : severity === 'warning' ? '#f59e0b' : '#3b82f6';
+                const severityIcon = severity === 'critical' ? '🔴' : severity === 'warning' ? '🟡' : 'ℹ️';
+
+                return `
+                    <div class="constraint-item" style="display: flex; align-items: flex-start; gap: 12px; padding: 12px; background: #f8f9fa; border-radius: 8px; margin-bottom: 8px; border-left: 3px solid ${severityColor};">
+                        <label class="toggle-switch" style="margin-top: 2px;">
+                            <input type="checkbox" ${c.enabled ? 'checked' : ''} onchange="toggleConstraint('${c.id}', this.checked)">
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; color: #1f2937;">
+                                ${severityIcon} ${c.description}
+                            </div>
+                            <div style="font-size: 0.85em; color: #6b7280; margin-top: 4px;">
+                                Type: ${c.constraint_type} | Severity: ${severity}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function closeConstraintsModal() {
+            document.getElementById('constraintsModal').classList.remove('active');
+        }
+
+        async function toggleConstraint(id, enabled) {
+            const success = await ConstraintsService.toggleConstraint(id, enabled);
+            if (success) {
+                showToast(`Rule ${enabled ? 'enabled' : 'disabled'}`);
+            } else {
+                showToast('Failed to update rule', 'error');
+            }
+        }
+
+        // ============================================
+        // CLAUDE AI INTEGRATION
+        // ============================================
+
+        function openApiSettingsModal() {
+            const modal = document.getElementById('apiSettingsModal');
+            const input = document.getElementById('apiKeyInput');
+            const status = document.getElementById('apiKeyStatus');
+
+            if (typeof ClaudeService !== 'undefined' && ClaudeService.hasApiKey()) {
+                input.value = '';
+                input.placeholder = ClaudeService.maskApiKey(ClaudeService.getApiKey());
+                status.innerHTML = '<span style="color: #10b981;">✓ API key configured</span>';
+            } else {
+                input.value = '';
+                input.placeholder = 'sk-ant-api...';
+                status.innerHTML = '<span style="color: #6b7280;">No API key configured</span>';
+            }
+
+            modal.classList.add('active');
+        }
+
+        function closeApiSettingsModal() {
+            document.getElementById('apiSettingsModal').classList.remove('active');
+        }
+
+        function toggleApiKeyVisibility() {
+            const input = document.getElementById('apiKeyInput');
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+
+        function saveApiKey() {
+            const input = document.getElementById('apiKeyInput');
+            const key = input.value.trim();
+
+            if (!key && typeof ClaudeService !== 'undefined' && ClaudeService.hasApiKey()) {
+                showToast('API key unchanged');
+                closeApiSettingsModal();
+                return;
+            }
+
+            if (!key) {
+                showToast('Please enter an API key');
+                return;
+            }
+
+            if (!key.startsWith('sk-ant-')) {
+                showToast('Invalid API key format');
+                return;
+            }
+
+            try {
+                ClaudeService.setApiKey(key);
+                showToast('API key saved');
+                closeApiSettingsModal();
+            } catch (error) {
+                showToast('Error saving API key');
+            }
+        }
+
+        function clearApiKey() {
+            if (confirm('Clear API key?')) {
+                ClaudeService.clearApiKey();
+                document.getElementById('apiKeyInput').value = '';
+                document.getElementById('apiKeyInput').placeholder = 'sk-ant-api...';
+                document.getElementById('apiKeyStatus').innerHTML = '<span style="color: #6b7280;">No API key configured</span>';
+                showToast('API key cleared');
+            }
+        }
+
+        async function testApiConnection() {
+            const status = document.getElementById('apiKeyStatus');
+            const input = document.getElementById('apiKeyInput');
+            const newKey = input.value.trim();
+
+            if (newKey && newKey.startsWith('sk-ant-')) {
+                ClaudeService.setApiKey(newKey);
+            }
+
+            if (!ClaudeService.hasApiKey()) {
+                status.innerHTML = '<span style="color: #ef4444;">No API key to test</span>';
+                return;
+            }
+
+            status.innerHTML = '<span style="color: #f59e0b;">Testing connection...</span>';
+
+            try {
+                const result = await ClaudeService.testConnection();
+                if (result.success) {
+                    status.innerHTML = '<span style="color: #10b981;">✓ Connection successful!</span>';
+                } else {
+                    status.innerHTML = `<span style="color: #ef4444;">✗ ${result.error}</span>`;
+                }
+            } catch (error) {
+                status.innerHTML = `<span style="color: #ef4444;">✗ ${error.message}</span>`;
+            }
+        }
+
+        async function evaluateScheduleWithAI() {
+            if (typeof ClaudeService === 'undefined' || !ClaudeService.hasApiKey()) {
+                openApiSettingsModal();
+                showToast('Please configure your Claude API key first');
+                return;
+            }
+
+            const panel = document.getElementById('aiResultsPanel');
+            const loading = document.getElementById('aiResultsLoading');
+            const content = document.getElementById('aiResultsContent');
+
+            panel.style.display = 'flex';
+            setTimeout(() => panel.classList.add('active'), 10);
+            loading.style.display = 'flex';
+            content.style.display = 'none';
+
+            try {
+                const courses = getCurrentScheduleData();
+                const quarter = document.getElementById('quarterSelect').value;
+
+                // Build schedule data structure for prompt
+                const scheduleData = {
+                    [quarter]: {
+                        assignedCourses: {}
+                    }
+                };
+
+                courses.forEach(course => {
+                    const key = `${course.day}-${course.time}-${course.room}`;
+                    if (!scheduleData[quarter].assignedCourses[key]) {
+                        scheduleData[quarter].assignedCourses[key] = [];
+                    }
+                    scheduleData[quarter].assignedCourses[key].push({
+                        courseCode: course.code,
+                        section: course.section,
+                        courseTitle: course.title,
+                        facultyName: course.instructor
+                    });
+                });
+
+                const prompt = ScheduleEvaluator.buildPrompt(scheduleData, {}, [], { quarter });
+
+                const response = await ClaudeService.analyze(prompt, {
+                    maxTokens: 4096,
+                    temperature: 0.3
+                });
+
+                const parsed = ScheduleEvaluator.parseResponse(response);
+                const results = ScheduleEvaluator.formatResults(parsed);
+
+                loading.style.display = 'none';
+                content.style.display = 'block';
+
+                if (results.error) {
+                    content.innerHTML = `<div class="conflict-item"><h4>Analysis Error</h4><p>${results.message}</p></div>`;
+                } else {
+                    const scoreClass = results.healthScore >= 80 ? 'good' : results.healthScore >= 60 ? 'medium' : 'poor';
+
+                    content.innerHTML = `
+                        <div class="health-score">
+                            <div class="health-score-circle ${scoreClass}">${results.healthScore || '--'}</div>
+                            <p style="margin: 0; font-size: 14px; color: #6b7280;">Schedule Health Score</p>
+                            <p style="margin: 8px 0 0; font-size: 13px;">${results.overallAssessment || ''}</p>
+                        </div>
+                        ${results.sections.map(section => `
+                            <div style="margin-bottom: 16px;">
+                                <h4 style="margin: 0 0 8px;">${section.icon} ${section.title} (${section.count})</h4>
+                                ${section.items.length === 0 ? '<p style="color: #6b7280; font-size: 13px;">No issues</p>' :
+                                section.items.map(item => `
+                                    <div class="conflict-item ${item.severity === 'critical' ? '' : item.severity === 'high' ? '' : 'warning'}">
+                                        <h4>${item.title}</h4>
+                                        <p>${item.description}</p>
+                                        ${item.suggestion ? `<div class="conflict-suggestion">💡 ${item.suggestion.action}</div>` : ''}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `).join('')}
+                    `;
+                }
+
+                showToast('AI analysis complete');
+
+            } catch (error) {
+                console.error('AI evaluation error:', error);
+                loading.style.display = 'none';
+                content.style.display = 'block';
+                content.innerHTML = `
+                    <div class="conflict-item">
+                        <h4>Analysis Failed</h4>
+                        <p>${error.message}</p>
+                        <p style="font-size: 12px; color: #6b7280;">Check your API key and try again.</p>
+                    </div>
+                `;
+                showToast('AI analysis failed');
+            }
+        }
+
+        function closeAiResultsPanel() {
+            const panel = document.getElementById('aiResultsPanel');
+            panel.classList.remove('active');
+            setTimeout(() => panel.style.display = 'none', 300);
+        }
+    </script>
 </body>
 </html>
