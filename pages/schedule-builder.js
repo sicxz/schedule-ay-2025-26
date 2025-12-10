@@ -10,13 +10,12 @@ let assignedCourses = {}; // { 'MW-10:00-12:00-206': [course1, course2], ... }
 let roomConstraints = null; // Loaded from room-constraints.json
 let caseByeCaseCourses = []; // Courses handled individually, not in grid
 
-// Room configuration - organized by campus
-const CATALYST_ROOMS = ['206', '207', '209', '210', '212'];
+// Room configuration - organized by campus (207 excluded - dedicated project room)
+const CATALYST_ROOMS = ['206', '209', '210', '212'];
 const CHENEY_ROOMS = ['CEB 102', 'CEB 104'];
 const ROOMS = [...CATALYST_ROOMS, ...CHENEY_ROOMS];
 const ROOM_NAMES = {
     '206': '206 UX Lab',
-    '207': '207 Project Room',
     '209': '209 Mac Lab',
     '210': '210 Mac Lab',
     '212': '212 Project Lab',
@@ -838,9 +837,9 @@ function getValidRooms(courseCode, quarter, slotUsage = {}) {
         return ['CEB 102', 'CEB 104'];
     }
 
-    // All other courses: Catalyst rooms except 212 (unless full)
+    // All other courses: Catalyst rooms except 212 and 207 (207 is dedicated project room)
     // 212 is restricted to specific courses only
-    return ['206', '207', '209', '210', 'CEB 102', 'CEB 104'];
+    return ['206', '209', '210', 'CEB 102', 'CEB 104'];
 }
 
 /**
@@ -2025,7 +2024,7 @@ function handleCourseSelection() {
         } else if (prefs.allowedCampus) {
             // Select first room on allowed campus
             const campusRooms = {
-                'catalyst': ['206', '207', '209', '210', '212'],
+                'catalyst': ['206', '209', '210', '212'],
                 'cheney': ['CEB 102', 'CEB 104']
             };
             const rooms = campusRooms[prefs.allowedCampus] || [];

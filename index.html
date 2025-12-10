@@ -3829,8 +3829,8 @@
 
             const criticalConflicts = conflicts.filter(c => c.severity === 'critical').length;
 
-            // Calculate room utilization (all scheduling rooms)
-            const rooms = ['206', '207', '209', '210', '212', 'CEB 102', 'CEB 104'];
+            // Calculate room utilization (excludes Room 207 - dedicated project room)
+            const rooms = ['206', '209', '210', '212', 'CEB 102', 'CEB 104'];
             const times = ['10:00-12:00', '13:00-15:00', '16:00-18:00'];
             const days = ['MW', 'TR'];
 
