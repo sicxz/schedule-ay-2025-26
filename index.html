@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Design Scheduler - EWU</title>
     <style>
+        :root {
+            --ewu-red: #a10022;
+            --primary-gradient: linear-gradient(135deg, #a10022 0%, #760019 100%);
+            --secondary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --glass: rgba(255, 255, 255, 0.9);
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,86 +20,120 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f0f2f5;
             min-height: 100vh;
-            padding: 20px;
+            padding: 40px 20px;
+            color: #1a1a1b;
         }
 
         .container {
             max-width: 1600px;
             margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            box-shadow: 0 30px 100px rgba(0,0,0,0.15);
             overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary-gradient);
             color: white;
-            padding: 30px;
+            padding: 50px 30px;
             text-align: center;
+            position: relative;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(to top, rgba(0,0,0,0.1), transparent);
+            pointer-events: none;
         }
 
         h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+            font-size: 3em;
+            font-weight: 800;
+            margin-bottom: 12px;
+            letter-spacing: -1px;
         }
 
         .subtitle {
-            font-size: 1.1em;
+            font-size: 1.2em;
             opacity: 0.9;
+            font-weight: 300;
         }
 
         .controls {
-            padding: 30px;
-            background: #f8f9fa;
-            border-bottom: 2px solid #dee2e6;
+            padding: 40px;
+            background: #ffffff;
+            border-bottom: 1px solid #e1e4e8;
             display: flex;
-            gap: 20px;
+            gap: 30px;
             flex-wrap: wrap;
-            align-items: center;
+            align-items: flex-end;
         }
 
         .control-group {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
+            flex: 1;
+            min-width: 200px;
         }
 
         label {
-            font-weight: 600;
-            color: #495057;
-            font-size: 0.9em;
+            font-weight: 700;
+            color: #4a5568;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         select, button {
-            padding: 10px 15px;
-            border: 2px solid #dee2e6;
-            border-radius: 8px;
+            padding: 12px 20px;
+            border: 2px solid #edf2f7;
+            border-radius: 12px;
             font-size: 1em;
-            background: white;
+            background: #f7fafc;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 600;
         }
 
-        select:hover, select:focus {
-            border-color: #667eea;
+        select:hover {
+            border-color: var(--ewu-red);
+            background: white;
+        }
+
+        select:focus {
+            border-color: var(--ewu-red);
             outline: none;
+            box-shadow: 0 0 0 4px rgba(161, 0, 34, 0.1);
         }
 
         button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--ewu-red);
             color: white;
             border: none;
-            font-weight: 600;
-            padding: 10px 25px;
+            padding: 14px 30px;
+            box-shadow: 0 4px 14px rgba(161, 0, 34, 0.3);
         }
 
         button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 8px 25px rgba(161, 0, 34, 0.4);
+            background: #8b001d;
+        }
+
+        button:active {
+            transform: translateY(0);
         }
 
         /* Dashboard Navigation Accordion */
@@ -460,45 +502,51 @@
         }
 
         .stat-card {
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            transition: transform 0.3s;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: left;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(0,0,0,0.05);
+            background: white;
+            color: #1a202c;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
         }
 
         .stat-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
 
         .stat-card.critical {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
-            color: white;
+            border-top: 5px solid #ff6b6b;
         }
 
         .stat-card.warning {
-            background: linear-gradient(135deg, #ffd93d 0%, #ff9f1c 100%);
-            color: #333;
+            border-top: 5px solid #ffd93d;
         }
 
         .stat-card.success {
-            background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
-            color: white;
+            border-top: 5px solid #51cf66;
         }
 
         .stat-card.info {
-            background: linear-gradient(135deg, #74c0fc 0%, #4dabf7 100%);
-            color: white;
+            border-top: 5px solid #74c0fc;
         }
 
         .stat-number {
-            font-size: 2.5em;
-            font-weight: bold;
-            margin-bottom: 5px;
+            font-size: 3em;
+            font-weight: 800;
+            margin-bottom: 8px;
+            display: block;
+            color: inherit;
         }
 
         .stat-label {
-            font-size: 0.9em;
-            opacity: 0.9;
+            font-size: 0.85em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #718096;
         }
 
         .content {
