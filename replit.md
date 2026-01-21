@@ -50,6 +50,8 @@ The app uses a comprehensive design system (`css/design-system.css`) with:
   - Improved schedule loading to preserve previous year's course placements
   - Courses now keep their same time slots when building next year's schedule
   - Saved placements stored in localStorage for consistency across sessions
+  - Fixed: parseSlotKey() correctly handles time ranges with dashes (e.g., "MW-10:00-12:20-206")
+  - Fixed: Auto-save placements after schedule loading and generation for preservation on first run
 - January 2026: Design/UX improvements
   - Updated to EWU brand colors (red #a10022)
   - Modernized button styles with shadows and hover effects
