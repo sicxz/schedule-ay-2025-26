@@ -10,41 +10,54 @@
    CSS VARIABLES - COLOR PALETTE
    ============================================ */
 :root {
-    /* Primary Colors */
+    /* EWU Brand Colors */
+    --ewu-red: #a10022;
+    --ewu-red-dark: #8b001d;
+    --ewu-red-light: #c91a3d;
+    --ewu-black: #1a1a1b;
+    
+    /* Primary Gradient */
+    --primary-gradient: linear-gradient(135deg, #a10022 0%, #760019 100%);
+    --secondary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    
+    /* Status Colors */
     --color-info: #168FFF;
-    --color-success: #1DB800;
-    --color-warning: #F5A623;
-    --color-error: #E74C3C;
+    --color-success: #22c55e;
+    --color-warning: #f59e0b;
+    --color-error: #ef4444;
 
     /* Content Colors (Light Mode) */
-    --color-content-1: #1C1C1C;
-    --color-content-2: #5B5757;
-    --color-content-3: #969696;
-    --color-icons: #CCCCCC;
+    --color-content-1: #1a1a1b;
+    --color-content-2: #4a5568;
+    --color-content-3: #718096;
+    --color-icons: #a0aec0;
 
     /* UI Colors */
-    --color-border: #E8E8E8;
-    --color-background-1: #F7F7F7;
+    --color-border: #e2e8f0;
+    --color-background-1: #f7fafc;
     --color-background-2: #FFFFFF;
+    --color-background-elevated: rgba(255, 255, 255, 0.95);
 
     /* Accent Colors (for charts/data viz) */
     --color-accent-blue: #168FFF;
-    --color-accent-green: #1DB800;
-    --color-accent-yellow: #F5A623;
-    --color-accent-red: #E74C3C;
+    --color-accent-green: #22c55e;
+    --color-accent-yellow: #f59e0b;
+    --color-accent-red: #ef4444;
     --color-accent-purple: #764ba2;
-    --color-accent-teal: #00B5AD;
+    --color-accent-teal: #14b8a6;
 
     /* Shadows */
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
-    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12);
+    --shadow-xl: 0 25px 80px rgba(0, 0, 0, 0.15);
 
     /* Border Radius */
-    --radius-sm: 4px;
-    --radius-md: 8px;
-    --radius-lg: 12px;
-    --radius-xl: 16px;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-xl: 20px;
+    --radius-2xl: 24px;
 
     /* Spacing Scale */
     --space-1: 4px;
@@ -56,6 +69,11 @@
     --space-8: 32px;
     --space-10: 40px;
     --space-12: 48px;
+    
+    /* Transitions */
+    --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ============================================
@@ -275,25 +293,37 @@ h5, .h5 {
     align-items: center;
     justify-content: center;
     gap: var(--space-2);
-    padding: var(--space-2) var(--space-4);
+    padding: var(--space-3) var(--space-5);
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     border-radius: var(--radius-md);
     border: 1px solid transparent;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all var(--transition-normal);
     text-decoration: none;
 }
 
+.ds-btn:focus-visible {
+    outline: 2px solid var(--ewu-red);
+    outline-offset: 2px;
+}
+
 .ds-btn-primary {
-    background: var(--color-info);
+    background: var(--ewu-red);
     color: white;
-    border-color: var(--color-info);
+    border-color: var(--ewu-red);
+    box-shadow: 0 4px 14px rgba(161, 0, 34, 0.25);
 }
 
 .ds-btn-primary:hover {
-    background: #1276D4;
-    border-color: #1276D4;
+    background: var(--ewu-red-dark);
+    border-color: var(--ewu-red-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(161, 0, 34, 0.35);
+}
+
+.ds-btn-primary:active {
+    transform: translateY(0);
 }
 
 .ds-btn-secondary {
@@ -696,6 +726,141 @@ h5, .h5 {
 }
 
 /* ============================================
+   FLOATING ACTION BUTTONS
+   ============================================ */
+.ds-fab-container {
+    position: fixed;
+    right: var(--space-6);
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    z-index: 100;
+}
+
+.ds-fab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-5);
+    border-radius: var(--radius-lg);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    border: none;
+    box-shadow: var(--shadow-md);
+    white-space: nowrap;
+}
+
+.ds-fab:hover {
+    transform: translateX(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.ds-fab:active {
+    transform: translateX(0);
+}
+
+.ds-fab-primary {
+    background: var(--color-success);
+    color: white;
+}
+
+.ds-fab-primary:hover {
+    background: #16a34a;
+}
+
+.ds-fab-warning {
+    background: var(--color-warning);
+    color: white;
+}
+
+.ds-fab-warning:hover {
+    background: #d97706;
+}
+
+.ds-fab-info {
+    background: var(--color-info);
+    color: white;
+}
+
+.ds-fab-info:hover {
+    background: #0284c7;
+}
+
+.ds-fab-secondary {
+    background: var(--color-background-2);
+    color: var(--color-content-1);
+    border: 1px solid var(--color-border);
+}
+
+.ds-fab-secondary:hover {
+    background: var(--color-background-1);
+    border-color: var(--color-content-3);
+}
+
+.ds-fab-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    padding: 0;
+}
+
+/* ============================================
+   SKELETON LOADING
+   ============================================ */
+.ds-skeleton {
+    background: linear-gradient(90deg, var(--color-border) 25%, var(--color-background-1) 50%, var(--color-border) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: var(--radius-sm);
+}
+
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.ds-skeleton-text {
+    height: 16px;
+    margin-bottom: var(--space-2);
+}
+
+.ds-skeleton-title {
+    height: 24px;
+    width: 60%;
+    margin-bottom: var(--space-3);
+}
+
+.ds-skeleton-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+/* ============================================
+   FOCUS STATES & ACCESSIBILITY
+   ============================================ */
+*:focus-visible {
+    outline: 2px solid var(--ewu-red);
+    outline-offset: 2px;
+}
+
+.ds-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* ============================================
    UTILITIES
    ============================================ */
 .ds-flex { display: flex; }
@@ -705,6 +870,30 @@ h5, .h5 {
 .ds-gap-2 { gap: var(--space-2); }
 .ds-gap-3 { gap: var(--space-3); }
 .ds-gap-4 { gap: var(--space-4); }
+.ds-gap-6 { gap: var(--space-6); }
+.ds-mt-2 { margin-top: var(--space-2); }
 .ds-mt-4 { margin-top: var(--space-4); }
+.ds-mt-6 { margin-top: var(--space-6); }
+.ds-mb-2 { margin-bottom: var(--space-2); }
 .ds-mb-4 { margin-bottom: var(--space-4); }
+.ds-mb-6 { margin-bottom: var(--space-6); }
 .ds-hidden { display: none; }
+.ds-text-center { text-align: center; }
+.ds-text-right { text-align: right; }
+.ds-font-medium { font-weight: 500; }
+.ds-font-semibold { font-weight: 600; }
+.ds-font-bold { font-weight: 700; }
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Better focus for keyboard navigation */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
