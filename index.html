@@ -166,6 +166,37 @@
             box-shadow: 0 0 0 3px rgba(161, 0, 34, 0.1);
         }
 
+        .quarter-tabs {
+            display: flex;
+            background: #f1f5f9;
+            border-radius: var(--radius-sm);
+            padding: 4px;
+            gap: 4px;
+        }
+
+        .quarter-tab {
+            padding: 10px 24px;
+            border: none;
+            background: transparent;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quarter-tab:hover {
+            color: var(--text-primary);
+            background: rgba(255,255,255,0.5);
+        }
+
+        .quarter-tab.active {
+            background: var(--ewu-red);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
         .toolbar-right {
             margin-left: auto;
             display: flex;
@@ -664,14 +695,12 @@
                     <option value="2023-24">2023-24</option>
                 </select>
             </div>
-            <div class="control-group">
-                <label>Quarter</label>
-                <select id="quarterSelect" onchange="loadSchedule()">
-                    <option value="Fall">Fall</option>
-                    <option value="Winter">Winter</option>
-                    <option value="Spring">Spring</option>
-                </select>
+            <div class="quarter-tabs">
+                <button class="quarter-tab active" data-quarter="Fall" onclick="selectQuarter('Fall')">Fall</button>
+                <button class="quarter-tab" data-quarter="Winter" onclick="selectQuarter('Winter')">Winter</button>
+                <button class="quarter-tab" data-quarter="Spring" onclick="selectQuarter('Spring')">Spring</button>
             </div>
+            <input type="hidden" id="quarterSelect" value="Fall" />
             <div class="toolbar-right">
                 <button class="btn btn-success" onclick="toggleCoursePool()">
                     ➕ Add Course
@@ -883,6 +912,15 @@
             if (data) {
                 rooms = data;
             }
+        }
+
+        function selectQuarter(quarter) {
+            document.querySelectorAll('.quarter-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`.quarter-tab[data-quarter="${quarter}"]`).classList.add('active');
+            document.getElementById('quarterSelect').value = quarter;
+            loadSchedule();
         }
 
         async function loadSchedule() {
