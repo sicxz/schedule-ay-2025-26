@@ -42,6 +42,14 @@ The app uses a comprehensive design system (`css/design-system.css`) with:
 - Inter font from Google Fonts
 
 ## Recent Changes
+- January 2026: Faculty Selection & Schedule Preservation
+  - Added Faculty Selection Panel to Schedule Builder for selecting active faculty for next year
+  - Faculty organized by rank with priority: Full-time faculty (professors, lecturers) over Adjuncts
+  - Adjuncts are treated as "placeholders" for when full-time faculty are unavailable
+  - New FacultyManager module (js/faculty-manager.js) for faculty availability and selection
+  - Improved schedule loading to preserve previous year's course placements
+  - Courses now keep their same time slots when building next year's schedule
+  - Saved placements stored in localStorage for consistency across sessions
 - January 2026: Design/UX improvements
   - Updated to EWU brand colors (red #a10022)
   - Modernized button styles with shadows and hover effects

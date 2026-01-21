@@ -37,6 +37,22 @@
             </button>
         </div>
 
+        <!-- Faculty Selection Panel -->
+        <div class="faculty-selection-panel">
+            <button class="faculty-panel-toggle" onclick="toggleFacultyPanel()">
+                <span>👥 Faculty Selection for Next Year</span>
+                <span class="toggle-icon">▼</span>
+            </button>
+            <div class="faculty-panel-content" id="facultyPanelContent">
+                <p class="helper-text" style="margin-bottom: 16px; color: #6b7280; font-size: 13px;">
+                    Select which faculty will be available for the next academic year. Full-time faculty (professors, lecturers) are prioritized; adjuncts serve as placeholders when full-time faculty are unavailable.
+                </p>
+                <div id="facultySelectionContainer">
+                    <p style="color: #6b7280; text-align: center; padding: 20px;">Loading faculty data...</p>
+                </div>
+            </div>
+        </div>
+
         <!-- Summary Cards -->
         <div class="summary-cards" id="summaryCards">
             <div class="summary-card">
@@ -509,6 +525,26 @@
     <script src="../js/demand-predictor.js"></script>
     <script src="../js/schedule-generator.js"></script>
     <script src="../js/schedule-analyzer.js"></script>
+    <script src="../js/faculty-manager.js"></script>
     <script src="schedule-builder.js"></script>
+    <script>
+        // Initialize faculty panel
+        async function initFacultyPanel() {
+            if (typeof FacultyManager !== 'undefined') {
+                await FacultyManager.init({ workloadPath: '../workload-data.json' });
+                FacultyManager.renderSelectionUI('facultySelectionContainer');
+            }
+        }
+        
+        function toggleFacultyPanel() {
+            const content = document.getElementById('facultyPanelContent');
+            const toggle = document.querySelector('.faculty-panel-toggle');
+            content.classList.toggle('collapsed');
+            toggle.classList.toggle('collapsed');
+        }
+        
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', initFacultyPanel);
+    </script>
 </body>
 </html>

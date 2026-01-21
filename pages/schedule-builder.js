@@ -47,6 +47,105 @@ const EVENING_TIME = '4:00 PM - 6:20 PM';
 // Store courses from database for constraints
 let dbCourses = [];
 
+// Historical schedule placements storage key
+const SCHEDULE_PLACEMENTS_KEY = 'schedule_placements';
+
+/**
+ * Load saved schedule placements from localStorage
+ * Returns object: { 'DESN 100-001-Fall': { day: 'MW', time: '10:00-12:20', room: '206' }, ... }
+ */
+function loadSchedulePlacements() {
+    try {
+        const saved = localStorage.getItem(SCHEDULE_PLACEMENTS_KEY);
+        return saved ? JSON.parse(saved) : {};
+    } catch (e) {
+        console.warn('Could not load schedule placements:', e);
+        return {};
+    }
+}
+
+/**
+ * Save schedule placements to localStorage
+ */
+function saveSchedulePlacements(placements) {
+    try {
+        localStorage.setItem(SCHEDULE_PLACEMENTS_KEY, JSON.stringify(placements));
+    } catch (e) {
+        console.warn('Could not save schedule placements:', e);
+    }
+}
+
+/**
+ * Get placement key for a course
+ */
+function getPlacementKey(courseCode, section, quarter) {
+    return `${courseCode}-${section}-${quarter}`;
+}
+
+/**
+ * Parse slot key - handles time ranges with dashes (e.g., "MW-10:00-12:20-206")
+ * Format: DAY-TIME_START-TIME_END-ROOM
+ */
+function parseSlotKey(slotKey) {
+    // Split by dash but preserve time ranges
+    const parts = slotKey.split('-');
+    if (parts.length < 4) return null;
+    
+    // First part is day (MW or TR)
+    const day = parts[0];
+    // Last part is room
+    const room = parts[parts.length - 1];
+    // Middle parts form the time (e.g., "10:00-12:20" split becomes ["10:00", "12:20"])
+    const timeParts = parts.slice(1, parts.length - 1);
+    const time = timeParts.join('-');
+    
+    return { day, time, room };
+}
+
+/**
+ * Update saved placements from current schedule
+ */
+function updatePlacementsFromSchedule(year) {
+    const placements = loadSchedulePlacements();
+    
+    ['Fall', 'Winter', 'Spring'].forEach(quarter => {
+        const quarterData = allQuartersSchedule[quarter];
+        if (!quarterData?.assignedCourses) return;
+        
+        Object.entries(quarterData.assignedCourses).forEach(([slotKey, courses]) => {
+            if (slotKey === 'unassigned') return;
+            
+            // Use proper parsing for slot key
+            const parsed = parseSlotKey(slotKey);
+            if (!parsed) return;
+            
+            const { day, time, room } = parsed;
+            courses.forEach(course => {
+                const key = getPlacementKey(course.courseCode, course.section, quarter);
+                placements[key] = {
+                    day,
+                    time,
+                    room,
+                    year,
+                    facultyName: course.facultyName
+                };
+            });
+        });
+    });
+    
+    saveSchedulePlacements(placements);
+    console.log(`✅ Saved ${Object.keys(placements).length} course placements`);
+}
+
+/**
+ * Get saved placement for a course
+ */
+function getSavedPlacement(courseCode, section, quarter) {
+    const placements = loadSchedulePlacements();
+    const key = getPlacementKey(courseCode, section, quarter);
+    return placements[key] || null;
+}
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', async function() {
     console.log('Initializing Schedule Builder...');
@@ -191,6 +290,10 @@ async function handleLoadAndAnalyze() {
         // Hide loading, show analysis dashboard
         document.getElementById('loadingContainer').style.display = 'none';
         document.getElementById('analysisDashboard').style.display = 'block';
+
+        // Auto-save placements after loading so they're preserved for future use
+        updatePlacementsFromSchedule(sourceYear);
+        console.log(`✅ Auto-saved placements from ${sourceYear} schedule`);
 
         showToast(`Loaded ${totalSections} sections from ${sourceYear}. Review analysis before proceeding.`);
 
@@ -588,6 +691,9 @@ async function handleGenerate() {
         renderFacultySummary();
         renderQuarterTabs();
 
+        // Auto-save placements after generation for future preservation
+        updatePlacementsFromSchedule(previousYear);
+
         showToast(`Generated schedule for ${targetYear} based on ${previousYear} data (${totalSections} total sections)`);
 
     } catch (error) {
@@ -844,128 +950,191 @@ function getValidRooms(courseCode, quarter, slotUsage = {}) {
 
 /**
  * Auto-assign courses to grid slots with room constraints
+ * IMPROVED: First tries to preserve previous year placements, then balances remaining
  * Includes MW/TR balancing, time slot balancing, and evening safety pairing
  */
 function autoAssignToGrid(recommendations, quarter) {
-    // Sort by priority: Room 212 courses first, then high priority, then by level
-    const sorted = [...recommendations].sort((a, b) => {
-        // Room 212 primary courses get highest priority
-        const aIs212 = ROOM_212_PRIMARY.includes(a.courseCode) ? 0 : 1;
-        const bIs212 = ROOM_212_PRIMARY.includes(b.courseCode) ? 0 : 1;
-        if (aIs212 !== bIs212) return aIs212 - bIs212;
-
-        const priorityOrder = { high: 0, medium: 1, low: 2 };
-        if (priorityOrder[a.priority] !== priorityOrder[b.priority]) {
-            return priorityOrder[a.priority] - priorityOrder[b.priority];
-        }
-        return (a.level || '300').localeCompare(b.level || '300');
-    });
-
     // Track room usage per time slot
     const slotUsage = {};
-
+    
     // Track day counts for MW/TR balancing
     const dayCounts = { 'MW': 0, 'TR': 0 };
-
+    
     // Track time slot counts for even distribution
-    // Index 0 = morning (10:00), 1 = afternoon (1:00), 2 = evening (4:00)
     const timeSlotCounts = { 0: 0, 1: 0, 2: 0 };
-
+    
     // Track evening courses for safety pairing
     const eveningCourses = [];
-
-    sorted.forEach(rec => {
-        // Check if course is valid for this quarter (using catalog if available)
+    
+    // Separate courses into those with saved placements and those without
+    const coursesWithPlacements = [];
+    const coursesWithoutPlacements = [];
+    
+    recommendations.forEach(rec => {
         if (!isCourseOfferedInQuarter(rec.courseCode, quarter)) {
             console.log(`Skipping ${rec.courseCode} - not offered in ${quarter}`);
             return;
         }
-
-        // Get valid rooms for this course
-        const validRooms = getValidRooms(rec.courseCode, quarter, slotUsage);
-
+        
         for (let s = 0; s < rec.sectionsNeeded; s++) {
             const faculty = rec.assignedFaculty[s] || { name: 'TBD', section: String(s + 1).padStart(3, '0') };
-
-            // Find an available slot with MW/TR and time slot balancing
-            let assigned = false;
-
-            // Sort days by count (prefer less-used day for balance)
-            const sortedDays = [...DAYS].sort((a, b) => dayCounts[a] - dayCounts[b]);
-
-            // Time slot priority: morning (0), afternoon (1), then evening (2) last
-            // This prioritizes daytime slots before evening
-            const sortedTimeIndices = [0, 1, 2]; // Fixed order: 10am, 1pm, 4pm
-
-            for (const day of sortedDays) {
-                if (assigned) break;
-
-                // Iterate through time slots in priority order (morning/afternoon before evening)
-                for (const timeIdx of sortedTimeIndices) {
-                    if (assigned) break;
-                    const timeKey = TIME_KEYS[timeIdx];
-                    const timeDisplay = TIMES[timeIdx];
-
-                    for (const room of validRooms) {
-                        // No evening classes in Cheney (CEB rooms)
-                        if (timeIdx === 2 && (room === 'CEB 102' || room === 'CEB 104')) {
-                            continue;
-                        }
-
-                        const key = `${day}-${timeKey}-${room}`;
-                        if (!slotUsage[key]) slotUsage[key] = 0;
-
-                        // Allow up to 1 course per cell for cleaner grid
-                        if (slotUsage[key] < 1) {
-                            const courseData = {
-                                ...rec,
-                                section: faculty.section,
-                                facultyName: faculty.name,
-                                day: day,
-                                time: timeKey,
-                                timeDisplay: timeDisplay,
-                                room: room
-                            };
-
-                            if (!assignedCourses[key]) assignedCourses[key] = [];
-                            assignedCourses[key].push(courseData);
-                            slotUsage[key]++;
-                            dayCounts[day]++;
-                            timeSlotCounts[timeIdx]++;
-                            assigned = true;
-
-                            // Track evening courses for safety check
-                            if (timeIdx === 2) { // Evening slot
-                                eveningCourses.push({ day, room, courseData });
-                            }
-                            break;
-                        }
+            const section = faculty.section;
+            
+            // Check for saved placement
+            const savedPlacement = getSavedPlacement(rec.courseCode, section, quarter);
+            
+            // Use FacultyManager to get best faculty if available
+            let facultyName = faculty.name;
+            if (typeof FacultyManager !== 'undefined') {
+                const selectedFaculty = FacultyManager.getSelectedFaculty();
+                if (selectedFaculty.length > 0) {
+                    const bestFaculty = FacultyManager.getBestFacultyForCourse(rec.courseCode, faculty.name);
+                    if (bestFaculty && bestFaculty !== 'TBD') {
+                        facultyName = bestFaculty;
                     }
                 }
             }
-
-            // If no slot found, mark as unassigned
-            if (!assigned) {
-                const unassignedKey = 'unassigned';
-                if (!assignedCourses[unassignedKey]) assignedCourses[unassignedKey] = [];
-                assignedCourses[unassignedKey].push({
-                    ...rec,
-                    section: faculty.section,
-                    facultyName: faculty.name,
-                    roomConflict: true
-                });
+            
+            const courseEntry = {
+                rec,
+                section,
+                facultyName,
+                savedPlacement
+            };
+            
+            if (savedPlacement) {
+                coursesWithPlacements.push(courseEntry);
+            } else {
+                coursesWithoutPlacements.push(courseEntry);
             }
         }
     });
-
-    // Log distribution stats for debugging
+    
+    console.log(`${quarter}: ${coursesWithPlacements.length} courses with saved placements, ${coursesWithoutPlacements.length} need assignment`);
+    
+    // PHASE 1: Place courses with saved placements first (preserve previous year)
+    coursesWithPlacements.forEach(({ rec, section, facultyName, savedPlacement }) => {
+        const { day, time, room } = savedPlacement;
+        const key = `${day}-${time}-${room}`;
+        
+        if (!slotUsage[key]) slotUsage[key] = 0;
+        
+        // Check if slot is still available
+        if (slotUsage[key] < 1) {
+            const timeIdx = TIME_KEYS.indexOf(time);
+            const timeDisplay = timeIdx >= 0 ? TIMES[timeIdx] : time;
+            
+            const courseData = {
+                ...rec,
+                section,
+                facultyName,
+                day,
+                time,
+                timeDisplay,
+                room,
+                preservedPlacement: true
+            };
+            
+            if (!assignedCourses[key]) assignedCourses[key] = [];
+            assignedCourses[key].push(courseData);
+            slotUsage[key]++;
+            dayCounts[day]++;
+            if (timeIdx >= 0) timeSlotCounts[timeIdx]++;
+            
+            if (timeIdx === 2) {
+                eveningCourses.push({ day, room, courseData });
+            }
+        } else {
+            // Saved slot is taken, treat as needing new assignment
+            coursesWithoutPlacements.push({ rec, section, facultyName, savedPlacement: null });
+            console.log(`Slot conflict for ${rec.courseCode} at ${key}, will reassign`);
+        }
+    });
+    
+    // PHASE 2: Sort remaining by priority and assign to available slots
+    const sorted = coursesWithoutPlacements.sort((a, b) => {
+        const aIs212 = ROOM_212_PRIMARY.includes(a.rec.courseCode) ? 0 : 1;
+        const bIs212 = ROOM_212_PRIMARY.includes(b.rec.courseCode) ? 0 : 1;
+        if (aIs212 !== bIs212) return aIs212 - bIs212;
+        
+        const priorityOrder = { high: 0, medium: 1, low: 2, critical: 3 };
+        const aPriority = priorityOrder[a.rec.priority] ?? 2;
+        const bPriority = priorityOrder[b.rec.priority] ?? 2;
+        if (aPriority !== bPriority) return aPriority - bPriority;
+        
+        return (a.rec.level || '300').localeCompare(b.rec.level || '300');
+    });
+    
+    sorted.forEach(({ rec, section, facultyName }) => {
+        const validRooms = getValidRooms(rec.courseCode, quarter, slotUsage);
+        let assigned = false;
+        
+        // Sort days by count (prefer less-used day for balance)
+        const sortedDays = [...DAYS].sort((a, b) => dayCounts[a] - dayCounts[b]);
+        const sortedTimeIndices = [0, 1, 2];
+        
+        for (const day of sortedDays) {
+            if (assigned) break;
+            
+            for (const timeIdx of sortedTimeIndices) {
+                if (assigned) break;
+                const timeKey = TIME_KEYS[timeIdx];
+                const timeDisplay = TIMES[timeIdx];
+                
+                for (const room of validRooms) {
+                    if (timeIdx === 2 && (room === 'CEB 102' || room === 'CEB 104')) {
+                        continue;
+                    }
+                    
+                    const key = `${day}-${timeKey}-${room}`;
+                    if (!slotUsage[key]) slotUsage[key] = 0;
+                    
+                    if (slotUsage[key] < 1) {
+                        const courseData = {
+                            ...rec,
+                            section,
+                            facultyName,
+                            day,
+                            time: timeKey,
+                            timeDisplay,
+                            room
+                        };
+                        
+                        if (!assignedCourses[key]) assignedCourses[key] = [];
+                        assignedCourses[key].push(courseData);
+                        slotUsage[key]++;
+                        dayCounts[day]++;
+                        timeSlotCounts[timeIdx]++;
+                        assigned = true;
+                        
+                        if (timeIdx === 2) {
+                            eveningCourses.push({ day, room, courseData });
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        
+        if (!assigned) {
+            const unassignedKey = 'unassigned';
+            if (!assignedCourses[unassignedKey]) assignedCourses[unassignedKey] = [];
+            assignedCourses[unassignedKey].push({
+                ...rec,
+                section,
+                facultyName,
+                roomConflict: true
+            });
+        }
+    });
+    
+    // Log distribution stats
     console.log(`${quarter} distribution - Days:`, dayCounts, 'Time slots:', {
         morning: timeSlotCounts[0],
         afternoon: timeSlotCounts[1],
         evening: timeSlotCounts[2]
     });
-
-    // Evening safety check: warn if only one course in evening slot
+    
     checkEveningSafety(eveningCourses);
 }
 
@@ -1582,10 +1751,16 @@ function saveDraft() {
     const draft = {
         schedule: currentSchedule,
         assignedCourses: assignedCourses,
-        caseByeCaseCourses: caseByeCaseCourses
+        caseByeCaseCourses: caseByeCaseCourses,
+        allQuartersSchedule: allQuartersSchedule
     };
 
     localStorage.setItem('scheduleBuilderDraft', JSON.stringify(draft));
+    
+    // Also save placements for future use
+    const targetYear = document.getElementById('academicYear')?.value || currentSchedule.year;
+    updatePlacementsFromSchedule(targetYear);
+    
     showToast('Draft saved successfully');
 }
 
