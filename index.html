@@ -287,11 +287,32 @@
         .course-title {
             font-size: 0.8rem;
             color: var(--text-secondary);
-            margin-bottom: 8px;
+            margin-bottom: 4px;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+        }
+
+        .course-room {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 3px;
+            display: inline-block;
+            margin-bottom: 6px;
+            background: #e2e8f0;
+            color: var(--text-secondary);
+        }
+
+        .course-room.catalyst {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .course-room.cheney {
+            background: #fef3c7;
+            color: #92400e;
         }
 
         .course-faculty {
@@ -738,6 +759,22 @@
                     </select>
                 </div>
                 <div class="form-group">
+                    <label>Room</label>
+                    <select id="modalRoomSelect">
+                        <optgroup label="Catalyst (Spokane)">
+                            <option value="CAT-206">206 - UX Lab</option>
+                            <option value="CAT-209">209 - Mac Lab</option>
+                            <option value="CAT-210">210 - Mac Lab</option>
+                            <option value="CAT-212">212 - Project Lab</option>
+                        </optgroup>
+                        <optgroup label="Cheney Campus">
+                            <option value="CEB-102">CEB 102</option>
+                            <option value="CEB-104">CEB 104</option>
+                        </optgroup>
+                        <option value="">TBD</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label>Faculty</label>
                     <select id="modalFacultySelect"></select>
                 </div>
@@ -938,6 +975,19 @@
             });
         }
 
+        function formatRoom(room) {
+            if (!room) return 'TBD';
+            const roomMap = {
+                'CAT-206': '206 (Catalyst)',
+                'CAT-209': '209 (Catalyst)',
+                'CAT-210': '210 (Catalyst)',
+                'CAT-212': '212 (Catalyst)',
+                'CEB-102': 'CEB 102 (Cheney)',
+                'CEB-104': 'CEB 104 (Cheney)'
+            };
+            return roomMap[room] || room;
+        }
+
         function getDaysFromPattern(pattern) {
             const map = {
                 'MW': ['M', 'W'],
@@ -963,9 +1013,13 @@
                 '#94a3b8';
             card.style.borderLeftColor = facultyColor;
 
+            const roomDisplay = sc.room ? formatRoom(sc.room) : 'TBD';
+            const campusClass = sc.room?.startsWith('CAT') ? 'catalyst' : sc.room?.startsWith('CEB') ? 'cheney' : '';
+            
             card.innerHTML = `
                 <div class="course-code">${sc.course?.code || 'Unknown'}</div>
                 <div class="course-title">${sc.course?.title || ''}</div>
+                <div class="course-room ${campusClass}">${roomDisplay}</div>
                 <div class="course-faculty">
                     <select onchange="updateFaculty('${sc.id}', this.value)">
                         <option value="">-- Assign Faculty --</option>
@@ -1032,6 +1086,7 @@
             const timeSlot = document.getElementById('modalTimeSlot').value;
             const facultyId = document.getElementById('modalFacultySelect').value || null;
             const section = document.getElementById('modalSection').value;
+            const room = document.getElementById('modalRoomSelect').value || null;
 
             if (!currentAcademicYearId) {
                 const year = document.getElementById('yearSelect').value;
@@ -1055,7 +1110,8 @@
                     quarter: document.getElementById('quarterSelect').value,
                     day_pattern: dayPattern,
                     time_slot: timeSlot,
-                    section: section
+                    section: section,
+                    room: room
                 })
                 .select(`
                     *,
@@ -1102,7 +1158,8 @@
                             faculty_id: sc.faculty_id,
                             day_pattern: sc.day_pattern,
                             time_slot: sc.time_slot,
-                            section: sc.section
+                            section: sc.section,
+                            room: sc.room
                         })
                         .eq('id', sc.id)
                 );
