@@ -23,7 +23,8 @@ const dbService = {
 
         try {
             // Get or create department
-            const { data: dept, error: deptError } = await supabase
+            const client = getSupabaseClient();
+            const { data: dept, error: deptError } = await client
                 .from('departments')
                 .select('id')
                 .eq('code', CURRENT_DEPARTMENT_CODE)
@@ -31,7 +32,7 @@ const dbService = {
 
             if (deptError && deptError.code === 'PGRST116') {
                 // Department doesn't exist, create it
-                const { data: newDept, error: createError } = await supabase
+                const { data: newDept, error: createError } = await client
                     .from('departments')
                     .insert({ name: 'Design', code: CURRENT_DEPARTMENT_CODE })
                     .select('id')
@@ -67,7 +68,7 @@ const dbService = {
         }
 
         await this.initialize();
-        const { data, error } = await supabase
+        const { data, error } = await getSupabaseClient()
             .from('courses')
             .select('*')
             .eq('department_id', this.departmentId)
@@ -87,7 +88,7 @@ const dbService = {
         }
 
         await this.initialize();
-        const { data, error } = await supabase
+        const { data, error } = await getSupabaseClient()
             .from('courses')
             .insert({
                 department_id: this.departmentId,
@@ -145,7 +146,7 @@ const dbService = {
         if (course.timeConstraintHard !== undefined) updateData.time_constraint_hard = course.timeConstraintHard;
         if (course.isCaseByCase !== undefined) updateData.is_case_by_case = course.isCaseByCase;
 
-        const { data, error } = await supabase
+        const { data, error } = await getSupabaseClient()
             .from('courses')
             .update(updateData)
             .eq('id', id)
@@ -167,7 +168,7 @@ const dbService = {
         }
 
         await this.initialize();
-        const { error } = await supabase
+        const { error } = await getSupabaseClient()
             .from('courses')
             .delete()
             .eq('id', id)
@@ -190,7 +191,7 @@ const dbService = {
         }
 
         await this.initialize();
-        const { data, error } = await supabase
+        const { data, error } = await getSupabaseClient()
             .from('faculty')
             .select('*')
             .eq('department_id', this.departmentId)
@@ -209,7 +210,7 @@ const dbService = {
         }
 
         await this.initialize();
-        const { data, error } = await supabase
+        const { data, error } = await getSupabaseClient()
             .from('faculty')
             .select('*')
             .eq('department_id', this.departmentId)
@@ -230,7 +231,7 @@ const dbService = {
         }
 
         await this.initialize();
-        const { data, error } = await supabase
+        const { data, error } = await getSupabaseClient()
             .from('faculty')
             .insert({
                 department_id: this.departmentId,
@@ -259,7 +260,7 @@ const dbService = {
         }
 
         await this.initialize();
-        const { data, error } = await supabase
+        const { data, error } = await getSupabaseClient()
             .from('rooms')
             .select('*')
             .eq('department_id', this.departmentId)
@@ -286,7 +287,7 @@ const dbService = {
         }
 
         await this.initialize();
-        const { data, error } = await supabase
+        const { data, error } = await getSupabaseClient()
             .from('academic_years')
             .select('*')
             .eq('department_id', this.departmentId)
@@ -305,7 +306,7 @@ const dbService = {
         await this.initialize();
 
         // Try to get existing
-        const { data: existing } = await supabase
+        const { data: existing } = await getSupabaseClient()
             .from('academic_years')
             .select('*')
             .eq('department_id', this.departmentId)
@@ -315,7 +316,7 @@ const dbService = {
         if (existing) return existing;
 
         // Create new
-        const { data, error } = await supabase
+        const { data, error } = await getSupabaseClient()
             .from('academic_years')
             .insert({
                 department_id: this.departmentId,
@@ -385,7 +386,7 @@ const dbService = {
 
         if (courseData.id) {
             // Update existing
-            const { data, error } = await supabase
+            const { data, error } = await getSupabaseClient()
                 .from('scheduled_courses')
                 .update(record)
                 .eq('id', courseData.id)
@@ -396,7 +397,7 @@ const dbService = {
             return data;
         } else {
             // Insert new
-            const { data, error } = await supabase
+            const { data, error } = await getSupabaseClient()
                 .from('scheduled_courses')
                 .insert(record)
                 .select()
@@ -416,7 +417,7 @@ const dbService = {
             return false;
         }
 
-        const { error } = await supabase
+        const { error } = await getSupabaseClient()
             .from('scheduled_courses')
             .delete()
             .eq('id', id);
@@ -446,7 +447,7 @@ const dbService = {
             projected_enrollment: c.projectedEnrollment || null
         }));
 
-        const { data, error } = await supabase
+        const { data, error } = await getSupabaseClient()
             .from('scheduled_courses')
             .upsert(records)
             .select();
@@ -467,7 +468,7 @@ const dbService = {
             return null;
         }
 
-        const { data, error } = await supabase
+        const { data, error } = await getSupabaseClient()
             .from('faculty_preferences')
             .select('*')
             .eq('faculty_id', facultyId)
@@ -498,7 +499,7 @@ const dbService = {
             updated_at: new Date().toISOString()
         };
 
-        const { data, error } = await supabase
+        const { data, error } = await getSupabaseClient()
             .from('faculty_preferences')
             .upsert(record, { onConflict: 'faculty_id' })
             .select()
@@ -521,7 +522,7 @@ const dbService = {
         }
 
         await this.initialize();
-        const { data, error } = await supabase
+        const { data, error } = await getSupabaseClient()
             .from('scheduling_constraints')
             .select('*')
             .eq('department_id', this.departmentId)
@@ -550,7 +551,7 @@ const dbService = {
         };
 
         if (constraint.id) {
-            const { data, error } = await supabase
+            const { data, error } = await getSupabaseClient()
                 .from('scheduling_constraints')
                 .update(record)
                 .eq('id', constraint.id)
@@ -560,7 +561,7 @@ const dbService = {
             if (error) throw error;
             return data;
         } else {
-            const { data, error } = await supabase
+            const { data, error } = await getSupabaseClient()
                 .from('scheduling_constraints')
                 .insert(record)
                 .select()
@@ -617,7 +618,7 @@ const dbService = {
         };
 
         if (allocation.id) {
-            const { data, error } = await supabase
+            const { data, error } = await getSupabaseClient()
                 .from('release_time')
                 .update(record)
                 .eq('id', allocation.id)
@@ -627,7 +628,7 @@ const dbService = {
             if (error) throw error;
             return data;
         } else {
-            const { data, error } = await supabase
+            const { data, error } = await getSupabaseClient()
                 .from('release_time')
                 .insert(record)
                 .select()
@@ -732,7 +733,7 @@ const dbService = {
         if (!isSupabaseConfigured()) return null;
 
         await this.initialize();
-        const { data } = await supabase
+        const { data } = await getSupabaseClient()
             .from('courses')
             .select('id')
             .eq('department_id', this.departmentId)
@@ -746,7 +747,7 @@ const dbService = {
         if (!isSupabaseConfigured()) return null;
 
         await this.initialize();
-        const { data } = await supabase
+        const { data } = await getSupabaseClient()
             .from('faculty')
             .select('id')
             .eq('department_id', this.departmentId)
@@ -760,7 +761,7 @@ const dbService = {
         if (!isSupabaseConfigured()) return null;
 
         await this.initialize();
-        const { data } = await supabase
+        const { data } = await getSupabaseClient()
             .from('rooms')
             .select('id')
             .eq('department_id', this.departmentId)

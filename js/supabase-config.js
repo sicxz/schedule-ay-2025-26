@@ -17,7 +17,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const CURRENT_DEPARTMENT_CODE = 'DESN';
 
 // Initialize Supabase client (only if credentials are configured)
-let supabase = null;
+let supabaseClient = null;
 
 function isSupabaseConfigured() {
     return SUPABASE_URL !== 'YOUR_SUPABASE_PROJECT_URL' &&
@@ -30,14 +30,21 @@ function initSupabase() {
         return null;
     }
 
-    if (!window.supabase) {
+    if (!window.supabase || !window.supabase.createClient) {
         console.error('Supabase JS library not loaded. Add the script tag before this file.');
         return null;
     }
 
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    console.log('Supabase client initialized');
-    return supabase;
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    console.log('Supabase client initialized successfully');
+    return supabaseClient;
+}
+
+function getSupabaseClient() {
+    if (!supabaseClient) {
+        return initSupabase();
+    }
+    return supabaseClient;
 }
 
 // Auto-initialize when script loads
