@@ -1094,7 +1094,25 @@
         }
 
         async function saveSchedule() {
-            showToast('Schedule saved', 'success');
+            showLoading();
+            try {
+                const updatePromises = scheduledCourses.map(sc => 
+                    db.from('scheduled_courses')
+                        .update({
+                            faculty_id: sc.faculty_id,
+                            day_pattern: sc.day_pattern,
+                            time_slot: sc.time_slot,
+                            section: sc.section
+                        })
+                        .eq('id', sc.id)
+                );
+                await Promise.all(updatePromises);
+                showToast('All changes saved successfully', 'success');
+            } catch (error) {
+                console.error('Save error:', error);
+                showToast('Failed to save changes', 'error');
+            }
+            hideLoading();
         }
 
         async function copyFromPrevious() {
