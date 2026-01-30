@@ -42,6 +42,13 @@ The app uses a comprehensive design system (`css/design-system.css`) with:
 - Inter font from Google Fonts
 
 ## Recent Changes
+- January 2026: Streamlined UI - Schedule-First Design
+  - Added prominent quarter tabs (Fall, Winter, Spring) directly below header
+  - Filters panel now collapsed by default with toggle button
+  - Action buttons converted to floating action button (FAB) menu
+  - Dashboards & Tools section collapsed by default
+  - Reduced header size to show schedule grid immediately on load
+  - Removed info banner to minimize clutter
 - January 2026: Faculty Selection & Schedule Preservation
   - Added Faculty Selection Panel to Schedule Builder for selecting active faculty for next year
   - Faculty organized by rank with priority: Full-time faculty (professors, lecturers) over Adjuncts
