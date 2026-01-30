@@ -3771,21 +3771,46 @@
             const coursesList = document.createElement('div');
             coursesList.className = 'online-courses-list';
 
-            onlineCourses.forEach(course => {
+            onlineCourses.forEach((course, index) => {
                 const item = document.createElement('div');
                 item.className = 'online-course-item';
-                item.innerHTML = `<strong>${course.code}</strong> <span style="color:#57606a">${course.name}</span> <span style="color:#8b949e">- ${course.instructor}</span>`;
                 
-                item.onclick = () => {
+                const courseInfo = document.createElement('span');
+                courseInfo.innerHTML = `<strong>${course.code}</strong> <span style="color:#57606a">${course.name}</span> <span style="color:#8b949e">- ${course.instructor}</span>`;
+                courseInfo.style.cursor = 'pointer';
+                courseInfo.onclick = () => {
                     showCourseDetails(course.code, course.name, course.instructor, course.credits, 'ONLINE', null, quarter, 'ONLINE', 'async');
                 };
-                item.style.cursor = 'pointer';
                 
+                const deleteBtn = document.createElement('button');
+                deleteBtn.innerHTML = '&times;';
+                deleteBtn.title = 'Delete this online course';
+                deleteBtn.style.cssText = 'background: none; border: none; color: #cf222e; font-size: 1.2em; cursor: pointer; padding: 0 4px; margin-left: 8px; line-height: 1;';
+                deleteBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    if (confirm(`Delete ${course.code} - ${course.name}?`)) {
+                        deleteOnlineCourse(quarter, index);
+                    }
+                };
+                
+                item.appendChild(courseInfo);
+                item.appendChild(deleteBtn);
                 coursesList.appendChild(item);
             });
 
             section.appendChild(coursesList);
             onlineSection.appendChild(section);
+        }
+
+        function deleteOnlineCourse(quarter, index) {
+            const data = scheduleData[quarter];
+            if (data && data['ONLINE'] && data['ONLINE']['async']) {
+                data['ONLINE']['async'].splice(index, 1);
+                saveScheduleData();
+                renderOnlineCourses(quarter);
+                updateStats(quarter);
+                showToast('Online course deleted');
+            }
         }
 
         function renderArrangedCourses(quarter) {
