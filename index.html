@@ -4660,39 +4660,31 @@
             const instructorValue = currentCourseData.instructor || '';
             let facultyFound = false;
 
-            // Normalize instructor name for matching (handle various formats)
-            const normalizeInstructor = (name) => {
+            // Helper to extract last name from various formats
+            const getLastName = (name) => {
                 if (!name) return '';
-                return name.toLowerCase().replace(/[^a-z]/g, '');
+                // Handle "S.Durr" format
+                if (name.includes('.')) {
+                    return name.split('.').pop().toLowerCase();
+                }
+                // Handle "Sam Durr" format
+                return name.split(' ').pop().toLowerCase();
             };
-
-            const normalizedInstructor = normalizeInstructor(instructorValue);
+            
+            const instructorLastName = getLastName(instructorValue);
 
             for (let i = 0; i < facultySelect.options.length; i++) {
                 const optionValue = facultySelect.options[i].value;
-                const optionText = facultySelect.options[i].text;
-
+                
                 // Try exact match first
-                if (optionValue === instructorValue || optionText === instructorValue) {
+                if (optionValue === instructorValue) {
                     facultySelect.selectedIndex = i;
                     facultyFound = true;
                     break;
                 }
 
-                // Try normalized match (handles "T.Masingale" vs "Travis Masingale")
-                const normalizedOption = normalizeInstructor(optionValue);
-                const normalizedOptionText = normalizeInstructor(optionText);
-
-                if (normalizedOption && normalizedInstructor.includes(normalizedOption.slice(-6)) ||
-                    normalizedOptionText && normalizedInstructor.includes(normalizedOptionText.slice(-6))) {
-                    facultySelect.selectedIndex = i;
-                    facultyFound = true;
-                    break;
-                }
-
-                // Check if last names match
-                const instructorLastName = instructorValue.split(' ').pop()?.toLowerCase() || '';
-                const optionLastName = optionText.split(' ').pop()?.toLowerCase() || '';
+                // Check if last names match (handles "S.Durr" matching to "S.Durr (Lecturer)")
+                const optionLastName = getLastName(optionValue);
                 if (instructorLastName && optionLastName && instructorLastName === optionLastName) {
                     facultySelect.selectedIndex = i;
                     facultyFound = true;
@@ -4700,11 +4692,13 @@
                 }
             }
 
-            // If still not found, try to add the instructor as a custom option
+            // If still not found, set value directly (it may work if exact match exists)
             if (!facultyFound && instructorValue && instructorValue !== 'TBD') {
-                console.log('Instructor not found in dropdown:', instructorValue);
-                // Set to first matching partial or leave as placeholder
-                facultySelect.selectedIndex = 0;
+                facultySelect.value = instructorValue;
+                if (facultySelect.value !== instructorValue) {
+                    // Value didn't stick, reset to placeholder
+                    facultySelect.selectedIndex = 0;
+                }
             }
 
             // Try to get more data from ScheduleManager if available
@@ -4757,21 +4751,41 @@
 
             const courseId = document.getElementById('editCourseId').value;
             const year = document.getElementById('editYear').value;
-            // Capitalize quarter to match ScheduleManager format (e.g., "fall" -> "Fall")
             const quarterRaw = document.getElementById('editQuarter').value;
             const quarter = quarterRaw.charAt(0).toUpperCase() + quarterRaw.slice(1);
+            const quarterLower = quarterRaw.toLowerCase();
+
+            const newInstructor = document.getElementById('editFaculty').value || 'TBD';
+            const newRoom = document.getElementById('editRoom').value || '';
 
             const updates = {
                 section: document.getElementById('editSection').value,
                 credits: parseInt(document.getElementById('editCredits').value) || 5,
                 enrollmentCap: parseInt(document.getElementById('editEnrollmentCap').value) || 24,
-                assignedFaculty: document.getElementById('editFaculty').value || null,
-                room: document.getElementById('editRoom').value || null,
+                assignedFaculty: newInstructor,
+                room: newRoom,
                 days: getEditSelectedDays(),
                 startTime: document.getElementById('editStartTime').value || null,
                 endTime: document.getElementById('editEndTime').value || null,
                 notes: document.getElementById('editNotes').value || null
             };
+
+            // Update the scheduleData directly for immediate display
+            if (currentCourseData) {
+                const { day, time, room, code } = currentCourseData;
+                const quarterData = scheduleData[quarterLower];
+                
+                if (quarterData && quarterData[day] && quarterData[day][time]) {
+                    const courses = quarterData[day][time];
+                    const courseIndex = courses.findIndex(c => c.code === code && c.room === room);
+                    
+                    if (courseIndex !== -1) {
+                        courses[courseIndex].instructor = newInstructor;
+                        if (newRoom) courses[courseIndex].room = newRoom;
+                        saveScheduleData();
+                    }
+                }
+            }
 
             if (typeof ScheduleManager !== 'undefined' && courseId) {
                 const result = ScheduleManager.updateCourseAssignment(year, quarter, courseId, updates);
@@ -4787,8 +4801,13 @@
                     showToast(result.errors.join(', '), 'error');
                 }
             } else {
-                showToast('Changes saved locally');
+                showToast('Course updated');
                 closeEditModal();
+                // Refresh the schedule view
+                const currentQuarter = document.getElementById('quarterSelect').value;
+                renderSchedule(currentQuarter);
+                renderOnlineCourses(currentQuarter);
+                renderArrangedCourses(currentQuarter);
             }
         }
 
@@ -5492,9 +5511,154 @@
             });
         }
 
+        // Custom faculty storage
+        let customFaculty = JSON.parse(localStorage.getItem('customFaculty') || '[]');
+        let pendingFacultySelectId = null;
+        
+        // Default faculty roster
+        const defaultFaculty = {
+            'Professors': [
+                { name: 'T.Masingale', rank: 'Professor' },
+                { name: 'G.Hustrulid', rank: 'Professor' },
+                { name: 'M.Breen', rank: 'Professor' },
+                { name: 'C.Manikoth', rank: 'Professor' }
+            ],
+            'Lecturers': [
+                { name: 'S.Mills', rank: 'Lecturer' },
+                { name: 'A.Sopu', rank: 'Lecturer' },
+                { name: 'S.Durr', rank: 'Lecturer' }
+            ],
+            'Adjuncts': [
+                { name: 'J.Braukmann', rank: 'Adjunct' }
+            ]
+        };
+        
+        function rebuildFacultyDropdowns() {
+            const selects = [
+                document.getElementById('addFaculty'),
+                document.getElementById('editFaculty')
+            ];
+            
+            selects.forEach(select => {
+                if (!select) return;
+                const currentValue = select.value;
+                
+                // Clear and rebuild
+                select.innerHTML = '<option value="">Select Instructor...</option>';
+                
+                // Add default faculty by rank
+                Object.entries(defaultFaculty).forEach(([groupLabel, members]) => {
+                    const optgroup = document.createElement('optgroup');
+                    optgroup.label = groupLabel;
+                    members.forEach(f => {
+                        const opt = document.createElement('option');
+                        opt.value = f.name;
+                        opt.textContent = f.name + ' (' + f.rank + ')';
+                        optgroup.appendChild(opt);
+                    });
+                    select.appendChild(optgroup);
+                });
+                
+                // Add custom faculty if any
+                if (customFaculty.length > 0) {
+                    const customGroup = document.createElement('optgroup');
+                    customGroup.label = 'Custom Faculty';
+                    customFaculty.forEach(f => {
+                        const opt = document.createElement('option');
+                        opt.value = f.name;
+                        opt.textContent = f.name + ' (' + f.rank + ')';
+                        customGroup.appendChild(opt);
+                    });
+                    select.appendChild(customGroup);
+                }
+                
+                // Add TBD and Add New options
+                const tbdOpt = document.createElement('option');
+                tbdOpt.value = 'TBD';
+                tbdOpt.textContent = 'TBD';
+                select.appendChild(tbdOpt);
+                
+                const addNewOpt = document.createElement('option');
+                addNewOpt.value = '__add_new__';
+                addNewOpt.textContent = '+ Add New Faculty...';
+                select.appendChild(addNewOpt);
+                
+                // Restore selection if possible
+                if (currentValue) {
+                    select.value = currentValue;
+                }
+            });
+        }
+        
+        function handleFacultySelectChange(selectId) {
+            const select = document.getElementById(selectId);
+            if (select.value === '__add_new__') {
+                pendingFacultySelectId = selectId;
+                select.value = ''; // Reset selection
+                openAddFacultyModal();
+            }
+        }
+        
+        function openAddFacultyModal() {
+            document.getElementById('addFacultyForm').reset();
+            document.getElementById('addFacultyModal').classList.add('active');
+        }
+        
+        function closeAddFacultyModal() {
+            document.getElementById('addFacultyModal').classList.remove('active');
+            pendingFacultySelectId = null;
+        }
+        
+        function handleAddFacultySubmit(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('newFacultyName').value.trim();
+            const rank = document.getElementById('newFacultyRank').value;
+            
+            if (!name || !rank) {
+                showToast('Please fill in all fields', 'error');
+                return;
+            }
+            
+            // Check for duplicates
+            const allFaculty = [...Object.values(defaultFaculty).flat(), ...customFaculty];
+            if (allFaculty.some(f => f.name.toLowerCase() === name.toLowerCase())) {
+                showToast('Faculty member already exists', 'error');
+                return;
+            }
+            
+            // Add to custom faculty
+            customFaculty.push({ name, rank });
+            localStorage.setItem('customFaculty', JSON.stringify(customFaculty));
+            
+            // Rebuild dropdowns
+            rebuildFacultyDropdowns();
+            
+            // Select the new faculty in the pending dropdown
+            if (pendingFacultySelectId) {
+                const select = document.getElementById(pendingFacultySelectId);
+                if (select) {
+                    select.value = name;
+                }
+            }
+            
+            closeAddFacultyModal();
+            showToast('Faculty member added: ' + name);
+        }
+
         async function init() {
             await loadEnrollmentData();
             await loadFacultyData();
+            
+            // Initialize custom faculty from localStorage
+            customFaculty = JSON.parse(localStorage.getItem('customFaculty') || '[]');
+            
+            // Rebuild faculty dropdowns with current roster
+            rebuildFacultyDropdowns();
+            
+            // Add change handlers to faculty selects
+            document.getElementById('addFaculty')?.addEventListener('change', () => handleFacultySelectChange('addFaculty'));
+            document.getElementById('editFaculty')?.addEventListener('change', () => handleFacultySelectChange('editFaculty'));
 
             // Migrate old schedule data format to year-aware format
             migrateOldScheduleData();
@@ -5606,6 +5770,22 @@
                         <label for="editFaculty" class="form-label">Faculty</label>
                         <select id="editFaculty" class="form-select">
                             <option value="">Select Instructor...</option>
+                            <optgroup label="Professors">
+                                <option value="T.Masingale">T.Masingale (Professor)</option>
+                                <option value="G.Hustrulid">G.Hustrulid (Professor)</option>
+                                <option value="M.Breen">M.Breen (Professor)</option>
+                                <option value="C.Manikoth">C.Manikoth (Professor)</option>
+                            </optgroup>
+                            <optgroup label="Lecturers">
+                                <option value="S.Mills">S.Mills (Lecturer)</option>
+                                <option value="A.Sopu">A.Sopu (Lecturer)</option>
+                                <option value="S.Durr">S.Durr (Lecturer)</option>
+                            </optgroup>
+                            <optgroup label="Adjuncts">
+                                <option value="J.Braukmann">J.Braukmann (Adjunct)</option>
+                            </optgroup>
+                            <option value="TBD">TBD</option>
+                            <option value="__add_new__">+ Add New Faculty...</option>
                         </select>
                     </div>
 
@@ -5715,17 +5895,22 @@
                         <label for="addFaculty" class="form-label">Instructor</label>
                         <select id="addFaculty" class="form-select">
                             <option value="">Select Instructor...</option>
-                            <option value="T.Masingale">T.Masingale</option>
-                            <option value="S.Durr">S.Durr</option>
-                            <option value="C.Manikoth">C.Manikoth</option>
-                            <option value="S.Mills">S.Mills</option>
-                            <option value="M.Lybbert">M.Lybbert</option>
-                            <option value="G.Hustrulid">G.Hustrulid</option>
-                            <option value="A.Sopu">A.Sopu</option>
-                            <option value="E.Norris">E.Norris</option>
-                            <option value="J.Braukmann">J.Braukmann</option>
-                            <option value="S.Allison">S.Allison</option>
+                            <optgroup label="Professors">
+                                <option value="T.Masingale">T.Masingale (Professor)</option>
+                                <option value="G.Hustrulid">G.Hustrulid (Professor)</option>
+                                <option value="M.Breen">M.Breen (Professor)</option>
+                                <option value="C.Manikoth">C.Manikoth (Professor)</option>
+                            </optgroup>
+                            <optgroup label="Lecturers">
+                                <option value="S.Mills">S.Mills (Lecturer)</option>
+                                <option value="A.Sopu">A.Sopu (Lecturer)</option>
+                                <option value="S.Durr">S.Durr (Lecturer)</option>
+                            </optgroup>
+                            <optgroup label="Adjuncts">
+                                <option value="J.Braukmann">J.Braukmann (Adjunct)</option>
+                            </optgroup>
                             <option value="TBD">TBD</option>
+                            <option value="__add_new__">+ Add New Faculty...</option>
                         </select>
                     </div>
 
@@ -5841,6 +6026,38 @@
     <!-- Toast Notification -->
     <div class="toast" id="toast">
         <span id="toastMessage">Changes saved</span>
+    </div>
+
+    <!-- Add Faculty Modal -->
+    <div class="modal-overlay" id="addFacultyModal">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2 class="modal-title">Add New Faculty</h2>
+                <button class="modal-close" onclick="closeAddFacultyModal()">&times;</button>
+            </div>
+            <form id="addFacultyForm" onsubmit="handleAddFacultySubmit(event)">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="newFacultyName" class="form-label">Name (First Initial.LastName)</label>
+                        <input type="text" id="newFacultyName" class="form-input" placeholder="e.g., J.Smith" required>
+                        <small style="color: #6b7280; font-size: 0.85em;">Format: First initial + period + last name</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="newFacultyRank" class="form-label">Rank</label>
+                        <select id="newFacultyRank" class="form-select" required>
+                            <option value="">Select Rank...</option>
+                            <option value="Professor">Professor</option>
+                            <option value="Lecturer">Lecturer</option>
+                            <option value="Adjunct">Adjunct</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeAddFacultyModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Add Faculty</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <!-- Scheduling Rules Panel -->
