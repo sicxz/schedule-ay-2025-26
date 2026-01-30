@@ -42,6 +42,12 @@ The app uses a comprehensive design system (`css/design-system.css`) with:
 - Inter font from Google Fonts
 
 ## Recent Changes
+- January 2026: Graduation Pathway Conflict Detection
+  - Rewrote student_conflict checker to use graduation pathway pairings instead of generic upper-div counting
+  - Defined 25+ common course pairings (senior year: 463+480+490, UX track: 338+348+458, etc.)
+  - Conflicts now only flag when courses students commonly take together are at the same time
+  - Example: 490, 374, 338 at same time is NOT a conflict; 480, 490, 463 together IS a conflict
+  - Updated fallback constraints to match new pairing-based logic
 - January 2026: Online Section Support & Bug Fixes
   - Added online/asynchronous section toggle in Add Course modal
   - Online sections stored in ONLINE/async data structure
