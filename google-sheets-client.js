@@ -339,19 +339,24 @@ function parseCourseTimeToHour(courseTime) {
 }
 
 function getCourseDuration(timeString) {
-  if (!timeString) return 2;
+  if (!timeString) return 3; // Default 2h 20min = 3 hourly slots
   
-  const match = timeString.match(/(\d{1,2}):?(\d{2})?\s*-\s*(\d{1,2}):?(\d{2})?/);
-  if (!match) return 2;
+  const match = timeString.match(/(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})/);
+  if (!match) return 3;
   
   let startHour = parseInt(match[1]);
+  const startMin = parseInt(match[2]);
   let endHour = parseInt(match[3]);
+  const endMin = parseInt(match[4]);
   
   if (startHour < 7) startHour += 12;
   if (endHour < 7) endHour += 12;
   if (endHour <= startHour) endHour += 12;
   
-  const duration = endHour - startHour;
+  // Calculate duration in minutes, then convert to hourly slots
+  const totalMinutes = (endHour * 60 + endMin) - (startHour * 60 + startMin);
+  // 2h 20min = 140 min -> 3 hourly slots, 2h = 120 min -> 2 slots
+  const duration = Math.ceil(totalMinutes / 60);
   return Math.max(1, Math.min(duration, 4));
 }
 
