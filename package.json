@@ -2,7 +2,8 @@
   "name": "ewu-design-schedule-analyzer",
   "version": "2.0.0",
   "description": "EWU Design Department Schedule Analyzer - Faculty workload and enrollment analytics",
-  "main": "index.html",
+  "type": "module",
+  "main": "api-server.js",
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
@@ -38,6 +39,7 @@
     "verbose": true
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.86.2"
+    "@supabase/supabase-js": "^2.86.2",
+    "googleapis": "^148.0.0"
   }
 }

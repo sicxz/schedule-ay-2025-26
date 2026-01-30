@@ -1,6 +1,7 @@
 modules = ["nodejs-20", "web", "python-3.12"]
 [agent]
 expertMode = true
+integrations = ["google-sheet:1.0.0"]
 
 [nix]
 channel = "stable-25_05"
@@ -21,13 +22,13 @@ args = "Start application"
 name = "Start application"
 author = "agent"
 
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "node server.js"
-waitForPort = 5000
-
 [workflows.workflow.metadata]
 outputType = "webview"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "node api-server.js"
+waitForPort = 5000
 
 [[ports]]
 localPort = 5000

@@ -2546,6 +2546,10 @@
                     <span class="fab-item-icon">⚙️</span>
                     <span class="fab-item-label">Settings</span>
                 </button>
+                <button class="fab-item" onclick="exportToGoogleSheets()" title="Export to Google Sheets">
+                    <span class="fab-item-icon">📊</span>
+                    <span class="fab-item-label">Export to Sheets</span>
+                </button>
             </div>
         </div>
 
@@ -6000,6 +6004,33 @@
         // ============================================
         // SAVE, CONFLICT DETECTION & AI ANALYSIS
         // ============================================
+
+        async function exportToGoogleSheets() {
+            showToast('Exporting to Google Sheets...');
+            
+            try {
+                const response = await fetch('/api/export-to-sheets', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        scheduleData: scheduleData,
+                        academicYear: currentAcademicYear
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('Exported! Opening spreadsheet...');
+                    window.open(result.spreadsheetUrl, '_blank');
+                } else {
+                    showToast('Export failed: ' + result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Export error:', error);
+                showToast('Export failed: ' + error.message, 'error');
+            }
+        }
 
         /**
          * Save schedule changes to localStorage and optionally to database
