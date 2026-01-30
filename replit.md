@@ -42,6 +42,12 @@ The app uses a comprehensive design system (`css/design-system.css`) with:
 - Inter font from Google Fonts
 
 ## Recent Changes
+- January 2026: Online Section Support & Bug Fixes
+  - Added online/asynchronous section toggle in Add Course modal
+  - Online sections stored in ONLINE/async data structure
+  - Added "Online / Async" option to room dropdown
+  - Fixed conflict detection to display times in AM/PM format (1:00 PM instead of 13:00)
+  - Fixed undefined suggestion bug in conflict results by adding suggestion field to all conflict types
 - January 2026: Primer Design System Integration
   - Adopted GitHub Primer design patterns for cleaner, professional look
   - System font stack (-apple-system, BlinkMacSystemFont, etc.)
