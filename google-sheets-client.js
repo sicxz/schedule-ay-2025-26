@@ -291,6 +291,7 @@ function findCourseForSlot(courses, dayPatterns, timeSlot, room) {
     const courseHour = parseCourseTimeToHour(courseTime);
     
     if (courseHour === targetHour) {
+      console.log(`MATCH: ${course.code} @ slot ${timeSlot}(${targetHour}) course time ${courseTime}(${courseHour}) room ${room}`);
       return course;
     }
   }
