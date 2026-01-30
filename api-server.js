@@ -47,12 +47,24 @@ const server = http.createServer(async (req, res) => {
       const body = await parseBody(req);
       const { scheduleData, academicYear } = body;
       
+      console.log('Export request received for year:', academicYear);
+      console.log('Fall courses:', (scheduleData.fall || []).length);
+      console.log('Winter courses:', (scheduleData.winter || []).length);
+      console.log('Spring courses:', (scheduleData.spring || []).length);
+      
+      if (scheduleData.fall && scheduleData.fall.length > 0) {
+        console.log('Sample fall course:', JSON.stringify(scheduleData.fall[0]));
+      }
+      
       const result = await createScheduleSpreadsheet(scheduleData, academicYear || '2025-26');
+      
+      console.log('Export successful:', result.spreadsheetUrl);
       
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ success: true, ...result }));
     } catch (error) {
       console.error('Export error:', error);
+      console.error('Error stack:', error.stack);
       res.writeHead(500, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ success: false, error: error.message }));
     }
