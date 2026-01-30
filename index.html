@@ -1323,14 +1323,19 @@
             backdrop-filter: blur(10px);
         }
 
-        /* Enrollment indicators */
+        /* Enrollment indicators - small circle */
         .enrollment-badge {
-            display: inline-block;
-            padding: 2px 6px;
-            border-radius: 10px;
-            font-size: 0.7em;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            padding: 0;
+            border-radius: 50%;
+            font-size: 9px;
             font-weight: 600;
             margin-left: 4px;
+            flex-shrink: 0;
         }
 
         .enrollment-high {
@@ -2555,6 +2560,32 @@
         </div>
 
         <div class="content">
+            <div id="minorInfoPanel"></div>
+            <div id="trackSuggestionsPanel"></div>
+
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                <h2 style="margin: 0; color: #495057;">Schedule Grid - <span id="quarterTitle">Spring 2026</span></h2>
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <div class="swap-toggle-container" title="When ON: Dropping a course onto an occupied slot swaps them. When OFF: The existing course goes to the displaced tray.">
+                        <span class="swap-toggle-label" id="displaceLabel">Displace</span>
+                        <label class="swap-toggle">
+                            <input type="checkbox" id="swapModeToggle" onchange="updateSwapModeLabels()">
+                            <span class="swap-toggle-slider"></span>
+                        </label>
+                        <span class="swap-toggle-label" id="swapLabel">Swap</span>
+                    </div>
+                    <button onclick="openAddCourseModal()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                        <span style="font-size: 1.2em;">+</span> Add Course
+                    </button>
+                </div>
+            </div>
+            <div class="schedule-grid" id="scheduleGrid"></div>
+
+            <div class="special-sections-grid">
+                <div id="onlineSection"></div>
+                <div id="arrangedSection"></div>
+            </div>
+
             <div class="legend">
                 <div class="legend-item">
                     <div class="legend-color" style="background: #fff5f5; border: 2px solid #ff6b6b;"></div>
@@ -2625,33 +2656,7 @@
                 </div>
             </div>
 
-            <div id="minorInfoPanel"></div>
-            <div id="trackSuggestionsPanel"></div>
-
             <div id="enrollmentAnalytics"></div>
-
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
-                <h2 style="margin: 0; color: #495057;">Schedule Grid - <span id="quarterTitle">Spring 2026</span></h2>
-                <div style="display: flex; align-items: center; gap: 16px;">
-                    <div class="swap-toggle-container" title="When ON: Dropping a course onto an occupied slot swaps them. When OFF: The existing course goes to the displaced tray.">
-                        <span class="swap-toggle-label" id="displaceLabel">Displace</span>
-                        <label class="swap-toggle">
-                            <input type="checkbox" id="swapModeToggle" onchange="updateSwapModeLabels()">
-                            <span class="swap-toggle-slider"></span>
-                        </label>
-                        <span class="swap-toggle-label" id="swapLabel">Swap</span>
-                    </div>
-                    <button onclick="openAddCourseModal()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 6px;">
-                        <span style="font-size: 1.2em;">+</span> Add Course
-                    </button>
-                </div>
-            </div>
-            <div class="schedule-grid" id="scheduleGrid"></div>
-
-            <div class="special-sections-grid">
-                <div id="onlineSection"></div>
-                <div id="arrangedSection"></div>
-            </div>
 
             <div class="analysis-grid">
                 <div class="conflicts-panel">
