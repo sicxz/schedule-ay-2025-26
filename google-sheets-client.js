@@ -50,6 +50,32 @@ export async function getUncachableGoogleSheetClient() {
 const ROOMS = ['206 UX Lab', '207 Media Lab', '209 Mac Lab', '210 Mac Lab', '212 Project Lab', '', 'CEB 102', 'CEB 104'];
 const TIME_SLOTS = ['8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM', '6:00 PM'];
 
+const INSTRUCTOR_COLORS = {
+  'T.Masingale': { red: 0.68, green: 0.85, blue: 0.90 },
+  'Masingale': { red: 0.68, green: 0.85, blue: 0.90 },
+  'S.Durr': { red: 0.96, green: 0.89, blue: 0.76 },
+  'Durr': { red: 0.96, green: 0.89, blue: 0.76 },
+  'C.Manikoth': { red: 0.98, green: 0.80, blue: 0.49 },
+  'Manikoth': { red: 0.98, green: 0.80, blue: 0.49 },
+  'M.Lybbert': { red: 0.80, green: 0.73, blue: 0.85 },
+  'Lybbert': { red: 0.80, green: 0.73, blue: 0.85 },
+  'S.Mills': { red: 0.85, green: 0.92, blue: 0.83 },
+  'Mills': { red: 0.85, green: 0.92, blue: 0.83 },
+  'A.Sopu': { red: 0.76, green: 0.88, blue: 0.71 },
+  'Sopu': { red: 0.76, green: 0.88, blue: 0.71 },
+  'S.Allison': { red: 0.76, green: 0.88, blue: 0.71 },
+  'Allison': { red: 0.76, green: 0.88, blue: 0.71 },
+  'G.Hustrulid': { red: 0.98, green: 0.80, blue: 0.49 },
+  'Hustrulid': { red: 0.98, green: 0.80, blue: 0.49 },
+  'E.Norris': { red: 0.68, green: 0.85, blue: 0.90 },
+  'Norris': { red: 0.68, green: 0.85, blue: 0.90 },
+  'Barton/Pettigrew': { red: 0.80, green: 0.73, blue: 0.85 },
+  'TBD': { red: 0.90, green: 0.90, blue: 0.90 }
+};
+
+const DEFAULT_COLOR = { red: 0.95, green: 0.95, blue: 0.95 };
+const HEADER_COLOR = { red: 0.85, green: 0.85, blue: 0.85 };
+
 export async function createScheduleSpreadsheet(scheduleData, academicYear) {
   const sheets = await getUncachableGoogleSheetClient();
   
@@ -71,9 +97,13 @@ export async function createScheduleSpreadsheet(scheduleData, academicYear) {
   const spreadsheetId = spreadsheet.data.spreadsheetId;
   const today = new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
 
+  const allFormatData = {};
+
   for (const [key, quarterName] of Object.entries(quarters)) {
+    const sheetId = key === 'fall' ? 0 : key === 'winter' ? 1 : 2;
     const courses = scheduleData[key] || [];
-    const rows = buildScheduleGrid(courses, quarterName, today);
+    const { rows, formatData } = buildScheduleGridWithFormat(courses, quarterName, today);
+    allFormatData[sheetId] = formatData;
     
     if (rows.length > 0) {
       await sheets.spreadsheets.values.update({
@@ -87,7 +117,7 @@ export async function createScheduleSpreadsheet(scheduleData, academicYear) {
     }
   }
 
-  await applyFormatting(sheets, spreadsheetId);
+  await applyFormatting(sheets, spreadsheetId, allFormatData);
 
   return {
     spreadsheetId,
@@ -107,43 +137,88 @@ function getQuarterNames(academicYear) {
   };
 }
 
-function buildScheduleGrid(courses, quarterName, updateDate) {
+function buildScheduleGridWithFormat(courses, quarterName, updateDate) {
   const rows = [];
+  const formatData = {
+    titleRow: 0,
+    headerRows: [],
+    courseBlocks: []
+  };
   
-  rows.push(...buildDaySection('MONDAY & WEDNESDAY', ['MW', 'M', 'W'], courses, quarterName, updateDate));
+  rows.push([quarterName, '', '', '', '', '', '', '', 'updated ' + updateDate]);
   rows.push(['']);
-  rows.push(...buildDaySection('TUESDAY & THURSDAY', ['TR', 'T', 'R', 'TTh'], courses, null, null));
   
-  return rows;
+  const mwResult = buildDaySection('MONDAY & WEDNESDAY', ['MW', 'M', 'W'], courses, rows.length);
+  formatData.headerRows.push(rows.length);
+  rows.push(...mwResult.rows);
+  mwResult.courseBlocks.forEach(block => {
+    block.row += rows.length - mwResult.rows.length;
+    formatData.courseBlocks.push(block);
+  });
+  
+  rows.push(['']);
+  
+  const trHeaderRow = rows.length;
+  const trResult = buildDaySection('TUESDAY & THURSDAY', ['TR', 'T', 'R', 'TTh'], courses, rows.length);
+  formatData.headerRows.push(trHeaderRow);
+  rows.push(...trResult.rows);
+  trResult.courseBlocks.forEach(block => {
+    block.row += rows.length - trResult.rows.length;
+    formatData.courseBlocks.push(block);
+  });
+  
+  rows.push(['']);
+  
+  const onlineHeaderRow = rows.length;
+  const onlineResult = buildOnlineSection(courses, rows.length);
+  if (onlineResult.rows.length > 0) {
+    formatData.headerRows.push(onlineHeaderRow);
+    rows.push(...onlineResult.rows);
+    onlineResult.courseBlocks.forEach(block => {
+      block.row += rows.length - onlineResult.rows.length;
+      formatData.courseBlocks.push(block);
+    });
+  }
+  
+  return { rows, formatData };
 }
 
-function buildDaySection(dayLabel, dayPatterns, courses, quarterName, updateDate) {
+function buildDaySection(dayLabel, dayPatterns, courses, startRowOffset) {
   const rows = [];
+  const courseBlocks = [];
+  const occupiedCells = new Set();
   
-  const headerRow = [dayLabel];
-  ROOMS.forEach((room, idx) => {
-    if (idx === 0 && quarterName) {
-      headerRow.push(quarterName + '\n' + room);
-    } else if (idx === 6 && updateDate) {
-      headerRow.push('updated ' + updateDate + '\n' + room);
-    } else {
-      headerRow.push(room);
-    }
-  });
+  const headerRow = [dayLabel, ...ROOMS];
   rows.push(headerRow);
   
-  for (const timeSlot of TIME_SLOTS) {
+  for (let timeIdx = 0; timeIdx < TIME_SLOTS.length; timeIdx++) {
+    const timeSlot = TIME_SLOTS[timeIdx];
     const row = [timeSlot];
     
-    for (const room of ROOMS) {
-      if (!room) {
+    for (let colIdx = 0; colIdx < ROOMS.length; colIdx++) {
+      const room = ROOMS[colIdx];
+      const cellKey = `${timeIdx}-${colIdx}`;
+      
+      if (!room || occupiedCells.has(cellKey)) {
         row.push('');
         continue;
       }
       
       const course = findCourseForSlot(courses, dayPatterns, timeSlot, room);
       if (course) {
+        const duration = getCourseDuration(course.time);
         row.push(formatCourseCell(course));
+        
+        for (let d = 1; d < duration && timeIdx + d < TIME_SLOTS.length; d++) {
+          occupiedCells.add(`${timeIdx + d}-${colIdx}`);
+        }
+        
+        courseBlocks.push({
+          row: timeIdx + 1,
+          col: colIdx + 1,
+          duration: duration,
+          color: getInstructorColor(course.instructor)
+        });
       } else {
         row.push('');
       }
@@ -152,7 +227,42 @@ function buildDaySection(dayLabel, dayPatterns, courses, quarterName, updateDate
     rows.push(row);
   }
   
-  return rows;
+  return { rows, courseBlocks };
+}
+
+function buildOnlineSection(courses, startRowOffset) {
+  const rows = [];
+  const courseBlocks = [];
+  
+  const onlineCourses = courses.filter(c => 
+    (c.room || '').toUpperCase() === 'ONLINE' || 
+    (c.day || '').toUpperCase() === 'ONLINE'
+  );
+  
+  if (onlineCourses.length === 0) {
+    return { rows: [], courseBlocks: [] };
+  }
+  
+  rows.push(['ONLINE', ...ROOMS.map(() => '')]);
+  
+  const row = ['async'];
+  for (let i = 0; i < ROOMS.length; i++) {
+    if (i < onlineCourses.length) {
+      const course = onlineCourses[i];
+      row.push(formatCourseCell(course));
+      courseBlocks.push({
+        row: 1,
+        col: i + 1,
+        duration: 1,
+        color: getInstructorColor(course.instructor)
+      });
+    } else {
+      row.push('');
+    }
+  }
+  rows.push(row);
+  
+  return { rows, courseBlocks };
 }
 
 function findCourseForSlot(courses, dayPatterns, timeSlot, room) {
@@ -161,6 +271,8 @@ function findCourseForSlot(courses, dayPatterns, timeSlot, room) {
   
   for (const course of courses) {
     const courseDay = course.day || '';
+    if (courseDay.toUpperCase() === 'ONLINE') continue;
+    
     const matchesDay = dayPatterns.some(pattern => 
       courseDay.toUpperCase().includes(pattern.toUpperCase()) ||
       pattern.toUpperCase().includes(courseDay.toUpperCase())
@@ -226,6 +338,23 @@ function parseCourseTimeToHour(courseTime) {
   return -1;
 }
 
+function getCourseDuration(timeString) {
+  if (!timeString) return 2;
+  
+  const match = timeString.match(/(\d{1,2}):?(\d{2})?\s*-\s*(\d{1,2}):?(\d{2})?/);
+  if (!match) return 2;
+  
+  let startHour = parseInt(match[1]);
+  let endHour = parseInt(match[3]);
+  
+  if (startHour < 7) startHour += 12;
+  if (endHour < 7) endHour += 12;
+  if (endHour <= startHour) endHour += 12;
+  
+  const duration = endHour - startHour;
+  return Math.max(1, Math.min(duration, 4));
+}
+
 function formatCourseCell(course) {
   const parts = [];
   
@@ -239,92 +368,175 @@ function formatCourseCell(course) {
   return parts.join('\n');
 }
 
-async function applyFormatting(sheets, spreadsheetId) {
+function getInstructorColor(instructor) {
+  if (!instructor) return DEFAULT_COLOR;
+  
+  for (const [key, color] of Object.entries(INSTRUCTOR_COLORS)) {
+    if (instructor.includes(key) || key.includes(instructor)) {
+      return color;
+    }
+  }
+  
+  return DEFAULT_COLOR;
+}
+
+async function applyFormatting(sheets, spreadsheetId, allFormatData) {
+  const requests = [];
+  
+  for (let sheetId = 0; sheetId < 3; sheetId++) {
+    requests.push({
+      repeatCell: {
+        range: { sheetId },
+        cell: {
+          userEnteredFormat: {
+            wrapStrategy: 'WRAP',
+            verticalAlignment: 'TOP',
+            textFormat: { fontFamily: 'Arial', fontSize: 10 }
+          }
+        },
+        fields: 'userEnteredFormat(wrapStrategy,verticalAlignment,textFormat)'
+      }
+    });
+    
+    requests.push({
+      repeatCell: {
+        range: { sheetId, startRowIndex: 0, endRowIndex: 1, startColumnIndex: 0, endColumnIndex: 6 },
+        cell: {
+          userEnteredFormat: {
+            textFormat: { bold: true, fontSize: 24 },
+            horizontalAlignment: 'CENTER'
+          }
+        },
+        fields: 'userEnteredFormat(textFormat,horizontalAlignment)'
+      }
+    });
+    
+    requests.push({
+      mergeCells: {
+        range: { sheetId, startRowIndex: 0, endRowIndex: 1, startColumnIndex: 0, endColumnIndex: 6 },
+        mergeType: 'MERGE_ALL'
+      }
+    });
+    
+    requests.push({
+      repeatCell: {
+        range: { sheetId, startRowIndex: 0, endRowIndex: 1, startColumnIndex: 8, endColumnIndex: 9 },
+        cell: {
+          userEnteredFormat: {
+            textFormat: { fontSize: 10 },
+            horizontalAlignment: 'RIGHT'
+          }
+        },
+        fields: 'userEnteredFormat(textFormat,horizontalAlignment)'
+      }
+    });
+    
+    requests.push({
+      updateDimensionProperties: {
+        range: { sheetId, dimension: 'COLUMNS', startIndex: 0, endIndex: 1 },
+        properties: { pixelSize: 80 },
+        fields: 'pixelSize'
+      }
+    });
+    
+    requests.push({
+      updateDimensionProperties: {
+        range: { sheetId, dimension: 'COLUMNS', startIndex: 1, endIndex: 9 },
+        properties: { pixelSize: 110 },
+        fields: 'pixelSize'
+      }
+    });
+    
+    requests.push({
+      updateDimensionProperties: {
+        range: { sheetId, dimension: 'ROWS', startIndex: 1, endIndex: 50 },
+        properties: { pixelSize: 60 },
+        fields: 'pixelSize'
+      }
+    });
+    
+    requests.push({
+      updateDimensionProperties: {
+        range: { sheetId, dimension: 'ROWS', startIndex: 0, endIndex: 1 },
+        properties: { pixelSize: 40 },
+        fields: 'pixelSize'
+      }
+    });
+    
+    const formatData = allFormatData[sheetId];
+    if (!formatData) continue;
+    
+    for (const headerRow of formatData.headerRows) {
+      requests.push({
+        repeatCell: {
+          range: { 
+            sheetId, 
+            startRowIndex: headerRow, 
+            endRowIndex: headerRow + 1, 
+            startColumnIndex: 0, 
+            endColumnIndex: 9 
+          },
+          cell: {
+            userEnteredFormat: {
+              backgroundColor: HEADER_COLOR,
+              textFormat: { bold: true, fontSize: 11 },
+              horizontalAlignment: 'CENTER'
+            }
+          },
+          fields: 'userEnteredFormat(backgroundColor,textFormat,horizontalAlignment)'
+        }
+      });
+    }
+    
+    const processedMerges = new Set();
+    
+    for (const block of formatData.courseBlocks) {
+      const baseRow = formatData.headerRows[0] + block.row;
+      const mergeKey = `${baseRow}-${block.col}`;
+      
+      if (processedMerges.has(mergeKey)) continue;
+      processedMerges.add(mergeKey);
+      
+      requests.push({
+        repeatCell: {
+          range: { 
+            sheetId, 
+            startRowIndex: baseRow, 
+            endRowIndex: baseRow + block.duration,
+            startColumnIndex: block.col, 
+            endColumnIndex: block.col + 1 
+          },
+          cell: {
+            userEnteredFormat: {
+              backgroundColor: block.color,
+              verticalAlignment: 'TOP'
+            }
+          },
+          fields: 'userEnteredFormat(backgroundColor,verticalAlignment)'
+        }
+      });
+      
+      if (block.duration > 1) {
+        requests.push({
+          mergeCells: {
+            range: { 
+              sheetId, 
+              startRowIndex: baseRow, 
+              endRowIndex: baseRow + block.duration,
+              startColumnIndex: block.col, 
+              endColumnIndex: block.col + 1 
+            },
+            mergeType: 'MERGE_ALL'
+          }
+        });
+      }
+    }
+  }
+  
   try {
     await sheets.spreadsheets.batchUpdate({
       spreadsheetId,
-      requestBody: {
-        requests: [
-          {
-            repeatCell: {
-              range: { sheetId: 0 },
-              cell: {
-                userEnteredFormat: {
-                  wrapStrategy: 'WRAP',
-                  verticalAlignment: 'TOP'
-                }
-              },
-              fields: 'userEnteredFormat(wrapStrategy,verticalAlignment)'
-            }
-          },
-          {
-            repeatCell: {
-              range: { sheetId: 1 },
-              cell: {
-                userEnteredFormat: {
-                  wrapStrategy: 'WRAP',
-                  verticalAlignment: 'TOP'
-                }
-              },
-              fields: 'userEnteredFormat(wrapStrategy,verticalAlignment)'
-            }
-          },
-          {
-            repeatCell: {
-              range: { sheetId: 2 },
-              cell: {
-                userEnteredFormat: {
-                  wrapStrategy: 'WRAP',
-                  verticalAlignment: 'TOP'
-                }
-              },
-              fields: 'userEnteredFormat(wrapStrategy,verticalAlignment)'
-            }
-          },
-          {
-            updateDimensionProperties: {
-              range: { sheetId: 0, dimension: 'COLUMNS', startIndex: 1, endIndex: 9 },
-              properties: { pixelSize: 120 },
-              fields: 'pixelSize'
-            }
-          },
-          {
-            updateDimensionProperties: {
-              range: { sheetId: 1, dimension: 'COLUMNS', startIndex: 1, endIndex: 9 },
-              properties: { pixelSize: 120 },
-              fields: 'pixelSize'
-            }
-          },
-          {
-            updateDimensionProperties: {
-              range: { sheetId: 2, dimension: 'COLUMNS', startIndex: 1, endIndex: 9 },
-              properties: { pixelSize: 120 },
-              fields: 'pixelSize'
-            }
-          },
-          {
-            updateDimensionProperties: {
-              range: { sheetId: 0, dimension: 'ROWS', startIndex: 0, endIndex: 30 },
-              properties: { pixelSize: 80 },
-              fields: 'pixelSize'
-            }
-          },
-          {
-            updateDimensionProperties: {
-              range: { sheetId: 1, dimension: 'ROWS', startIndex: 0, endIndex: 30 },
-              properties: { pixelSize: 80 },
-              fields: 'pixelSize'
-            }
-          },
-          {
-            updateDimensionProperties: {
-              range: { sheetId: 2, dimension: 'ROWS', startIndex: 0, endIndex: 30 },
-              properties: { pixelSize: 80 },
-              fields: 'pixelSize'
-            }
-          }
-        ]
-      }
+      requestBody: { requests }
     });
   } catch (err) {
     console.warn('Could not apply formatting:', err.message);
