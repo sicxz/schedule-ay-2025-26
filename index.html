@@ -5346,18 +5346,51 @@
             }
         }
 
+        function migrateTimeSlots(data) {
+            const timeMapping = {
+                '10:00-12:00': '10:00-12:20',
+                '13:00-15:00': '13:00-15:20',
+                '16:00-18:00': '16:00-18:20'
+            };
+            let migrated = false;
+            
+            for (const quarter of ['fall', 'winter', 'spring']) {
+                if (data[quarter]) {
+                    for (const day of ['MW', 'TR']) {
+                        if (data[quarter][day]) {
+                            for (const oldTime of Object.keys(timeMapping)) {
+                                if (data[quarter][day][oldTime]) {
+                                    const newTime = timeMapping[oldTime];
+                                    data[quarter][day][newTime] = data[quarter][day][oldTime];
+                                    delete data[quarter][day][oldTime];
+                                    migrated = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            if (migrated) {
+                console.log('Migrated time slots to 2h 20min format');
+            }
+            return data;
+        }
+
         function loadScheduleData(year) {
             const targetYear = year || currentAcademicYear;
             try {
                 const saved = localStorage.getItem(getStorageKey(targetYear));
                 if (saved) {
-                    const parsed = JSON.parse(saved);
+                    let parsed = JSON.parse(saved);
+                    parsed = migrateTimeSlots(parsed);
                     for (const quarter of ['fall', 'winter', 'spring']) {
                         if (parsed[quarter]) {
                             scheduleData[quarter] = parsed[quarter];
                         }
                     }
                     console.log('Schedule data loaded for year:', targetYear);
+                    saveScheduleData();
                     return true;
                 }
             } catch (e) {
