@@ -42,6 +42,17 @@ The app uses a comprehensive design system (`css/design-system.css`) with:
 - Inter font from Google Fonts
 
 ## Recent Changes
+- January 2026: Course Editing & Time Slot Fixes
+  - Fixed "Quarter not found" error when saving course edits - now uses direct scheduleData as primary save path
+  - Updated time slots to reflect actual 2h 20min course duration (10:00-12:20, 13:00-15:20, 16:00-18:20)
+  - Improved instructor pre-selection in edit modal using last name matching
+  - ScheduleManager update is now optional secondary sync (won't fail saves if unavailable)
+- January 2026: Faculty Roster Update
+  - Updated faculty dropdowns to current AY 2026-27 roster
+  - Professors: T.Masingale, G.Hustrulid, M.Breen, C.Manikoth
+  - Lecturers: S.Mills, A.Sopu, S.Durr
+  - Adjuncts: J.Braukmann
+  - Added "Add New Faculty" functionality with localStorage persistence
 - January 2026: Graduation Pathway Conflict Detection
   - Rewrote student_conflict checker to use graduation pathway pairings instead of generic upper-div counting
   - Defined 25+ common course pairings (senior year: 463+480+490, UX track: 338+348+458, etc.)
