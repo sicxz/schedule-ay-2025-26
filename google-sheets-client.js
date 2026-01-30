@@ -342,7 +342,10 @@ function getCourseDuration(timeString) {
   if (!timeString) return 3; // Default 2h 20min = 3 hourly slots
   
   const match = timeString.match(/(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})/);
-  if (!match) return 3;
+  if (!match) {
+    console.log('Duration: no match for', timeString, '-> defaulting to 3');
+    return 3;
+  }
   
   let startHour = parseInt(match[1]);
   const startMin = parseInt(match[2]);
@@ -357,7 +360,9 @@ function getCourseDuration(timeString) {
   const totalMinutes = (endHour * 60 + endMin) - (startHour * 60 + startMin);
   // 2h 20min = 140 min -> 3 hourly slots, 2h = 120 min -> 2 slots
   const duration = Math.ceil(totalMinutes / 60);
-  return Math.max(1, Math.min(duration, 4));
+  const result = Math.max(1, Math.min(duration, 4));
+  console.log('Duration:', timeString, '-> totalMin:', totalMinutes, 'slots:', result);
+  return result;
 }
 
 function formatCourseCell(course) {

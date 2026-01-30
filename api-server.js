@@ -52,8 +52,12 @@ const server = http.createServer(async (req, res) => {
       console.log('Winter courses:', (scheduleData.winter || []).length);
       console.log('Spring courses:', (scheduleData.spring || []).length);
       
+      // Log all fall courses with times
       if (scheduleData.fall && scheduleData.fall.length > 0) {
-        console.log('Sample fall course:', JSON.stringify(scheduleData.fall[0]));
+        console.log('All fall courses:');
+        scheduleData.fall.forEach(c => {
+          console.log(`  ${c.code} | ${c.day} | ${c.time} | Room: ${c.room}`);
+        });
       }
       
       const result = await createScheduleSpreadsheet(scheduleData, academicYear || '2025-26');
