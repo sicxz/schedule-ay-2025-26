@@ -2376,6 +2376,86 @@
         .container, .controls, header, .dashboard-nav {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
+        /* Print Styles */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printContainer, #printContainer * {
+                visibility: visible;
+            }
+            #printContainer {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+            .print-quarter {
+                page-break-after: always;
+                padding: 20px;
+            }
+            .print-quarter:last-child {
+                page-break-after: auto;
+            }
+            .print-header {
+                text-align: center;
+                margin-bottom: 20px;
+                border-bottom: 2px solid #a10022;
+                padding-bottom: 10px;
+            }
+            .print-header h1 {
+                font-size: 24px;
+                color: #a10022;
+                margin: 0;
+            }
+            .print-header .print-date {
+                font-size: 12px;
+                color: #666;
+                margin-top: 5px;
+            }
+            .print-section {
+                margin-bottom: 20px;
+            }
+            .print-section h2 {
+                font-size: 14px;
+                background: #f0f0f0;
+                padding: 8px;
+                margin: 0 0 10px 0;
+            }
+            .print-grid {
+                border-collapse: collapse;
+                width: 100%;
+                font-size: 10px;
+            }
+            .print-grid th, .print-grid td {
+                border: 1px solid #ccc;
+                padding: 4px 6px;
+                text-align: left;
+                vertical-align: top;
+            }
+            .print-grid th {
+                background: #e0e0e0;
+                font-weight: bold;
+            }
+            .print-course {
+                background: #f5f5f5;
+                padding: 3px;
+                margin: 2px 0;
+                font-size: 9px;
+            }
+            .print-course-code {
+                font-weight: bold;
+            }
+            .print-online-section {
+                margin-top: 15px;
+                padding-top: 10px;
+                border-top: 1px dashed #ccc;
+            }
+        }
+        #printContainer {
+            display: none;
+        }
     </style>
 
     <!-- Supabase -->
@@ -2557,6 +2637,10 @@
                 <button class="fab-item" onclick="exportToGoogleSheets()" title="Export to Google Sheets">
                     <span class="fab-item-icon">📊</span>
                     <span class="fab-item-label">Export to Sheets</span>
+                </button>
+                <button class="fab-item" onclick="openPrintDialog()" title="Print Schedule">
+                    <span class="fab-item-icon">🖨️</span>
+                    <span class="fab-item-label">Print</span>
                 </button>
             </div>
         </div>
@@ -6177,6 +6261,29 @@
         </div>
     </div>
 
+    <!-- Print Dialog Modal -->
+    <div class="modal-overlay" id="printModal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2>Print Schedule</h2>
+                <button class="modal-close" onclick="closePrintDialog()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 16px;">What would you like to print?</p>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <button class="btn-primary" onclick="printSchedule('current')" style="padding: 12px 16px;">
+                        Print Current Quarter Only
+                        <span style="display: block; font-size: 12px; opacity: 0.8; margin-top: 4px;" id="printCurrentLabel"></span>
+                    </button>
+                    <button class="btn-secondary" onclick="printSchedule('all')" style="padding: 12px 16px;">
+                        Print All Three Quarters
+                        <span style="display: block; font-size: 12px; opacity: 0.8; margin-top: 4px;">Fall, Winter, Spring</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Conflict Detection Results Panel -->
     <div class="results-panel" id="conflictResultsPanel" style="display: none;">
         <div class="results-panel-header">
@@ -7009,6 +7116,140 @@
             const panel = document.getElementById('aiResultsPanel');
             panel.classList.remove('active');
             setTimeout(() => panel.style.display = 'none', 300);
+        }
+
+        // ============================================
+        // PRINT FUNCTIONALITY
+        // ============================================
+
+        function openPrintDialog() {
+            const modal = document.getElementById('printModal');
+            const currentQuarter = document.getElementById('quarterSelect').value;
+            const quarterLabel = document.getElementById('quarterSelect').options[document.getElementById('quarterSelect').selectedIndex].text;
+            document.getElementById('printCurrentLabel').textContent = quarterLabel;
+            modal.classList.add('active');
+            toggleFabMenu();
+        }
+
+        function closePrintDialog() {
+            document.getElementById('printModal').classList.remove('active');
+        }
+
+        function printSchedule(mode) {
+            closePrintDialog();
+            
+            const quarters = mode === 'all' 
+                ? ['fall', 'winter', 'spring'] 
+                : [document.getElementById('quarterSelect').value];
+            
+            const printContainer = document.createElement('div');
+            printContainer.id = 'printContainer';
+            
+            const quarterNames = {
+                fall: `Fall ${currentAcademicYear.split('-')[0]}`,
+                winter: `Winter ${currentAcademicYear.split('-')[1]}`,
+                spring: `Spring ${currentAcademicYear.split('-')[1]}`
+            };
+            
+            const rooms = ['206', '207', '209', '210', '212', 'CEB 102', 'CEB 104'];
+            const timeSlots = ['10:00-12:20', '13:00-15:20', '16:00-18:20'];
+            const timeLabels = ['10:00 AM - 12:20 PM', '1:00 PM - 3:20 PM', '4:00 PM - 6:20 PM'];
+            
+            quarters.forEach(quarter => {
+                const quarterData = scheduleData[quarter] || {};
+                const quarterDiv = document.createElement('div');
+                quarterDiv.className = 'print-quarter';
+                
+                quarterDiv.innerHTML = `
+                    <div class="print-header">
+                        <h1>EWU Design Department - ${quarterNames[quarter]}</h1>
+                        <div class="print-date">Printed: ${new Date().toLocaleDateString()}</div>
+                    </div>
+                `;
+                
+                // MW Section
+                quarterDiv.appendChild(buildPrintSection('Monday / Wednesday', ['MW'], quarterData, rooms, timeSlots, timeLabels));
+                
+                // TR Section
+                quarterDiv.appendChild(buildPrintSection('Tuesday / Thursday', ['TR'], quarterData, rooms, timeSlots, timeLabels));
+                
+                // Online Section
+                const onlineCourses = getOnlineCoursesForQuarter(quarterData);
+                if (onlineCourses.length > 0) {
+                    const onlineSection = document.createElement('div');
+                    onlineSection.className = 'print-online-section';
+                    onlineSection.innerHTML = '<h2>Online / Asynchronous Courses</h2>';
+                    onlineCourses.forEach(course => {
+                        const courseDiv = document.createElement('div');
+                        courseDiv.className = 'print-course';
+                        courseDiv.innerHTML = `<span class="print-course-code">${course.code}</span> - ${course.name || course.title} (${course.instructor})`;
+                        onlineSection.appendChild(courseDiv);
+                    });
+                    quarterDiv.appendChild(onlineSection);
+                }
+                
+                printContainer.appendChild(quarterDiv);
+            });
+            
+            document.body.appendChild(printContainer);
+            window.print();
+            
+            setTimeout(() => {
+                document.body.removeChild(printContainer);
+            }, 500);
+        }
+
+        function buildPrintSection(title, dayPatterns, quarterData, rooms, timeSlots, timeLabels) {
+            const section = document.createElement('div');
+            section.className = 'print-section';
+            
+            let tableHTML = `<h2>${title}</h2><table class="print-grid"><thead><tr><th>Time</th>`;
+            rooms.forEach(room => tableHTML += `<th>${room}</th>`);
+            tableHTML += '</tr></thead><tbody>';
+            
+            timeSlots.forEach((slot, idx) => {
+                tableHTML += `<tr><td>${timeLabels[idx]}</td>`;
+                rooms.forEach(room => {
+                    const courses = findCoursesForPrint(quarterData, dayPatterns, slot, room);
+                    if (courses.length > 0) {
+                        tableHTML += '<td>';
+                        courses.forEach(course => {
+                            tableHTML += `<div class="print-course"><span class="print-course-code">${course.code}</span><br>${course.name || course.title || ''}<br>${course.instructor || 'TBD'}</div>`;
+                        });
+                        tableHTML += '</td>';
+                    } else {
+                        tableHTML += '<td></td>';
+                    }
+                });
+                tableHTML += '</tr>';
+            });
+            
+            tableHTML += '</tbody></table>';
+            section.innerHTML = tableHTML;
+            return section;
+        }
+
+        function findCoursesForPrint(quarterData, dayPatterns, timeSlot, room) {
+            const results = [];
+            dayPatterns.forEach(pattern => {
+                const dayData = quarterData[pattern];
+                if (!dayData) return;
+                const timeCourses = dayData[timeSlot];
+                if (!Array.isArray(timeCourses)) return;
+                timeCourses.forEach(course => {
+                    const courseRoom = (course.room || '').toString();
+                    if (courseRoom === room || room.startsWith(courseRoom)) {
+                        results.push(course);
+                    }
+                });
+            });
+            return results;
+        }
+
+        function getOnlineCoursesForQuarter(quarterData) {
+            const onlineData = quarterData['ONLINE'] || {};
+            const asyncData = onlineData['async'] || [];
+            return asyncData;
         }
     </script>
 </body>
