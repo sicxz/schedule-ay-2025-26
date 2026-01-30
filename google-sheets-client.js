@@ -148,34 +148,35 @@ function buildScheduleGridWithFormat(courses, quarterName, updateDate) {
   rows.push([quarterName, '', '', '', '', '', '', '', 'updated ' + updateDate]);
   rows.push(['']);
   
-  const mwResult = buildDaySection('MONDAY & WEDNESDAY', ['MW', 'M', 'W'], courses, rows.length);
-  formatData.headerRows.push(rows.length);
+  const mwStartRow = rows.length;
+  const mwResult = buildDaySection('MONDAY & WEDNESDAY', ['MW', 'M', 'W'], courses, mwStartRow);
+  formatData.headerRows.push(mwStartRow);
   rows.push(...mwResult.rows);
   mwResult.courseBlocks.forEach(block => {
-    block.row += rows.length - mwResult.rows.length;
+    block.row += mwStartRow; // block.row is relative to section, add section start to make absolute
     formatData.courseBlocks.push(block);
   });
   
   rows.push(['']);
   
-  const trHeaderRow = rows.length;
-  const trResult = buildDaySection('TUESDAY & THURSDAY', ['TR', 'T', 'R', 'TTh'], courses, rows.length);
-  formatData.headerRows.push(trHeaderRow);
+  const trStartRow = rows.length;
+  const trResult = buildDaySection('TUESDAY & THURSDAY', ['TR', 'T', 'R', 'TTh'], courses, trStartRow);
+  formatData.headerRows.push(trStartRow);
   rows.push(...trResult.rows);
   trResult.courseBlocks.forEach(block => {
-    block.row += rows.length - trResult.rows.length;
+    block.row += trStartRow; // block.row is relative to section, add section start to make absolute
     formatData.courseBlocks.push(block);
   });
   
   rows.push(['']);
   
-  const onlineHeaderRow = rows.length;
-  const onlineResult = buildOnlineSection(courses, rows.length);
+  const onlineStartRow = rows.length;
+  const onlineResult = buildOnlineSection(courses, onlineStartRow);
   if (onlineResult.rows.length > 0) {
-    formatData.headerRows.push(onlineHeaderRow);
+    formatData.headerRows.push(onlineStartRow);
     rows.push(...onlineResult.rows);
     onlineResult.courseBlocks.forEach(block => {
-      block.row += rows.length - onlineResult.rows.length;
+      block.row += onlineStartRow; // block.row is relative to section, add section start to make absolute
       formatData.courseBlocks.push(block);
     });
   }
@@ -502,7 +503,8 @@ async function applyFormatting(sheets, spreadsheetId, allFormatData) {
     const processedMerges = new Set();
     
     for (const block of formatData.courseBlocks) {
-      const baseRow = formatData.headerRows[0] + block.row;
+      // block.row is already an absolute row index (adjusted during buildScheduleGridWithFormat)
+      const baseRow = block.row;
       const mergeKey = `${baseRow}-${block.col}`;
       
       if (processedMerges.has(mergeKey)) continue;

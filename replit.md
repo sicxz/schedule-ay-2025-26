@@ -42,6 +42,11 @@ The app uses a comprehensive design system (`css/design-system.css`) with:
 - Inter font from Google Fonts
 
 ## Recent Changes
+- January 2026: Google Sheets Export & Print Fixes
+  - Fixed row offset calculation in Google Sheets export - courses now appear at correct time slots
+  - Duration calculation now properly handles 2h 20min courses (140 min = 3 hourly rows)
+  - Added print functionality with option to print current quarter or all three quarters
+  - Print output includes MW section, TR section, and online courses
 - January 2026: Course Editing & Time Slot Fixes
   - Fixed "Quarter not found" error when saving course edits - now uses direct scheduleData as primary save path
   - Updated time slots to reflect actual 2h 20min course duration (10:00-12:20, 13:00-15:20, 16:00-18:20)
