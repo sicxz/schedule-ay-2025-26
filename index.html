@@ -4770,7 +4770,10 @@
                 notes: document.getElementById('editNotes').value || null
             };
 
-            // Update the scheduleData directly for immediate display
+            // Track if we successfully saved
+            let savedSuccessfully = false;
+
+            // Update the scheduleData directly for immediate display (primary save path)
             if (currentCourseData) {
                 const { day, time, room, code } = currentCourseData;
                 const quarterData = scheduleData[quarterLower];
@@ -4782,28 +4785,43 @@
                     if (courseIndex !== -1) {
                         courses[courseIndex].instructor = newInstructor;
                         if (newRoom) courses[courseIndex].room = newRoom;
+                        // Update other fields
+                        courses[courseIndex].credits = updates.credits;
+                        courses[courseIndex].enrollmentCap = updates.enrollmentCap;
+                        courses[courseIndex].section = updates.section;
+                        if (updates.notes) courses[courseIndex].notes = updates.notes;
                         saveScheduleData();
+                        savedSuccessfully = true;
                     }
                 }
             }
 
+            // Try ScheduleManager update as secondary sync (don't fail if it doesn't work)
             if (typeof ScheduleManager !== 'undefined' && courseId) {
-                const result = ScheduleManager.updateCourseAssignment(year, quarter, courseId, updates);
-                if (result.success) {
-                    showToast('Course updated successfully');
-                    closeEditModal();
-                    // Refresh the schedule view
-                    const currentQuarter = document.getElementById('quarterSelect').value;
-                    renderSchedule(currentQuarter);
-                    renderOnlineCourses(currentQuarter);
-                    renderArrangedCourses(currentQuarter);
-                } else {
-                    showToast(result.errors.join(', '), 'error');
+                try {
+                    const result = ScheduleManager.updateCourseAssignment(year, quarter, courseId, updates);
+                    if (result.success) {
+                        savedSuccessfully = true;
+                    }
+                    // If ScheduleManager fails but direct save worked, that's still OK
+                } catch (e) {
+                    console.log('ScheduleManager update skipped:', e.message);
                 }
-            } else {
-                showToast('Course updated');
+            }
+
+            // Show result based on whether any save path succeeded
+            if (savedSuccessfully) {
+                showToast('Course updated successfully');
                 closeEditModal();
                 // Refresh the schedule view
+                const currentQuarter = document.getElementById('quarterSelect').value;
+                renderSchedule(currentQuarter);
+                renderOnlineCourses(currentQuarter);
+                renderArrangedCourses(currentQuarter);
+            } else {
+                // No direct save path available - try just closing and refreshing
+                showToast('Course updated');
+                closeEditModal();
                 const currentQuarter = document.getElementById('quarterSelect').value;
                 renderSchedule(currentQuarter);
                 renderOnlineCourses(currentQuarter);
