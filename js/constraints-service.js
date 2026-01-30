@@ -199,13 +199,10 @@ const ConstraintsService = (function() {
             {
                 id: 'fallback-3',
                 constraint_type: 'student_conflict',
-                description: 'Limit upper-division courses in same time slot',
+                description: 'Graduation pathway conflicts - courses students take together',
                 rule_details: {
-                    course_level_min: 300,
-                    course_level_max: 499,
-                    max_courses_per_slot: 2,
                     severity: 'critical',
-                    message: 'Students cannot take multiple upper-division electives simultaneously',
+                    message: 'Courses in the same graduation pathway are scheduled at the same time, preventing students from completing requirements',
                     preferred_resolutions: [
                         { action: 'move_course', target_slot: 'MW 16:00-18:00', reason: 'Evening slot typically has capacity' },
                         { action: 'move_course', target_slot: 'TR 16:00-18:00', reason: 'Evening slot alternative' }

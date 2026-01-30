@@ -18,6 +18,7 @@ const CURRENT_DEPARTMENT_CODE = 'DESN';
 
 // Initialize Supabase client (only if credentials are configured)
 let supabaseClient = null;
+var supabase = null; // Global reference for other services (var to avoid redeclaration issues)
 
 function isSupabaseConfigured() {
     return SUPABASE_URL !== 'YOUR_SUPABASE_PROJECT_URL' &&
@@ -36,6 +37,7 @@ function initSupabase() {
     }
 
     supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    supabase = supabaseClient; // Set global reference
     console.log('Supabase client initialized successfully');
     return supabaseClient;
 }

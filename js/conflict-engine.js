@@ -5,14 +5,50 @@
 
 const ConflictEngine = (function() {
 
-    // Courses that are exempt from upper-division conflict rules
-    // DESN 374 (AI + Design) is open to all levels
-    const UPPER_DIV_EXEMPT = ['DESN 374'];
-
     // Available rooms for resolution calculations
     const ROOMS = ['206', '207', '208', '209', '210', '212'];
     const TIME_SLOTS = ['10:00-12:00', '13:00-15:00', '16:00-18:00'];
     const DAY_PATTERNS = ['MW', 'TR'];
+    
+    // Common course pairings that students typically take together
+    // These are graduation pathway conflicts - courses in the same pathway/year
+    const COMMON_PAIRINGS = [
+        // Freshman year combinations
+        ['DESN 100', 'DESN 216'],
+        ['DESN 200', 'DESN 216'],
+        ['DESN 200', 'DESN 243'],
+        ['DESN 243', 'DESN 263'],
+        
+        // Sophomore year combinations  
+        ['DESN 326', 'DESN 355'],
+        ['DESN 326', 'DESN 301'],
+        ['DESN 338', 'DESN 368'],
+        ['DESN 338', 'DESN 355'],
+        
+        // Junior year combinations
+        ['DESN 336', 'DESN 365'],
+        ['DESN 348', 'DESN 378'],
+        ['DESN 369', 'DESN 379'],
+        ['DESN 458', 'DESN 468'],
+        
+        // Senior year combinations - CRITICAL
+        ['DESN 463', 'DESN 480'],
+        ['DESN 463', 'DESN 490'],
+        ['DESN 480', 'DESN 490'],
+        ['DESN 469', 'DESN 480'],
+        
+        // UX Track sequence
+        ['DESN 338', 'DESN 348'],
+        ['DESN 348', 'DESN 458'],
+        
+        // Animation Track sequence
+        ['DESN 355', 'DESN 365'],
+        ['DESN 336', 'DESN 446'],
+        
+        // Code Track sequence
+        ['DESN 368', 'DESN 378'],
+        ['DESN 369', 'DESN 469']
+    ];
 
     /**
      * Evaluate a schedule against all enabled constraints
@@ -102,57 +138,76 @@ const ConflictEngine = (function() {
         },
 
         /**
-         * Student conflict - too many upper-division courses at same time
+         * Student conflict - courses that students commonly take together at same time
+         * Uses graduation pathway pairings to detect real conflicts
          */
         student_conflict: function(schedule, rule, constraint) {
             const issues = [];
-            const levelMin = rule.course_level_min || 300;
-            const levelMax = rule.course_level_max || 499;
-            const maxPerSlot = rule.max_courses_per_slot || 2;
-
-            // Filter to upper-division courses (excluding exempt courses like DESN 374)
-            const upperDiv = schedule.filter(c => {
-                const num = parseInt(c.code.replace('DESN ', ''));
-                return num >= levelMin && num <= levelMax && !UPPER_DIV_EXEMPT.includes(c.code);
-            });
-
-            // Group by day+time
+            const foundConflicts = new Set(); // Track reported conflicts to avoid duplicates
+            
+            // Group courses by day+time
             const slots = {};
-            upperDiv.forEach(course => {
-                if (course.day && course.time) {
+            schedule.forEach(course => {
+                if (course.day && course.time && course.code) {
                     const key = `${course.day}-${course.time}`;
                     if (!slots[key]) slots[key] = [];
                     slots[key].push(course);
                 }
             });
 
-            // Check each slot
-            Object.entries(slots).forEach(([key, courses]) => {
-                if (courses.length > maxPerSlot) {
+            // Check each slot for pathway conflicts
+            Object.entries(slots).forEach(([key, coursesInSlot]) => {
+                if (coursesInSlot.length < 2) return; // Need at least 2 courses to conflict
+                
+                const courseCodes = coursesInSlot.map(c => c.code);
+                const conflictingPairs = [];
+                
+                // Check if any common pairings are in the same slot
+                COMMON_PAIRINGS.forEach(([course1, course2]) => {
+                    if (courseCodes.includes(course1) && courseCodes.includes(course2)) {
+                        const pairKey = [course1, course2].sort().join('-');
+                        if (!foundConflicts.has(`${key}-${pairKey}`)) {
+                            foundConflicts.add(`${key}-${pairKey}`);
+                            conflictingPairs.push([course1, course2]);
+                        }
+                    }
+                });
+                
+                // Report conflicts for this slot
+                if (conflictingPairs.length > 0) {
                     const [day, time] = key.split('-');
                     const dayName = day === 'MW' ? 'Monday/Wednesday' : day === 'TR' ? 'Tuesday/Thursday' : day;
                     const timeFormatted = formatTime(time);
-
-                    // Get stored preferred resolutions
-                    const storedResolutions = rule.preferred_resolutions || [];
-
+                    
+                    // Get all conflicting courses
+                    const conflictingCodes = [...new Set(conflictingPairs.flat())];
+                    const conflictingCourses = coursesInSlot.filter(c => conflictingCodes.includes(c.code));
+                    
+                    // Determine severity based on course levels
+                    const has400Level = conflictingCodes.some(c => {
+                        const num = parseInt(c.replace('DESN ', ''));
+                        return num >= 400;
+                    });
+                    const severity = has400Level ? 'critical' : (rule.severity || 'warning');
+                    
                     // Calculate dynamic resolutions
-                    const dynamicResolutions = calculateSlotResolutions(schedule, courses[0], day, time);
-
-                    // Merge and sort by impact
-                    const allResolutions = [...storedResolutions, ...dynamicResolutions]
-                        .slice(0, 4);
-
+                    const dynamicResolutions = calculateSlotResolutions(schedule, conflictingCourses[0], day, time);
+                    const storedResolutions = rule.preferred_resolutions || [];
+                    const allResolutions = [...storedResolutions, ...dynamicResolutions].slice(0, 4);
+                    
+                    // Create descriptive message
+                    const pairDescriptions = conflictingPairs.map(([c1, c2]) => `${c1} and ${c2}`).join(', ');
+                    
                     issues.push({
-                        severity: rule.severity || 'critical',
+                        severity: severity,
                         type: 'student-conflict',
-                        title: `${dayName}, ${timeFormatted}`,
-                        description: rule.message || 'Students cannot take multiple upper-division electives simultaneously',
-                        courses: courses,
-                        studentsAffected: estimateAffectedStudents(courses),
+                        title: `Pathway Conflict: ${dayName}, ${timeFormatted}`,
+                        description: `Students commonly need to take ${pairDescriptions} together, but they're scheduled at the same time`,
+                        courses: conflictingCourses,
+                        studentsAffected: estimateAffectedStudents(conflictingCourses),
                         currentSlot: `${day} ${time}`,
                         resolutions: allResolutions,
-                        suggestion: `Move one of these courses to a different time slot to reduce student scheduling conflicts`
+                        suggestion: `Move one course to a different time slot so students can complete their graduation pathway`
                     });
                 }
             });
@@ -390,7 +445,7 @@ const ConflictEngine = (function() {
     return {
         evaluate,
         checkers,
-        UPPER_DIV_EXEMPT
+        COMMON_PAIRINGS
     };
 })();
 
