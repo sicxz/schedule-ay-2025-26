@@ -108,6 +108,55 @@
             font-weight: 400;
         }
 
+        /* Year Navigation */
+        .year-nav {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: var(--space-2) var(--space-3);
+            background: var(--color-canvas-subtle);
+            border-bottom: 1px solid var(--color-border-muted);
+        }
+
+        .year-selector {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            font-size: 13px;
+        }
+
+        .year-selector label {
+            color: var(--color-fg-muted);
+            font-weight: 500;
+        }
+
+        .year-selector select {
+            padding: 4px 8px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: var(--radius-2);
+        }
+
+        .copy-year-btn {
+            padding: 4px 12px;
+            font-size: 12px;
+            background: var(--color-canvas-default);
+            border: 1px solid var(--color-border-default);
+            border-radius: var(--radius-2);
+            color: var(--color-fg-default);
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .copy-year-btn:hover {
+            background: var(--color-canvas-subtle);
+        }
+
+        .tab-year {
+            font-weight: 400;
+            opacity: 0.8;
+        }
+
         /* Quarter Tabs - Primer UnderlineNav style */
         .quarter-tabs {
             display: flex;
@@ -2382,11 +2431,25 @@
             <p class="subtitle">Visual Course Scheduling & Conflict Detection Tool</p>
         </header>
 
+        <!-- Year and Quarter Navigation -->
+        <div class="year-nav">
+            <div class="year-selector">
+                <label>Academic Year:</label>
+                <select id="yearSelect" onchange="switchAcademicYear(this.value)">
+                    <option value="2025-26" selected>2025-26</option>
+                    <option value="2026-27">2026-27</option>
+                </select>
+                <button class="copy-year-btn" onclick="copyToNextYear()" title="Copy current schedule to next year">
+                    Copy to Next Year →
+                </button>
+            </div>
+        </div>
+
         <!-- Quarter Tabs - Primary Navigation -->
         <div class="quarter-tabs">
-            <button class="quarter-tab" data-quarter="fall" onclick="selectQuarterTab('fall')">Fall 2025</button>
-            <button class="quarter-tab" data-quarter="winter" onclick="selectQuarterTab('winter')">Winter 2026</button>
-            <button class="quarter-tab active" data-quarter="spring" onclick="selectQuarterTab('spring')">Spring 2026</button>
+            <button class="quarter-tab" data-quarter="fall" onclick="selectQuarterTab('fall')">Fall <span class="tab-year">2025</span></button>
+            <button class="quarter-tab" data-quarter="winter" onclick="selectQuarterTab('winter')">Winter <span class="tab-year">2026</span></button>
+            <button class="quarter-tab active" data-quarter="spring" onclick="selectQuarterTab('spring')">Spring <span class="tab-year">2026</span></button>
         </div>
 
         <!-- Collapsible Filters Panel -->
@@ -5194,28 +5257,35 @@
             showToast(courseCode + ' added to schedule');
         }
 
-        // Schedule data persistence
+        // Current academic year
+        let currentAcademicYear = '2025-26';
+
+        // Schedule data persistence (year-aware)
+        function getStorageKey(year) {
+            return 'designSchedulerData_' + (year || currentAcademicYear);
+        }
+
         function saveScheduleData() {
             try {
-                localStorage.setItem('designSchedulerData', JSON.stringify(scheduleData));
-                console.log('Schedule data saved to localStorage');
+                localStorage.setItem(getStorageKey(), JSON.stringify(scheduleData));
+                console.log('Schedule data saved for year:', currentAcademicYear);
             } catch (e) {
                 console.warn('Could not save schedule data:', e);
             }
         }
 
-        function loadScheduleData() {
+        function loadScheduleData(year) {
+            const targetYear = year || currentAcademicYear;
             try {
-                const saved = localStorage.getItem('designSchedulerData');
+                const saved = localStorage.getItem(getStorageKey(targetYear));
                 if (saved) {
                     const parsed = JSON.parse(saved);
-                    // Merge saved data into scheduleData
                     for (const quarter of ['fall', 'winter', 'spring']) {
                         if (parsed[quarter]) {
                             scheduleData[quarter] = parsed[quarter];
                         }
                     }
-                    console.log('Schedule data loaded from localStorage');
+                    console.log('Schedule data loaded for year:', targetYear);
                     return true;
                 }
             } catch (e) {
@@ -5225,8 +5295,121 @@
         }
 
         function clearScheduleData() {
-            localStorage.removeItem('designSchedulerData');
+            localStorage.removeItem(getStorageKey());
             showToast('Schedule data cleared - refresh to reset');
+        }
+
+        // Migrate old storage format to year-aware format
+        function migrateOldScheduleData() {
+            const oldKey = 'designSchedulerData';
+            const oldData = localStorage.getItem(oldKey);
+            if (oldData && !localStorage.getItem(getStorageKey('2025-26'))) {
+                localStorage.setItem(getStorageKey('2025-26'), oldData);
+                localStorage.removeItem(oldKey);
+                console.log('Migrated schedule data to year-aware format');
+            }
+        }
+
+        // Switch academic year
+        function switchAcademicYear(newYear) {
+            // Save current year's data first
+            saveScheduleData();
+
+            // Switch to new year
+            currentAcademicYear = newYear;
+
+            // Reset scheduleData to defaults
+            scheduleData.fall = {};
+            scheduleData.winter = {};
+            scheduleData.spring = {};
+
+            // Load the new year's data (if any)
+            const hasData = loadScheduleData(newYear);
+
+            // Update quarter tab labels
+            updateQuarterTabLabels(newYear);
+
+            // Re-render current quarter
+            const quarter = document.getElementById('quarterSelect').value;
+            renderSchedule(quarter);
+            renderConflicts(quarter);
+            updateStats(quarter);
+
+            if (!hasData) {
+                showToast('Viewing ' + newYear + ' schedule (empty - use Copy to populate)');
+            } else {
+                showToast('Switched to ' + newYear + ' schedule');
+            }
+        }
+
+        function updateQuarterTabLabels(year) {
+            const [startYear, endYear] = year.split('-');
+            const fullStartYear = '20' + startYear;
+            const fullEndYear = '20' + endYear;
+
+            document.querySelectorAll('.quarter-tab').forEach(tab => {
+                const quarter = tab.dataset.quarter;
+                const yearSpan = tab.querySelector('.tab-year');
+                if (yearSpan) {
+                    if (quarter === 'fall') {
+                        yearSpan.textContent = fullStartYear;
+                    } else {
+                        yearSpan.textContent = fullEndYear;
+                    }
+                }
+            });
+
+            // Update hidden select options
+            const quarterSelect = document.getElementById('quarterSelect');
+            if (quarterSelect) {
+                quarterSelect.options[0].text = 'Fall ' + fullStartYear;
+                quarterSelect.options[1].text = 'Winter ' + fullEndYear;
+                quarterSelect.options[2].text = 'Spring ' + fullEndYear;
+            }
+
+            // Update schedule grid title
+            const quarterTitle = document.getElementById('quarterTitle');
+            if (quarterTitle) {
+                const currentQuarter = document.getElementById('quarterSelect').value;
+                const qYear = currentQuarter === 'fall' ? fullStartYear : fullEndYear;
+                quarterTitle.textContent = currentQuarter.charAt(0).toUpperCase() + currentQuarter.slice(1) + ' ' + qYear;
+            }
+        }
+
+        // Copy current year's schedule to next year
+        function copyToNextYear() {
+            const yearSelect = document.getElementById('yearSelect');
+            const currentIndex = yearSelect.selectedIndex;
+
+            if (currentIndex >= yearSelect.options.length - 1) {
+                // Need to add a new year option
+                const currentYearParts = currentAcademicYear.split('-');
+                const nextStartYear = parseInt(currentYearParts[0]) + 1;
+                const nextEndYear = parseInt(currentYearParts[1]) + 1;
+                const nextYear = nextStartYear + '-' + nextEndYear;
+
+                // Add new option
+                const newOption = document.createElement('option');
+                newOption.value = nextYear;
+                newOption.textContent = nextYear;
+                yearSelect.appendChild(newOption);
+            }
+
+            const nextYear = yearSelect.options[currentIndex + 1].value;
+
+            // Deep copy current schedule data
+            const copyData = JSON.parse(JSON.stringify(scheduleData));
+
+            // Save copy to next year's storage
+            localStorage.setItem(getStorageKey(nextYear), JSON.stringify(copyData));
+
+            showToast('Schedule copied to ' + nextYear + '!');
+
+            // Ask if user wants to switch
+            if (confirm('Schedule copied to ' + nextYear + '. Switch to that year now?')) {
+                yearSelect.value = nextYear;
+                switchAcademicYear(nextYear);
+            }
         }
 
         // Initialize app - load data then render
@@ -5277,6 +5460,9 @@
         async function init() {
             await loadEnrollmentData();
             await loadFacultyData();
+
+            // Migrate old schedule data format to year-aware format
+            migrateOldScheduleData();
 
             // Load saved schedule data from localStorage
             loadScheduleData();
