@@ -27,7 +27,7 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #f0f2f5;
             min-height: 100vh;
-            padding: 40px 20px;
+            padding: 20px;
             color: #1a1a1b;
         }
 
@@ -45,7 +45,7 @@
         header {
             background: var(--primary-gradient);
             color: white;
-            padding: 50px 30px;
+            padding: 24px 30px;
             text-align: center;
             position: relative;
         }
@@ -62,34 +62,240 @@
         }
 
         h1 {
-            font-size: 3em;
+            font-size: 2em;
             font-weight: 800;
-            margin-bottom: 12px;
-            letter-spacing: -1px;
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
         }
 
         .subtitle {
-            font-size: 1.2em;
+            font-size: 1em;
             opacity: 0.9;
             font-weight: 300;
         }
 
-        .controls {
-            padding: 40px;
-            background: #ffffff;
-            border-bottom: 1px solid #e1e4e8;
+        /* Quarter Tabs */
+        .quarter-tabs {
             display: flex;
-            gap: 30px;
-            flex-wrap: wrap;
-            align-items: flex-end;
+            background: #ffffff;
+            border-bottom: 3px solid #e1e4e8;
+            padding: 0;
         }
 
-        .control-group {
+        .quarter-tab {
+            flex: 1;
+            padding: 18px 24px;
+            border: none;
+            background: transparent;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #718096;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        .quarter-tab:hover {
+            background: #f7fafc;
+            color: var(--ewu-red);
+            transform: none;
+            box-shadow: none;
+        }
+
+        .quarter-tab.active {
+            color: var(--ewu-red);
+            background: #fff5f7;
+        }
+
+        .quarter-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--ewu-red);
+        }
+
+        /* Collapsible Filters Panel */
+        .filters-panel {
+            background: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .filters-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            background: #f7fafc;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            color: #4a5568;
+            transition: background 0.2s;
+        }
+
+        .filters-toggle:hover {
+            background: #edf2f7;
+        }
+
+        .filters-toggle .toggle-icon {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .filters-panel.collapsed .toggle-icon {
+            transform: rotate(-90deg);
+        }
+
+        .filters-content {
+            padding: 20px 24px;
+            background: #ffffff;
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        .filters-panel.collapsed .filters-content {
+            display: none;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 0.8em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-group select {
+            padding: 10px 14px;
+            border: 2px solid #edf2f7;
+            border-radius: 10px;
+            font-size: 0.95em;
+            background: #f7fafc;
+            cursor: pointer;
+            transition: all 0.25s;
+            font-weight: 500;
+        }
+
+        .filter-group select:hover {
+            border-color: var(--ewu-red);
+            background: white;
+        }
+
+        .filter-group select:focus {
+            border-color: var(--ewu-red);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(161, 0, 34, 0.1);
+        }
+
+        /* Floating Action Button */
+        .fab-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .fab-main {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--ewu-red);
+            color: white;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(161, 0, 34, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .fab-main:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 30px rgba(161, 0, 34, 0.5);
+            background: #8b001d;
+        }
+
+        .fab-icon {
+            transition: transform 0.3s;
+        }
+
+        .fab-container.open .fab-icon {
+            transform: rotate(45deg);
+        }
+
+        .fab-menu {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
             display: flex;
             flex-direction: column;
             gap: 10px;
-            flex: 1;
-            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fab-container.open .fab-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .fab-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            background: white;
+            border: none;
+            border-radius: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            font-weight: 500;
+            font-size: 0.9em;
+        }
+
+        .fab-item:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            background: #f7fafc;
+        }
+
+        .fab-item-icon {
+            font-size: 1.1em;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         label {
@@ -2109,94 +2315,117 @@
             <p class="subtitle">Visual Course Scheduling & Conflict Detection Tool</p>
         </header>
 
-        <div class="controls">
-            <div class="control-group">
-                <label for="quarterSelect">Select Quarter:</label>
-                <select id="quarterSelect">
-                    <option value="fall">Fall 2025</option>
-                    <option value="winter">Winter 2026</option>
-                    <option value="spring" selected>Spring 2026</option>
-                </select>
-            </div>
+        <!-- Quarter Tabs - Primary Navigation -->
+        <div class="quarter-tabs">
+            <button class="quarter-tab" data-quarter="fall" onclick="selectQuarterTab('fall')">Fall 2025</button>
+            <button class="quarter-tab" data-quarter="winter" onclick="selectQuarterTab('winter')">Winter 2026</button>
+            <button class="quarter-tab active" data-quarter="spring" onclick="selectQuarterTab('spring')">Spring 2026</button>
+        </div>
 
-            <div class="control-group">
-                <label for="courseFilter">Filter by Course:</label>
-                <select id="courseFilter">
-                    <option value="all">All Courses</option>
-                    <option value="DESN 401">DESN 401 - Imaginary Worlds</option>
-                    <option value="DESN 463">DESN 463 - Community Design</option>
-                    <option value="DESN 379">DESN 379 - Web Dev 2</option>
-                </select>
+        <!-- Collapsible Filters Panel -->
+        <div class="filters-panel collapsed" id="filtersPanel">
+            <div class="filters-toggle" onclick="toggleFiltersPanel()">
+                <span>🎯 Filters & Options</span>
+                <span class="toggle-icon">▼</span>
             </div>
+            <div class="filters-content" id="filtersContent">
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label for="courseFilter">Filter by Course:</label>
+                        <select id="courseFilter">
+                            <option value="all">All Courses</option>
+                            <option value="DESN 401">DESN 401 - Imaginary Worlds</option>
+                            <option value="DESN 463">DESN 463 - Community Design</option>
+                            <option value="DESN 379">DESN 379 - Web Dev 2</option>
+                        </select>
+                    </div>
 
-            <div class="control-group">
-                <label for="roomFilter">Filter by Room:</label>
-                <select id="roomFilter">
-                    <option value="all">All Rooms</option>
-                    <option value="206">206 UX Lab</option>
-                    <option value="207">207 Media Lab</option>
-                    <option value="209">209 Mac Lab</option>
-                    <option value="210">210 Mac Lab</option>
-                    <option value="212">212 Project Lab</option>
-                    <option value="CEB">CEB Rooms</option>
-                </select>
+                    <div class="filter-group">
+                        <label for="roomFilter">Filter by Room:</label>
+                        <select id="roomFilter">
+                            <option value="all">All Rooms</option>
+                            <option value="206">206 UX Lab</option>
+                            <option value="207">207 Media Lab</option>
+                            <option value="209">209 Mac Lab</option>
+                            <option value="210">210 Mac Lab</option>
+                            <option value="212">212 Project Lab</option>
+                            <option value="CEB">CEB Rooms</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="minorFilter">Filter by Minor:</label>
+                        <select id="minorFilter">
+                            <option value="all">All Courses</option>
+                            <option value="ux">UX/Interaction Design</option>
+                            <option value="animation">Animation</option>
+                            <option value="gameDesign">Game Design</option>
+                            <option value="graphicDesign">Graphic Design</option>
+                            <option value="photography">Photography</option>
+                            <option value="webDevelopment">Web Development</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="trackFilter">Student Track:</label>
+                        <select id="trackFilter">
+                            <option value="all">All Tracks</option>
+                            <option value="ux">UX Design</option>
+                            <option value="interaction-design">Interaction Design</option>
+                            <option value="web-development">Web Development</option>
+                            <option value="animation">Animation</option>
+                            <option value="game-design">Game Design</option>
+                            <option value="motion">Motion Design</option>
+                            <option value="photography">Photography</option>
+                        </select>
+                    </div>
+                </div>
             </div>
+        </div>
 
-            <div class="control-group">
-                <label for="minorFilter">Filter by Minor:</label>
-                <select id="minorFilter">
-                    <option value="all">All Courses</option>
-                    <option value="ux">UX/Interaction Design</option>
-                    <option value="animation">Animation</option>
-                    <option value="gameDesign">Game Design</option>
-                    <option value="graphicDesign">Graphic Design</option>
-                    <option value="photography">Photography</option>
-                    <option value="webDevelopment">Web Development</option>
-                </select>
-            </div>
+        <!-- Hidden select for compatibility with existing code -->
+        <select id="quarterSelect" style="display: none;">
+            <option value="fall">Fall 2025</option>
+            <option value="winter">Winter 2026</option>
+            <option value="spring" selected>Spring 2026</option>
+        </select>
 
-            <div class="control-group">
-                <label for="trackFilter">Student Track:</label>
-                <select id="trackFilter">
-                    <option value="all">All Tracks</option>
-                    <option value="ux">UX Design</option>
-                    <option value="interaction-design">Interaction Design</option>
-                    <option value="web-development">Web Development</option>
-                    <option value="animation">Animation</option>
-                    <option value="game-design">Game Design</option>
-                    <option value="motion">Motion Design</option>
-                    <option value="photography">Photography</option>
-                </select>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="control-group action-buttons">
-                <button class="btn-save" onclick="saveScheduleChanges()">
-                    💾 Save Changes
+        <!-- Floating Action Button -->
+        <div class="fab-container" id="fabContainer">
+            <button class="fab-main" onclick="toggleFabMenu()" title="Actions">
+                <span class="fab-icon">⚡</span>
+            </button>
+            <div class="fab-menu" id="fabMenu">
+                <button class="fab-item" onclick="saveScheduleChanges()" title="Save Changes">
+                    <span class="fab-item-icon">💾</span>
+                    <span class="fab-item-label">Save</span>
                 </button>
-                <button class="btn-evaluate" onclick="runConflictDetection()">
-                    🔍 Detect Conflicts
+                <button class="fab-item" onclick="runConflictDetection()" title="Detect Conflicts">
+                    <span class="fab-item-icon">🔍</span>
+                    <span class="fab-item-label">Conflicts</span>
                 </button>
-                <button class="btn-ai" onclick="evaluateScheduleWithAI()">
-                    ✨ AI Analysis
+                <button class="fab-item" onclick="evaluateScheduleWithAI()" title="AI Analysis">
+                    <span class="fab-item-icon">✨</span>
+                    <span class="fab-item-label">AI Analysis</span>
                 </button>
-                <button class="btn-settings" onclick="openConstraintsModal()" title="Scheduling Rules">
-                    📋 Rules
+                <button class="fab-item" onclick="openConstraintsModal()" title="Rules">
+                    <span class="fab-item-icon">📋</span>
+                    <span class="fab-item-label">Rules</span>
                 </button>
-                <button class="btn-settings" onclick="openApiSettingsModal()" title="API Settings">
-                    ⚙️
+                <button class="fab-item" onclick="openApiSettingsModal()" title="Settings">
+                    <span class="fab-item-icon">⚙️</span>
+                    <span class="fab-item-label">Settings</span>
                 </button>
             </div>
-
         </div>
 
         <!-- Dashboard Navigation -->
         <div class="dashboard-nav">
-            <div class="nav-accordion-toggle" onclick="toggleNavAccordion()">
+            <div class="nav-accordion-toggle collapsed" onclick="toggleNavAccordion()">
                 <span>📌 Dashboards & Tools</span>
                 <span class="toggle-icon">▼</span>
             </div>
-            <div class="nav-accordion-content" id="navAccordionContent">
+            <div class="nav-accordion-content collapsed" id="navAccordionContent">
                 <!-- Analytics Row -->
                 <div class="nav-row">
                     <span class="nav-row-header">Analytics</span>
@@ -2229,11 +2458,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div style="background: #e7f5ff; border-left: 4px solid #339af0; padding: 12px 16px; margin: 20px; border-radius: 8px; font-size: 0.9em;">
-            <strong>📊 Enrollment Data:</strong> Course enrollment badges show previous year's same-quarter enrollment.
-            Example: <span style="background: #51cf66; color: white; padding: 2px 8px; border-radius: 12px; font-weight: 600;">👥 22 ('25)</span> means 22 students enrolled in this course during the same quarter in 2025.
         </div>
 
         <div class="stats-bar">
@@ -2407,6 +2631,60 @@
             toggle.classList.toggle('collapsed');
             content.classList.toggle('collapsed');
         }
+
+        // Filters panel toggle
+        function toggleFiltersPanel() {
+            const panel = document.getElementById('filtersPanel');
+            panel.classList.toggle('collapsed');
+        }
+
+        // Floating action button menu toggle
+        function toggleFabMenu() {
+            const container = document.getElementById('fabContainer');
+            container.classList.toggle('open');
+        }
+
+        // Close FAB menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const fabContainer = document.getElementById('fabContainer');
+            if (fabContainer && !fabContainer.contains(e.target)) {
+                fabContainer.classList.remove('open');
+            }
+        });
+
+        // Quarter tab selection
+        function selectQuarterTab(quarter) {
+            // Update tab visual state
+            document.querySelectorAll('.quarter-tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.dataset.quarter === quarter) {
+                    tab.classList.add('active');
+                }
+            });
+
+            // Update hidden select for compatibility
+            const quarterSelect = document.getElementById('quarterSelect');
+            if (quarterSelect) {
+                quarterSelect.value = quarter;
+                // Trigger change event for existing handlers
+                quarterSelect.dispatchEvent(new Event('change'));
+            }
+        }
+
+        // Initialize UI state on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sync quarter tabs with hidden select value
+            const quarterSelect = document.getElementById('quarterSelect');
+            if (quarterSelect) {
+                const activeQuarter = quarterSelect.value;
+                document.querySelectorAll('.quarter-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                    if (tab.dataset.quarter === activeQuarter) {
+                        tab.classList.add('active');
+                    }
+                });
+            }
+        });
 
         // Faculty modal functions
         function showFacultyModal(facultyName) {

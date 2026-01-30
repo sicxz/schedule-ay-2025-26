@@ -1,0 +1,142 @@
+{
+  "colorScheme": "light",
+  "fonts": [
+    {
+      "family": "-apple-system",
+      "count": 114
+    },
+    {
+      "family": "BlinkMacSystemFont",
+      "count": 114
+    },
+    {
+      "family": "Segoe UI",
+      "count": 114
+    },
+    {
+      "family": "Helvetica",
+      "count": 114
+    },
+    {
+      "family": "Arial",
+      "count": 114
+    },
+    {
+      "family": "sans-serif",
+      "count": 114
+    },
+    {
+      "family": "Apple Color Emoji",
+      "count": 114
+    },
+    {
+      "family": "Segoe UI Emoji",
+      "count": 114
+    },
+    {
+      "family": "Mona Sans",
+      "count": 110
+    },
+    {
+      "family": "MonaSansFallback",
+      "count": 110
+    }
+  ],
+  "colors": {
+    "primary": "#59636E",
+    "accent": "#0969DA",
+    "background": "#FFFFFF",
+    "textPrimary": "#25292E",
+    "link": "#0969DA"
+  },
+  "typography": {
+    "fontFamilies": {
+      "primary": "-apple-system",
+      "heading": "Mona Sans"
+    },
+    "fontStacks": {
+      "body": [
+        "-apple-system",
+        "BlinkMacSystemFont",
+        "Segoe UI",
+        "Helvetica",
+        "Arial",
+        "sans-serif",
+        "Apple Color Emoji",
+        "Segoe UI Emoji"
+      ],
+      "heading": [
+        "Mona Sans",
+        "MonaSansFallback",
+        "-apple-system",
+        "BlinkMacSystemFont",
+        "Segoe UI",
+        "Helvetica",
+        "Arial",
+        "sans-serif",
+        "Apple Color Emoji",
+        "Segoe UI Emoji"
+      ],
+      "paragraph": [
+        "Mona Sans",
+        "MonaSansFallback",
+        "-apple-system",
+        "BlinkMacSystemFont",
+        "Segoe UI",
+        "Helvetica",
+        "Arial",
+        "sans-serif",
+        "Apple Color Emoji",
+        "Segoe UI Emoji"
+      ]
+    },
+    "fontSizes": {
+      "h1": "40px",
+      "h2": "24px",
+      "body": "18px"
+    }
+  },
+  "spacing": {
+    "baseUnit": 4,
+    "borderRadius": "6px"
+  },
+  "components": {
+    "input": {
+      "background": "transparent",
+      "textColor": "#1F2328",
+      "borderColor": null,
+      "borderRadius": "0px",
+      "borderRadiusCorners": {
+        "topLeft": "0px",
+        "topRight": "0px",
+        "bottomRight": "0px",
+        "bottomLeft": "0px"
+      },
+      "shadow": "none"
+    }
+  },
+  "images": {
+    "logo": null,
+    "favicon": "https://primer.style/icon.svg?d353506fbf1e1ca8",
+    "ogImage": null
+  },
+  "__framework_hints": [],
+  "__llm_button_reasoning": {
+    "primary": {
+      "index": -1,
+      "text": "N/A",
+      "reasoning": "LLM failed"
+    },
+    "secondary": {
+      "index": -1,
+      "text": "N/A",
+      "reasoning": "LLM failed"
+    },
+    "confidence": 0
+  },
+  "confidence": {
+    "buttons": 0,
+    "colors": 0,
+    "overall": 0
+  }
+}
