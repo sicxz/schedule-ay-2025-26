@@ -42,6 +42,15 @@ The app uses a comprehensive design system (`css/design-system.css`) with:
 - Inter font from Google Fonts
 
 ## Recent Changes
+- January 2026: Primer Design System Integration
+  - Adopted GitHub Primer design patterns for cleaner, professional look
+  - System font stack (-apple-system, BlinkMacSystemFont, etc.)
+  - 6px border radius on components (Primer standard)
+  - 4px spacing scale for consistent layout
+  - Primer color tokens for borders, backgrounds, text
+  - Flat stat cards with left-side color accents
+  - Subtle shadows and transitions (Primer shadow scale)
+  - Preserved EWU brand colors (header gradient, accents)
 - January 2026: Streamlined UI - Schedule-First Design
   - Added prominent quarter tabs (Fall, Winter, Spring) directly below header
   - Filters panel now collapsed by default with toggle button
