@@ -6009,11 +6009,17 @@
             showToast('Exporting to Google Sheets...');
             
             try {
+                const exportData = {
+                    fall: flattenQuarterData(scheduleData.fall || {}),
+                    winter: flattenQuarterData(scheduleData.winter || {}),
+                    spring: flattenQuarterData(scheduleData.spring || {})
+                };
+                
                 const response = await fetch('/api/export-to-sheets', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        scheduleData: scheduleData,
+                        scheduleData: exportData,
                         academicYear: currentAcademicYear
                     })
                 });
@@ -6030,6 +6036,28 @@
                 console.error('Export error:', error);
                 showToast('Export failed: ' + error.message, 'error');
             }
+        }
+        
+        function flattenQuarterData(quarterData) {
+            const courses = [];
+            for (const day of Object.keys(quarterData)) {
+                const dayData = quarterData[day];
+                if (!dayData || typeof dayData !== 'object') continue;
+                
+                for (const time of Object.keys(dayData)) {
+                    const timeCourses = dayData[time];
+                    if (!Array.isArray(timeCourses)) continue;
+                    
+                    for (const course of timeCourses) {
+                        courses.push({
+                            ...course,
+                            day: day,
+                            time: time
+                        });
+                    }
+                }
+            }
+            return courses;
         }
 
         /**
