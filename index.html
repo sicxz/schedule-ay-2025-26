@@ -777,64 +777,50 @@
         }
 
         .stats-bar {
-            padding: var(--space-3);
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: var(--space-3);
-            background: var(--color-canvas-default);
+            padding: var(--space-2) var(--space-3);
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            background: var(--color-canvas-subtle);
             border-bottom: 1px solid var(--color-border-muted);
+            font-size: 13px;
         }
 
-        .stat-card {
-            padding: var(--space-3);
-            border-radius: var(--radius-2);
-            text-align: left;
-            transition: box-shadow 0.15s ease;
-            border: 1px solid var(--color-border-default);
-            background: var(--color-canvas-default);
-            color: var(--color-fg-default);
-            box-shadow: none;
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+            white-space: nowrap;
         }
 
-        .stat-card:hover {
-            transform: none;
-            box-shadow: var(--shadow-md);
-        }
-
-        .stat-card.critical {
-            border-left: 3px solid var(--color-danger-emphasis);
-            border-top: none;
-        }
-
-        .stat-card.warning {
-            border-left: 3px solid var(--color-attention-emphasis);
-            border-top: none;
-        }
-
-        .stat-card.success {
-            border-left: 3px solid var(--color-success-emphasis);
-            border-top: none;
-        }
-
-        .stat-card.info {
-            border-left: 3px solid var(--color-accent-emphasis);
-            border-top: none;
-        }
-
-        .stat-number {
-            font-size: 32px;
-            font-weight: 600;
-            margin-bottom: var(--space-1);
-            display: block;
-            color: inherit;
-        }
-
-        .stat-label {
+        .stat-item .stat-icon {
             font-size: 12px;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        }
+
+        .stat-item .stat-number {
+            font-weight: 600;
+            color: var(--color-fg-default);
+        }
+
+        .stat-item .stat-label {
             color: var(--color-fg-muted);
+            font-size: 12px;
+        }
+
+        .stat-item.critical .stat-number {
+            color: var(--color-danger-emphasis);
+        }
+
+        .stat-item.warning .stat-number {
+            color: var(--color-attention-emphasis);
+        }
+
+        .stat-item.success .stat-number {
+            color: var(--color-success-emphasis);
+        }
+
+        .stat-item.info .stat-number {
+            color: var(--color-accent-emphasis);
         }
 
         .content {
@@ -1144,26 +1130,27 @@
         .faculty-tbd { border-left-color: #bdc3c7 !important; }
 
         .faculty-legend {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-2);
+            padding: var(--space-2) var(--space-3);
+            background: var(--color-canvas-subtle);
+            border-radius: var(--radius-2);
+            margin-bottom: var(--space-3);
+            border: 1px solid var(--color-border-muted);
         }
 
         .faculty-legend-item {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 0.85em;
+            gap: 4px;
+            font-size: 11px;
         }
 
         .faculty-color-bar {
-            width: 30px;
-            height: 15px;
-            border-radius: 3px;
+            width: 12px;
+            height: 12px;
+            border-radius: var(--radius-1);
         }
 
         /* Minor highlighting */
@@ -1323,19 +1310,16 @@
             backdrop-filter: blur(10px);
         }
 
-        /* Enrollment indicators - small circle */
+        /* Enrollment indicators - compact inline text */
         .enrollment-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 20px;
-            height: 20px;
+            display: inline;
             padding: 0;
-            border-radius: 50%;
-            font-size: 9px;
-            font-weight: 600;
-            margin-left: 4px;
-            flex-shrink: 0;
+            border-radius: 0;
+            font-size: 0.75em;
+            font-weight: 500;
+            margin-left: 2px;
+            background: transparent !important;
+            color: var(--color-fg-muted) !important;
         }
 
         .enrollment-high {
@@ -2141,32 +2125,35 @@
             font-size: 0.75rem;
             writing-mode: horizontal-tb;
         }
-        /* Delete button on course blocks */
+        /* Delete button on course blocks - subtle gray X */
         .course-block .delete-btn {
             position: absolute;
-            top: 4px;
-            right: 4px;
-            background: rgba(239, 68, 68, 0.9);
-            color: white;
+            top: 2px;
+            right: 2px;
+            background: transparent;
+            color: var(--color-fg-muted);
             border: none;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            font-size: 12px;
+            width: 16px;
+            height: 16px;
+            border-radius: var(--radius-1);
+            font-size: 14px;
+            font-weight: 300;
             cursor: pointer;
             opacity: 0;
-            transition: opacity 0.2s;
+            transition: opacity 0.15s, background 0.15s;
             display: flex;
             align-items: center;
             justify-content: center;
             line-height: 1;
         }
         .course-block:hover .delete-btn {
-            opacity: 1;
+            opacity: 0.6;
         }
         .course-block .delete-btn:hover {
-            background: #dc2626;
-            transform: scale(1.1);
+            opacity: 1;
+            background: rgba(0, 0, 0, 0.1);
+            color: var(--color-fg-default);
+            transform: none;
         }
         /* Confirmation Modal */
         .confirm-modal {
@@ -2541,21 +2528,21 @@
         </div>
 
         <div class="stats-bar">
-            <div class="stat-card critical">
-                <div class="stat-number" id="criticalConflicts">3</div>
-                <div class="stat-label">Critical Conflicts</div>
+            <div class="stat-item critical">
+                <span class="stat-number" id="criticalConflicts">3</span>
+                <span class="stat-label">Critical</span>
             </div>
-            <div class="stat-card warning">
-                <div class="stat-number" id="totalConflicts">7</div>
-                <div class="stat-label">Total Conflicts</div>
+            <div class="stat-item warning">
+                <span class="stat-number" id="totalConflicts">7</span>
+                <span class="stat-label">Conflicts</span>
             </div>
-            <div class="stat-card info">
-                <div class="stat-number" id="totalCourses">15</div>
-                <div class="stat-label">Total Courses</div>
+            <div class="stat-item info">
+                <span class="stat-number" id="totalCourses">15</span>
+                <span class="stat-label">Courses</span>
             </div>
-            <div class="stat-card success">
-                <div class="stat-number" id="utilizationRate">78%</div>
-                <div class="stat-label">Room Utilization</div>
+            <div class="stat-item success">
+                <span class="stat-number" id="utilizationRate">78%</span>
+                <span class="stat-label">Utilization</span>
             </div>
         </div>
 
@@ -3379,15 +3366,8 @@
                             nameDiv.className = 'course-name';
                             nameDiv.textContent = course.code + ' ';
                             const enrollBadge = document.createElement('span');
-                            enrollBadge.className = 'enrollment-badge enrollment-' + enrollmentLevel;
-                            enrollBadge.textContent = '👥 ' + displayEnrollment;
-                            if (showYearIndicator) {
-                                const yearSpan = document.createElement('span');
-                                yearSpan.style.fontSize = '0.75em';
-                                yearSpan.style.opacity = '0.8';
-                                yearSpan.textContent = " ('25)";
-                                enrollBadge.appendChild(yearSpan);
-                            }
+                            enrollBadge.className = 'enrollment-badge';
+                            enrollBadge.textContent = '(' + displayEnrollment + (showYearIndicator ? "'" : '') + ')';
                             nameDiv.appendChild(enrollBadge);
 
                             const titleDiv = document.createElement('div');
