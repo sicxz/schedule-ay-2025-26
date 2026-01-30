@@ -5126,12 +5126,37 @@
             document.getElementById('addCourseForm').reset();
             document.getElementById('addDayM').checked = true;
             document.getElementById('addDayW').checked = true;
+            document.getElementById('addOnlineSection').checked = false;
+            toggleOnlineMode(false);
             document.getElementById('addCourseModal').classList.add('active');
 
             // Load courses from Supabase
             await loadCoursesFromSupabase();
             // Load faculty from Supabase
             await loadFacultyFromSupabase();
+        }
+        
+        function toggleOnlineMode(isOnline) {
+            const inPersonFields = document.getElementById('inPersonFields');
+            const roomSelect = document.getElementById('addRoom');
+            const startTime = document.getElementById('addStartTime');
+            const endTime = document.getElementById('addEndTime');
+            
+            if (isOnline) {
+                inPersonFields.style.display = 'none';
+                roomSelect.value = 'ONLINE';
+                roomSelect.disabled = true;
+                startTime.required = false;
+                endTime.required = false;
+                roomSelect.required = false;
+            } else {
+                inPersonFields.style.display = 'block';
+                roomSelect.value = '';
+                roomSelect.disabled = false;
+                startTime.required = true;
+                endTime.required = true;
+                roomSelect.required = true;
+            }
         }
 
         async function loadCoursesFromSupabase() {
@@ -5227,18 +5252,24 @@
             const section = document.getElementById('addSection').value;
             const credits = parseInt(document.getElementById('addCredits').value);
             const instructor = document.getElementById('addFaculty').value || 'TBD';
-            const days = getAddSelectedDays();
-            const startTime = document.getElementById('addStartTime').value;
-            const endTime = document.getElementById('addEndTime').value;
+            const isOnline = document.getElementById('addOnlineSection').checked;
             const room = document.getElementById('addRoom').value;
-
-            // Determine day pattern (MW or TR)
-            const dayPattern = (days.includes('M') || days.includes('W')) ? 'MW' : 'TR';
-            const timeSlot = startTime.replace(':', '') === '1000' ? '10:00-12:00' :
-                            startTime.replace(':', '') === '1300' ? '13:00-15:00' : '16:00-18:00';
 
             const quarter = document.getElementById('quarterSelect').value;
             const data = scheduleData[quarter];
+
+            let dayPattern, timeSlot;
+            
+            if (isOnline || room === 'ONLINE') {
+                dayPattern = 'ONLINE';
+                timeSlot = 'async';
+            } else {
+                const days = getAddSelectedDays();
+                const startTime = document.getElementById('addStartTime').value;
+                dayPattern = (days.includes('M') || days.includes('W')) ? 'MW' : 'TR';
+                timeSlot = startTime.replace(':', '') === '1000' ? '10:00-12:00' :
+                                startTime.replace(':', '') === '1300' ? '13:00-15:00' : '16:00-18:00';
+            }
 
             // Ensure structure exists
             if (!data[dayPattern]) data[dayPattern] = {};
@@ -5250,7 +5281,7 @@
                 name: courseName,
                 instructor: instructor,
                 credits: credits,
-                room: room
+                room: isOnline ? 'ONLINE' : room
             });
 
             closeAddCourseModal();
@@ -5699,25 +5730,33 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Days</label>
-                        <div style="display: flex; gap: 12px; margin-top: 6px;">
-                            <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
-                                <input type="checkbox" id="addDayM" value="M" checked> M
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
-                                <input type="checkbox" id="addDayT" value="T"> T
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
-                                <input type="checkbox" id="addDayW" value="W" checked> W
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
-                                <input type="checkbox" id="addDayTh" value="Th"> Th
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
-                                <input type="checkbox" id="addDayF" value="F"> F
-                            </label>
-                        </div>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 8px 12px; background: #f0fdf4; border-radius: 6px; border: 1px solid #86efac;">
+                            <input type="checkbox" id="addOnlineSection" onchange="toggleOnlineMode(this.checked)">
+                            <span style="font-weight: 500; color: #166534;">Online/Async Section</span>
+                        </label>
                     </div>
+
+                    <div id="inPersonFields">
+                        <div class="form-group">
+                            <label class="form-label">Days</label>
+                            <div style="display: flex; gap: 12px; margin-top: 6px;">
+                                <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                                    <input type="checkbox" id="addDayM" value="M" checked> M
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                                    <input type="checkbox" id="addDayT" value="T"> T
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                                    <input type="checkbox" id="addDayW" value="W" checked> W
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                                    <input type="checkbox" id="addDayTh" value="Th"> Th
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                                    <input type="checkbox" id="addDayF" value="F"> F
+                                </label>
+                            </div>
+                        </div>
 
                     <div class="form-input-group">
                         <div class="form-group">
@@ -5750,7 +5789,9 @@
                             <option value="212">212 - Project Lab</option>
                             <option value="CEB 102">CEB 102</option>
                             <option value="CEB 104">CEB 104</option>
+                            <option value="ONLINE">Online / Async</option>
                         </select>
+                    </div>
                     </div>
                 </div>
 

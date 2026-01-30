@@ -145,12 +145,14 @@ const ConflictEngine = (function() {
 
                     issues.push({
                         severity: rule.severity || 'critical',
+                        type: 'student-conflict',
                         title: `${dayName}, ${timeFormatted}`,
                         description: rule.message || 'Students cannot take multiple upper-division electives simultaneously',
                         courses: courses,
-                        studentsAffected: 'High',
+                        studentsAffected: estimateAffectedStudents(courses),
                         currentSlot: `${day} ${time}`,
-                        resolutions: allResolutions
+                        resolutions: allResolutions,
+                        suggestion: `Move one of these courses to a different time slot to reduce student scheduling conflicts`
                     });
                 }
             });
@@ -347,14 +349,41 @@ const ConflictEngine = (function() {
     }
 
     /**
-     * Format time for display
+     * Format time for display (24hr to AM/PM)
      */
     function formatTime(time) {
         if (!time) return '';
-        return time
-            .replace('10:00-12:00', '10:00 AM - 12:00 PM')
-            .replace('13:00-15:00', '1:00 PM - 3:00 PM')
-            .replace('16:00-18:00', '4:00 PM - 6:00 PM');
+        
+        if (time.includes('-')) {
+            const [start, end] = time.split('-');
+            return `${formatSingleTime(start)} - ${formatSingleTime(end)}`;
+        }
+        return formatSingleTime(time);
+    }
+    
+    function formatSingleTime(t) {
+        if (!t) return '';
+        const match = t.match(/(\d{1,2}):(\d{2})/);
+        if (!match) return t;
+        
+        let hour = parseInt(match[1]);
+        const min = match[2];
+        const ampm = hour >= 12 ? 'PM' : 'AM';
+        
+        if (hour > 12) hour -= 12;
+        if (hour === 0) hour = 12;
+        
+        return `${hour}:${min} ${ampm}`;
+    }
+    
+    /**
+     * Estimate number of students affected by a conflict
+     */
+    function estimateAffectedStudents(courses) {
+        const uniqueCourses = courses.length;
+        if (uniqueCourses >= 4) return 'Very High (15-25 students)';
+        if (uniqueCourses >= 3) return 'High (10-20 students)';
+        return 'Moderate (5-15 students)';
     }
 
     // Public API
