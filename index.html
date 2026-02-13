@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Design Scheduler - EWU</title>
+    <title>Program Command - EWU Design</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -1672,6 +1672,126 @@
             padding: 16px 24px;
             border-top: 1px solid #e5e7eb;
         }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            max-width: 560px;
+            width: min(92vw, 560px);
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--primer-border-default, #d0d7de);
+        }
+
+        .api-help {
+            margin-bottom: 14px;
+            background: #f6f8fa;
+            border: 1px solid #d0d7de;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 13px;
+            color: #4b5563;
+        }
+
+        .api-help strong {
+            color: #1f2937;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .api-provider-type {
+            margin-top: 12px;
+            margin-bottom: 8px;
+        }
+
+        .api-provider-type label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #374151;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .api-provider-type input[type="checkbox"] {
+            margin-right: 8px;
+            transform: translateY(1px);
+        }
+
+        .api-provider-note {
+            margin: 6px 0 0;
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .api-model-group {
+            margin-top: 12px;
+        }
+
+        .api-model-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+            color: #374151;
+            font-weight: 600;
+        }
+
+        .api-model-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #fff;
+            color: #1f2937;
+        }
+
+        .api-model-note {
+            margin: 6px 0 0;
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .api-status-box {
+            margin-top: 12px;
+            border: 1px solid #d0d7de;
+            border-radius: 8px;
+            background: #f8fafc;
+            padding: 10px 12px;
+            min-height: 56px;
+        }
+
+        .api-status-box.ok {
+            border-color: #10b981;
+            background: #ecfdf5;
+        }
+
+        .api-status-box.warn {
+            border-color: #f59e0b;
+            background: #fffbeb;
+        }
+
+        .api-status-box.error {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+
+        .api-status-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: #6b7280;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .api-status-message {
+            font-size: 13px;
+            color: #1f2937;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
         .form-group {
             margin-bottom: 16px;
         }
@@ -2372,9 +2492,980 @@
             }
         }
 
-        /* Smooth page transitions */
-        .container, .controls, header, .dashboard-nav {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        /* EWU Editorial + Primer-Style Theme Override */
+        :root {
+            --ewu-red: #B7142E;
+            --ewu-red-dark: #8F0F24;
+            --ewu-black: #1a1a1a;
+            --ewu-paper: #faf9f7;
+            --ewu-stone: #f0eeeb;
+            --ewu-muted: #6b6560;
+            --ewu-line: #ddd8d2;
+            --ewu-accent: #c4450c;
+            --ewu-success: #2a7d4f;
+            --ewu-warning: #b45309;
+            --ewu-mono: "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --primary-gradient: linear-gradient(180deg, #B7142E 0%, #8F0F24 100%);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--ewu-paper);
+            color: var(--ewu-black);
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .container {
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
+            overflow: visible;
+            max-width: 96%;
+        }
+
+        header {
+            background: var(--ewu-black);
+            color: var(--ewu-paper);
+            padding: 2rem 2rem 1.75rem;
+            margin-bottom: 1rem;
+            text-align: left;
+            border-radius: 0;
+            border-bottom: 3px solid var(--ewu-red);
+        }
+
+        .header-eyebrow {
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--ewu-accent);
+            margin-bottom: 0.45rem;
+            font-family: var(--ewu-mono);
+            font-weight: 700;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 0.45rem;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            font-size: 1.05rem;
+            color: #b5b0aa;
+            opacity: 1;
+            line-height: 1.45;
+        }
+
+        .year-nav,
+        .quarter-tabs,
+        .stats-bar,
+        .legend,
+        .faculty-legend,
+        .online-section,
+        .conflicts-panel,
+        .conflict-solver-panel {
+            background: var(--ewu-stone);
+            border: 1px solid var(--ewu-line);
+        }
+
+        .year-nav {
+            justify-content: space-between;
+            gap: 12px;
+            border-radius: 0;
+            margin-bottom: 0;
+            border-bottom: none;
+        }
+
+        .year-selector label,
+        .filter-group label {
+            font-family: var(--ewu-mono);
+            text-transform: uppercase;
+            letter-spacing: 1.4px;
+            font-size: 11px;
+            color: var(--ewu-muted);
+            font-weight: 700;
+        }
+
+        .copy-year-btn,
+        .btn-secondary,
+        .fab-item,
+        .nav-link {
+            border-color: var(--ewu-line);
+            color: var(--ewu-black);
+            background: #ffffff;
+        }
+
+        .copy-year-btn:hover,
+        .btn-secondary:hover,
+        .fab-item:hover,
+        .nav-link:hover {
+            background: var(--ewu-stone);
+            border-color: #c8c1ba;
+        }
+
+        .quarter-tabs {
+            border-top: none;
+            border-bottom: 1px solid var(--ewu-line);
+            gap: 8px;
+        }
+
+        .quarter-tab {
+            border-radius: 0;
+            font-weight: 700;
+            color: var(--ewu-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 13px;
+            padding: 12px 12px;
+        }
+
+        .quarter-tab.active {
+            color: var(--ewu-black);
+        }
+
+        .quarter-tab.active::after {
+            background: var(--ewu-red);
+            height: 3px;
+            border-radius: 0;
+        }
+
+        .filters-toggle,
+        .nav-accordion-toggle {
+            font-family: var(--ewu-mono);
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .nav-accordion-toggle {
+            background: var(--ewu-black);
+            color: var(--ewu-paper);
+        }
+
+        .nav-accordion-toggle:hover {
+            background: #2b2b2b;
+        }
+
+        .nav-row-header {
+            color: var(--ewu-accent);
+            font-family: var(--ewu-mono);
+            letter-spacing: 1.5px;
+            font-size: 11px;
+        }
+
+        .stats-bar {
+            padding: 14px 18px;
+            display: grid;
+            grid-template-columns: repeat(4, minmax(120px, 1fr));
+            gap: 10px;
+            border-top: none;
+        }
+
+        .stat-item {
+            background: #ffffff;
+            border: 1px solid var(--ewu-line);
+            border-left: 3px solid var(--ewu-red);
+            border-radius: 0;
+            padding: 10px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0;
+        }
+
+        .stat-item .stat-number {
+            font-size: 1.2rem;
+            font-weight: 800;
+            line-height: 1.1;
+        }
+
+        .stat-item .stat-label {
+            font-family: var(--ewu-mono);
+            font-size: 10px;
+            letter-spacing: 1.1px;
+            text-transform: uppercase;
+            color: var(--ewu-muted);
+            margin-top: 4px;
+        }
+
+        .stat-item.critical {
+            border-left-color: var(--ewu-red);
+        }
+
+        .stat-item.warning {
+            border-left-color: var(--ewu-warning);
+        }
+
+        .stat-item.success {
+            border-left-color: var(--ewu-success);
+        }
+
+        .stat-item.info {
+            border-left-color: #2b6cb0;
+        }
+
+        .content {
+            padding: 24px;
+        }
+
+        .schedule-grid {
+            background: var(--ewu-line);
+            border: 1px solid var(--ewu-line);
+            border-radius: 0;
+        }
+
+        .grid-header,
+        .time-slot {
+            background: var(--ewu-black);
+            color: var(--ewu-paper);
+            font-family: var(--ewu-mono);
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .schedule-cell {
+            background: #ffffff;
+        }
+
+        .schedule-cell:hover {
+            background: #f5f3f0;
+        }
+
+        .course-block {
+            background: #ffffff;
+            border: 1px solid #e2ddd7;
+            border-left: 4px solid var(--ewu-red);
+            border-radius: 0;
+            box-shadow: none;
+            padding: 8px 10px;
+        }
+
+        .course-block:hover {
+            transform: translateX(2px);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        .course-name {
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 0.1px;
+        }
+
+        .course-details {
+            color: var(--ewu-muted);
+            font-size: 12px;
+        }
+
+        .day-divider {
+            background: var(--ewu-red);
+            height: 2px;
+            margin: 10px 0;
+        }
+
+        .day-divider::after {
+            color: var(--ewu-red);
+            font-family: var(--ewu-mono);
+            font-size: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border: 1px solid var(--ewu-line);
+            border-radius: 0;
+        }
+
+        .conflicts-panel,
+        .conflict-solver-panel,
+        .recommendations,
+        .minor-info-panel,
+        .arranged-section {
+            border-radius: 0;
+        }
+
+        .recommendations {
+            background: #fff0eb;
+            color: var(--ewu-black);
+            border: 1px solid #f0d6cb;
+            border-left: 4px solid var(--ewu-accent);
+        }
+
+        .recommendations h2 {
+            color: var(--ewu-black);
+        }
+
+        .recommendation-item {
+            background: #ffffff;
+            border: 1px solid #ead4cb;
+            border-left: 3px solid var(--ewu-accent);
+            backdrop-filter: none;
+            border-radius: 0;
+        }
+
+        .schedule-grid-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            gap: 16px;
+        }
+
+        .schedule-grid-title {
+            margin: 0;
+            color: var(--ewu-black);
+            font-size: 1.35rem;
+            font-weight: 800;
+            letter-spacing: -0.01em;
+        }
+
+        .schedule-grid-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .scheduler-assistant-panel {
+            margin-top: 16px;
+            margin-bottom: 18px;
+            background: #ffffff;
+            border: 1px solid var(--ewu-line);
+            border-left: 4px solid var(--ewu-red);
+            padding: 16px;
+        }
+
+        .scheduler-assistant-header {
+            margin-bottom: 12px;
+        }
+
+        .scheduler-assistant-eyebrow {
+            font-size: 11px;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            font-family: var(--ewu-mono);
+            color: var(--ewu-accent);
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .scheduler-assistant-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: var(--ewu-black);
+        }
+
+        .scheduler-assistant-header p {
+            margin: 6px 0 0;
+            color: var(--ewu-muted);
+            font-size: 0.95rem;
+        }
+
+        .scheduler-assistant-input-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
+        }
+
+        .scheduler-question-input {
+            border: 1px solid var(--ewu-line);
+            padding: 10px 12px;
+            font-size: 14px;
+            font-family: inherit;
+            min-height: 90px;
+            resize: vertical;
+            background: #fff;
+            color: var(--ewu-black);
+        }
+
+        .scheduler-assistant-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 185px;
+        }
+
+        .scheduler-assistant-actions button {
+            min-height: 38px;
+        }
+
+        .scheduler-assistant-response {
+            margin-top: 12px;
+            border: 1px solid var(--ewu-line);
+            background: var(--ewu-stone);
+            padding: 12px;
+            white-space: pre-wrap;
+            line-height: 1.55;
+            font-size: 14px;
+            color: var(--ewu-black);
+            min-height: 70px;
+        }
+
+        .scheduler-assistant-response.empty {
+            color: var(--ewu-muted);
+            font-style: italic;
+        }
+
+        .legend,
+        .faculty-legend {
+            border-radius: 0;
+        }
+
+        .modal,
+        .faculty-modal,
+        .confirm-dialog {
+            border-radius: 0;
+            border: 1px solid var(--ewu-line);
+        }
+
+        .modal-header,
+        .faculty-modal-header {
+            border-bottom: 1px solid var(--ewu-line);
+        }
+
+        .fab-main,
+        button.btn-primary {
+            background: var(--ewu-red);
+            border: 1px solid var(--ewu-red-dark);
+            color: #fff;
+        }
+
+        .fab-main:hover,
+        button.btn-primary:hover {
+            background: var(--ewu-red-dark);
+        }
+
+        .btn-ewu-accent {
+            background: var(--ewu-red) !important;
+            color: #fff !important;
+            border: 1px solid var(--ewu-red-dark) !important;
+            border-radius: 0 !important;
+            font-weight: 700 !important;
+        }
+
+        .btn-ewu-accent:hover {
+            background: var(--ewu-red-dark) !important;
+        }
+
+        .btn-add-course-main {
+            padding: 10px 16px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+            height: auto !important;
+        }
+
+        .btn-add-icon {
+            font-family: var(--ewu-mono);
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        .displaced-tray-actions .btn-ewu-accent {
+            margin-bottom: 8px;
+        }
+
+        .ai-results-header-ewu {
+            background: var(--ewu-black) !important;
+            border-bottom: 2px solid var(--ewu-red);
+        }
+
+        /* Program Command + Primer Product UI Refinement */
+        :root {
+            --tray-width: 220px;
+            --tray-edge: 10px;
+            --primer-fg-default: #1f2328;
+            --primer-fg-muted: #59636e;
+            --primer-border-default: #d0d7de;
+            --primer-bg-default: #ffffff;
+            --primer-bg-subtle: #f6f8fa;
+            --primer-canvas: #f3f4f6;
+            --primer-shadow: 0 1px 0 rgba(27, 31, 36, 0.04), 0 8px 24px rgba(140, 149, 159, 0.2);
+        }
+
+        body {
+            background:
+                radial-gradient(1200px 320px at 15% 0%, rgba(183, 20, 46, 0.08), transparent 60%),
+                radial-gradient(900px 260px at 85% 0%, rgba(9, 105, 218, 0.08), transparent 62%),
+                var(--primer-canvas);
+            color: var(--primer-fg-default);
+        }
+
+        .container {
+            max-width: 1360px;
+            margin: 20px auto 40px;
+            transition: margin-left 0.26s ease;
+        }
+
+        body.tray-open .container {
+            margin-left: calc(var(--tray-width) + var(--tray-edge) + 18px);
+        }
+
+        header {
+            background: var(--primer-bg-default);
+            color: var(--primer-fg-default);
+            border: 1px solid var(--primer-border-default);
+            border-top: 4px solid var(--ewu-red);
+            border-bottom: 1px solid var(--primer-border-default);
+            border-radius: 12px;
+            box-shadow: var(--primer-shadow);
+        }
+
+        .header-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: #fff1f3;
+            border: 1px solid #ffd1d9;
+            color: #8f0f24;
+        }
+
+        .subtitle {
+            color: var(--primer-fg-muted);
+        }
+
+        .year-nav,
+        .quarter-tabs,
+        .legend,
+        .faculty-legend,
+        .online-section,
+        .conflicts-panel,
+        .conflict-solver-panel {
+            background: var(--primer-bg-default);
+            border: 1px solid var(--primer-border-default);
+            border-radius: 12px;
+            box-shadow: 0 1px 0 rgba(27, 31, 36, 0.04);
+        }
+
+        .year-nav {
+            padding: 14px 16px;
+            margin-bottom: 10px;
+        }
+
+        .quarter-tabs {
+            padding: 8px;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .quarter-tab {
+            border: 1px solid transparent;
+            border-radius: 8px;
+            color: var(--primer-fg-muted);
+            font-weight: 600;
+            text-transform: none;
+            letter-spacing: 0;
+            font-size: 14px;
+        }
+
+        .quarter-tab:hover {
+            background: var(--primer-bg-subtle);
+            color: var(--primer-fg-default);
+        }
+
+        .quarter-tab.active {
+            background: #24292f;
+            border-color: #24292f;
+            color: #ffffff;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+        }
+
+        .quarter-tab.active::after {
+            display: none;
+        }
+
+        .filters-toggle,
+        .nav-accordion-toggle {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            letter-spacing: 0;
+            text-transform: none;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .nav-accordion-toggle {
+            background: var(--primer-bg-default);
+            color: var(--primer-fg-default);
+            border: 1px solid var(--primer-border-default);
+            border-radius: 10px;
+        }
+
+        .nav-accordion-toggle:hover {
+            background: var(--primer-bg-subtle);
+        }
+
+        .nav-row-header {
+            color: var(--primer-fg-muted);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            letter-spacing: 0;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .copy-year-btn,
+        .btn-secondary,
+        .fab-item,
+        .nav-link {
+            border: 1px solid var(--primer-border-default);
+            color: var(--primer-fg-default);
+            background: var(--primer-bg-default);
+            border-radius: 8px;
+            box-shadow: 0 1px 0 rgba(27, 31, 36, 0.04);
+        }
+
+        .copy-year-btn:hover,
+        .btn-secondary:hover,
+        .fab-item:hover,
+        .nav-link:hover {
+            background: var(--primer-bg-subtle);
+            border-color: #afb8c1;
+        }
+
+        .stats-bar {
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            padding: 0;
+            margin-bottom: 14px;
+            gap: 12px;
+        }
+
+        .stat-item {
+            border-radius: 10px;
+            border: 1px solid var(--primer-border-default);
+            border-top: 3px solid var(--ewu-red);
+            border-left: 1px solid var(--primer-border-default);
+            box-shadow: 0 1px 0 rgba(27, 31, 36, 0.04);
+        }
+
+        .content {
+            background: var(--primer-bg-default);
+            border: 1px solid var(--primer-border-default);
+            border-radius: 12px;
+            box-shadow: var(--primer-shadow);
+            padding: 20px;
+        }
+
+        .schedule-grid {
+            border: 1px solid var(--primer-border-default);
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--primer-border-default);
+        }
+
+        .grid-header,
+        .time-slot {
+            background: #24292f;
+            color: #f6f8fa;
+            font-family: var(--ewu-mono);
+            font-size: 11px;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .schedule-cell {
+            background: #ffffff;
+        }
+
+        .schedule-cell:hover {
+            background: #f6f8fa;
+        }
+
+        .course-block {
+            border-radius: 8px;
+            border: 1px solid var(--primer-border-default);
+            border-left: 3px solid var(--ewu-red);
+            box-shadow: 0 1px 0 rgba(27, 31, 36, 0.04);
+        }
+
+        .course-block:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(31, 35, 40, 0.12);
+        }
+
+        .btn-ewu-accent {
+            border-radius: 8px !important;
+            box-shadow: 0 1px 0 rgba(27, 31, 36, 0.08) !important;
+        }
+
+        .scheduler-assistant-panel {
+            background: linear-gradient(180deg, #ffffff 0%, #f6f8fa 100%);
+            border: 1px solid var(--primer-border-default);
+            border-left: 1px solid var(--primer-border-default);
+            border-radius: 12px;
+            box-shadow: 0 1px 0 rgba(27, 31, 36, 0.04);
+        }
+
+        .scheduler-assistant-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            padding: 3px 10px;
+            border-radius: 999px;
+            background: #ddf4ff;
+            border: 1px solid #b6e3ff;
+            color: #0550ae;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            letter-spacing: 0;
+            text-transform: none;
+        }
+
+        .scheduler-question-input {
+            border: 1px solid var(--primer-border-default);
+            border-radius: 8px;
+            font-family: var(--ewu-mono);
+            line-height: 1.5;
+        }
+
+        .scheduler-question-input:focus {
+            outline: none;
+            border-color: #0969da;
+            box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.18);
+        }
+
+        .scheduler-assistant-response {
+            border-radius: 8px;
+            background: #ffffff;
+            border: 1px solid var(--primer-border-default);
+            white-space: normal;
+        }
+
+        .markdown-output {
+            color: var(--primer-fg-default);
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .markdown-output > :first-child {
+            margin-top: 0;
+        }
+
+        .markdown-output > :last-child {
+            margin-bottom: 0;
+        }
+
+        .markdown-output h1,
+        .markdown-output h2,
+        .markdown-output h3,
+        .markdown-output h4 {
+            margin: 0 0 10px;
+            line-height: 1.3;
+            color: #24292f;
+        }
+
+        .markdown-output p {
+            margin: 0 0 10px;
+        }
+
+        .markdown-output ul,
+        .markdown-output ol {
+            margin: 0 0 10px 20px;
+            padding: 0;
+        }
+
+        .markdown-output li {
+            margin: 4px 0;
+        }
+
+        .markdown-output blockquote {
+            margin: 10px 0;
+            padding: 8px 12px;
+            border-left: 3px solid #d0d7de;
+            background: #f6f8fa;
+            color: #57606a;
+        }
+
+        .markdown-output code {
+            font-family: var(--ewu-mono);
+            background: #f6f8fa;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            padding: 1px 5px;
+            font-size: 12px;
+        }
+
+        .markdown-output pre {
+            margin: 10px 0;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+            background: #0d1117;
+            color: #e6edf3;
+            overflow-x: auto;
+        }
+
+        .markdown-output pre code {
+            background: transparent;
+            border: none;
+            color: inherit;
+            padding: 0;
+        }
+
+        .markdown-output table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+
+        .markdown-output th,
+        .markdown-output td {
+            border: 1px solid #d0d7de;
+            padding: 7px 9px;
+            text-align: left;
+            vertical-align: top;
+            font-size: 13px;
+        }
+
+        .markdown-output th {
+            background: #f6f8fa;
+            font-weight: 600;
+        }
+
+        .markdown-output hr {
+            border: none;
+            border-top: 1px solid #d0d7de;
+            margin: 12px 0;
+        }
+
+        .markdown-output a {
+            color: #0969da;
+        }
+
+        .ai-results-header-ewu {
+            background: #24292f !important;
+            border-bottom: 1px solid #57606a;
+        }
+
+        /* Compact translucent displaced tray */
+        .displaced-tray {
+            left: var(--tray-edge);
+            top: var(--tray-edge);
+            bottom: var(--tray-edge);
+            width: var(--tray-width);
+            border: 1px solid var(--primer-border-default);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 6px 28px rgba(31, 35, 40, 0.22);
+            overflow: hidden;
+        }
+
+        .displaced-tray-header {
+            padding: 12px 14px;
+            background: linear-gradient(180deg, #24292f 0%, #3d444d 100%);
+        }
+
+        .displaced-tray-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .displaced-tray-content {
+            padding: 10px;
+        }
+
+        .displaced-course-card {
+            background: rgba(246, 248, 250, 0.9);
+            border: 1px solid var(--primer-border-default);
+            border-left: 3px solid #57606a;
+            border-radius: 7px;
+            padding: 10px;
+            margin-bottom: 8px;
+        }
+
+        .displaced-course-origin {
+            background: rgba(208, 215, 222, 0.38);
+        }
+
+        .displaced-tray-actions {
+            padding: 10px;
+            border-top: 1px solid var(--primer-border-default);
+        }
+
+        .displaced-tray-actions button {
+            padding: 8px;
+            font-size: 0.83rem;
+            border-radius: 7px;
+        }
+
+        .displaced-tray-toggle {
+            left: 8px;
+            padding: 10px 7px;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 2px 0 10px rgba(31, 35, 40, 0.2);
+        }
+
+        @media (max-width: 1220px) {
+            body.tray-open .container {
+                margin-left: 20px;
+            }
+            .displaced-tray {
+                width: min(210px, 58vw);
+            }
+        }
+
+        @media (max-width: 860px) {
+            .displaced-tray {
+                width: min(88vw, 300px);
+            }
+            .displaced-tray-header {
+                padding: 10px 12px;
+            }
+        }
+
+        :focus-visible {
+            outline: 3px solid rgba(183, 20, 46, 0.28);
+            outline-offset: 1px;
+        }
+
+        @media (max-width: 900px) {
+            .stats-bar {
+                grid-template-columns: repeat(2, minmax(130px, 1fr));
+            }
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                max-width: 100%;
+            }
+            header {
+                padding: 1.4rem 1rem 1.2rem;
+            }
+            h1 {
+                font-size: 1.55rem;
+            }
+            .subtitle {
+                font-size: 0.92rem;
+            }
+            .stats-bar {
+                grid-template-columns: 1fr 1fr;
+            }
+            .schedule-grid-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .schedule-grid-actions {
+                width: 100%;
+                justify-content: space-between;
+                flex-wrap: wrap;
+            }
+            .scheduler-assistant-input-row {
+                grid-template-columns: 1fr;
+            }
+            .scheduler-assistant-actions {
+                min-width: unset;
+                width: 100%;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
         }
 
     </style>
@@ -2411,7 +3502,7 @@
             </div>
         </div>
         <div class="displaced-tray-actions">
-            <button class="btn-add-course" onclick="openAddCourseModal()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); margin-bottom: 8px;">+ Add Course</button>
+            <button class="btn-add-course btn-ewu-accent" onclick="openAddCourseModal()">+ Add Course</button>
             <button class="btn-clear-all" onclick="clearAllDisplaced()">Clear All</button>
         </div>
     </div>
@@ -2436,8 +3527,9 @@
 
     <div class="container">
         <header>
-            <h1>Design Scheduler</h1>
-            <p class="subtitle">Visual Course Scheduling & Conflict Detection Tool</p>
+            <div class="header-eyebrow">EWU DESIGN · PROGRAM COMMAND</div>
+            <h1>Program Command</h1>
+            <p class="subtitle">Design Program Planning, Scheduling, and Scenario Control</p>
         </header>
 
         <!-- Year and Quarter Navigation -->
@@ -2600,6 +3692,7 @@
                     <div class="nav-row-items">
                         <button onclick="highlightConflicts()" class="nav-link"><span class="icon">🔍</span>Conflicts</button>
                         <button onclick="exportReport()" class="nav-link"><span class="icon">📋</span>Export</button>
+                        <a href="pages/pamcam-playground.html" class="nav-link"><span class="icon">🧪</span>PamCam Lab</a>
                         <a href="pages/release-time-dashboard.html" class="nav-link"><span class="icon">🔧</span>Release Time</a>
                         <a href="pages/recommendations-dashboard.html" class="nav-link"><span class="icon">💡</span>Recommendations</a>
                     </div>
@@ -2630,9 +3723,9 @@
             <div id="minorInfoPanel"></div>
             <div id="trackSuggestionsPanel"></div>
 
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
-                <h2 style="margin: 0; color: #495057;">Schedule Grid - <span id="quarterTitle">Spring 2026</span></h2>
-                <div style="display: flex; align-items: center; gap: 16px;">
+            <div class="schedule-grid-header">
+                <h2 class="schedule-grid-title">Program Schedule - <span id="quarterTitle">Spring 2026</span></h2>
+                <div class="schedule-grid-actions">
                     <div class="swap-toggle-container" title="When ON: Dropping a course onto an occupied slot swaps them. When OFF: The existing course goes to the displaced tray.">
                         <span class="swap-toggle-label" id="displaceLabel">Displace</span>
                         <label class="swap-toggle">
@@ -2641,8 +3734,8 @@
                         </label>
                         <span class="swap-toggle-label" id="swapLabel">Swap</span>
                     </div>
-                    <button onclick="openAddCourseModal()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 6px;">
-                        <span style="font-size: 1.2em;">+</span> Add Course
+                    <button class="btn-ewu-accent btn-add-course-main" onclick="openAddCourseModal()">
+                        <span class="btn-add-icon">+</span> Add Course
                     </button>
                 </div>
             </div>
@@ -2652,6 +3745,23 @@
             
             <div class="special-sections-grid">
                 <div id="arrangedSection"></div>
+            </div>
+
+            <div class="scheduler-assistant-panel">
+                <div class="scheduler-assistant-header">
+                    <div class="scheduler-assistant-eyebrow">Program Command · ChatGPT</div>
+                    <h3>Program Command</h3>
+                    <p>Run natural-language planning commands before committing schedule changes.</p>
+                </div>
+                <div class="scheduler-assistant-input-row">
+                    <textarea id="schedulerQuestionInput" class="scheduler-question-input" placeholder="Example: Run without the optional lecturer and redistribute 45 credits with minimum conflict risk."></textarea>
+                    <div class="scheduler-assistant-actions">
+                        <button class="btn-ewu-accent" onclick="askSchedulerQuestion()">Run Command</button>
+                        <button class="btn-secondary" onclick="fillSchedulerQuestion('If the optional lecturer is removed from the 45-credit plan, what is the lowest-risk redistribution across Sam, Sonja, and Meg?')">Without Optional Lecturer</button>
+                        <button class="btn-secondary" onclick="fillSchedulerQuestion('Given Travis and Ginelle each have 31 credits plus 5 inload and DESN 499 at 2 per quarter, where are overload risks by quarter?')">Overload Audit</button>
+                    </div>
+                </div>
+                <div id="schedulerQuestionResponse" class="scheduler-assistant-response empty">Your answer will appear here.</div>
             </div>
 
             <div class="legend">
@@ -5009,11 +6119,13 @@
         function openDisplacedTray() {
             document.getElementById('displacedTray').classList.add('open');
             document.getElementById('displacedToggle').classList.remove('visible');
+            document.body.classList.add('tray-open');
         }
 
         // Close displaced tray
         function closeDisplacedTray() {
             document.getElementById('displacedTray').classList.remove('open');
+            document.body.classList.remove('tray-open');
             if (displacedCourses.length > 0) {
                 document.getElementById('displacedToggle').classList.add('visible');
             }
@@ -6157,24 +7269,45 @@
     </div>
 
     <!-- API Settings Modal -->
-    <div class="modal-overlay" id="apiSettingsModal">
-        <div class="modal-content" style="max-width: 500px;">
+    <div class="modal-overlay" id="apiSettingsModal" onclick="closeApiSettingsModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
             <div class="modal-header">
-                <h2>Claude API Settings</h2>
+                <h2>AI API Settings (OpenAI or Claude)</h2>
                 <button class="modal-close" onclick="closeApiSettingsModal()">&times;</button>
             </div>
             <div class="modal-body">
+                <div class="api-help">
+                    <strong>How this works</strong>
+                    1. Paste your API key.
+                    2. Choose key type (checkbox).
+                    3. Click Test Connection.
+                    4. Save and close.
+                </div>
                 <div class="form-group">
                     <label for="apiKeyInput">API Key</label>
                     <div style="display: flex; gap: 8px;">
-                        <input type="password" id="apiKeyInput" placeholder="sk-ant-api..." style="flex: 1; font-family: monospace;">
+                        <input type="password" id="apiKeyInput" placeholder="sk-... or sk-ant-..." style="flex: 1; font-family: monospace;">
                         <button class="btn-secondary" onclick="toggleApiKeyVisibility()">👁️</button>
                     </div>
-                    <p style="font-size: 12px; color: #6b7280; margin-top: 8px;">Get your key from <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a></p>
+                    <p style="font-size: 12px; color: #6b7280; margin-top: 8px;">Use either <a href="https://platform.openai.com/api-keys" target="_blank">OpenAI API keys</a> or <a href="https://console.anthropic.com/settings/keys" target="_blank">Anthropic API keys</a>.</p>
                 </div>
-                <div id="apiKeyStatus" style="margin-top: 12px;"></div>
+                <div class="api-provider-type">
+                    <label><input type="checkbox" id="providerOpenAI" onchange="toggleApiProviderType('openai')">Use OpenAI key</label>
+                    <label><input type="checkbox" id="providerClaude" onchange="toggleApiProviderType('anthropic')">Use Claude (Anthropic) key</label>
+                    <p class="api-provider-note">If neither is checked, the app auto-detects key type from prefix.</p>
+                </div>
+                <div class="api-model-group">
+                    <label for="apiModelSelect">Model</label>
+                    <select id="apiModelSelect" class="api-model-select"></select>
+                    <p class="api-model-note">Pick the model used for Program Command and AI analysis.</p>
+                </div>
+                <div id="apiKeyStatus" class="api-status-box">
+                    <div class="api-status-title">Status</div>
+                    <div id="apiKeyStatusMessage" class="api-status-message">No API key configured.</div>
+                </div>
             </div>
             <div class="modal-actions">
+                <button class="btn-secondary" onclick="closeApiSettingsModal()">Close</button>
                 <button class="btn-secondary" style="background: #ef4444; color: white; border: none;" onclick="clearApiKey()">Clear Key</button>
                 <button class="btn-secondary" onclick="testApiConnection()">Test Connection</button>
                 <button class="btn-primary" onclick="saveApiKey()">Save</button>
@@ -6218,13 +7351,13 @@
 
     <!-- AI Analysis Results Panel -->
     <div class="results-panel ai-panel" id="aiResultsPanel" style="display: none;">
-        <div class="results-panel-header" style="background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);">
-            <h3>✨ AI Schedule Analysis</h3>
+        <div class="results-panel-header ai-results-header-ewu">
+            <h3>✨ Program Command Analysis</h3>
             <button class="modal-close" onclick="closeAiResultsPanel()">&times;</button>
         </div>
         <div class="results-panel-loading" id="aiResultsLoading" style="display: none;">
             <div class="loading-spinner"></div>
-            <p>Analyzing schedule with Claude AI...</p>
+            <p>Analyzing schedule with ChatGPT...</p>
         </div>
         <div class="results-panel-content" id="aiResultsContent">
             <!-- Populated by JavaScript -->
@@ -6352,9 +7485,11 @@
         .health-score-circle.poor { border-color: #ef4444; color: #ef4444; }
     </style>
 
-    <!-- Claude AI Integration Scripts -->
+    <!-- OpenAI Integration Scripts -->
     <script src="js/claude-service.js"></script>
     <script src="js/schedule-evaluator.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
 
     <script>
         // ============================================
@@ -6839,28 +7974,196 @@
         }
 
         // ============================================
-        // CLAUDE AI INTEGRATION
+        // OPENAI / CHATGPT INTEGRATION
         // ============================================
+
+        const PLANNING_TARGETS = [
+            { faculty: 'Travis', credits: 31, inload: 5, desn499PerQuarter: 2 },
+            { faculty: 'Ginelle', credits: 31, inload: 5, desn499PerQuarter: 2 },
+            { faculty: 'Mindy', credits: 18 },
+            { faculty: 'Colin', credits: 36 },
+            { faculty: 'Sonja', credits: 45 },
+            { faculty: 'Sam', credits: 45 },
+            { faculty: 'Meg', credits: 45 },
+            { faculty: 'Optional Lecturer', credits: 45, optionalScenario: true }
+        ];
+        const AI_MODELS = {
+            openai: [
+                { value: 'gpt-4o-mini', label: 'gpt-4o-mini (fast + low cost)' },
+                { value: 'gpt-4o', label: 'gpt-4o (strong reasoning)' },
+                { value: 'gpt-4.1-mini', label: 'gpt-4.1-mini (balanced)' },
+                { value: 'gpt-4.1', label: 'gpt-4.1 (highest quality)' }
+            ],
+            anthropic: [
+                { value: 'claude-opus-4-6', label: 'claude-opus-4-6 (highest quality)' },
+                { value: 'claude-sonnet-4-5', label: 'claude-sonnet-4-5 (recommended)' },
+                { value: 'claude-haiku-4-5', label: 'claude-haiku-4-5 (fast + low cost)' },
+                { value: 'claude-3-7-sonnet-latest', label: 'claude-3.7-sonnet-latest (legacy)' }
+            ]
+        };
+
+        function getAiService() {
+            if (typeof OpenAIService !== 'undefined') {
+                return OpenAIService;
+            }
+            if (typeof ClaudeService !== 'undefined') {
+                return ClaudeService;
+            }
+            return null;
+        }
+
+        function tryHydrateAiKeyFromInput(aiService) {
+            if (!aiService) {
+                return false;
+            }
+            const input = document.getElementById('apiKeyInput');
+            const typedKey = input?.value?.trim();
+
+            if (typedKey && typedKey.startsWith('sk-')) {
+                try {
+                    aiService.setApiKey(typedKey);
+                    return true;
+                } catch (_error) {
+                    return false;
+                }
+            }
+
+            return aiService.hasApiKey();
+        }
+
+        function getSelectedProviderPreference() {
+            const openaiChecked = document.getElementById('providerOpenAI')?.checked;
+            const claudeChecked = document.getElementById('providerClaude')?.checked;
+            if (openaiChecked) return 'openai';
+            if (claudeChecked) return 'anthropic';
+            return null;
+        }
+
+        function inferProviderForModal(aiService) {
+            const explicit = getSelectedProviderPreference();
+            if (explicit) {
+                return explicit;
+            }
+
+            const typedKey = document.getElementById('apiKeyInput')?.value?.trim() || '';
+            if (typedKey.startsWith('sk-ant-')) {
+                return 'anthropic';
+            }
+            if (typedKey.startsWith('sk-')) {
+                return 'openai';
+            }
+
+            return aiService?.getCurrentProvider?.() || 'openai';
+        }
+
+        function populateModelDropdown(aiService, provider) {
+            const select = document.getElementById('apiModelSelect');
+            if (!select) {
+                return;
+            }
+
+            const models = AI_MODELS[provider] || AI_MODELS.openai;
+            const preferred = aiService?.getModelPreference?.(provider);
+            const fallback = aiService?.getCurrentDefaultModel?.();
+
+            select.innerHTML = models
+                .map((model) => `<option value="${model.value}">${model.label}</option>`)
+                .join('');
+
+            const preferredValue = preferred || fallback || models[0]?.value;
+            const match = models.find((model) => model.value === preferredValue);
+            select.value = match ? preferredValue : models[0]?.value || '';
+        }
+
+        function toggleApiProviderType(provider) {
+            const openaiCheckbox = document.getElementById('providerOpenAI');
+            const claudeCheckbox = document.getElementById('providerClaude');
+            const aiService = getAiService();
+
+            if (!openaiCheckbox || !claudeCheckbox) {
+                return;
+            }
+
+            if (provider === 'openai' && openaiCheckbox.checked) {
+                claudeCheckbox.checked = false;
+            } else if (provider === 'anthropic' && claudeCheckbox.checked) {
+                openaiCheckbox.checked = false;
+            }
+
+            const preference = getSelectedProviderPreference();
+            aiService?.setProviderPreference?.(preference);
+            const effectiveProvider = preference || inferProviderForModal(aiService);
+            populateModelDropdown(aiService, effectiveProvider);
+            updateApiStatus(
+                preference
+                    ? `Provider preference set: ${preference === 'anthropic' ? 'Claude (Anthropic)' : 'OpenAI'}`
+                    : 'Provider preference cleared. Auto-detect will be used.',
+                'warn'
+            );
+        }
+
+        function updateApiStatus(message, tone = 'warn', title = 'Status') {
+            const box = document.getElementById('apiKeyStatus');
+            const messageEl = document.getElementById('apiKeyStatusMessage');
+            if (!box || !messageEl) {
+                return;
+            }
+
+            box.classList.remove('ok', 'warn', 'error');
+            if (tone === 'ok') {
+                box.classList.add('ok');
+            } else if (tone === 'error') {
+                box.classList.add('error');
+            } else {
+                box.classList.add('warn');
+            }
+
+            const titleEl = box.querySelector('.api-status-title');
+            if (titleEl) {
+                titleEl.textContent = title;
+            }
+            messageEl.textContent = message;
+        }
 
         function openApiSettingsModal() {
             const modal = document.getElementById('apiSettingsModal');
             const input = document.getElementById('apiKeyInput');
-            const status = document.getElementById('apiKeyStatus');
+            const aiService = getAiService();
+            const typedKey = input?.value?.trim();
+            const providerPref = aiService?.getProviderPreference?.() || null;
+            const openaiCheckbox = document.getElementById('providerOpenAI');
+            const claudeCheckbox = document.getElementById('providerClaude');
+            const inferredProvider = providerPref
+                || (typedKey?.startsWith('sk-ant-') ? 'anthropic' : null)
+                || (typedKey?.startsWith('sk-') ? 'openai' : null)
+                || aiService?.getCurrentProvider?.()
+                || 'openai';
 
-            if (typeof ClaudeService !== 'undefined' && ClaudeService.hasApiKey()) {
+            if (aiService && aiService.hasApiKey()) {
                 input.value = '';
-                input.placeholder = ClaudeService.maskApiKey(ClaudeService.getApiKey());
-                status.innerHTML = '<span style="color: #10b981;">✓ API key configured</span>';
+                input.placeholder = aiService.maskApiKey(aiService.getApiKey());
+                updateApiStatus('API key configured.', 'ok');
+            } else if (typedKey && typedKey.startsWith('sk-')) {
+                updateApiStatus('Unsaved key detected. Click Save or Test Connection.', 'warn');
             } else {
                 input.value = '';
-                input.placeholder = 'sk-ant-api...';
-                status.innerHTML = '<span style="color: #6b7280;">No API key configured</span>';
+                input.placeholder = 'sk-... or sk-ant-...';
+                updateApiStatus('No API key configured.', 'warn');
             }
+
+            if (openaiCheckbox && claudeCheckbox) {
+                openaiCheckbox.checked = inferredProvider === 'openai';
+                claudeCheckbox.checked = inferredProvider === 'anthropic';
+            }
+            populateModelDropdown(aiService, inferredProvider);
 
             modal.classList.add('active');
         }
 
-        function closeApiSettingsModal() {
+        function closeApiSettingsModal(event) {
+            if (event && event.target && event.target.id !== 'apiSettingsModal') {
+                return;
+            }
             document.getElementById('apiSettingsModal').classList.remove('active');
         }
 
@@ -6872,76 +8175,335 @@
         function saveApiKey() {
             const input = document.getElementById('apiKeyInput');
             const key = input.value.trim();
+            const aiService = getAiService();
 
-            if (!key && typeof ClaudeService !== 'undefined' && ClaudeService.hasApiKey()) {
+            if (!aiService) {
+                showToast('AI service unavailable', 'error');
+                return;
+            }
+
+            if (!key && aiService.hasApiKey()) {
                 showToast('API key unchanged');
+                updateApiStatus('API key unchanged.', 'ok');
                 closeApiSettingsModal();
                 return;
             }
 
             if (!key) {
                 showToast('Please enter an API key');
+                updateApiStatus('Please enter an API key before saving.', 'error', 'Validation');
                 return;
             }
 
-            if (!key.startsWith('sk-ant-')) {
+            if (!key.startsWith('sk-')) {
                 showToast('Invalid API key format');
+                updateApiStatus('Invalid key format. Key must start with "sk-".', 'error', 'Validation');
                 return;
             }
 
             try {
-                ClaudeService.setApiKey(key);
+                aiService.setApiKey(key);
+                aiService.setProviderPreference(getSelectedProviderPreference());
+                const provider = inferProviderForModal(aiService);
+                const selectedModel = document.getElementById('apiModelSelect')?.value;
+                aiService.setModelPreference(selectedModel, provider);
                 showToast('API key saved');
+                updateApiStatus('API key saved successfully.', 'ok');
                 closeApiSettingsModal();
             } catch (error) {
                 showToast('Error saving API key');
+                updateApiStatus(error.message || 'Error saving API key.', 'error');
             }
         }
 
         function clearApiKey() {
+            const aiService = getAiService();
+            if (!aiService) {
+                showToast('AI service unavailable', 'error');
+                return;
+            }
+
             if (confirm('Clear API key?')) {
-                ClaudeService.clearApiKey();
+                aiService.clearApiKey();
                 document.getElementById('apiKeyInput').value = '';
-                document.getElementById('apiKeyInput').placeholder = 'sk-ant-api...';
-                document.getElementById('apiKeyStatus').innerHTML = '<span style="color: #6b7280;">No API key configured</span>';
+                document.getElementById('apiKeyInput').placeholder = 'sk-... or sk-ant-...';
+                const openaiCheckbox = document.getElementById('providerOpenAI');
+                const claudeCheckbox = document.getElementById('providerClaude');
+                if (openaiCheckbox) openaiCheckbox.checked = false;
+                if (claudeCheckbox) claudeCheckbox.checked = false;
+                updateApiStatus('API key cleared.', 'warn');
                 showToast('API key cleared');
             }
         }
 
         async function testApiConnection() {
-            const status = document.getElementById('apiKeyStatus');
             const input = document.getElementById('apiKeyInput');
             const newKey = input.value.trim();
+            const aiService = getAiService();
+            const providerPref = getSelectedProviderPreference();
+            const effectiveProvider = providerPref || inferProviderForModal(aiService);
+            const selectedModel = document.getElementById('apiModelSelect')?.value;
 
-            if (newKey && newKey.startsWith('sk-ant-')) {
-                ClaudeService.setApiKey(newKey);
-            }
-
-            if (!ClaudeService.hasApiKey()) {
-                status.innerHTML = '<span style="color: #ef4444;">No API key to test</span>';
+            if (!aiService) {
+                updateApiStatus('AI service unavailable.', 'error');
                 return;
             }
 
-            status.innerHTML = '<span style="color: #f59e0b;">Testing connection...</span>';
+            if (newKey && newKey.startsWith('sk-')) {
+                aiService.setApiKey(newKey);
+            }
+
+            aiService.setProviderPreference(providerPref);
+            aiService.setModelPreference(selectedModel, effectiveProvider);
+            updateApiStatus('Testing connection... please wait.', 'warn');
 
             try {
-                const result = await ClaudeService.testConnection();
+                const result = await aiService.testConnection(selectedModel || undefined, providerPref || undefined);
                 if (result.success) {
-                    status.innerHTML = '<span style="color: #10b981;">✓ Connection successful!</span>';
+                    const providerLabel = result.provider === 'anthropic' ? 'Claude (Anthropic)' : 'OpenAI';
+                    updateApiStatus(
+                        `Connection successful.\nProvider: ${providerLabel}\nModel: ${result.model}\nResponse: ${result.message}`,
+                        'ok'
+                    );
                 } else {
-                    status.innerHTML = `<span style="color: #ef4444;">✗ ${result.error}</span>`;
+                    updateApiStatus(`Connection failed.\n${result.error}`, 'error');
                 }
             } catch (error) {
-                status.innerHTML = `<span style="color: #ef4444;">✗ ${error.message}</span>`;
+                updateApiStatus(`Connection error.\n${error.message}`, 'error');
+            }
+        }
+
+        function buildScheduleSnapshotForAI(quarter) {
+            const normalizePromptInstructorName = (instructorName) => {
+                const value = String(instructorName || '').trim().toLowerCase();
+                if (!value) {
+                    return 'TBD';
+                }
+                if (value === 'a.sopu' || value === 'ariel' || value === 'ariel sopu') {
+                    return 'Optional Lecturer';
+                }
+                return instructorName;
+            };
+
+            const snapshot = {
+                [quarter]: {
+                    assignedCourses: {}
+                }
+            };
+
+            const quarterData = scheduleData[quarter] || {};
+            Object.entries(quarterData).forEach(([day, dayData]) => {
+                if (!dayData || typeof dayData !== 'object') {
+                    return;
+                }
+                Object.entries(dayData).forEach(([time, courses]) => {
+                    if (!Array.isArray(courses)) {
+                        return;
+                    }
+                    courses.forEach((course, index) => {
+                        const room = course.room || day;
+                        const key = `${day}-${time}-${room}`;
+                        if (!snapshot[quarter].assignedCourses[key]) {
+                            snapshot[quarter].assignedCourses[key] = [];
+                        }
+                        snapshot[quarter].assignedCourses[key].push({
+                            courseCode: course.code,
+                            section: course.section || String(index + 1).padStart(3, '0'),
+                            courseTitle: course.name || course.title || '',
+                            facultyName: normalizePromptInstructorName(course.instructor),
+                            credits: Number(course.credits) || 5
+                        });
+                    });
+                });
+            });
+
+            return snapshot;
+        }
+
+        function buildPlannerScenarioText() {
+            return PLANNING_TARGETS
+                .map((target) => {
+                    const details = [`${target.credits} credits`];
+                    if (target.inload) details.push(`${target.inload} inload`);
+                    if (target.desn499PerQuarter) details.push(`DESN499 ${target.desn499PerQuarter}/quarter`);
+                    if (target.optionalScenario) details.push('optional (with/without)');
+                    return `- ${target.faculty}: ${details.join(', ')}`;
+                })
+                .join('\n');
+        }
+
+        function fillSchedulerQuestion(questionText) {
+            const input = document.getElementById('schedulerQuestionInput');
+            input.value = questionText;
+            input.focus();
+            input.setSelectionRange(input.value.length, input.value.length);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const input = document.getElementById('schedulerQuestionInput');
+            if (!input) {
+                return;
+            }
+            input.addEventListener('keydown', (event) => {
+                if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+                    event.preventDefault();
+                    askSchedulerQuestion();
+                }
+            });
+        });
+
+        function buildSchedulerQuestionPrompt(question, quarter) {
+            const normalizePromptInstructorName = (instructorName) => {
+                const value = String(instructorName || '').trim().toLowerCase();
+                if (!value) {
+                    return 'TBD';
+                }
+                if (value === 'a.sopu' || value === 'ariel' || value === 'ariel sopu') {
+                    return 'Optional Lecturer';
+                }
+                return instructorName;
+            };
+
+            const quarterCourses = flattenQuarterData(scheduleData[quarter] || {});
+            const trimmedCourses = quarterCourses.map((course) => ({
+                code: course.code,
+                title: course.name || course.title || '',
+                instructor: normalizePromptInstructorName(course.instructor),
+                room: course.room || '',
+                day: course.day || '',
+                time: course.time || '',
+                credits: Number(course.credits) || 5
+            }));
+
+            return `You are the scheduling strategist for EWU Design.
+
+CURRENT QUARTER: ${quarter}
+SCENARIO TARGETS:
+${buildPlannerScenarioText()}
+
+SCHEDULE COURSES (JSON):
+${JSON.stringify(trimmedCourses, null, 2)}
+
+QUESTION:
+${question}
+
+RESPONSE FORMAT:
+1) Direct answer
+2) Impact analysis (who/what changes)
+3) Recommended action plan
+4) Key assumptions`;
+        }
+
+        function escapeHtml(value) {
+            return String(value || '')
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#39;');
+        }
+
+        function markdownToSafeHtml(markdownText) {
+            const text = (markdownText || '').trim();
+            if (!text) {
+                return '';
+            }
+
+            if (window.marked && typeof window.marked.parse === 'function') {
+                window.marked.setOptions({
+                    gfm: true,
+                    breaks: true,
+                    headerIds: false,
+                    mangle: false
+                });
+
+                const renderedHtml = window.marked.parse(text);
+                if (window.DOMPurify && typeof window.DOMPurify.sanitize === 'function') {
+                    return window.DOMPurify.sanitize(renderedHtml);
+                }
+                return escapeHtml(text).replace(/\n/g, '<br>');
+            }
+
+            return escapeHtml(text).replace(/\n/g, '<br>');
+        }
+
+        function renderMarkdownResponse(element, markdownText, fallbackText = 'No response returned.') {
+            if (!element) {
+                return;
+            }
+
+            const text = (markdownText || '').trim();
+            if (!text) {
+                element.classList.add('empty');
+                element.textContent = fallbackText;
+                return;
+            }
+
+            element.classList.remove('empty');
+            const html = markdownToSafeHtml(text);
+            element.innerHTML = `<div class="markdown-output">${html}</div>`;
+        }
+
+        async function askSchedulerQuestion() {
+            const aiService = getAiService();
+            if (!aiService) {
+                openApiSettingsModal();
+                showToast('AI service unavailable', 'error');
+                return;
+            }
+            tryHydrateAiKeyFromInput(aiService);
+
+            const input = document.getElementById('schedulerQuestionInput');
+            const responseEl = document.getElementById('schedulerQuestionResponse');
+            const question = input.value.trim();
+
+            if (!question) {
+                showToast('Enter a question first');
+                input.focus();
+                return;
+            }
+
+            responseEl.classList.remove('empty');
+            renderMarkdownResponse(responseEl, '_Thinking..._');
+
+            try {
+                const quarter = document.getElementById('quarterSelect').value;
+                const prompt = buildSchedulerQuestionPrompt(question, quarter);
+                const model = aiService.getCurrentDefaultModel?.() || 'gpt-4o-mini';
+                const provider = aiService.getCurrentProvider?.();
+                const result = await aiService.analyze(prompt, {
+                    model,
+                    provider,
+                    maxTokens: 1200,
+                    temperature: 0.2,
+                    systemPrompt: 'You are a precise academic scheduling assistant. Be concrete, actionable, and explicit about risk tradeoffs.'
+                });
+
+                const answer = (result.text || '').trim();
+                renderMarkdownResponse(responseEl, answer, 'No answer returned.');
+                showToast('Program Command response ready');
+            } catch (error) {
+                if (error.message.includes('No AI API key found') || error.message.includes('No API key')) {
+                    openApiSettingsModal();
+                    showToast('Add your API key in Settings, then retry', 'error');
+                }
+                renderMarkdownResponse(
+                    responseEl,
+                    `### Request failed\n\n${escapeHtml(error.message)}`,
+                    `Request failed: ${error.message}`
+                );
+                showToast('Program Command request failed', 'error');
             }
         }
 
         async function evaluateScheduleWithAI() {
-            if (typeof ClaudeService === 'undefined' || !ClaudeService.hasApiKey()) {
+            const aiService = getAiService();
+            if (!aiService) {
                 openApiSettingsModal();
-                showToast('Please configure your Claude API key first');
+                showToast('AI service unavailable', 'error');
                 return;
             }
+            tryHydrateAiKeyFromInput(aiService);
 
             const panel = document.getElementById('aiResultsPanel');
             const loading = document.getElementById('aiResultsLoading');
@@ -6953,34 +8515,18 @@
             content.style.display = 'none';
 
             try {
-                const courses = getCurrentScheduleData();
                 const quarter = document.getElementById('quarterSelect').value;
+                const scheduleSnapshot = buildScheduleSnapshotForAI(quarter);
+                const prompt = ScheduleEvaluator.buildPrompt(scheduleSnapshot, {}, [], { quarter });
+                const model = aiService.getCurrentDefaultModel?.() || 'gpt-4o-mini';
+                const provider = aiService.getCurrentProvider?.();
 
-                // Build schedule data structure for prompt
-                const scheduleData = {
-                    [quarter]: {
-                        assignedCourses: {}
-                    }
-                };
-
-                courses.forEach(course => {
-                    const key = `${course.day}-${course.time}-${course.room}`;
-                    if (!scheduleData[quarter].assignedCourses[key]) {
-                        scheduleData[quarter].assignedCourses[key] = [];
-                    }
-                    scheduleData[quarter].assignedCourses[key].push({
-                        courseCode: course.code,
-                        section: course.section,
-                        courseTitle: course.title,
-                        facultyName: course.instructor
-                    });
-                });
-
-                const prompt = ScheduleEvaluator.buildPrompt(scheduleData, {}, [], { quarter });
-
-                const response = await ClaudeService.analyze(prompt, {
+                const response = await aiService.analyze(prompt, {
+                    model,
+                    provider,
                     maxTokens: 4096,
-                    temperature: 0.3
+                    temperature: 0.2,
+                    responseFormat: 'json_object'
                 });
 
                 const parsed = ScheduleEvaluator.parseResponse(response);
@@ -7016,10 +8562,13 @@
                     `;
                 }
 
-                showToast('AI analysis complete');
+                showToast('Program Command analysis complete');
 
             } catch (error) {
                 console.error('AI evaluation error:', error);
+                if (error.message.includes('No AI API key found') || error.message.includes('No API key')) {
+                    openApiSettingsModal();
+                }
                 loading.style.display = 'none';
                 content.style.display = 'block';
                 content.innerHTML = `

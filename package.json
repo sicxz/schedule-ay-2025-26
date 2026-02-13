@@ -5,13 +5,15 @@
   "type": "module",
   "main": "api-server.js",
   "scripts": {
+    "start": "node api-server.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "process-data": "node scripts/process-enrollment-data.js",
     "calculate-workload": "node scripts/workload-calculator.js enrollment-data/processed",
     "validate-data": "node scripts/validate-enrollment.js enrollment-data/processed/corrected-all-quarters.csv",
-    "serve": "python3 -m http.server 8080"
+    "serve": "node api-server.js",
+    "serve:static": "python3 -m http.server 8080"
   },
   "repository": {
     "type": "git",

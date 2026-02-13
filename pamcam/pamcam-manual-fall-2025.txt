@@ -1,0 +1,451 @@
+Disclaimer: The commentary and modeling techniques shared in this user manual
+do not necessarily reflect those from EWU’s Office of Institutional Research,
+Academic Affairs Planning and Budget, and the Division of Business and Strategy.
+
+PAMCAM User Manual
+_________________________________________
+L. M. Smith
+Last Revision: May 14, 2025
+
+1
+
+1. Introduction
+Based upon both pedagogical and financial considerations, PAMCAM (Personnel
+Allocation Model Contribution Margin Assessment Model) is a free, open resource
+mathematical model designed to inform decision-making related to the management
+of faculty personnel and corresponding credit-bearing academic activity centers in
+higher education. The operations of instruction delivery associated with an academic
+activity center vary along a continuum spanning from a single course section to the
+entire university academic portfolio. PAMCAM brings forth no new ideas from a
+mathematics or finance standpoint. Furthermore, the nature of PAMCAM analysis has
+been routinely performed at universities since the 1990’s with variations in
+terminology, emphasis areas, depth, and breadth of analysis. What appears to be
+novel for PAMCAM, however, is 1) how the change in contribution margin is
+disaggregated into two parts that elucidate the separate effects of enrollment growth
+and student-faculty ratio change, and 2) how information is graphically
+communicated using a four-sided design envelope that captures key considerations
+commonly made amid discussions around personnel and academic activity center
+management. These differences introduce fertile ground for faculty and
+administrators to more effectively communicate their perspective and understand
+others’ perspectives using a common vocabulary with a clearly understood definition
+of terms.
+The evaluation process around faculty personnel and academic program decisionmaking should feature transparency, clarity, adequate time for absorption of
+information, and data-informed rationale. PAMCAM is useful for establishing a
+foundation for such a process. The motivation for the use of PAMCAM, therefore, is
+to help advance a healthy shared governance environment as faculty personnel and
+academic activity center decisions are made.
+2. Activity Centers
+Within the context of PAMCAM analysis, the contribution margin captures the
+difference between an academic activity center’s revenue and expenses associated
+with customers and employees, respectively. Customers may be primarily envisioned
+collectively as students and prospective employers for whom they wish to work.
+2
+
+Employees are the faculty whose services are curriculum delivery and peripheral
+supporting engagement. As such, the apparatus supporting direct operations of
+instruction delivery associated with a single course section, discipline area, degreemajor, academic program, department, school, college, or university may comprise
+an academic activity center.
+PAMCAM was first introduced (Smith, et al., 2022) in the form of a relatively complexlooking model, and later presented in a more succinct and understandable model
+format (Smith, 2025); elements of the later article are summarized herein. As
+explained in both articles, the PAMCAM contribution margin does not account for
+fixed (or nearly fixed) costs. Such fixed costs include but are not limited to those
+related to support staff, custodial services, landscaping, police, property insurance,
+and utilities. These costs are insensitive to relatively small changes in enrollment and
+student faculty ratio. Because the change in contribution margin due to a change in
+enrollment or change in student-faculty ratio is a central mathematical pillar for
+PAMCAM, such fixed costs are ignored. The contribution margin for an academic
+activity center, therefore, should almost always be equal to or greater than zero. They
+are considered profit centers in support of other activities within an encompassing,
+non-profit academic enterprise. A culture in which discussions around change in
+contribution margin are integrated into strategic planning and execution helps
+establish a strong and inclusive foundation for teamwork, entrepreneurship,
+creativity, and a competitive advantage for an institution of higher education.
+3. Contribution Margin
+The contribution margin for PAMCAM is expressed in (1) below. Students and faculty
+are defined in terms of full-time student equivalents (FTES) and full-time faculty
+equivalents (FTEF), respectively.
+𝑠
+
+𝑚 = (𝑡 + 𝑎 ∙ 𝑓 − ) ∙ 𝑛
+𝑅
+
+(1)
+
+where:
+𝑚 is the annual contribution margin ($)
+𝑡 is the weighted avg annual tuition per student ($/FTES)
+𝑎 is the weighted avg annual credit hours per student (SCH/ FTES)
+3
+
+𝑓
+𝑠
+𝑅
+𝑛
+
+is the weighted avg annual state formula funding per credit hour ($/SCH)
+is the weighted avg annual salary per faculty ($/FTEF)
+is the annualized student-faculty ratio (FTES/FTEF)
+is the annualized enrollment (FTES)
+
+4. Design Envelope
+In Figure 1, the previous, current, and projected states of an academic activity center
+are denoted by points 1, 2, and 3, respectively. The PAMCAM design envelope may
+be envisioned as the permissible space in which an academic activity center may
+reside. It is bound by four lines, as illustrated in Figure 1. The slope of the lower line
+(Line A) is determined by constraining (1) to be equal to or greater than zero, then
+solving for R. This lower line represents the financial break-even boundary below
+which the contribution margin is negative. Therefore, an academic activity center
+located above this lower line is profitable; this lower boundary is a financial
+constraint. The slope of the upper line (Line B) is the student-faculty ratio above which
+pedagogical quality is unacceptably low; this upper boundary is a pedagogical
+constraint typically proposed by a faculty program coordinator and subject to
+approval by a dean, director, and/or department chair. The placement of the left-hand
+and right-hand boundaries are prescribed, based upon functional and
+aspirational/space considerations, respectively.
+5. Change in Faculty
+PAMCAM yields the change in faculty, 𝑑𝑝, required to move the center to a position
+along the top boundary of the design envelope; this is at the intersection of Line B
+and C in Figure 1. As such, 𝑑𝑝 is calculated according to the following relationship.
+𝑑𝑝 =
+
+𝑛𝑓𝑖𝑛𝑎𝑙
+𝑅𝑚𝑎𝑥
+
+− 𝑝𝑖𝑛𝑖𝑡𝑖𝑎𝑙
+
+(2)
+
+where:
+𝑛𝑓𝑖𝑛𝑎𝑙 is the final FTES coordinate
+𝑅𝑚𝑎𝑥 is the slope of the line coincident with the top line of the design envelope
+𝑝𝑖𝑛𝑖𝑡𝑖𝑎𝑙 is the initial FTEF coordinate
+4
+
+6. Change in Contribution Margin
+Any state (ie. location) within the PAMCAM design envelope is satisfactory from a
+financial perspective. The optimum financial state, however, is at the projected Point
+3 in Figure 1; this state corresponds to maximum financial efficiency under the
+prescribed conditions. Therefore, the PAMCAM model is designed to conform to a
+principle of maximum financial efficiency. Anywhere within the design envelope or
+along its boundaries is pedagogically permissible. The optimum location, therefore,
+in the PAMCAM design envelope is along the top boundary at which both the
+principle of maximum financial efficiency and pedagogical-based constraints are
+satisfied.
+5
+
+A change in enrollment, 𝑑𝑛, and/or a change in student-faculty ratio, 𝑑𝑅, leads to
+movement of the academic activity center’s state from Point 2 to Point 3 which in
+turn leads to a change in its contribution margin. While motion from Point 2 to 3 for
+some academic activity centers will feature a positive contribution margin, others will
+feature a negative contribution margin. Decision-makers within the college should
+manage this dynamic by reallocating financial resources strategically.
+With the understanding that everyone on campus plays a role in enrollment
+management, the impact of an individual’s decision-making on enrollment is not
+always clear because there exists a myriad of internal and external factors that also
+influence enrollment. Thus, the dean, director, and chair’s connection to the 𝑑𝑛
+“lever” is mostly reactive. The 𝑑𝑅 lever is fundamentally different. It can more easily
+be controlled through intentional actions within a college. Adding an additional
+lecturer or not backfilling a recently vacated tenured position will affect 𝑑𝑅. Thus, the
+dean, director, and chair’s connection to the 𝑑𝑅 “lever” is mostly proactive. It follows,
+therefore, that a manager would find useful a deeper understanding of the difference
+between the impact of their reactive and proactive decision-making has on academic
+activity center contribution margins in their college. The PAMCAM model
+quantitatively shows this difference both numerically and graphically.
+Let the change in 𝑚, 𝑅, and 𝑛 be denoted by 𝑑𝑚, 𝑑𝑅, and 𝑑𝑛, respectively. From (1),
+it is seen that 𝑚 is nonlinear with respect to 𝑅. Also, the impact of 𝑛 is dependent
+upon 𝑅; there is an interaction between the two. An efficient way to accurately
+separate the portion of 𝑑𝑚 due to 𝑑𝑅 from the portion of 𝑑𝑚 due to 𝑑𝑛 is to employ
+an approximation model involving a Taylor series expansion described within the field
+of differential calculus (Weir, et al., 2015). For this current PAMCAM model, a tenth
+order Taylor series expansion model is introduced in (3) for the change in contribution
+margin, 𝑑𝑚, as a function of a change in enrollment, 𝑑𝑛, and a change in studentfaculty ratio, 𝑑𝑅.
+1
+
+𝜕𝑖
+
+1
+
+𝜕𝑖
+
+𝑑𝑚 ≈ ∑𝑘𝑖=1 ∙ 𝑖 [𝑚(𝑛𝑜 , 𝑅𝑜 )] ∙ (𝑑𝑛)𝑖 + ∑𝑘𝑖=1 ∙ 𝑖 [𝑚(𝑛𝑜 , 𝑅𝑜 )] ∙ (𝑑𝑅 )𝑖
+𝑖! 𝜕 𝑛
+
+𝑖! 𝜕 𝑅
+
+or, because 𝑚 is linear with respect to 𝑛,
+6
+
+(3a)
+
+𝑑𝑚 ≈
+
+𝜕
+𝜕𝑛
+
+1
+
+𝜕𝑖
+
+[𝑚(𝑛𝑜 , 𝑅𝑜 )] ∙ (𝑑𝑛) + ∑𝑘𝑖=1 ∙ 𝑖 [𝑚(𝑛𝑜 , 𝑅𝑜 )] ∙ (𝑑𝑅 )𝑖
+𝑖! 𝜕 𝑅
+
+(3b)
+
+where:
+k = 10
+𝑛𝑜 is the current year’s enrollment
+𝑅𝑜 is the current year’s student-faculty ratio
+dR is the change in student-faculty ratio from the current year to the next year
+7. Graphical User Interface
+PAMCAM may be built on various platforms and presented in graphical and/or
+numerical formats. Examples of suitable platforms are spreadsheets, web-based
+applications, and mobile phone applications. The current version is available in EXCEL.
+Because it has a built-in macro, it has an “xlsm” extension. The EXCEL model features
+five tabs: Sandbox, College 1, College, 2, College 3, College 4, and Division. Within the
+sandbox, users may engage in experimental analysis without affecting any other tab.
+Information in the college tabs, however, rolls into the division tab. Provided they are
+correctly coupled to the division tab, the four college tabs could be replaced with tabs
+for any number of colleges, departments, academic programs, or discipline areas. A
+web-based Sandbox as well as the EXCEL model are available at the free, open
+resource website at ……. (under construction).
+Navigating the PAMCAM user interface is relatively simple, provided one understands
+the meaning of the input data and has access to reliable data. A user’s understanding
+of the mathematical formulation shown in (3) is not essential to their effective use of
+PAMCAM. The following steps are recommended as an introductory process:
+A. Activity Center: Decide on the type of academic activity center to be evaluated,
+in consultation with the office of institutional research, the division budget
+office, stakeholders within the college and the provost’s office (hereafter called
+“stakeholders”). Unless there exists a compelling reason to do otherwise, the
+academic activity center analysis should begin at the discipline area level.
+7
+
+Results based upon PAMCAM analysis for discipline areas will roll into, for
+example, departments, colleges, and the division for subsequent PAMCAM
+analysis. This process is illustrated in the next section.
+B. Students and Faculty: Decide on how FTES and FTEF are to be calculated in
+consultation with stakeholders. To account for service effects, FTES calculations
+should be based upon credit hours associated with any student in the
+classroom, regardless of their major, unless there exists a compelling reason to
+do otherwise. FTEF calculations should be based upon those instructors who
+teach students seated in the classroom, regardless of the instructor’s home
+department. For the purposes of PAMCAM analysis, these instructors are
+affiliated with the department that manages the discipline area. These
+approaches are not necessary, but they are recommended. The key is
+consistency across analysis among stakeholders throughout the division.
+C. Basic Input: Input estimated values for t, a, f, s, n, and p in the maroonhighlighted fields. Also input a value for the projected percent enrollment
+change from state 2 to 3; this is used to determine 𝑑𝑛 from state 2 to 3. Do not
+invest an unnecessary amount of time quibbling over the exact values. There
+will never be universal consensus on exact numbers. Noting that PAMCAM
+provides estimated values, stakeholders should consult with each other, agree
+on an estimate, then move on.
+D. Strategic Input: This refers primarily to specification of the maximum student
+faculty ratio, 𝑅𝑚𝑎𝑥 , which defines the top line of the design envelope.
+Prescription of 𝑅𝑚𝑎𝑥 for state 3 allows for the calculation of 𝑑𝑅 from state 2 to
+3. In addition to 𝑑𝑛, the value for 𝑅𝑚𝑎𝑥 will have a major impact on PAMCAM’s
+recommended change in faculty, 𝑑𝑝.
+E. Adjusting the Graphs: Both graphs (as well as various cells) will automatically
+change, based upon changes to the input fields. The design envelope and/or
+arrows depicting changes in state may vanish from the space in the graphs. To
+reset graph layout, hit “control-q”. If there is a desire to establish one’s own
+custom scale on the graphs, they may double-click on the axes to make changes
+per the standard EXCEL process.
+F. Sharing Results: To share PAMCAM results, hit “Control-p” to print out a onepage hardcopy or pdf.
+
+8
+
+8. Fictitious Illustrative Case Study
+As part of a division-level action plan, the dean of College A tasks the chair of
+Department A1 to assess their faculty hiring needs for their department. The
+department chair, in turn, reaches out to the program coordinators for collection of
+data to help support a recommendation. Working with the office of institutional
+research, the program coordinators populate rows one through twenty-six in Table 1
+with data for five discipline areas (with nonsensical names): Candles, Origami,
+Balloons, Presents, and Games. All five discipline areas apply to undergraduate-level
+course work for which 15 credit hours per term are considered full-time for students.
+The university academic year encompasses four terms: Fall, Winter, Spring, and
+Summer.
+For the CAND 100 courses delivered in the fall, shown in row 2, there is a headcount
+(HC) of 77 students. Since CAND 100 is a 3-credit course, each student seated in the
+classroom represents 3/15 FTES. The total number of FTES, therefore, is 77 x (3/15)
+or 15.40. Alternatively, the 15.40 FTES could have been calculated by determining the
+total number of credit hours (231), then dividing 231 by 15.
+Courses shown in Table 1 are taught by various combinations of part-time faculty (ie.
+adjunct), lecturers, tenure-track faculty, visiting scholars, and graduate students. The
+seventy-seven students in CAND 100 for the fall are taught in four sections, two each
+by an adjunct faculty, and two each by a tenure-track faculty resulting in a total FTEF
+of 0.8 The resulting SFR is 19.25 for the current year. For the previous year, a similar
+analysis is carried out leading to a total of 14.80 FTES and 0.65 FTEF for fall CAND 100.
+Continuing to work closely with the office of institutional research, the program
+coordinators prescribed a projected growth in FTES of 7.80% for the projected (next)
+year for fall CAND 100. Similar analysis was performed for the winter, spring, and
+summer terms for Candles leading to the roll-up shown in row 6.
+The 7.28% projected growth rate is determined by computing the weighted average
+of the individual course %FTES values using their total SCH’s for weights. Working
+closely with fellow faculty and in consultation with the department chair, the program
+coordinators prescribe a maximum SFR of 18; this value is based upon carefully
+weighed pedagogical considerations. The program coordinator notes that 1) the
+9
+
+current 18.67 SFR exceeds the maximum 18.00 SFR, and 2) the demand for Candles
+is projected to grow at a strong rate of 7.28%.
+The following estimates were made by the program coordinators, in consultation with
+the office of institutional research and other stakeholders, for the current year for
+Candles:
+• Average annual tuition per FTES, t:
+• Average annual SCH per FTES, a:
+• Average annual state support per SCH:
+• Average annual salary/benefits per FTEF:
+
+$8,000/FTES
+32 SCH/FTES
+$100/SCH
+$90,000/FTEF
+
+These values were used for all analysis in this illustrative section. In practice however,
+some or all of them would vary across discipline areas.
+PAMCAM results for Candles are shown in Figure 2. In conjunction with market
+demand data, space requirements, and other considerations, the coordinator
+discusses the PAMCAM results with the department chair and others in the
+department and college. The two arrows depict Candle’s change in state from
+previous-to-current and from current-to-projected. Candles currently “lives” outside
+of (above) the permissible design envelope, as shown by the head of the first arrow.
+The PAMCAM model indicates an increase of 0.34 FTEF is needed to place Candles at
+its optimal location along the top boundary of the design envelope.
+The values shown in the center-highlighted cell within the two heat maps at the
+bottom of the PAMCAM results page automatically correspond approximately to
+PAMCAM’s recommended change to SFR (-3.57% or -0.67), the prescribed change in
+enrollment (7.28% or 4.08) and PAMCAM’s recommended change to faculty (11.25%
+or 0.34). These heat maps provide additional quick-reference PAMCAM solutions
+without having to experiment with various combinations of input. After consideration
+of these heat maps and further consultation with stakeholders, the coordinator
+recommends hiring the 0.34 additional FTEF.
+The contribution margin for Candles is $357,400 for the previous state (Year 1). Both
+FTES and FTEF grow when moving from previous state (Year 1) to the current state
+(Year 2). This results in a contribution margin of $357,200 for the current state. Even
+10
+
+with a 0.34 FTEF increase, the contribution margin grows further to $372,476. The
+right-hand graph in Figure 3 graphically shows the trend.
+When moving from the current to projected state (ie. from Year 2 to Year 3), the total
+change in contribution margin is $15,276, despite a 0.67 decrease in SFR at a cost of
+$10,000 for an additional 0.34 FTEF. Candles is a growing profit center that the
+program coordinator considers worthy of strong consideration of a $10,000
+investment in FTEF. (In practice, the actual increase in FTEF would have likely been a
+multiple of 0.05, say 0.25 or 0.40, due to how the workloads are calculated.)
+Other program coordinators proceed with similar analysis for the other four discipline
+areas. As shown in Figure 3, Origami is trending in an unfavorable way. Its financial
+contribution to the university is $27,724 less for the current year than it was for the
+previous year. Yet, it still contributes to the university $94,776 for the current year. To
+rectify Origami’s unfavorable trend, the coordinator considers PAMCAM’s solution
+which would lead to an additional $12,619 in funding for the university, which in turn
+would lead to Origami delivering to the university $107,395 annually. This would
+require a reduction of 0.29 Origami FTEF. When shown these results, the department
+chair contemplates asking the dean to advocate for a portion of the $12,619 from
+Origami to help pay for the additional Candles FTEF.
+PAMCAM results for Balloons suggest a need to reduce the number of FTEF by 0.74
+thereby liberating $85,122 in funds to be invested elsewhere as shown in Figure 4.
+Presents is in trouble, as shown in Figure 5; it currently operates at an approximate
+break-even state while its headcount is at ten or less for all four terms. It is taught,
+however, by an adjunct faculty who has support from the coordinator who insists the
+course is an essential part of the curriculum. PAMCAM shows a required 0.22
+reduction in FTEF, leading to the likelihood of collapsing the current set of sections
+into a set of fewer sections. Proactively, the coordinator consults with the academic
+advisor and department chair to mitigate possible roadblocks for students’ efficient
+progress toward graduation.
+Figure 6 shows a healthy trend for Games, leading to a required 0.04 increase in FTEF;
+again, due to how workloads are calculated, this small value would likely be
+interpreted as zero. PAMCAM results for the Department A1 roll-up are shown in
+11
+
+Figure 7. The maximum SFR of 18.06 (row 29 in Table 1) was not prescribed arbitrarily.
+It had to satisfy the following constraint:
+𝑚3,𝑟𝑜𝑙𝑙 − 𝑚2,𝑟𝑜𝑙𝑙 = ∑𝑧𝑖=1 𝑑𝑚𝑖
+where:
+
+(4a)
+
+𝑚3 and 𝑚2 are the contribution margin for projected and current states,
+respectively, for the roll-up center
+“roll” denotes roll-up center (in this case, it is Department A)
+z = # units rolled into the roll-up center (in this case, it is 5)
+𝑑𝑚1 , 𝑑𝑚2 , 𝑑𝑚3 , 𝑑𝑚4 , 𝑑𝑚5 are the change in contribution margins for
+the centers being rolled into the roll-up center. (In this case, they are
+Candles, Origami, Balloons, Presents, and Games.)
+∑𝑧𝑖=1 𝑑𝑚𝑖 is determined to be $162,459 from Figures 3 - 7.
+
+Application of (1) to (4a), then solving for 𝑅3 leads to:
+𝑅3 =
+
+𝑠∙𝑛3
+𝑠
+𝑧
+(𝑡+𝑎∙𝑓)∙𝑛3 −∑𝑖=1 𝑑𝑚𝑖 − (𝑡+𝑎∙𝑓− )∙𝑛2
+𝑅2
+
+(4b)
+
+For Department A1, the maximum SFR (ie. 𝑅3 ) is calculated to be 18.06.
+The department chair examines the PAMCAM results shown in Figure 7, noting that
+the 0.91 FTEF net decrease leads to a department contribution margin change in the
+amount of $162,459. Similar analysis is carried out for the other departments,
+colleges, and the division leading to results shown in Figures 8 – 14.
+As shown in Figure 10, the dean of College A will introduce a contribution margin
+change of $235,450. First, and without considering the use of this $235,450, the dean
+redistributes funding within the college, noting the differences in contribution margin
+changes across the departments; these transactions would be for the following
+academic year. Second, if the dean provides sufficient justification (or pursuant to an
+RCM-type budget model), the dean may have access to a portion of the $235,450 for
+strategic investment into college-related initiatives. The chairs exercise a similar
+option within their departments.
+12
+
+While College A shows a projected positive contribution margin change of a (surplus)
+$235,450, Colleges B, C, and D show projections of a deficit of $220,012, surplus
+$1,016,103, and deficit $800,724, respectively. The resulting division roll-up leads to
+a projected contribution margin change of a surplus $230,818. The provost also
+considers redistribution across various areas within the division, based upon
+consultation with various stakeholders and/or pursuant to an RCM-type of budget
+model which rewards performance – all in harmony with the president’s vision for
+the university.
+
+13
+
+References
+Smith, L. M., Hall, K., Johnston, J., Noe, K., Hubbard, K., Beverly, L., & Guidry, M.
+(2022). A Systems Approach to Personnel Allocation Modeling in Higher
+Education. www. aaua. org, 85.
+Smith, L. M. (2025). In Review. Contextualizing the Change in Contribution Margin of
+the Academic Program Portfolio within the University Operating Budget. Journal of
+Higher Education Management, XX. (I never found the time this past summer to resubmit the manuscript with revisions. So, I withdrew it from consideration.)
+
+14
+
+15
+
+16
+
+17
+
+18
+
+19
+
+20
+
+21
+
+22
+
+23
+
+24
+
+25
+
+26
+
+27
+
+28
+
+

@@ -49,6 +49,354 @@ let dbCourses = [];
 
 // Historical schedule placements storage key
 const SCHEDULE_PLACEMENTS_KEY = 'schedule_placements';
+const FACULTY_BUILD_STORAGE_KEY = 'faculty_build_scenario_v1';
+const FACULTY_PREFERENCES_LOCAL_KEY = 'faculty_preferences_local_v1';
+
+const DEFAULT_FACULTY_BUILD_SCENARIO = {
+    faculty: [
+        { name: 'Travis Masingale', included: true, annualCredits: 31, inloadCredits: 5, desn499PerQuarter: 2 },
+        { name: 'Ginelle Hustrulid', included: true, annualCredits: 31, inloadCredits: 5, desn499PerQuarter: 2 },
+        { name: 'Melinda Breen', included: true, annualCredits: 18, inloadCredits: 0, desn499PerQuarter: 0 },
+        { name: 'Colin Manikoth', included: true, annualCredits: 36, inloadCredits: 0, desn499PerQuarter: 0 },
+        { name: 'Sonja Durr', included: true, annualCredits: 45, inloadCredits: 0, desn499PerQuarter: 0 },
+        { name: 'Simeon Mills', included: true, annualCredits: 45, inloadCredits: 0, desn499PerQuarter: 0 },
+        { name: 'Meg Lybbert', included: true, annualCredits: 45, inloadCredits: 0, desn499PerQuarter: 0 },
+        { name: 'Ariel Sopu', included: false, annualCredits: 45, inloadCredits: 0, desn499PerQuarter: 0 }
+    ]
+};
+
+const FACULTY_NAME_ALIASES = {
+    'mindy': 'Melinda Breen',
+    'melinda': 'Melinda Breen',
+    'sam': 'Simeon Mills',
+    'simeon': 'Simeon Mills',
+    'ariel': 'Ariel Sopu',
+    'travis': 'Travis Masingale',
+    'ginelle': 'Ginelle Hustrulid',
+    'colin': 'Colin Manikoth',
+    'sonja': 'Sonja Durr',
+    'meg': 'Meg Lybbert'
+};
+
+let facultyBuildScenario = cloneDefaultFacultyBuildScenario();
+let facultyBuildCapacityWarnings = [];
+let facultyPreferencesCache = {};
+
+function cloneDefaultFacultyBuildScenario() {
+    return JSON.parse(JSON.stringify(DEFAULT_FACULTY_BUILD_SCENARIO));
+}
+
+function normalizeFacultyName(name) {
+    return resolveFacultyScenarioName(name);
+}
+
+function loadFacultyPreferencesCache() {
+    try {
+        const raw = localStorage.getItem(FACULTY_PREFERENCES_LOCAL_KEY);
+        facultyPreferencesCache = raw ? JSON.parse(raw) : {};
+    } catch (error) {
+        console.warn('Could not load faculty preferences cache:', error);
+        facultyPreferencesCache = {};
+    }
+}
+
+function saveFacultyPreferencesCache() {
+    try {
+        localStorage.setItem(FACULTY_PREFERENCES_LOCAL_KEY, JSON.stringify(facultyPreferencesCache));
+    } catch (error) {
+        console.warn('Could not save faculty preferences cache:', error);
+    }
+}
+
+function setFacultyPreference(name, preference) {
+    if (!name) return;
+    const key = normalizeFacultyName(name);
+    facultyPreferencesCache[key] = {
+        ...(facultyPreferencesCache[key] || {}),
+        ...(preference || {})
+    };
+    saveFacultyPreferencesCache();
+}
+
+function getFacultyPreference(name) {
+    const key = normalizeFacultyName(name);
+    return facultyPreferencesCache[key] || null;
+}
+
+function resolveFacultyScenarioName(name) {
+    if (!name) return '';
+    const trimmed = String(name).trim();
+    const normalized = trimmed.toLowerCase();
+    return FACULTY_NAME_ALIASES[normalized] || trimmed;
+}
+
+function getScenarioFacultyEntry(name) {
+    const resolved = resolveFacultyScenarioName(name);
+    return facultyBuildScenario.faculty.find(f => f.name === resolved) || null;
+}
+
+function saveFacultyBuildScenario() {
+    try {
+        localStorage.setItem(FACULTY_BUILD_STORAGE_KEY, JSON.stringify(facultyBuildScenario));
+    } catch (error) {
+        console.warn('Could not save faculty build scenario:', error);
+    }
+}
+
+function loadFacultyBuildScenario() {
+    facultyBuildScenario = cloneDefaultFacultyBuildScenario();
+
+    try {
+        const raw = localStorage.getItem(FACULTY_BUILD_STORAGE_KEY);
+        if (!raw) return;
+
+        const parsed = JSON.parse(raw);
+        const saved = Array.isArray(parsed?.faculty) ? parsed.faculty : [];
+        const merged = cloneDefaultFacultyBuildScenario();
+
+        saved.forEach(savedEntry => {
+            const target = merged.faculty.find(f => f.name === resolveFacultyScenarioName(savedEntry.name));
+            if (!target) return;
+            target.included = !!savedEntry.included;
+            target.annualCredits = Number(savedEntry.annualCredits) || 0;
+            target.inloadCredits = Number(savedEntry.inloadCredits) || 0;
+            target.desn499PerQuarter = Number(savedEntry.desn499PerQuarter) || 0;
+        });
+
+        facultyBuildScenario = merged;
+    } catch (error) {
+        console.warn('Could not load faculty build scenario:', error);
+    }
+}
+
+function getFacultyScenarioConfig(name) {
+    const scenarioEntry = getScenarioFacultyEntry(name);
+
+    if (scenarioEntry) {
+        const annualTargetCredits = (Number(scenarioEntry.annualCredits) || 0) + (Number(scenarioEntry.inloadCredits) || 0);
+        const reserved499AnnualCredits = (Number(scenarioEntry.desn499PerQuarter) || 0) * 3;
+        const annualScheduledLimit = Math.max(0, annualTargetCredits - reserved499AnnualCredits);
+        return {
+            name: scenarioEntry.name,
+            included: !!scenarioEntry.included,
+            annualTargetCredits,
+            annualScheduledLimit,
+            quarterScheduledLimit: annualScheduledLimit / 3,
+            reserved499AnnualCredits
+        };
+    }
+
+    let annualTargetCredits = 45;
+    if (typeof FacultyManager !== 'undefined') {
+        const facultyInfo = FacultyManager.getFacultyInfo(name);
+        if (facultyInfo?.rankInfo?.maxCredits) {
+            annualTargetCredits = facultyInfo.rankInfo.maxCredits;
+        }
+    }
+
+    return {
+        name,
+        included: true,
+        annualTargetCredits,
+        annualScheduledLimit: annualTargetCredits,
+        quarterScheduledLimit: annualTargetCredits / 3,
+        reserved499AnnualCredits: 0
+    };
+}
+
+function isFacultyIncludedInScenario(name) {
+    const config = getFacultyScenarioConfig(name);
+    return !!config.included;
+}
+
+function calculateScenarioCapacity(includeArielOverride = null) {
+    const totals = {
+        includedFacultyCount: 0,
+        annualTargetCredits: 0,
+        annualScheduledCredits: 0,
+        quarterlyScheduledCredits: 0
+    };
+
+    facultyBuildScenario.faculty.forEach(entry => {
+        const isAriel = entry.name === 'Ariel Sopu';
+        const included = isAriel && includeArielOverride !== null ? includeArielOverride : !!entry.included;
+        if (!included) return;
+
+        const annualTarget = (Number(entry.annualCredits) || 0) + (Number(entry.inloadCredits) || 0);
+        const annualScheduled = Math.max(0, annualTarget - ((Number(entry.desn499PerQuarter) || 0) * 3));
+        totals.includedFacultyCount += 1;
+        totals.annualTargetCredits += annualTarget;
+        totals.annualScheduledCredits += annualScheduled;
+        totals.quarterlyScheduledCredits += annualScheduled / 3;
+    });
+
+    return totals;
+}
+
+function getScenarioAssignedDemandSummary() {
+    const quarters = ['Fall', 'Winter', 'Spring'];
+    let scheduledDemand = 0;
+    let tbdDemand = 0;
+
+    quarters.forEach(quarter => {
+        const quarterData = allQuartersSchedule[quarter]?.assignedCourses || {};
+        Object.values(quarterData).forEach(courses => {
+            (courses || []).forEach(course => {
+                const credits = Number(course.credits) || 5;
+                scheduledDemand += credits;
+                if ((course.facultyName || 'TBD') === 'TBD') {
+                    tbdDemand += credits;
+                }
+            });
+        });
+    });
+
+    return {
+        scheduledDemand,
+        coveredDemand: Math.max(0, scheduledDemand - tbdDemand),
+        tbdDemand
+    };
+}
+
+function updateScenarioAssignmentSummary() {
+    const element = document.getElementById('scenarioAssignmentSummary');
+    if (!element) return;
+
+    if (!currentSchedule) {
+        element.textContent = 'Load a schedule to compare demand against this scenario.';
+        return;
+    }
+
+    const capacity = calculateScenarioCapacity();
+    const demand = getScenarioAssignedDemandSummary();
+    const net = capacity.annualScheduledCredits - demand.coveredDemand;
+    const warnings = facultyBuildCapacityWarnings.length;
+
+    let statusText = `Covered demand: ${demand.coveredDemand.toFixed(1)} credits | Scenario annual scheduled capacity: ${capacity.annualScheduledCredits.toFixed(1)} credits.`;
+    statusText += net >= 0
+        ? ` Remaining capacity: ${net.toFixed(1)} credits.`
+        : ` Shortfall: ${Math.abs(net).toFixed(1)} credits.`;
+
+    if (demand.tbdDemand > 0) {
+        statusText += ` ${demand.tbdDemand.toFixed(1)} credits are currently assigned to TBD.`;
+    }
+
+    if (warnings > 0) {
+        statusText += ` ${warnings} section(s) were left as TBD due to faculty capacity limits.`;
+    }
+
+    element.textContent = statusText;
+}
+
+function renderFacultyBuildScenario() {
+    const tbody = document.getElementById('facultyBuildRows');
+    if (!tbody) return;
+
+    const includeArielInput = document.getElementById('includeArielScenario');
+    const arielEntry = getScenarioFacultyEntry('Ariel Sopu');
+    if (includeArielInput && arielEntry) {
+        includeArielInput.checked = !!arielEntry.included;
+    }
+
+    const currentTotals = calculateScenarioCapacity();
+    const withArielTotals = calculateScenarioCapacity(true);
+    const withoutArielTotals = calculateScenarioCapacity(false);
+    const arielDelta = withArielTotals.annualScheduledCredits - withoutArielTotals.annualScheduledCredits;
+
+    const facultyCountEl = document.getElementById('scenarioFacultyCount');
+    const annualTargetEl = document.getElementById('scenarioAnnualTarget');
+    const annualScheduledEl = document.getElementById('scenarioAnnualScheduled');
+    const quarterScheduledEl = document.getElementById('scenarioQuarterlyScheduled');
+    const deltaEl = document.getElementById('scenarioDeltaText');
+
+    if (facultyCountEl) facultyCountEl.textContent = currentTotals.includedFacultyCount;
+    if (annualTargetEl) annualTargetEl.textContent = currentTotals.annualTargetCredits.toFixed(1);
+    if (annualScheduledEl) annualScheduledEl.textContent = currentTotals.annualScheduledCredits.toFixed(1);
+    if (quarterScheduledEl) quarterScheduledEl.textContent = currentTotals.quarterlyScheduledCredits.toFixed(1);
+    if (deltaEl) {
+        deltaEl.textContent = `With optional lecturer vs without optional lecturer annual scheduled delta: ${arielDelta.toFixed(1)} credits`;
+    }
+
+    const rows = facultyBuildScenario.faculty.map((entry, index) => {
+        const annualTarget = (Number(entry.annualCredits) || 0) + (Number(entry.inloadCredits) || 0);
+        const annualScheduled = Math.max(0, annualTarget - ((Number(entry.desn499PerQuarter) || 0) * 3));
+        const quarterlyScheduled = annualScheduled / 3;
+        const rowClass = entry.included ? '' : 'is-disabled';
+
+        return `
+            <tr class="${rowClass}">
+                <td>
+                    <div class="faculty-cell">
+                        <input type="checkbox" data-index="${index}" data-field="included" ${entry.included ? 'checked' : ''}>
+                        <span>${entry.name}</span>
+                    </div>
+                </td>
+                <td><input type="number" min="0" step="0.5" data-index="${index}" data-field="annualCredits" value="${entry.annualCredits}"></td>
+                <td><input type="number" min="0" step="0.5" data-index="${index}" data-field="inloadCredits" value="${entry.inloadCredits}"></td>
+                <td><input type="number" min="0" step="0.5" data-index="${index}" data-field="desn499PerQuarter" value="${entry.desn499PerQuarter}"></td>
+                <td><span class="scenario-value">${annualScheduled.toFixed(1)}</span></td>
+                <td><span class="scenario-value">${quarterlyScheduled.toFixed(1)}</span></td>
+            </tr>
+        `;
+    }).join('');
+
+    tbody.innerHTML = rows;
+
+    tbody.querySelectorAll('input[data-index]').forEach(input => {
+        input.addEventListener('change', handleFacultyBuildInputChange);
+        if (input.type !== 'checkbox') {
+            input.addEventListener('input', handleFacultyBuildInputChange);
+        }
+    });
+
+    updateScenarioAssignmentSummary();
+}
+
+function handleFacultyBuildInputChange(event) {
+    const index = Number(event.target.dataset.index);
+    const field = event.target.dataset.field;
+    const entry = facultyBuildScenario.faculty[index];
+    if (!entry || !field) return;
+
+    if (field === 'included') {
+        entry.included = !!event.target.checked;
+    } else {
+        const value = Number(event.target.value);
+        entry[field] = Number.isFinite(value) ? Math.max(0, value) : 0;
+    }
+
+    saveFacultyBuildScenario();
+    renderFacultyBuildScenario();
+    if (currentSchedule) {
+        renderFacultySummary();
+    }
+}
+
+function handleArielScenarioToggle(include) {
+    const entry = getScenarioFacultyEntry('Ariel Sopu');
+    if (!entry) return;
+    entry.included = !!include;
+    saveFacultyBuildScenario();
+    renderFacultyBuildScenario();
+    if (currentSchedule) {
+        renderFacultySummary();
+    }
+}
+
+function resetFacultyBuildScenario() {
+    facultyBuildScenario = cloneDefaultFacultyBuildScenario();
+    saveFacultyBuildScenario();
+    renderFacultyBuildScenario();
+    if (currentSchedule) {
+        renderFacultySummary();
+    }
+    showToast('Faculty build scenario reset to defaults');
+}
+
+function initializeFacultyBuildScenario() {
+    loadFacultyBuildScenario();
+    renderFacultyBuildScenario();
+}
 
 /**
  * Load saved schedule placements from localStorage
@@ -202,6 +550,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
 
         console.log('Schedule Builder modules initialized');
+        loadFacultyPreferencesCache();
+        initializeFacultyBuildScenario();
         loadDraft();
 
     } catch (error) {
@@ -253,11 +603,13 @@ async function handleLoadAndAnalyze() {
         };
 
         let totalSections = 0;
+        facultyBuildCapacityWarnings = [];
+        const assignmentState = { annualLoads: {} };
 
         // Generate schedule for each quarter
         for (const quarter of quarters) {
             const quarterCourses = allCourses.filter(c => c.quarter === quarter);
-            const recommendations = buildRecommendations(quarterCourses, quarter);
+            const recommendations = buildRecommendations(quarterCourses, quarter, targetYear);
 
             // Reset current quarter state
             assignedCourses = {};
@@ -265,7 +617,7 @@ async function handleLoadAndAnalyze() {
 
             // Filter case-by-case and assign to grid
             const gridCourses = filterCaseByeCaseCourses(recommendations, quarter);
-            autoAssignToGrid(gridCourses, quarter);
+            autoAssignToGrid(gridCourses, quarter, assignmentState);
 
             // Store in allQuartersSchedule
             allQuartersSchedule[quarter] = {
@@ -296,6 +648,7 @@ async function handleLoadAndAnalyze() {
         console.log(`✅ Auto-saved placements from ${sourceYear} schedule`);
 
         showToast(`Loaded ${totalSections} sections from ${sourceYear}. Review analysis before proceeding.`);
+        updateScenarioAssignmentSummary();
 
     } catch (error) {
         console.error('Load error:', error);
@@ -309,9 +662,10 @@ async function handleLoadAndAnalyze() {
  * Render analysis dashboard with recommendations
  */
 function renderAnalysisDashboard(results) {
+    const scenarioWarnings = facultyBuildCapacityWarnings.length;
     // Update summary stats
-    document.getElementById('totalIssues').textContent = results.summary.totalIssues;
-    document.getElementById('capacityWarnings').textContent = results.summary.capacityWarnings;
+    document.getElementById('totalIssues').textContent = results.summary.totalIssues + scenarioWarnings;
+    document.getElementById('capacityWarnings').textContent = results.summary.capacityWarnings + scenarioWarnings;
     document.getElementById('coursesLoaded').textContent = results.summary.coursesLoaded;
 
     // Render enrollment recommendations
@@ -562,14 +916,14 @@ function proceedToGrid() {
     currentSchedule = {
         year: targetYear,
         quarter: activeQuarter,
-        summary: {
-            totalSections: totalSections,
-            assignedSections: totalSections,
-            highDemandCourses: analysisResults?.enrollment?.length || 0,
-            warningCount: analysisResults?.summary?.totalIssues || 0
-        },
-        recommendations: allQuartersSchedule[activeQuarter].recommendations
-    };
+            summary: {
+                totalSections: totalSections,
+                assignedSections: totalSections,
+                highDemandCourses: analysisResults?.enrollment?.length || 0,
+                warningCount: (analysisResults?.summary?.totalIssues || 0) + facultyBuildCapacityWarnings.length
+            },
+            recommendations: allQuartersSchedule[activeQuarter].recommendations
+        };
 
     // Hide analysis dashboard, show grid
     document.getElementById('analysisDashboard').style.display = 'none';
@@ -630,11 +984,13 @@ async function handleGenerate() {
         };
 
         let totalSections = 0;
+        facultyBuildCapacityWarnings = [];
+        const assignmentState = { annualLoads: {} };
 
         // Generate schedule for each quarter
         for (const quarter of quarters) {
             const quarterCourses = allCourses.filter(c => c.quarter === quarter);
-            const recommendations = buildRecommendations(quarterCourses, quarter);
+            const recommendations = buildRecommendations(quarterCourses, quarter, targetYear);
 
             // Reset current quarter state
             assignedCourses = {};
@@ -642,7 +998,7 @@ async function handleGenerate() {
 
             // Filter case-by-case and assign to grid
             const gridCourses = filterCaseByeCaseCourses(recommendations, quarter);
-            autoAssignToGrid(gridCourses, quarter);
+            autoAssignToGrid(gridCourses, quarter, assignmentState);
 
             // Store in allQuartersSchedule
             allQuartersSchedule[quarter] = {
@@ -668,7 +1024,7 @@ async function handleGenerate() {
                 assignedSections: totalSections,
                 highDemandCourses: allCourses.filter(c => c.enrolled > 20).length,
                 warningCount: Object.values(allQuartersSchedule).reduce((sum, q) =>
-                    sum + (q.assignedCourses['unassigned']?.length || 0), 0)
+                    sum + (q.assignedCourses['unassigned']?.length || 0), 0) + facultyBuildCapacityWarnings.length
             },
             recommendations: allQuartersSchedule[activeQuarter].recommendations
         };
@@ -695,6 +1051,7 @@ async function handleGenerate() {
         updatePlacementsFromSchedule(previousYear);
 
         showToast(`Generated schedule for ${targetYear} based on ${previousYear} data (${totalSections} total sections)`);
+        updateScenarioAssignmentSummary();
 
     } catch (error) {
         console.error('Generation error:', error);
@@ -757,7 +1114,31 @@ function extractCoursesFromYear(yearData, currentYearFaculty) {
 /**
  * Build recommendations from courses
  */
-function buildRecommendations(courses, quarter) {
+function normalizeCourseCode(courseCode) {
+    return String(courseCode || '')
+        .replace(/-/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .toUpperCase();
+}
+
+function getCourseEnrollmentCap(courseCode) {
+    const normalized = normalizeCourseCode(courseCode);
+    const courseInfo = courseCatalog?.courses?.find(c => normalizeCourseCode(c.code) === normalized);
+    return courseInfo?.typicalEnrollmentCap || courseInfo?.enrollmentCap || 24;
+}
+
+function getPredictedDemandForCourse(courseCode, quarter, targetYear, fallbackDemand) {
+    if (typeof DemandPredictor === 'undefined') return fallbackDemand;
+    const prediction = DemandPredictor.predictCourseDemand(courseCode, quarter, targetYear);
+    const predicted = prediction?.predictedDemand;
+    if (typeof predicted === 'number' && Number.isFinite(predicted) && predicted > 0) {
+        return predicted;
+    }
+    return fallbackDemand;
+}
+
+function buildRecommendations(courses, quarter, targetYear) {
     // Group courses by course code
     const courseGroups = {};
     courses.forEach(course => {
@@ -778,22 +1159,36 @@ function buildRecommendations(courses, quarter) {
     // Convert to recommendations array
     return Object.values(courseGroups).map(group => {
         const avgEnrollment = group.totalEnrolled / group.sections.length;
+        const enrollmentCap = getCourseEnrollmentCap(group.courseCode);
+        const predictedDemand = Math.max(
+            1,
+            Math.round(getPredictedDemandForCourse(group.courseCode, quarter, targetYear, avgEnrollment))
+        );
+        const sectionsNeeded = Math.max(1, Math.ceil(predictedDemand / enrollmentCap));
+        const utilization = Math.round((predictedDemand / (enrollmentCap * sectionsNeeded)) * 100);
+        const assignedFaculty = [];
+
+        for (let i = 0; i < sectionsNeeded; i++) {
+            const sourceSection = group.sections[i] || group.sections[i % group.sections.length] || {};
+            assignedFaculty.push({
+                name: sourceSection.facultyName || 'TBD',
+                section: String(i + 1).padStart(3, '0')
+            });
+        }
+
         return {
             courseCode: group.courseCode,
             courseTitle: group.courseTitle,
             credits: group.credits,
-            sectionsNeeded: group.sections.length,
-            predictedDemand: Math.round(avgEnrollment),
-            utilization: Math.round((avgEnrollment / 24) * 100),
+            sectionsNeeded,
+            predictedDemand,
+            utilization,
             // Color coding: red (<6), orange (6-15), yellow (16-20), green (21+)
-            priority: avgEnrollment < 6 ? 'critical' :
-                      avgEnrollment <= 15 ? 'low' :
-                      avgEnrollment <= 20 ? 'medium' : 'high',
+            priority: predictedDemand < 6 ? 'critical' :
+                      predictedDemand <= 15 ? 'low' :
+                      predictedDemand <= 20 ? 'medium' : 'high',
             level: group.level,
-            assignedFaculty: group.sections.map((s, i) => ({
-                name: s.facultyName || 'TBD',
-                section: s.section || String(i + 1).padStart(3, '0')
-            }))
+            assignedFaculty
         };
     });
 }
@@ -953,9 +1348,163 @@ function getValidRooms(courseCode, quarter, slotUsage = {}) {
  * IMPROVED: First tries to preserve previous year placements, then balances remaining
  * Includes MW/TR balancing, time slot balancing, and evening safety pairing
  */
-function autoAssignToGrid(recommendations, quarter) {
+function getFacultyHistoryCount(faculty, courseCode) {
+    if (!faculty?.courses || !courseCode) return 0;
+    const normalizedCode = normalizeCourseCode(courseCode);
+    return faculty.courses.reduce((count, c) => {
+        return normalizeCourseCode(c.courseCode) === normalizedCode ? count + 1 : count;
+    }, 0);
+}
+
+function getFacultyCandidates(preferredFaculty, selectedFaculty = []) {
+    const candidates = [];
+    const seen = new Set();
+
+    selectedFaculty.forEach(f => {
+        if (!f?.name || seen.has(f.name)) return;
+        if (!isFacultyIncludedInScenario(f.name)) return;
+        candidates.push(f);
+        seen.add(f.name);
+    });
+
+    if (
+        preferredFaculty &&
+        preferredFaculty !== 'TBD' &&
+        !seen.has(preferredFaculty) &&
+        isFacultyIncludedInScenario(preferredFaculty)
+    ) {
+        candidates.push({ name: preferredFaculty, courses: [] });
+        seen.add(preferredFaculty);
+    }
+
+    if (candidates.length === 0 && selectedFaculty.length === 0) {
+        facultyBuildScenario.faculty.forEach(entry => {
+            if (!entry.included || seen.has(entry.name)) return;
+            candidates.push({ name: entry.name, courses: [] });
+            seen.add(entry.name);
+        });
+    }
+
+    return candidates;
+}
+
+function getTimeBucketForKey(timeKey) {
+    if (timeKey === '10:00-12:20') return 'morning';
+    if (timeKey === '13:00-15:20') return 'afternoon';
+    return 'evening';
+}
+
+function getCampusForRoom(room) {
+    return room && room.startsWith('CEB') ? 'cheney' : 'catalyst';
+}
+
+function hasFacultyTimeConflict(facultyName, day, timeKey) {
+    if (!facultyName || facultyName === 'TBD') return false;
+    return ROOMS.some(room => {
+        const key = `${day}-${timeKey}-${room}`;
+        const courses = assignedCourses[key] || [];
+        return courses.some(course => course.facultyName === facultyName);
+    });
+}
+
+function checkFacultySlotPreference(facultyName, day, timeKey, room) {
+    const pref = getFacultyPreference(facultyName);
+    if (!pref) {
+        return { blocked: false, bonus: 0 };
+    }
+
+    const bucket = getTimeBucketForKey(timeKey);
+    const campus = getCampusForRoom(room);
+    const blockedDays = pref.dayBlocked || [];
+    const blockedTimes = pref.timeBlocked || [];
+    const preferredDays = pref.dayPreferred || [];
+    const preferredTimes = pref.timePreferred || [];
+    const campusAssignment = pref.campusAssignment || 'any';
+
+    const blocked = blockedDays.includes(day) ||
+        blockedTimes.includes(bucket) ||
+        (campusAssignment !== 'any' && campusAssignment !== campus);
+
+    let bonus = 0;
+    if (preferredDays.includes(day)) bonus += 1;
+    if (preferredTimes.includes(bucket)) bonus += 1;
+    if (campusAssignment !== 'any' && campusAssignment === campus) bonus += 1;
+
+    return { blocked, bonus };
+}
+
+function chooseFacultyForSection(courseCode, preferredFaculty, credits, quarter, day, timeKey, room, quarterLoads, assignmentState, selectedFaculty) {
+    assignmentState.annualLoads = assignmentState.annualLoads || {};
+
+    const candidates = getFacultyCandidates(preferredFaculty, selectedFaculty);
+    if (candidates.length === 0) {
+        facultyBuildCapacityWarnings.push({
+            quarter,
+            courseCode,
+            reason: 'No eligible faculty in scenario'
+        });
+        return 'TBD';
+    }
+
+    const scored = candidates.map(candidate => {
+        const config = getFacultyScenarioConfig(candidate.name);
+        const currentQuarterLoad = quarterLoads[candidate.name] || 0;
+        const currentAnnualLoad = assignmentState.annualLoads[candidate.name] || 0;
+        const remainingQuarter = config.quarterScheduledLimit - currentQuarterLoad;
+        const remainingAnnual = config.annualScheduledLimit - currentAnnualLoad;
+        const { blocked, bonus } = checkFacultySlotPreference(candidate.name, day, timeKey, room);
+        const slotConflict = hasFacultyTimeConflict(candidate.name, day, timeKey);
+        const canFit = !blocked &&
+            !slotConflict &&
+            remainingQuarter + 0.001 >= credits &&
+            remainingAnnual + 0.001 >= credits;
+
+        return {
+            name: candidate.name,
+            canFit,
+            preferredMatch: candidate.name === preferredFaculty ? 1 : 0,
+            historyCount: getFacultyHistoryCount(candidate, courseCode),
+            preferenceBonus: bonus,
+            slotConflict,
+            remainingQuarter,
+            remainingAnnual
+        };
+    });
+
+    scored.sort((a, b) => {
+        if (a.canFit !== b.canFit) return a.canFit ? -1 : 1;
+        if (a.preferenceBonus !== b.preferenceBonus) return b.preferenceBonus - a.preferenceBonus;
+        if (a.historyCount !== b.historyCount) return b.historyCount - a.historyCount;
+        if (a.preferredMatch !== b.preferredMatch) return b.preferredMatch - a.preferredMatch;
+        const aRemaining = Math.min(a.remainingQuarter, a.remainingAnnual);
+        const bRemaining = Math.min(b.remainingQuarter, b.remainingAnnual);
+        return bRemaining - aRemaining;
+    });
+
+    const choice = scored.find(c => c.canFit);
+    if (!choice) {
+        facultyBuildCapacityWarnings.push({
+            quarter,
+            courseCode,
+            reason: `No faculty has ${credits} available credits`
+        });
+        return 'TBD';
+    }
+
+    quarterLoads[choice.name] = (quarterLoads[choice.name] || 0) + credits;
+    assignmentState.annualLoads[choice.name] = (assignmentState.annualLoads[choice.name] || 0) + credits;
+    return choice.name;
+}
+
+function autoAssignToGrid(recommendations, quarter, assignmentState = { annualLoads: {} }) {
+    assignmentState.annualLoads = assignmentState.annualLoads || {};
+
     // Track room usage per time slot
     const slotUsage = {};
+    const quarterLoads = {};
+    const selectedFaculty = typeof FacultyManager !== 'undefined'
+        ? (FacultyManager.getSelectedFaculty() || [])
+        : [];
     
     // Track day counts for MW/TR balancing
     const dayCounts = { 'MW': 0, 'TR': 0 };
@@ -983,22 +1532,10 @@ function autoAssignToGrid(recommendations, quarter) {
             // Check for saved placement
             const savedPlacement = getSavedPlacement(rec.courseCode, section, quarter);
             
-            // Use FacultyManager to get best faculty if available
-            let facultyName = faculty.name;
-            if (typeof FacultyManager !== 'undefined') {
-                const selectedFaculty = FacultyManager.getSelectedFaculty();
-                if (selectedFaculty.length > 0) {
-                    const bestFaculty = FacultyManager.getBestFacultyForCourse(rec.courseCode, faculty.name);
-                    if (bestFaculty && bestFaculty !== 'TBD') {
-                        facultyName = bestFaculty;
-                    }
-                }
-            }
-            
             const courseEntry = {
                 rec,
                 section,
-                facultyName,
+                preferredFaculty: faculty.name,
                 savedPlacement
             };
             
@@ -1013,7 +1550,7 @@ function autoAssignToGrid(recommendations, quarter) {
     console.log(`${quarter}: ${coursesWithPlacements.length} courses with saved placements, ${coursesWithoutPlacements.length} need assignment`);
     
     // PHASE 1: Place courses with saved placements first (preserve previous year)
-    coursesWithPlacements.forEach(({ rec, section, facultyName, savedPlacement }) => {
+    coursesWithPlacements.forEach(({ rec, section, preferredFaculty, savedPlacement }) => {
         const { day, time, room } = savedPlacement;
         const key = `${day}-${time}-${room}`;
         
@@ -1021,6 +1558,18 @@ function autoAssignToGrid(recommendations, quarter) {
         
         // Check if slot is still available
         if (slotUsage[key] < 1) {
+            const facultyName = chooseFacultyForSection(
+                rec.courseCode,
+                preferredFaculty,
+                rec.credits || 5,
+                quarter,
+                day,
+                time,
+                room,
+                quarterLoads,
+                assignmentState,
+                selectedFaculty
+            );
             const timeIdx = TIME_KEYS.indexOf(time);
             const timeDisplay = timeIdx >= 0 ? TIMES[timeIdx] : time;
             
@@ -1046,7 +1595,7 @@ function autoAssignToGrid(recommendations, quarter) {
             }
         } else {
             // Saved slot is taken, treat as needing new assignment
-            coursesWithoutPlacements.push({ rec, section, facultyName, savedPlacement: null });
+            coursesWithoutPlacements.push({ rec, section, preferredFaculty, savedPlacement: null });
             console.log(`Slot conflict for ${rec.courseCode} at ${key}, will reassign`);
         }
     });
@@ -1065,7 +1614,7 @@ function autoAssignToGrid(recommendations, quarter) {
         return (a.rec.level || '300').localeCompare(b.rec.level || '300');
     });
     
-    sorted.forEach(({ rec, section, facultyName }) => {
+    sorted.forEach(({ rec, section, preferredFaculty }) => {
         const validRooms = getValidRooms(rec.courseCode, quarter, slotUsage);
         let assigned = false;
         
@@ -1090,6 +1639,18 @@ function autoAssignToGrid(recommendations, quarter) {
                     if (!slotUsage[key]) slotUsage[key] = 0;
                     
                     if (slotUsage[key] < 1) {
+                        const facultyName = chooseFacultyForSection(
+                            rec.courseCode,
+                            preferredFaculty,
+                            rec.credits || 5,
+                            quarter,
+                            day,
+                            timeKey,
+                            room,
+                            quarterLoads,
+                            assignmentState,
+                            selectedFaculty
+                        );
                         const courseData = {
                             ...rec,
                             section,
@@ -1122,7 +1683,7 @@ function autoAssignToGrid(recommendations, quarter) {
             assignedCourses[unassignedKey].push({
                 ...rec,
                 section,
-                facultyName,
+                facultyName: 'TBD',
                 roomConflict: true
             });
         }
@@ -1136,6 +1697,7 @@ function autoAssignToGrid(recommendations, quarter) {
     });
     
     checkEveningSafety(eveningCourses);
+    updateScenarioAssignmentSummary();
 }
 
 /**
@@ -1472,6 +2034,7 @@ function deleteCourse(courseCode, section, day, time, room) {
         showToast(`${courseCode}-${section} removed from schedule`);
         renderScheduleGrid();
         renderUnassignedList();
+        renderFacultySummary();
     }
 }
 
@@ -1501,6 +2064,18 @@ function handleDrop(e, toDay, toTime, toRoom) {
         }
 
         if (movedCourse) {
+            if (
+                movedCourse.facultyName &&
+                movedCourse.facultyName !== 'TBD' &&
+                hasFacultyTimeConflict(movedCourse.facultyName, toDay, toTime)
+            ) {
+                // Restore at source if target would double-book faculty
+                if (!assignedCourses[fromKey]) assignedCourses[fromKey] = [];
+                assignedCourses[fromKey].push(movedCourse);
+                showToast(`Cannot move: ${movedCourse.facultyName} is already teaching at that time`, 'warning');
+                return;
+            }
+
             // Check if target has existing courses - SWAP them to source location
             let swappedCourse = null;
             if (assignedCourses[toKey] && assignedCourses[toKey].length > 0) {
@@ -1539,6 +2114,7 @@ function handleDrop(e, toDay, toTime, toRoom) {
             // Re-render
             renderScheduleGrid();
             renderUnassignedList();
+            renderFacultySummary();
 
             // Show appropriate toast
             if (swappedCourse) {
@@ -1609,6 +2185,7 @@ function renderFacultySummary() {
 
     if (!currentSchedule) {
         container.innerHTML = '<p style="color: #6b7280;">No schedule generated</p>';
+        updateScenarioAssignmentSummary();
         return;
     }
 
@@ -1629,11 +2206,14 @@ function renderFacultySummary() {
 
     let html = '';
     sorted.forEach(([name, credits]) => {
-        const isOverload = credits > 15; // Simple threshold
+        const config = getFacultyScenarioConfig(name);
+        const limit = config.quarterScheduledLimit || 0;
+        const isOverload = credits > limit + 0.001;
+        const loadLabel = `${credits.toFixed(1)} / ${limit.toFixed(1)} cr`;
         html += `
             <div class="faculty-row">
                 <span class="faculty-name">${name}</span>
-                <span class="faculty-load ${isOverload ? 'overload' : ''}">${credits} cr</span>
+                <span class="faculty-load ${isOverload ? 'overload' : ''}">${loadLabel}</span>
             </div>
         `;
     });
@@ -1649,6 +2229,7 @@ function renderFacultySummary() {
     }
 
     container.innerHTML = html || '<p style="color: #6b7280;">No faculty assignments</p>';
+    updateScenarioAssignmentSummary();
 }
 
 /**
@@ -1752,7 +2333,8 @@ function saveDraft() {
         schedule: currentSchedule,
         assignedCourses: assignedCourses,
         caseByeCaseCourses: caseByeCaseCourses,
-        allQuartersSchedule: allQuartersSchedule
+        allQuartersSchedule: allQuartersSchedule,
+        facultyBuildScenario: facultyBuildScenario
     };
 
     localStorage.setItem('scheduleBuilderDraft', JSON.stringify(draft));
@@ -1774,11 +2356,17 @@ function loadDraft() {
     try {
         const data = JSON.parse(draft);
         currentSchedule = data.schedule;
-        assignedCourses = data.assignedCourses || {};
-        caseByeCaseCourses = data.caseByeCaseCourses || [];
+        allQuartersSchedule = data.allQuartersSchedule || allQuartersSchedule;
+        activeQuarter = currentSchedule?.quarter || 'Fall';
+        assignedCourses = allQuartersSchedule[activeQuarter]?.assignedCourses || data.assignedCourses || {};
+        caseByeCaseCourses = allQuartersSchedule[activeQuarter]?.caseByeCaseCourses || data.caseByeCaseCourses || [];
+        if (data.facultyBuildScenario?.faculty) {
+            facultyBuildScenario = data.facultyBuildScenario;
+            saveFacultyBuildScenario();
+            renderFacultyBuildScenario();
+        }
 
         document.getElementById('academicYear').value = currentSchedule.year;
-        document.getElementById('targetQuarter').value = currentSchedule.quarter;
 
         document.getElementById('emptyState').style.display = 'none';
         document.getElementById('projectedDemandSection').style.display = 'block';
@@ -1793,6 +2381,7 @@ function loadDraft() {
         renderScheduleGrid();
         renderUnassignedList();
         renderFacultySummary();
+        renderQuarterTabs();
 
         showToast('Draft loaded');
     } catch (error) {
@@ -2000,6 +2589,7 @@ function exportJSON() {
         academicYear: currentSchedule.year,
         quarter: currentSchedule.quarter,
         generatedAt: new Date().toISOString(),
+        facultyBuildScenario,
         courses: []
     };
 
@@ -2120,9 +2710,11 @@ function exportToEditor() {
 function showToast(message, type = 'success') {
     const toast = document.getElementById('toast');
     const toastMessage = document.getElementById('toastMessage');
+    const normalizedType = ['success', 'error', 'warning', 'info'].includes(type) ? type : 'info';
 
     toastMessage.textContent = message;
-    toast.style.background = type === 'error' ? '#ef4444' : '#1f2937';
+    toast.classList.remove('toast-success', 'toast-error', 'toast-warning', 'toast-info');
+    toast.classList.add(`toast-${normalizedType}`);
     toast.classList.add('visible');
 
     setTimeout(() => {
@@ -2362,6 +2954,11 @@ function handleAddCourse(e) {
 
     const key = `${days}-${time}-${room}`;
 
+    if (faculty !== 'TBD' && hasFacultyTimeConflict(faculty, days, time)) {
+        showToast(`Cannot add: ${faculty} already has a course in that time slot`, 'warning');
+        return;
+    }
+
     // Get course info
     const courseInfo = courseCatalog?.courses?.find(c => c.code === courseCode) || {};
     const courseTitle = courseInfo.title || getCourseTitle(courseCode);
@@ -2461,6 +3058,8 @@ function closeFacultyPreferencesModal() {
 async function loadFacultyPreferences() {
     const select = document.getElementById('prefFacultyName');
     const facultyId = select.value;
+    const selectedName = select.options[select.selectedIndex]?.textContent || '';
+    const normalizedName = normalizeFacultyName(selectedName);
 
     if (!facultyId) {
         document.getElementById('facultyPreferencesForm').reset();
@@ -2469,9 +3068,27 @@ async function loadFacultyPreferences() {
     }
 
     currentFacultyId = facultyId;
+    document.getElementById('facultyPreferencesForm').reset();
 
     if (!isSupabaseConfigured()) {
-        showToast('Database not configured - preferences won\'t be saved', 'warning');
+        const localPref = getFacultyPreference(normalizedName);
+        if (localPref) {
+            document.querySelectorAll('input[name="timePref"]').forEach(cb => {
+                cb.checked = (localPref.timePreferred || []).includes(cb.value);
+            });
+            document.querySelectorAll('input[name="timeBlocked"]').forEach(cb => {
+                cb.checked = (localPref.timeBlocked || []).includes(cb.value);
+            });
+            document.querySelectorAll('input[name="dayPref"]').forEach(cb => {
+                cb.checked = (localPref.dayPreferred || []).includes(cb.value);
+            });
+            document.querySelectorAll('input[name="dayBlocked"]').forEach(cb => {
+                cb.checked = (localPref.dayBlocked || []).includes(cb.value);
+            });
+            document.getElementById('prefCampus').value = localPref.campusAssignment || 'any';
+            document.getElementById('prefNotes').value = localPref.notes || '';
+        }
+        showToast('Using local preferences cache', 'warning');
         return;
     }
 
@@ -2499,10 +3116,37 @@ async function loadFacultyPreferences() {
             document.getElementById('prefCampus').value = prefs.campus_assignment || 'any';
             document.getElementById('prefNotes').value = prefs.notes || '';
 
+            setFacultyPreference(normalizedName, {
+                timePreferred: prefs.time_preferred || [],
+                timeBlocked: prefs.time_blocked || [],
+                dayPreferred: prefs.day_preferred || [],
+                dayBlocked: prefs.day_blocked || [],
+                campusAssignment: prefs.campus_assignment || 'any',
+                notes: prefs.notes || ''
+            });
+
             showToast('Preferences loaded');
         }
     } catch (error) {
         console.error('Error loading preferences:', error);
+        const localPref = getFacultyPreference(normalizedName);
+        if (localPref) {
+            document.querySelectorAll('input[name="timePref"]').forEach(cb => {
+                cb.checked = (localPref.timePreferred || []).includes(cb.value);
+            });
+            document.querySelectorAll('input[name="timeBlocked"]').forEach(cb => {
+                cb.checked = (localPref.timeBlocked || []).includes(cb.value);
+            });
+            document.querySelectorAll('input[name="dayPref"]').forEach(cb => {
+                cb.checked = (localPref.dayPreferred || []).includes(cb.value);
+            });
+            document.querySelectorAll('input[name="dayBlocked"]').forEach(cb => {
+                cb.checked = (localPref.dayBlocked || []).includes(cb.value);
+            });
+            document.getElementById('prefCampus').value = localPref.campusAssignment || 'any';
+            document.getElementById('prefNotes').value = localPref.notes || '';
+            showToast('Loaded local preferences fallback', 'warning');
+        }
     }
 }
 
@@ -2517,12 +3161,11 @@ async function handleSaveFacultyPreferences(e) {
         return;
     }
 
-    if (!isSupabaseConfigured()) {
-        showToast('Database not configured', 'error');
-        return;
-    }
-
     try {
+        const select = document.getElementById('prefFacultyName');
+        const selectedName = select.options[select.selectedIndex]?.textContent || '';
+        const normalizedName = normalizeFacultyName(selectedName);
+
         // Gather form data
         const timePreferred = Array.from(document.querySelectorAll('input[name="timePref"]:checked'))
             .map(cb => cb.value);
@@ -2534,6 +3177,21 @@ async function handleSaveFacultyPreferences(e) {
             .map(cb => cb.value);
         const campusAssignment = document.getElementById('prefCampus').value;
         const notes = document.getElementById('prefNotes').value;
+
+        setFacultyPreference(normalizedName, {
+            timePreferred,
+            timeBlocked,
+            dayPreferred,
+            dayBlocked,
+            campusAssignment,
+            notes
+        });
+
+        if (!isSupabaseConfigured()) {
+            showToast('Preferences saved locally');
+            closeFacultyPreferencesModal();
+            return;
+        }
 
         await dbService.saveFacultyPreferences(currentFacultyId, {
             timePreferred,
@@ -2554,10 +3212,26 @@ async function handleSaveFacultyPreferences(e) {
 }
 
 // ============================================
-// CLAUDE AI INTEGRATION
+// OPENAI AI INTEGRATION
 // ============================================
 
 let lastAiResults = null;
+
+function tryHydrateApiKeyFromInput() {
+    const input = document.getElementById('apiKeyInput');
+    const typedKey = input?.value?.trim();
+
+    if (typedKey && typedKey.startsWith('sk-')) {
+        try {
+            ClaudeService.setApiKey(typedKey);
+            return true;
+        } catch (_error) {
+            return false;
+        }
+    }
+
+    return ClaudeService.hasApiKey();
+}
 
 /**
  * Open API Settings Modal
@@ -2566,6 +3240,7 @@ function openApiSettingsModal() {
     const modal = document.getElementById('apiSettingsModal');
     const input = document.getElementById('apiKeyInput');
     const status = document.getElementById('apiKeyStatus');
+    const typedKey = input?.value?.trim();
 
     // Show current key status
     if (ClaudeService.hasApiKey()) {
@@ -2573,9 +3248,11 @@ function openApiSettingsModal() {
         input.value = '';
         input.placeholder = maskedKey;
         status.innerHTML = '<span class="status-connected">API key configured</span>';
+    } else if (typedKey && typedKey.startsWith('sk-')) {
+        status.innerHTML = '<span class="status-testing">Unsaved key detected. Click Save or Test Connection.</span>';
     } else {
         input.value = '';
-        input.placeholder = 'sk-ant-api...';
+        input.placeholder = 'sk-... or sk-ant-...';
         status.innerHTML = '<span class="status-disconnected">No API key configured</span>';
     }
 
@@ -2616,7 +3293,7 @@ function saveApiKey() {
         return;
     }
 
-    if (!key.startsWith('sk-ant-')) {
+    if (!key.startsWith('sk-')) {
         showToast('Invalid API key format', 'error');
         return;
     }
@@ -2637,7 +3314,7 @@ function clearApiKey() {
     if (confirm('Are you sure you want to clear the API key?')) {
         ClaudeService.clearApiKey();
         document.getElementById('apiKeyInput').value = '';
-        document.getElementById('apiKeyInput').placeholder = 'sk-ant-api...';
+        document.getElementById('apiKeyInput').placeholder = 'sk-... or sk-ant-...';
         document.getElementById('apiKeyStatus').innerHTML = '<span class="status-disconnected">No API key configured</span>';
         showToast('API key cleared');
     }
@@ -2652,13 +3329,8 @@ async function testApiConnection() {
     // Check if there's a new key in the input
     const input = document.getElementById('apiKeyInput');
     const newKey = input.value.trim();
-    if (newKey && newKey.startsWith('sk-ant-')) {
+    if (newKey && newKey.startsWith('sk-')) {
         ClaudeService.setApiKey(newKey);
-    }
-
-    if (!ClaudeService.hasApiKey()) {
-        status.innerHTML = '<span class="status-error">No API key to test</span>';
-        return;
     }
 
     status.innerHTML = '<span class="status-testing">Testing connection...</span>';
@@ -2680,11 +3352,7 @@ async function testApiConnection() {
  * Evaluate schedule with AI
  */
 async function evaluateWithAI() {
-    if (!ClaudeService.hasApiKey()) {
-        openApiSettingsModal();
-        showToast('Please configure your Claude API key first', 'error');
-        return;
-    }
+    tryHydrateApiKeyFromInput();
 
     if (!currentSchedule || Object.keys(assignedCourses).length === 0) {
         showToast('No schedule to evaluate. Load a schedule first.', 'error');
@@ -2719,7 +3387,7 @@ async function evaluateWithAI() {
             { quarter: activeQuarter }
         );
 
-        console.log('Sending to Claude API...');
+        console.log('Sending to OpenAI API...');
         const response = await ClaudeService.analyze(prompt, {
             maxTokens: 4096,
             temperature: 0.3
@@ -2742,6 +3410,10 @@ async function evaluateWithAI() {
 
     } catch (error) {
         console.error('AI evaluation error:', error);
+        if (error.message.includes('No AI API key found') || error.message.includes('No API key')) {
+            openApiSettingsModal();
+            showToast('Add your API key in Settings, then retry', 'error');
+        }
         loading.style.display = 'none';
         content.style.display = 'block';
         content.innerHTML = `

@@ -1,17 +1,17 @@
 /**
- * Claude API Service
- * Handles API key management and Claude API calls for schedule analysis
+ * Backward-compatible AI service.
+ * Kept as `ClaudeService` so existing pages keep working, but now routes to OpenAI via `/api/ai/*`.
  */
 
 const ClaudeService = (function() {
-    const STORAGE_KEY = 'claude_api_key';
-    const API_URL = 'https://api.anthropic.com/v1/messages';
-    const API_VERSION = '2023-06-01';
-    const DEFAULT_MODEL = 'claude-sonnet-4-20250514';
+    const STORAGE_KEY = 'openai_api_key';
+    const PROVIDER_PREF_KEY = 'ai_provider_preference';
+    const MODEL_PREFS_KEY = 'ai_model_preferences';
+    const CHAT_ENDPOINT = '/api/ai/chat';
+    const TEST_ENDPOINT = '/api/ai/test';
+    const OPENAI_DEFAULT_MODEL = 'gpt-4o-mini';
+    const ANTHROPIC_DEFAULT_MODEL = 'claude-sonnet-4-5';
 
-    /**
-     * Simple obfuscation for localStorage (not true encryption, just basic obscuring)
-     */
     function obfuscate(str) {
         return btoa(str.split('').reverse().join(''));
     }
@@ -24,78 +24,159 @@ const ClaudeService = (function() {
         }
     }
 
-    /**
-     * Store API key in localStorage
-     */
-    function setApiKey(key) {
-        if (!key || typeof key !== 'string') {
+    function validateApiKey(key) {
+        if (!key || typeof key !== 'string' || !key.trim()) {
             throw new Error('Invalid API key');
         }
-        localStorage.setItem(STORAGE_KEY, obfuscate(key));
+        const trimmed = key.trim();
+        if (!trimmed.startsWith('sk-')) {
+            throw new Error('API key must start with "sk-"');
+        }
+        return trimmed;
     }
 
-    /**
-     * Retrieve API key from localStorage
-     */
+    function getProviderFromKey(key) {
+        if (!key || typeof key !== 'string') {
+            return 'openai';
+        }
+        return key.startsWith('sk-ant-') ? 'anthropic' : 'openai';
+    }
+
+    function setProviderPreference(provider) {
+        const normalized = provider === 'openai' || provider === 'anthropic' ? provider : null;
+        if (normalized) {
+            localStorage.setItem(PROVIDER_PREF_KEY, normalized);
+        } else {
+            localStorage.removeItem(PROVIDER_PREF_KEY);
+        }
+    }
+
+    function getProviderPreference() {
+        const stored = localStorage.getItem(PROVIDER_PREF_KEY);
+        if (stored === 'openai' || stored === 'anthropic') {
+            return stored;
+        }
+        return null;
+    }
+
+    function getModelPreferences() {
+        const raw = localStorage.getItem(MODEL_PREFS_KEY);
+        if (!raw) {
+            return {};
+        }
+        try {
+            const parsed = JSON.parse(raw);
+            if (parsed && typeof parsed === 'object') {
+                return parsed;
+            }
+        } catch {
+            return {};
+        }
+        return {};
+    }
+
+    function setModelPreference(model, provider = getCurrentProvider()) {
+        const prefs = getModelPreferences();
+        if (!model || typeof model !== 'string' || !model.trim()) {
+            delete prefs[provider];
+        } else {
+            prefs[provider] = model.trim();
+        }
+        localStorage.setItem(MODEL_PREFS_KEY, JSON.stringify(prefs));
+    }
+
+    function getModelPreference(provider = getCurrentProvider()) {
+        const prefs = getModelPreferences();
+        const model = prefs[provider];
+        if (typeof model === 'string' && model.trim()) {
+            return model.trim();
+        }
+        return null;
+    }
+
+    function getDefaultModelForProvider(provider) {
+        return provider === 'anthropic' ? ANTHROPIC_DEFAULT_MODEL : OPENAI_DEFAULT_MODEL;
+    }
+
+    function getCurrentProvider() {
+        const preferred = getProviderPreference();
+        if (preferred) {
+            return preferred;
+        }
+        return getProviderFromKey(getApiKey());
+    }
+
+    function getCurrentDefaultModel() {
+        const provider = getCurrentProvider();
+        return getModelPreference(provider) || getDefaultModelForProvider(provider);
+    }
+
+    function setApiKey(key) {
+        const normalized = validateApiKey(key);
+        localStorage.setItem(STORAGE_KEY, obfuscate(normalized));
+    }
+
     function getApiKey() {
         const stored = localStorage.getItem(STORAGE_KEY);
-        if (!stored) return null;
+        if (!stored) {
+            return null;
+        }
         return deobfuscate(stored);
     }
 
-    /**
-     * Check if API key is configured
-     */
     function hasApiKey() {
-        return !!getApiKey();
+        return Boolean(getApiKey());
     }
 
-    /**
-     * Clear stored API key
-     */
     function clearApiKey() {
         localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(PROVIDER_PREF_KEY);
+        localStorage.removeItem(MODEL_PREFS_KEY);
     }
 
-    /**
-     * Test connection with a simple API call
-     */
-    async function testConnection() {
+    async function request(endpoint, payload = {}) {
         const apiKey = getApiKey();
-        if (!apiKey) {
-            return { success: false, error: 'No API key configured' };
+        const headers = {
+            'Content-Type': 'application/json'
+        };
+        if (apiKey) {
+            headers['x-ai-api-key'] = apiKey;
         }
 
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(payload)
+        });
+
+        let data = {};
         try {
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-api-key': apiKey,
-                    'anthropic-version': API_VERSION,
-                    'anthropic-dangerous-direct-browser-access': 'true'
-                },
-                body: JSON.stringify({
-                    model: DEFAULT_MODEL,
-                    max_tokens: 50,
-                    messages: [{ role: 'user', content: 'Say "Connected!" and nothing else.' }]
-                })
+            data = await response.json();
+        } catch {
+            data = {};
+        }
+
+        if (!response.ok || data.success === false) {
+            const message = data.error || `Request failed (${response.status})`;
+            throw new Error(message);
+        }
+
+        return data;
+    }
+
+    async function testConnection(model = getCurrentDefaultModel(), provider = null) {
+        const effectiveProvider = provider || getCurrentProvider();
+        try {
+            const data = await request(TEST_ENDPOINT, {
+                model,
+                provider: effectiveProvider
             });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                return {
-                    success: false,
-                    error: errorData.error?.message || `HTTP ${response.status}`
-                };
-            }
-
-            const data = await response.json();
             return {
                 success: true,
-                message: data.content?.[0]?.text || 'Connected'
+                message: data.message || 'Connected',
+                model: data.model || model,
+                provider: data.provider || effectiveProvider
             };
-
         } catch (error) {
             return {
                 success: false,
@@ -104,87 +185,87 @@ const ClaudeService = (function() {
         }
     }
 
-    /**
-     * Send a prompt to Claude and get a response
-     */
     async function analyze(prompt, options = {}) {
-        const apiKey = getApiKey();
-        if (!apiKey) {
-            throw new Error('No API key configured. Please add your API key in Settings.');
+        if (!prompt || typeof prompt !== 'string') {
+            throw new Error('Prompt is required');
         }
 
         const {
-            model = DEFAULT_MODEL,
+            model = getCurrentDefaultModel(),
             maxTokens = 4096,
             temperature = 0.3,
-            systemPrompt = null
+            systemPrompt = null,
+            responseFormat = null,
+            provider = null
         } = options;
+        const effectiveProvider = provider || getCurrentProvider();
 
-        const messages = [{ role: 'user', content: prompt }];
-
-        const requestBody = {
+        const payload = {
+            prompt,
+            provider: effectiveProvider,
             model,
-            max_tokens: maxTokens,
-            messages
+            maxTokens,
+            temperature
         };
 
         if (systemPrompt) {
-            requestBody.system = systemPrompt;
+            payload.systemPrompt = systemPrompt;
+        }
+        if (responseFormat) {
+            payload.responseFormat = responseFormat;
         }
 
-        if (temperature !== undefined) {
-            requestBody.temperature = temperature;
-        }
-
-        try {
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-api-key': apiKey,
-                    'anthropic-version': API_VERSION,
-                    'anthropic-dangerous-direct-browser-access': 'true'
-                },
-                body: JSON.stringify(requestBody)
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error?.message || `API error: ${response.status}`);
-            }
-
-            const data = await response.json();
-
-            // Extract text content from response
-            const textContent = data.content?.find(c => c.type === 'text');
-            if (!textContent) {
-                throw new Error('No text content in response');
-            }
-
-            return {
-                text: textContent.text,
-                usage: data.usage,
-                model: data.model,
-                stopReason: data.stop_reason
-            };
-
-        } catch (error) {
-            if (error.message.includes('Failed to fetch')) {
-                throw new Error('Network error. Check your internet connection and ensure CORS is enabled.');
-            }
-            throw error;
-        }
+        const data = await request(CHAT_ENDPOINT, payload);
+        return {
+            text: data.text || '',
+            usage: data.usage || null,
+            model: data.model || model,
+            provider: data.provider || effectiveProvider
+        };
     }
 
-    /**
-     * Mask API key for display (show first 7 and last 4 chars)
-     */
+    async function chat(messages, options = {}) {
+        if (!Array.isArray(messages) || messages.length === 0) {
+            throw new Error('Messages are required');
+        }
+
+        const {
+            model = getCurrentDefaultModel(),
+            maxTokens = 1200,
+            temperature = 0.3,
+            responseFormat = null,
+            provider = null
+        } = options;
+        const effectiveProvider = provider || getCurrentProvider();
+
+        const payload = {
+            messages,
+            provider: effectiveProvider,
+            model,
+            maxTokens,
+            temperature
+        };
+
+        if (responseFormat) {
+            payload.responseFormat = responseFormat;
+        }
+
+        const data = await request(CHAT_ENDPOINT, payload);
+        return {
+            text: data.text || '',
+            usage: data.usage || null,
+            model: data.model || model,
+            provider: data.provider || effectiveProvider
+        };
+    }
+
     function maskApiKey(key) {
-        if (!key || key.length < 15) return '••••••••••••';
+        if (!key || key.length < 15) {
+            return '••••••••••••';
+        }
         return key.substring(0, 7) + '••••••••••••' + key.substring(key.length - 4);
     }
 
-    // Public API
     return {
         setApiKey,
         getApiKey,
@@ -192,11 +273,24 @@ const ClaudeService = (function() {
         clearApiKey,
         testConnection,
         analyze,
-        maskApiKey
+        chat,
+        maskApiKey,
+        provider: getCurrentProvider(),
+        defaultModel: getCurrentDefaultModel(),
+        getCurrentProvider,
+        getCurrentDefaultModel,
+        setProviderPreference,
+        getProviderPreference,
+        setModelPreference,
+        getModelPreference
     };
 })();
 
-// Export for module systems
+if (typeof window !== 'undefined') {
+    window.OpenAIService = ClaudeService;
+    window.SchedulerAIService = ClaudeService;
+}
+
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = ClaudeService;
 }

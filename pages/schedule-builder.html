@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Schedule Builder - Design Scheduler</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <link rel="stylesheet" href="../css/schedule-builder.css">
+    <link rel="stylesheet" href="../css/program-command-dashboard-theme.css">
 </head>
 <body>
     <div class="container">
@@ -35,6 +39,9 @@
             <button id="generateBtn" class="btn-primary" onclick="handleLoadAndAnalyze()">
                 Load & Analyze
             </button>
+            <button class="btn-secondary" onclick="window.location.href='pamcam-playground.html'">
+                PamCam Lab
+            </button>
         </div>
 
         <!-- Faculty Selection Panel -->
@@ -51,6 +58,65 @@
                     <p style="color: #6b7280; text-align: center; padding: 20px;">Loading faculty data...</p>
                 </div>
             </div>
+        </div>
+
+        <!-- Predictive Faculty Build Panel -->
+        <div class="build-scenario-panel">
+            <div class="scenario-header">
+                <div>
+                    <h2>Predictive Faculty Build</h2>
+                    <p>Set annual credits, inload, and DESN 499 assumptions used for auto-assignment.</p>
+                </div>
+                <label class="scenario-toggle">
+                    <input type="checkbox" id="includeArielScenario" onchange="handleArielScenarioToggle(this.checked)">
+                    Include Optional Lecturer
+                </label>
+            </div>
+
+            <div class="scenario-metrics">
+                <div class="scenario-metric">
+                    <div class="scenario-metric-label">Included Faculty</div>
+                    <div class="scenario-metric-value" id="scenarioFacultyCount">0</div>
+                </div>
+                <div class="scenario-metric">
+                    <div class="scenario-metric-label">Annual Target Credits</div>
+                    <div class="scenario-metric-value" id="scenarioAnnualTarget">0</div>
+                </div>
+                <div class="scenario-metric">
+                    <div class="scenario-metric-label">Annual Scheduled Capacity</div>
+                    <div class="scenario-metric-value" id="scenarioAnnualScheduled">0</div>
+                </div>
+                <div class="scenario-metric">
+                    <div class="scenario-metric-label">Quarterly Scheduled Capacity</div>
+                    <div class="scenario-metric-value" id="scenarioQuarterlyScheduled">0</div>
+                </div>
+            </div>
+
+            <div class="scenario-table-wrapper">
+                <table class="scenario-table">
+                    <thead>
+                        <tr>
+                            <th>Faculty</th>
+                            <th>Annual Credits</th>
+                            <th>Inload</th>
+                            <th>DESN 499 / Quarter</th>
+                            <th>Annual Scheduled</th>
+                            <th>Quarterly Scheduled</th>
+                        </tr>
+                    </thead>
+                    <tbody id="facultyBuildRows">
+                        <tr>
+                            <td colspan="6" style="text-align:center; color:#6b7280; padding:14px;">Loading scenario...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="scenario-footer">
+                <button class="btn-small" onclick="resetFacultyBuildScenario()">Reset Defaults</button>
+                <span id="scenarioDeltaText">With optional lecturer vs without optional lecturer capacity delta: --</span>
+            </div>
+            <p class="scenario-assignment-note" id="scenarioAssignmentSummary">Load a schedule to compare demand against this scenario.</p>
         </div>
 
         <!-- Summary Cards -->
@@ -432,17 +498,17 @@
         <div class="modal-overlay" id="apiSettingsModal">
             <div class="modal" style="max-width: 500px;">
                 <div class="modal-header">
-                    <h2 class="modal-title">Claude API Settings</h2>
+                    <h2 class="modal-title">AI API Settings (OpenAI or Claude)</h2>
                     <button class="modal-close" onclick="closeApiSettingsModal()">&times;</button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="apiKeyInput">API Key</label>
                         <div class="api-key-input-group">
-                            <input type="password" id="apiKeyInput" placeholder="sk-ant-api..." autocomplete="off">
+                            <input type="password" id="apiKeyInput" placeholder="sk-... or sk-ant-..." autocomplete="off">
                             <button type="button" class="btn-small" onclick="toggleApiKeyVisibility()">👁️</button>
                         </div>
-                        <p class="helper-text">Get your API key from <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a></p>
+                        <p class="helper-text">Use either <a href="https://platform.openai.com/api-keys" target="_blank">OpenAI API keys</a> or <a href="https://console.anthropic.com/settings/keys" target="_blank">Anthropic API keys</a></p>
                     </div>
                     <div id="apiKeyStatus" class="api-key-status"></div>
                 </div>
@@ -462,7 +528,7 @@
             </div>
             <div class="ai-results-loading" id="aiResultsLoading" style="display: none;">
                 <div class="loading-spinner"></div>
-                <p>Analyzing schedule with Claude AI...</p>
+                <p>Analyzing schedule with ChatGPT...</p>
             </div>
             <div class="ai-results-content" id="aiResultsContent">
                 <!-- Health Score -->
@@ -516,7 +582,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/supabase-config.js"></script>
     <script src="../js/db-service.js"></script>
-    <!-- Claude AI Integration -->
+    <!-- OpenAI Integration -->
     <script src="../js/claude-service.js"></script>
     <script src="../js/schedule-evaluator.js"></script>
     <!-- Application Scripts -->
