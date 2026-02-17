@@ -262,7 +262,8 @@
       "typicalEnrollmentCap": 5,
       "level": "300",
       "offeredQuarters": ["Fall", "Winter", "Spring"],
-      "isVariable": true
+      "isVariable": true,
+      "workloadMultiplier": 0.2
     },
     {
       "code": "DESN 401",
@@ -320,7 +321,7 @@
       "level": "400",
       "offeredQuarters": ["Fall", "Winter", "Spring"],
       "isVariable": true,
-      "workloadMultiplier": 0.15
+      "workloadMultiplier": 0.2
     },
     {
       "code": "DESN 493",

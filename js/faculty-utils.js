@@ -195,6 +195,8 @@ function calculateAppliedLearningSummary(facultyData) {
     const summary = {
         totalCredits: 0,
         totalWorkload: 0,
+        desn399: { credits: 0, workload: 0, sections: 0 },
+        desn491: { credits: 0, workload: 0, sections: 0 },
         desn499: { credits: 0, workload: 0, sections: 0 },
         desn495: { credits: 0, workload: 0, sections: 0 }
     };
@@ -205,6 +207,22 @@ function calculateAppliedLearningSummary(facultyData) {
 
     Object.values(facultyData).forEach(faculty => {
         if (faculty.appliedLearning) {
+            // DESN 399
+            if (faculty.appliedLearning['DESN 399']) {
+                const desn399 = faculty.appliedLearning['DESN 399'];
+                summary.desn399.credits += desn399.credits || 0;
+                summary.desn399.workload += desn399.workload || 0;
+                summary.desn399.sections += desn399.sections || 0;
+            }
+
+            // DESN 491
+            if (faculty.appliedLearning['DESN 491']) {
+                const desn491 = faculty.appliedLearning['DESN 491'];
+                summary.desn491.credits += desn491.credits || 0;
+                summary.desn491.workload += desn491.workload || 0;
+                summary.desn491.sections += desn491.sections || 0;
+            }
+
             // DESN 499
             if (faculty.appliedLearning['DESN 499']) {
                 const desn499 = faculty.appliedLearning['DESN 499'];

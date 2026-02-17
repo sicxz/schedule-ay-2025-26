@@ -30,6 +30,8 @@ class ReleaseTimeAdjustmentsManager {
                 { id: 'other', label: 'Other', color: '#6b7280', description: 'Other release time' }
             ],
             appliedLearningMultipliers: {
+                'DESN 399': 0.2,
+                'DESN 491': 0.2,
                 'DESN 499': 0.2,
                 'DESN 495': 0.1,
                 'DESN 490': 0.15

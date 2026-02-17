@@ -1,0 +1,339 @@
+:root {
+    --pc-bg: #f6f8fa;
+    --pc-surface: #ffffff;
+    --pc-border: #d0d7de;
+    --pc-muted: #59636e;
+    --pc-text: #1f2328;
+    --pc-accent: #a10022;
+    --pc-accent-dark: #8a001d;
+    --pc-canvas: #f3f4f6;
+    --pc-shadow: 0 1px 0 rgba(27, 31, 36, 0.04), 0 8px 24px rgba(140, 149, 159, 0.2);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+    background:
+        radial-gradient(1200px 320px at 15% 0%, rgba(183, 20, 46, 0.08), transparent 60%),
+        radial-gradient(900px 260px at 85% 0%, rgba(9, 105, 218, 0.08), transparent 62%),
+        var(--pc-canvas);
+    color: var(--pc-text);
+}
+
+.page-shell {
+    max-width: 1360px;
+    margin: 20px auto 40px;
+    padding: 0 16px;
+}
+
+.page-top-actions {
+    margin-bottom: 10px;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 10px;
+    border: 1px solid var(--pc-border);
+    border-radius: 8px;
+    box-shadow: 0 1px 0 rgba(27, 31, 36, 0.04);
+    background: var(--pc-surface);
+    color: var(--pc-text);
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.back-link:hover {
+    background: var(--pc-bg);
+    border-color: #afb8c1;
+}
+
+.page-header {
+    background: var(--pc-surface);
+    color: var(--pc-text);
+    border: 1px solid var(--pc-border);
+    border-top: 4px solid var(--pc-accent);
+    border-bottom: 1px solid var(--pc-border);
+    border-radius: 12px;
+    box-shadow: var(--pc-shadow);
+    padding: 24px;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.header-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #fff1f3;
+    border: 1px solid #ffd1d9;
+    color: #8f0f24;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.page-header h1 {
+    margin: 0 0 4px;
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+}
+
+.subtitle {
+    margin: 0;
+    color: var(--pc-muted);
+    opacity: 1;
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.panel {
+    background: var(--pc-surface);
+    border: 1px solid var(--pc-border);
+    border-radius: 12px;
+    box-shadow: 0 1px 0 rgba(27, 31, 36, 0.04);
+    padding: 16px;
+}
+
+.setup-controls {
+    grid-column: 1 / -1;
+}
+
+.control-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.year-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.year-actions select {
+    width: auto;
+    min-width: 150px;
+}
+
+label {
+    display: grid;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--pc-muted);
+}
+
+input,
+select,
+textarea,
+button {
+    font: inherit;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--pc-border);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--pc-text);
+}
+
+textarea {
+    resize: vertical;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.summary-card {
+    border: 1px solid var(--pc-border);
+    border-radius: 8px;
+    padding: 10px;
+    background: #fff;
+}
+
+.summary-card h2 {
+    margin: 0;
+    font-size: 12px;
+    color: var(--pc-muted);
+    font-weight: 600;
+}
+
+.summary-card p {
+    margin: 8px 0 0;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.adjunct-inputs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin: 12px 0;
+}
+
+.panel-help {
+    margin: 0;
+    color: var(--pc-muted);
+    font-size: 13px;
+}
+
+.block-label {
+    margin-top: 10px;
+}
+
+.panel-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+#formModeTag {
+    font-size: 12px;
+    color: var(--pc-muted);
+    border: 1px solid var(--pc-border);
+    border-radius: 999px;
+    padding: 3px 10px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.form-actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+button {
+    padding: 8px 12px;
+    border: 1px solid var(--pc-border);
+    border-radius: 8px;
+    background: var(--pc-surface);
+    color: var(--pc-text);
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 1px 0 rgba(27, 31, 36, 0.04);
+}
+
+button:hover {
+    background: var(--pc-bg);
+    border-color: #afb8c1;
+}
+
+#saveFacultyBtn {
+    border-color: var(--pc-accent-dark);
+    background: var(--pc-accent);
+    color: #fff;
+}
+
+#saveFacultyBtn:hover {
+    background: var(--pc-accent-dark);
+    border-color: var(--pc-accent-dark);
+}
+
+button.secondary {
+    border-color: var(--pc-border);
+    background: var(--pc-surface);
+    color: var(--pc-text);
+}
+
+#addYearBtn {
+    padding: 4px 10px;
+    font-size: 12px;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+#copyPreviousYearBtn {
+    padding: 4px 10px;
+    font-size: 12px;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.faculty-table-panel {
+    grid-column: 1 / -1;
+}
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    border-bottom: 1px solid var(--pc-border);
+    padding: 10px 8px;
+    text-align: left;
+    font-size: 13px;
+}
+
+th {
+    color: var(--pc-muted);
+    font-weight: 600;
+}
+
+.table-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.table-actions button {
+    padding: 5px 9px;
+    font-size: 12px;
+}
+
+.empty-row {
+    color: var(--pc-muted);
+    text-align: center;
+    padding: 18px;
+}
+
+@media (max-width: 960px) {
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .adjunct-inputs,
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}

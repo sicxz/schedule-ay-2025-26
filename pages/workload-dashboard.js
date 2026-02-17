@@ -7,13 +7,75 @@
 let workloadData = null;
 let currentYearData = null;
 let currentFilters = {
-    year: '2024-25',
+    year: getCurrentAcademicYear(),
     status: 'all',
     category: 'all'
 };
 
 // Chart instances
 let charts = {};
+
+function getCurrentAcademicYear() {
+    const now = new Date();
+    const startYear = now.getMonth() >= 6 ? now.getFullYear() : now.getFullYear() - 1;
+    return `${startYear}-${String(startYear + 1).slice(-2)}`;
+}
+
+function getPreferredYear() {
+    const dynamicYear = getCurrentAcademicYear();
+    if (dynamicYear) return dynamicYear;
+    return '2025-26';
+}
+
+function getYearFromQuery() {
+    const params = new URLSearchParams(window.location.search);
+    const year = String(params.get('year') || '').trim();
+    return /^\d{4}-\d{2}$/.test(year) ? year : '';
+}
+
+function augmentYearFilterOptions() {
+    const select = document.getElementById('academicYearFilter');
+    if (!select || typeof WorkloadIntegration === 'undefined') return;
+
+    const yearOptions = WorkloadIntegration.getAcademicYearOptions(workloadData);
+    const existing = new Set(Array.from(select.options).map((option) => option.value));
+
+    yearOptions.forEach((year) => {
+        if (existing.has(year)) return;
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        select.appendChild(option);
+    });
+
+    const firstOption = select.options[0];
+    const yearValues = Array.from(select.options)
+        .slice(1)
+        .map((option) => option.value)
+        .sort();
+
+    while (select.options.length > 1) {
+        select.remove(1);
+    }
+
+    yearValues.forEach((year) => {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        select.appendChild(option);
+    });
+
+    if (firstOption) {
+        firstOption.text = firstOption.text || 'All Years';
+    }
+}
+
+function loadIntegratedYearData(year) {
+    if (typeof WorkloadIntegration !== 'undefined' && year !== 'all') {
+        return WorkloadIntegration.buildIntegratedWorkloadYearData(workloadData, year);
+    }
+    return getYearData(workloadData, year);
+}
 
 /**
  * Initialize dashboard
@@ -47,6 +109,15 @@ async function initDashboard() {
 
     // Setup year filter with callback
     setupYearFilter(workloadData, onYearChange);
+    augmentYearFilterOptions();
+
+    const yearSelect = document.getElementById('academicYearFilter');
+    const requestedYear = getYearFromQuery();
+    const preferredYear = requestedYear || getPreferredYear();
+    if (yearSelect && Array.from(yearSelect.options).some((option) => option.value === preferredYear)) {
+        yearSelect.value = preferredYear;
+        yearSelect.dispatchEvent(new Event('change'));
+    }
 
     // Setup other filters
     document.getElementById('statusFilter').addEventListener('change', onFilterChange);
@@ -68,8 +139,7 @@ function onYearChange(year) {
     currentFilters.year = year;
 
     // Get year-specific data using utility function
-    // This correctly handles the .all, .fullTime, .adjunct structure
-    currentYearData = getYearData(workloadData, year);
+    currentYearData = loadIntegratedYearData(year);
 
     // Update subtitle
     updateYearSubtitle(year, 'EWU Design Department - Academic Workload Analysis');
@@ -103,7 +173,7 @@ function refreshDashboard() {
     let facultyData = getFacultyByCategory(currentYearData, currentFilters.category);
 
     // Apply release time adjustments if ReleaseTimeManager is available
-    if (typeof applyReleaseTimeToFacultyData === 'function') {
+    if (typeof applyReleaseTimeToFacultyData === 'function' && currentYearData?.meta?.source !== 'integrated') {
         facultyData = applyReleaseTimeToFacultyData(facultyData, currentFilters.year);
     }
 
@@ -341,6 +411,13 @@ function renderFacultyTable(facultyData, tableId, includeRank) {
 function createActionsCell(facultyName) {
     const td = document.createElement('td');
 
+    const detailBtn = document.createElement('button');
+    detailBtn.className = 'btn-icon btn-add-course';
+    detailBtn.title = 'Manage workload detail courses';
+    detailBtn.textContent = '📄';
+    detailBtn.onclick = () => openFacultyWorkloadDetail(facultyName);
+    td.appendChild(detailBtn);
+
     const editBtn = document.createElement('button');
     editBtn.className = 'btn-icon btn-edit';
     editBtn.title = 'Edit courses';
@@ -385,6 +462,16 @@ function createProgressCell(utilizationRate, status) {
  */
 function renderAppliedLearningStats(facultyData) {
     const summary = calculateAppliedLearningSummary(facultyData);
+
+    document.getElementById('desn399Credits').textContent =
+        `${summary.desn399.credits} credits`;
+    document.getElementById('desn399Workload').textContent =
+        `${summary.desn399.workload.toFixed(1)} workload credits (${summary.desn399.sections} sections)`;
+
+    document.getElementById('desn491Credits').textContent =
+        `${summary.desn491.credits} credits`;
+    document.getElementById('desn491Workload').textContent =
+        `${summary.desn491.workload.toFixed(1)} workload credits (${summary.desn491.sections} sections)`;
 
     document.getElementById('desn499Credits').textContent =
         `${summary.desn499.credits} credits`;
@@ -439,6 +526,14 @@ function renderReleaseTimeStats(academicYear, yearData) {
         ? Math.round((releaseTimeSummary.totalCredits / fullTimeCapacity) * 100 * 10) / 10
         : 0;
     document.getElementById('capacityImpact').textContent = impactPercent + '%';
+}
+
+function openFacultyWorkloadDetail(facultyName) {
+    const params = new URLSearchParams({
+        faculty: facultyName,
+        year: currentFilters.year
+    });
+    window.location.href = `faculty-workload-detail.html?${params.toString()}`;
 }
 
 // Initialize dashboard when page loads

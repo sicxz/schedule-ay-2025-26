@@ -241,6 +241,22 @@ const ConstraintsService = (function() {
                     message: 'Only one instructor is scheduled for evening classes - safety concern'
                 },
                 enabled: true
+            },
+            {
+                id: 'fallback-7',
+                constraint_type: 'ay_setup_alignment',
+                description: 'Academic Year Setup alignment for workload and adjunct targets',
+                rule_details: {
+                    annualOverloadWarning: 3,
+                    annualOverloadCritical: 8,
+                    annualUnderloadWarning: 6,
+                    quarterOverloadWarning: 2,
+                    quarterOverloadCritical: 5,
+                    quarterUnderloadWarning: 3,
+                    adjunctUnderloadWarning: 0.5,
+                    adjunctOverloadWarning: 2
+                },
+                enabled: true
             }
         ];
     }

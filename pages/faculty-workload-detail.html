@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Workload Detail - Design Scheduler</title>
+    <link rel="stylesheet" href="../css/shared.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <style>
+        .detail-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 18px;
+        }
+
+        .detail-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+        }
+
+        .detail-controls label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .detail-controls select,
+        .detail-controls input,
+        .detail-controls textarea {
+            width: 100%;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 14px;
+        }
+
+        .detail-controls textarea {
+            min-height: 76px;
+            resize: vertical;
+        }
+
+        .rate-box {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 42px;
+            width: 100%;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            background: #f9fafb;
+            color: #1f2937;
+            font-weight: 600;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .btn-primary {
+            border: none;
+            border-radius: 8px;
+            background: #1d4ed8;
+            color: #fff;
+            padding: 10px 14px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-secondary {
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            background: #fff;
+            color: #374151;
+            padding: 10px 14px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .formula-note {
+            font-size: 13px;
+            color: #4b5563;
+            margin-top: 8px;
+        }
+
+        .rates-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+        }
+
+        .rate-item {
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            padding: 10px;
+            background: #f9fafb;
+        }
+
+        .rate-item strong {
+            display: block;
+            color: #111827;
+            margin-bottom: 4px;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 8px;
+        }
+    </style>
+    <script src="../js/config/constants.js"></script>
+    <script src="../js/data-loader.js"></script>
+    <script src="../js/workload-integration.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="./workload-dashboard.html" class="back-link">← Back to Faculty Workload</a>
+            <h1>📄 Faculty Workload Detail</h1>
+            <p class="subtitle">Manage DESN 399 / 491 / 495 / 499 student-credit entries and workload conversion.</p>
+        </header>
+
+        <div class="content detail-layout">
+            <div class="chart-container">
+                <h2>Selection</h2>
+                <div class="detail-controls">
+                    <div>
+                        <label for="yearSelect">Academic Year</label>
+                        <select id="yearSelect"></select>
+                    </div>
+                    <div>
+                        <label for="facultySelect">Faculty</label>
+                        <select id="facultySelect"></select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-bar">
+                <div class="stat-card">
+                    <div class="stat-label">Total Student Credits</div>
+                    <div class="stat-value" id="totalStudentCredits">0</div>
+                    <div class="stat-subtitle">For selected detail courses</div>
+                </div>
+                <div class="stat-card optimal">
+                    <div class="stat-label">Faculty Workload Credits</div>
+                    <div class="stat-value" id="totalWorkloadCredits">0</div>
+                    <div class="stat-subtitle">Student credits × workload rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Entries</div>
+                    <div class="stat-value" id="entryCount">0</div>
+                    <div class="stat-subtitle">Saved for this faculty/year</div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h2>Course Rates</h2>
+                <div id="ratesList" class="rates-list"></div>
+                <p class="formula-note">Example: 5 student credits in DESN 499 = 1.0 faculty workload credits (rate 0.2).</p>
+            </div>
+
+            <div class="chart-container">
+                <h2 id="formTitle">Add Detail Entry</h2>
+                <div class="detail-controls">
+                    <div>
+                        <label for="quarterInput">Quarter</label>
+                        <select id="quarterInput">
+                            <option value="Fall">Fall</option>
+                            <option value="Winter">Winter</option>
+                            <option value="Spring">Spring</option>
+                            <option value="Summer">Summer</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="courseInput">Course</label>
+                        <select id="courseInput"></select>
+                    </div>
+                    <div>
+                        <label for="studentCreditsInput">Student Credits</label>
+                        <input id="studentCreditsInput" type="number" min="0.5" step="0.5" value="5">
+                    </div>
+                    <div>
+                        <label>Workload Rate</label>
+                        <div class="rate-box" id="rateDisplay">0.2</div>
+                    </div>
+                    <div>
+                        <label for="workloadCreditsInput">Faculty Workload Credits</label>
+                        <input id="workloadCreditsInput" type="text" value="1.0" readonly>
+                    </div>
+                    <div style="grid-column: 1 / -1;">
+                        <label for="notesInput">Notes (optional)</label>
+                        <textarea id="notesInput" placeholder="Context, student details, or reconciliation notes."></textarea>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button id="saveEntryBtn" class="btn-primary" type="button">Add Entry</button>
+                    <button id="cancelEditBtn" class="btn-secondary" type="button" style="display: none;">Cancel Edit</button>
+                    <button id="openDashboardBtn" class="btn-secondary" type="button">Open Workload Dashboard</button>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h2>Saved Entries</h2>
+                <table class="data-table" id="entriesTable">
+                    <thead>
+                        <tr>
+                            <th>Quarter</th>
+                            <th>Course</th>
+                            <th>Student Credits</th>
+                            <th>Rate</th>
+                            <th>Workload Credits</th>
+                            <th>Notes</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="entriesBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="./faculty-workload-detail.js"></script>
+</body>
+</html>

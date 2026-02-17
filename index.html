@@ -815,14 +815,16 @@
 
         .faculty-legend-item {
             cursor: pointer;
-            transition: background 0.2s;
-            padding: 4px 8px;
-            border-radius: 4px;
-            margin: -4px -8px;
+            transition: background 0.2s, border-color 0.2s;
+            padding: 6px 10px;
+            border-radius: 8px;
+            border: 1px solid #d0d7de;
+            background: #fff;
         }
 
         .faculty-legend-item:hover {
-            background: #f3f4f6;
+            background: #f6f8fa;
+            border-color: #b8c1cc;
         }
 
         .stats-bar {
@@ -996,8 +998,128 @@
 
         .conflicts-panel h2 {
             color: #495057;
-            margin-bottom: 15px;
+            margin-bottom: 6px;
             font-size: 1.2em;
+        }
+
+        .conflicts-panel-subtitle {
+            margin: 0 0 12px;
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        .annual-conflict-summary {
+            background: #ffffff;
+            border: 1px solid #d0d7de;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 14px;
+        }
+
+        .annual-conflict-header {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .annual-conflict-header strong {
+            font-size: 0.95em;
+            color: #212529;
+        }
+
+        .annual-conflict-stats {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .annual-conflict-stat {
+            font-size: 0.78em;
+            border: 1px solid #d0d7de;
+            background: #f6f8fa;
+            color: #495057;
+            border-radius: 999px;
+            padding: 3px 9px;
+            font-weight: 600;
+        }
+
+        .annual-pattern-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .annual-pattern-item {
+            border: 1px solid #d0d7de;
+            border-left: 4px solid #adb5bd;
+            border-radius: 8px;
+            padding: 8px 10px;
+            background: #fff;
+        }
+
+        .annual-pattern-item.critical {
+            border-left-color: #ff6b6b;
+        }
+
+        .annual-pattern-item.high {
+            border-left-color: #ffa726;
+        }
+
+        .annual-pattern-item.medium {
+            border-left-color: #ffd93d;
+        }
+
+        .annual-pattern-title {
+            font-size: 0.85em;
+            font-weight: 600;
+            color: #212529;
+        }
+
+        .annual-pattern-meta {
+            font-size: 0.8em;
+            color: #6c757d;
+            margin-top: 2px;
+        }
+
+        .conflict-quarter-group {
+            margin-bottom: 14px;
+            padding-bottom: 4px;
+            border-bottom: 1px dashed #d0d7de;
+        }
+
+        .conflict-quarter-group:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .conflict-quarter-title {
+            margin: 0 0 10px;
+            font-size: 0.95em;
+            color: #374151;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .current-quarter-tag {
+            font-size: 0.72em;
+            border: 1px solid #d0d7de;
+            background: #f6f8fa;
+            color: #59636e;
+            border-radius: 999px;
+            padding: 2px 8px;
+            font-weight: 600;
+        }
+
+        .no-conflicts-quarter {
+            margin: 0 0 8px;
+            color: #1a7f37;
+            font-size: 0.88em;
+            font-weight: 600;
         }
 
         .conflict-item {
@@ -1180,7 +1302,7 @@
 
         .faculty-legend {
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
             gap: var(--space-2);
             padding: var(--space-2) var(--space-3);
             background: var(--color-canvas-subtle);
@@ -1189,11 +1311,40 @@
             border: 1px solid var(--color-border-muted);
         }
 
-        .faculty-legend-item {
+        .faculty-legend-header {
             display: flex;
             align-items: center;
-            gap: 4px;
+            justify-content: space-between;
+            gap: var(--space-2);
+            font-size: 12px;
+            color: var(--color-fg-muted);
+        }
+
+        .faculty-legend-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-2);
+        }
+
+        .faculty-legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             font-size: 11px;
+        }
+
+        .faculty-legend-name {
+            font-weight: 600;
+            color: var(--color-fg-default);
+        }
+
+        .faculty-legend-meta {
+            color: var(--color-fg-muted);
+        }
+
+        .faculty-legend-empty {
+            color: var(--color-fg-muted);
+            font-size: 12px;
         }
 
         .faculty-color-bar {
@@ -3680,6 +3831,7 @@
                     <span class="nav-row-header">Planning</span>
                     <div class="nav-row-items">
                         <a href="pages/schedule-builder.html" class="nav-link"><span class="icon">📅</span>Builder</a>
+                        <a href="pages/academic-year-setup.html" class="nav-link"><span class="icon">🗂️</span>AY Setup</a>
                         <a href="pages/course-management.html" class="nav-link"><span class="icon">📚</span>Courses</a>
                         <a href="pages/workload-dashboard.html" class="nav-link"><span class="icon">👥</span>Workload</a>
                         <a href="pages/constraints-dashboard.html" class="nav-link"><span class="icon">🔒</span>Constraints</a>
@@ -3779,66 +3931,15 @@
                 </div>
             </div>
 
-            <div class="faculty-legend">
-                <div class="faculty-legend-item" onclick="showFacultyModal('T.Masingale')">
-                    <div class="faculty-color-bar" style="background: #667eea;"></div>
-                    <span>T.Masingale</span>
-                </div>
-                <div class="faculty-legend-item" onclick="showFacultyModal('S.Durr')">
-                    <div class="faculty-color-bar" style="background: #e67e22;"></div>
-                    <span>S.Durr</span>
-                </div>
-                <div class="faculty-legend-item" onclick="showFacultyModal('C.Manikoth')">
-                    <div class="faculty-color-bar" style="background: #27ae60;"></div>
-                    <span>C.Manikoth</span>
-                </div>
-                <div class="faculty-legend-item" onclick="showFacultyModal('S.Mills')">
-                    <div class="faculty-color-bar" style="background: #9b59b6;"></div>
-                    <span>S.Mills</span>
-                </div>
-                <div class="faculty-legend-item" onclick="showFacultyModal('M.Lybbert')">
-                    <div class="faculty-color-bar" style="background: #e74c3c;"></div>
-                    <span>M.Lybbert</span>
-                </div>
-                <div class="faculty-legend-item" onclick="showFacultyModal('G.Hustrulid')">
-                    <div class="faculty-color-bar" style="background: #f39c12;"></div>
-                    <span>G.Hustrulid</span>
-                </div>
-                <div class="faculty-legend-item" onclick="showFacultyModal('A.Sopu')">
-                    <div class="faculty-color-bar" style="background: #3498db;"></div>
-                    <span>A.Sopu</span>
-                </div>
-                <div class="faculty-legend-item" onclick="showFacultyModal('E.Norris')">
-                    <div class="faculty-color-bar" style="background: #1abc9c;"></div>
-                    <span>E.Norris</span>
-                </div>
-                <div class="faculty-legend-item" onclick="showFacultyModal('J.Braukmann')">
-                    <div class="faculty-color-bar" style="background: #34495e;"></div>
-                    <span>J.Braukmann</span>
-                </div>
-                <div class="faculty-legend-item" onclick="showFacultyModal('S.Allison')">
-                    <div class="faculty-color-bar" style="background: #d35400;"></div>
-                    <span>S.Allison</span>
-                </div>
-                <div class="faculty-legend-item" onclick="showFacultyModal('Online')">
-                    <div class="faculty-color-bar" style="background: #7f8c8d;"></div>
-                    <span>Barton/Pettigrew (Online)</span>
-                </div>
-                <div class="faculty-legend-item" onclick="showFacultyModal('Adjunct')">
-                    <div class="faculty-color-bar" style="background: #95a5a6;"></div>
-                    <span>Adjunct</span>
-                </div>
-                <div class="faculty-legend-item" onclick="showFacultyModal('TBD')">
-                    <div class="faculty-color-bar" style="background: #bdc3c7;"></div>
-                    <span>TBD</span>
-                </div>
-            </div>
+            <div class="faculty-legend" id="facultyLegend"></div>
 
             <div id="enrollmentAnalytics"></div>
 
             <div class="analysis-grid">
                 <div class="conflicts-panel">
                     <h2>Detected Conflicts</h2>
+                    <p class="conflicts-panel-subtitle">Annual pattern scan first, then quarter-by-quarter details.</p>
+                    <div id="annualConflictSummary" class="annual-conflict-summary"></div>
                     <div id="conflictsList" style="max-height: 400px; overflow-y: auto;"></div>
                 </div>
 
@@ -3878,8 +3979,144 @@
             'TBD': { class: 'faculty-tbd', color: '#bdc3c7', name: 'TBD' }
         };
 
+        const AY_SETUP_STORAGE_KEY = 'programCommandAySetup';
+
+        function buildFacultyAliasMap() {
+            const aliasMap = {};
+            for (const [alias, info] of Object.entries(facultyColors)) {
+                const canonical = info?.name || alias;
+                aliasMap[alias] = canonical;
+                aliasMap[canonical] = canonical;
+            }
+            aliasMap.Online = 'Barton/Pettigrew';
+            return aliasMap;
+        }
+
+        const facultyAliasMap = buildFacultyAliasMap();
+
+        function getCanonicalFacultyName(name) {
+            const raw = typeof name === 'string' ? name.trim() : '';
+            if (!raw) return 'TBD';
+
+            const directMatch = facultyAliasMap[raw];
+            if (directMatch) return directMatch;
+
+            const lower = raw.toLowerCase();
+            if (lower.includes('adjunct')) return 'Adjunct';
+            if (lower.includes('online') || lower.includes('barton') || lower.includes('pettigrew')) return 'Barton/Pettigrew';
+            if (lower.includes('tbd')) return 'TBD';
+
+            // Alias fallback that ignores punctuation/spacing.
+            const compactRaw = lower.replace(/[^a-z0-9]/g, '');
+            for (const [alias, canonical] of Object.entries(facultyAliasMap)) {
+                const compactAlias = alias.toLowerCase().replace(/[^a-z0-9]/g, '');
+                if (compactRaw === compactAlias) return canonical;
+            }
+
+            return raw;
+        }
+
         function getFacultyClass(instructor) {
-            return facultyColors[instructor]?.class || 'faculty-tbd';
+            const canonical = getCanonicalFacultyName(instructor);
+            return facultyColors[canonical]?.class || facultyColors[instructor]?.class || 'faculty-tbd';
+        }
+
+        function escapeHtml(value) {
+            return String(value || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function readAySetupDataForYear(year) {
+            try {
+                const raw = localStorage.getItem(AY_SETUP_STORAGE_KEY);
+                if (!raw) return null;
+                const parsed = JSON.parse(raw);
+                return parsed?.[year] || null;
+            } catch (error) {
+                console.warn('Could not parse academic year setup data:', error);
+                return null;
+            }
+        }
+
+        function getFacultySetupRecord(name, year = currentAcademicYear) {
+            const yearData = readAySetupDataForYear(year);
+            const faculty = Array.isArray(yearData?.faculty) ? yearData.faculty : [];
+            const canonicalTarget = getCanonicalFacultyName(name);
+            return faculty.find((entry) => getCanonicalFacultyName(entry.name) === canonicalTarget) || null;
+        }
+
+        function getFacultyLegendEntries() {
+            const summaries = new Map();
+            const quarters = ['fall', 'winter', 'spring'];
+
+            quarters.forEach((quarter) => {
+                const quarterCourses = flattenQuarterData(scheduleData[quarter] || {});
+                quarterCourses.forEach((course) => {
+                    const canonical = getCanonicalFacultyName(course.instructor || 'TBD');
+                    const facultyInfo = facultyColors[canonical] || {
+                        color: '#6b7280',
+                        name: canonical
+                    };
+
+                    if (!summaries.has(canonical)) {
+                        summaries.set(canonical, {
+                            lookupName: canonical,
+                            displayName: facultyInfo.name || canonical,
+                            color: facultyInfo.color || '#6b7280',
+                            sections: 0,
+                            credits: 0
+                        });
+                    }
+
+                    const summary = summaries.get(canonical);
+                    summary.sections += 1;
+                    summary.credits += Number(course.credits) || 5;
+                });
+            });
+
+            return Array.from(summaries.values()).sort((a, b) => {
+                if (b.sections !== a.sections) return b.sections - a.sections;
+                return a.displayName.localeCompare(b.displayName);
+            });
+        }
+
+        function renderFacultyLegend() {
+            const legendEl = document.getElementById('facultyLegend');
+            if (!legendEl) return;
+
+            const entries = getFacultyLegendEntries();
+            const totalSections = entries.reduce((sum, entry) => sum + entry.sections, 0);
+
+            if (!entries.length) {
+                legendEl.innerHTML = `
+                    <div class="faculty-legend-header">
+                        <strong>Faculty Key</strong>
+                        <span>${escapeHtml(currentAcademicYear)}</span>
+                    </div>
+                    <div class="faculty-legend-empty">No sections assigned for this academic year yet.</div>
+                `;
+                return;
+            }
+
+            const chips = entries.map((entry) => `
+                <button class="faculty-legend-item" type="button" data-faculty="${escapeHtml(entry.lookupName)}" onclick="showFacultyModal(this.dataset.faculty)">
+                    <span class="faculty-color-bar" style="background:${escapeHtml(entry.color)};"></span>
+                    <span class="faculty-legend-name">${escapeHtml(entry.displayName)}</span>
+                    <span class="faculty-legend-meta">${entry.sections} sec | ${entry.credits} cr</span>
+                </button>
+            `).join('');
+
+            legendEl.innerHTML = `
+                <div class="faculty-legend-header">
+                    <strong>Faculty Key</strong>
+                    <span>${entries.length} faculty | ${totalSections} sections | ${escapeHtml(currentAcademicYear)}</span>
+                </div>
+                <div class="faculty-legend-list">${chips}</div>
+            `;
         }
 
         // Navigation accordion toggle
@@ -3953,8 +4190,9 @@
             const prefsEl = document.getElementById('facultyModalPreferences');
 
             // Set faculty name with color
-            const facultyInfo = facultyColors[facultyName] || { color: '#6b7280', name: facultyName };
-            nameEl.textContent = facultyInfo.name || facultyName;
+            const canonicalName = getCanonicalFacultyName(facultyName);
+            const facultyInfo = facultyColors[canonicalName] || facultyColors[facultyName] || { color: '#6b7280', name: canonicalName };
+            nameEl.textContent = facultyInfo.name || canonicalName;
             nameEl.style.color = facultyInfo.color;
 
             // Get current schedule from scheduleData
@@ -3962,17 +4200,15 @@
             if (typeof scheduleData !== 'undefined') {
                 const quarters = ['fall', 'winter', 'spring'];
                 quarters.forEach(quarter => {
-                    if (scheduleData[quarter]) {
-                        scheduleData[quarter].forEach(course => {
-                            if (course.instructor && (course.instructor.includes(facultyName) ||
-                                (facultyInfo.name && course.instructor.includes(facultyInfo.name)))) {
-                                facultyCourses.push({
-                                    ...course,
-                                    quarter: quarter.charAt(0).toUpperCase() + quarter.slice(1)
-                                });
-                            }
-                        });
-                    }
+                    const quarterCourses = flattenQuarterData(scheduleData[quarter] || {});
+                    quarterCourses.forEach(course => {
+                        if (getCanonicalFacultyName(course.instructor) === canonicalName) {
+                            facultyCourses.push({
+                                ...course,
+                                quarter: quarter.charAt(0).toUpperCase() + quarter.slice(1)
+                            });
+                        }
+                    });
                 });
             }
 
@@ -3981,8 +4217,8 @@
                 scheduleEl.innerHTML = facultyCourses.map(course => `
                     <div class="faculty-course-item">
                         <span class="course-code">${course.code}</span>
-                        <span class="course-title">${course.title || ''}</span>
-                        <span class="course-details">${course.quarter} | ${course.days || ''} ${course.time || ''}</span>
+                        <span class="course-title">${course.title || course.name || ''}</span>
+                        <span class="course-details">${course.quarter} | ${course.day || course.days || ''} ${course.time || ''}</span>
                     </div>
                 `).join('');
             } else {
@@ -3992,18 +4228,31 @@
             // Calculate workload stats
             const totalCredits = facultyCourses.reduce((sum, c) => sum + (parseInt(c.credits) || 5), 0);
             const sectionCount = facultyCourses.length;
+            const setupRecord = getFacultySetupRecord(canonicalName, currentAcademicYear);
             statsEl.innerHTML = `
                 <div class="stat-item"><span class="stat-label">Total Sections:</span> <span class="stat-value">${sectionCount}</span></div>
                 <div class="stat-item"><span class="stat-label">Total Credits:</span> <span class="stat-value">${totalCredits}</span></div>
+                <div class="stat-item"><span class="stat-label">Role:</span> <span class="stat-value">${escapeHtml(setupRecord?.role || 'Not set')}</span></div>
             `;
 
-            // Preferences placeholder - can be loaded from scheduling-rules.json
-            prefsEl.innerHTML = `
-                <div class="faculty-tags">
-                    <span class="pref-tag">See Constraints Dashboard for details</span>
-                </div>
-                <a href="pages/constraints-dashboard.html" class="pref-link">Manage Preferences →</a>
-            `;
+            if (setupRecord) {
+                prefsEl.innerHTML = `
+                    <div class="faculty-tags">
+                        <span class="pref-tag">FTE: ${escapeHtml(setupRecord.ftePercent || '100')}%</span>
+                        <span class="pref-tag">Annual Target: ${escapeHtml(setupRecord.annualTargetCredits || '45')} cr</span>
+                        <span class="pref-tag">Release: ${escapeHtml(setupRecord.releaseCredits || '0')} cr${setupRecord.releasePercent !== undefined && setupRecord.releasePercent !== null ? ` (${escapeHtml(setupRecord.releasePercent)}%)` : ''}</span>
+                        ${setupRecord.releaseReason ? `<span class="pref-tag">${escapeHtml(setupRecord.releaseReason)}</span>` : ''}
+                    </div>
+                    <a href="pages/academic-year-setup.html" class="pref-link">Edit Academic Year Inputs →</a>
+                `;
+            } else {
+                prefsEl.innerHTML = `
+                    <div class="faculty-tags">
+                        <span class="pref-tag">No AY setup record found for ${escapeHtml(currentAcademicYear)}</span>
+                    </div>
+                    <a href="pages/academic-year-setup.html" class="pref-link">Add Faculty Inputs →</a>
+                `;
+            }
 
             overlay.classList.add('visible');
         }
@@ -4291,49 +4540,12 @@
             }
         };
 
-        const conflictData = {
-            spring: [
-                {
-                    time: 'Tuesday & Thursday, 10:00 AM - 12:00 PM',
-                    severity: 'critical',
-                    courses: ['DESN 379 - Web Dev 2', 'DESN 401 - Imaginary Worlds', 'DESN 463 - Community Design'],
-                    impact: 'Students cannot take multiple upper-division electives simultaneously',
-                    affected: 'High'
-                }
-            ],
-            fall: [
-                {
-                    time: 'Monday & Wednesday, 10:00 AM - 12:00 PM',
-                    severity: 'high',
-                    courses: ['DESN 368 - Code + Design 1', 'DESN 490 - Capstone'],
-                    impact: 'Seniors in code track cannot complete both courses',
-                    affected: 'High'
-                },
-                {
-                    time: 'Monday & Wednesday, 1:00 PM - 3:00 PM',
-                    severity: 'medium',
-                    courses: ['DESN 338 - UX 1', 'DESN 463 - Community Design', 'DESN 301 - Visual Storytelling'],
-                    impact: 'UX track students limited in elective choices',
-                    affected: 'Medium'
-                }
-            ],
-            winter: [
-                {
-                    time: 'Monday & Wednesday, 1:00 PM - 3:00 PM',
-                    severity: 'critical',
-                    courses: ['DESN 348 - UX 2', 'DESN 480 - Professional Practice'],
-                    impact: 'Seniors pursuing UX minor must choose between DESN 348 (required for UX minor) and DESN 480 (required to graduate). This prevents seniors from completing both the UX minor and graduation requirements in the same quarter.',
-                    affected: 'High'
-                },
-                {
-                    time: 'Tuesday & Thursday, 10:00 AM - 12:00 PM',
-                    severity: 'high',
-                    courses: ['DESN 369 - Web Dev 1', 'DESN 490 - Capstone'],
-                    impact: 'Web development students delayed in capstone',
-                    affected: 'Medium'
-                }
-            ]
+        let conflictData = {
+            fall: [],
+            winter: [],
+            spring: []
         };
+        let annualConflictInsights = [];
 
         const recommendations = {
             spring: [
@@ -4345,9 +4557,9 @@
             ],
             fall: [
                 {
-                    priority: 'high',
-                    title: 'Add Second Capstone Section',
-                    description: 'Offer DESN 490 at Tuesday/Thursday 1-3 PM to allow seniors flexibility in completing degree requirements.'
+                    priority: 'medium',
+                    title: 'Monitor Capstone Distribution Across Quarters',
+                    description: 'DESN 490 can be completed across Fall, Winter, or Spring. Keep section placement balanced so seniors can sequence code-track courses without bottlenecks.'
                 }
             ],
             winter: [
@@ -4582,6 +4794,7 @@
 
             // Setup drag-and-drop after grid is rendered
             setupDragAndDrop();
+            renderFacultyLegend();
         }
 
         // ============================================
@@ -5245,129 +5458,646 @@
             analyticsPanel.appendChild(container);
         }
 
+        const CONFLICT_QUARTERS = ['fall', 'winter', 'spring'];
+        const CONFLICT_QUARTER_LABELS = {
+            fall: 'Fall',
+            winter: 'Winter',
+            spring: 'Spring'
+        };
+        const CONFLICT_SEVERITY_RANK = {
+            critical: 3,
+            high: 2,
+            medium: 1
+        };
+
+        function getConflictSeverityRank(severity) {
+            return CONFLICT_SEVERITY_RANK[String(severity || '').toLowerCase()] || 0;
+        }
+
+        function extractConflictCourseCode(courseLabel) {
+            const match = String(courseLabel || '').match(/[A-Z]{2,5}\s\d{3}[A-Z]?/);
+            return match ? match[0] : null;
+        }
+
+        function getConflictPatternLabel(conflict) {
+            const codes = (conflict.courses || [])
+                .map(extractConflictCourseCode)
+                .filter(Boolean);
+
+            if (codes.length) {
+                return [...new Set(codes)].sort().join(' + ');
+            }
+
+            return conflict.time || 'Unlabeled conflict pattern';
+        }
+
+        function normalizeCourseCode(courseCode) {
+            return String(courseCode || '')
+                .toUpperCase()
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+
+        function getCourseDisplayLabel(course) {
+            const code = normalizeCourseCode(course.code);
+            const title = String(course.name || course.title || '').trim();
+            return title ? `${code} - ${title}` : code;
+        }
+
+        function isSchedulableDay(day) {
+            return day === 'MW' || day === 'TR';
+        }
+
+        function getQuarterCourses(quarter) {
+            return flattenQuarterData(scheduleData[quarter] || {}).map((course) => ({
+                ...course,
+                code: normalizeCourseCode(course.code),
+                credits: Number(course.credits) || 5
+            }));
+        }
+
+        function formatConflictSlot(day, time) {
+            const dayLabel = day === 'MW'
+                ? 'Monday & Wednesday'
+                : day === 'TR'
+                    ? 'Tuesday & Thursday'
+                    : day;
+            return `${dayLabel}, ${formatTime(time)}`;
+        }
+
+        function createConflictEntry({
+            severity = 'medium',
+            time = '',
+            courses = [],
+            impact = '',
+            affected = 'Medium',
+            source = 'computed',
+            meta = {}
+        }) {
+            return {
+                severity: String(severity || 'medium').toLowerCase(),
+                time,
+                courses,
+                impact,
+                affected,
+                source,
+                ...meta
+            };
+        }
+
+        function dedupeConflicts(conflicts) {
+            const seen = new Set();
+            const deduped = [];
+
+            conflicts.forEach((conflict) => {
+                const key = [
+                    conflict.source || '',
+                    conflict.severity || '',
+                    conflict.title || '',
+                    conflict.time || '',
+                    (conflict.courses || []).slice().sort().join('|'),
+                    conflict.impact || '',
+                    conflict.description || ''
+                ].join('::');
+
+                if (seen.has(key)) return;
+                seen.add(key);
+                deduped.push(conflict);
+            });
+
+            return deduped;
+        }
+
+        function sortConflicts(conflicts) {
+            return [...conflicts].sort((a, b) => {
+                const severityDelta = getConflictSeverityRank(b.severity) - getConflictSeverityRank(a.severity);
+                if (severityDelta !== 0) return severityDelta;
+                const timeA = a.time || '';
+                const timeB = b.time || '';
+                if (timeA !== timeB) return timeA.localeCompare(timeB);
+                const detailA = a.impact || a.description || a.title || '';
+                const detailB = b.impact || b.description || b.title || '';
+                return detailA.localeCompare(detailB);
+            });
+        }
+
+        function buildPairingConflicts(quarterCourses) {
+            const conflicts = [];
+            const slotMap = new Map();
+            const commonPairings = (typeof ConflictEngine !== 'undefined' && Array.isArray(ConflictEngine.COMMON_PAIRINGS))
+                ? ConflictEngine.COMMON_PAIRINGS
+                : [];
+
+            quarterCourses
+                .filter((course) => isSchedulableDay(course.day) && course.time)
+                .forEach((course) => {
+                    const key = `${course.day}|${course.time}`;
+                    if (!slotMap.has(key)) slotMap.set(key, []);
+                    slotMap.get(key).push(course);
+                });
+
+            slotMap.forEach((slotCourses, slotKey) => {
+                if (slotCourses.length < 2) return;
+
+                const codesInSlot = new Set(slotCourses.map((course) => normalizeCourseCode(course.code)));
+                const pairMatches = commonPairings.filter(([first, second]) =>
+                    codesInSlot.has(normalizeCourseCode(first)) && codesInSlot.has(normalizeCourseCode(second))
+                );
+
+                if (!pairMatches.length) return;
+
+                const matchedCodes = new Set(pairMatches.flat().map(normalizeCourseCode));
+                const matchedCourses = slotCourses.filter((course) => matchedCodes.has(normalizeCourseCode(course.code)));
+
+                const has400Level = Array.from(matchedCodes).some((code) => {
+                    const match = code.match(/\b(\d{3})\b/);
+                    return match ? Number(match[1]) >= 400 : false;
+                });
+
+                const [day, time] = slotKey.split('|');
+                const pairText = pairMatches
+                    .map(([first, second]) => `${normalizeCourseCode(first)} + ${normalizeCourseCode(second)}`)
+                    .join('; ');
+
+                conflicts.push(createConflictEntry({
+                    severity: has400Level ? 'critical' : pairMatches.length > 1 ? 'high' : 'medium',
+                    time: formatConflictSlot(day, time),
+                    courses: matchedCourses.map(getCourseDisplayLabel),
+                    impact: `Courses commonly taken together overlap in one slot: ${pairText}.`,
+                    affected: pairMatches.length > 1 ? 'High' : 'Medium',
+                    source: 'pathway-pairing',
+                    meta: {
+                        dayPattern: day,
+                        timeSlot: time
+                    }
+                }));
+            });
+
+            return conflicts;
+        }
+
+        function buildFacultyDoubleBookConflicts(quarterCourses) {
+            const conflicts = [];
+            const byInstructorSlot = new Map();
+
+            quarterCourses
+                .filter((course) =>
+                    isSchedulableDay(course.day)
+                    && course.time
+                    && course.instructor
+                    && getCanonicalFacultyName(course.instructor) !== 'TBD'
+                )
+                .forEach((course) => {
+                    const instructor = getCanonicalFacultyName(course.instructor);
+                    const key = `${instructor}|${course.day}|${course.time}`;
+                    if (!byInstructorSlot.has(key)) byInstructorSlot.set(key, []);
+                    byInstructorSlot.get(key).push(course);
+                });
+
+            byInstructorSlot.forEach((slotCourses, key) => {
+                if (slotCourses.length < 2) return;
+                const rooms = new Set(slotCourses.map((course) => course.room));
+                if (rooms.size < 2) return;
+
+                const [instructor, day, time] = key.split('|');
+                conflicts.push(createConflictEntry({
+                    severity: 'critical',
+                    time: formatConflictSlot(day, time),
+                    courses: slotCourses.map(getCourseDisplayLabel),
+                    impact: `${instructor} is double-booked in different rooms at the same time.`,
+                    affected: 'High',
+                    source: 'faculty-double-book',
+                    meta: {
+                        dayPattern: day,
+                        timeSlot: time,
+                        instructor
+                    }
+                }));
+            });
+
+            return conflicts;
+        }
+
+        function buildRoomDoubleBookConflicts(quarterCourses) {
+            const conflicts = [];
+            const byRoomSlot = new Map();
+
+            quarterCourses
+                .filter((course) =>
+                    isSchedulableDay(course.day)
+                    && course.time
+                    && course.room
+                    && course.room !== 'ONLINE'
+                    && course.room !== 'ARRANGED'
+                )
+                .forEach((course) => {
+                    const key = `${course.room}|${course.day}|${course.time}`;
+                    if (!byRoomSlot.has(key)) byRoomSlot.set(key, []);
+                    byRoomSlot.get(key).push(course);
+                });
+
+            byRoomSlot.forEach((slotCourses, key) => {
+                if (slotCourses.length < 2) return;
+                const [room, day, time] = key.split('|');
+                conflicts.push(createConflictEntry({
+                    severity: 'critical',
+                    time: formatConflictSlot(day, time),
+                    courses: slotCourses.map(getCourseDisplayLabel),
+                    impact: `Room ${room} is double-booked for the same time slot.`,
+                    affected: 'High',
+                    source: 'room-double-book',
+                    meta: {
+                        dayPattern: day,
+                        timeSlot: time,
+                        room
+                    }
+                }));
+            });
+
+            return conflicts;
+        }
+
+        function buildAySetupConflicts(quarterCoursesMap) {
+            const empty = {
+                byQuarter: { fall: [], winter: [], spring: [] },
+                annualIssues: []
+            };
+
+            if (typeof ConflictEngine === 'undefined' || typeof ConflictEngine.evaluateAySetup !== 'function') {
+                return empty;
+            }
+
+            const analysis = ConflictEngine.evaluateAySetup(
+                quarterCoursesMap,
+                readAySetupDataForYear(currentAcademicYear),
+                {
+                    academicYear: currentAcademicYear,
+                    canonicalizeFacultyName: getCanonicalFacultyName
+                }
+            );
+
+            const mapIssueToConflictEntry = (issue, quarter) => {
+                const displaySeverity = issue.severity === 'critical'
+                    ? 'critical'
+                    : issue.priority === 'high'
+                        ? 'high'
+                        : 'medium';
+                const mappedCourses = (issue.courses || []).map((course) => {
+                    if (typeof course === 'string') return course;
+                    return getCourseDisplayLabel({
+                        code: course.code,
+                        name: course.title
+                    });
+                }).filter(Boolean);
+
+                return createConflictEntry({
+                    severity: displaySeverity,
+                    time: issue.title || `${CONFLICT_QUARTER_LABELS[quarter]} AY setup`,
+                    courses: mappedCourses,
+                    impact: issue.description || 'Detected an AY setup mismatch.',
+                    affected: issue.priority === 'high' || issue.severity === 'critical' ? 'High' : 'Medium',
+                    source: 'ay-setup'
+                });
+            };
+
+            const byQuarter = {
+                fall: [],
+                winter: [],
+                spring: []
+            };
+            CONFLICT_QUARTERS.forEach((quarter) => {
+                byQuarter[quarter] = (analysis.byQuarter?.[quarter] || []).map((issue) =>
+                    mapIssueToConflictEntry(issue, quarter)
+                );
+            });
+
+            const annualIssues = (analysis.annualIssues || []).map((issue) => ({
+                severity: issue.severity === 'critical'
+                    ? 'critical'
+                    : issue.priority === 'high'
+                        ? 'high'
+                        : 'medium',
+                title: issue.title || 'AY Setup Check',
+                description: issue.description || 'Detected an AY setup mismatch.',
+                source: 'ay-setup'
+            }));
+
+            return {
+                byQuarter,
+                annualIssues: sortConflicts(dedupeConflicts(annualIssues))
+            };
+        }
+
+        function refreshConflictData() {
+            const generated = {
+                fall: [],
+                winter: [],
+                spring: []
+            };
+            const quarterCoursesMap = {};
+
+            CONFLICT_QUARTERS.forEach((quarter) => {
+                const quarterCourses = getQuarterCourses(quarter);
+                quarterCoursesMap[quarter] = quarterCourses;
+
+                generated[quarter].push(...buildPairingConflicts(quarterCourses));
+                generated[quarter].push(...buildFacultyDoubleBookConflicts(quarterCourses));
+                generated[quarter].push(...buildRoomDoubleBookConflicts(quarterCourses));
+            });
+
+            const ayChecks = buildAySetupConflicts(quarterCoursesMap);
+            CONFLICT_QUARTERS.forEach((quarter) => {
+                generated[quarter].push(...(ayChecks.byQuarter[quarter] || []));
+                generated[quarter] = sortConflicts(dedupeConflicts(generated[quarter]));
+            });
+
+            conflictData = generated;
+            annualConflictInsights = ayChecks.annualIssues || [];
+        }
+
+        function getAnnualConflictPatterns() {
+            const patterns = new Map();
+
+            CONFLICT_QUARTERS.forEach((quarter) => {
+                const quarterConflicts = (conflictData[quarter] || []).filter((conflict) => conflict.source !== 'ay-setup');
+                quarterConflicts.forEach((conflict) => {
+                    const patternLabel = getConflictPatternLabel(conflict);
+                    if (!patterns.has(patternLabel)) {
+                        patterns.set(patternLabel, {
+                            label: patternLabel,
+                            quarters: new Set(),
+                            count: 0,
+                            severity: (conflict.severity || 'medium').toLowerCase(),
+                            impact: conflict.impact || ''
+                        });
+                    }
+
+                    const pattern = patterns.get(patternLabel);
+                    pattern.quarters.add(quarter);
+                    pattern.count += 1;
+
+                    if (getConflictSeverityRank(conflict.severity) > getConflictSeverityRank(pattern.severity)) {
+                        pattern.severity = (conflict.severity || 'medium').toLowerCase();
+                    }
+                });
+            });
+
+            return Array.from(patterns.values()).sort((a, b) => {
+                if (b.count !== a.count) return b.count - a.count;
+                const severityDelta = getConflictSeverityRank(b.severity) - getConflictSeverityRank(a.severity);
+                if (severityDelta !== 0) return severityDelta;
+                return a.label.localeCompare(b.label);
+            });
+        }
+
+        function renderAnnualConflictSummary(activeQuarter) {
+            const summaryEl = document.getElementById('annualConflictSummary');
+            if (!summaryEl) return;
+
+            const totalYearConflicts = CONFLICT_QUARTERS.reduce(
+                (sum, quarterKey) => sum + ((conflictData[quarterKey] || []).length),
+                0
+            );
+            const quarterConflicts = (conflictData[activeQuarter] || []).length;
+            const patterns = getAnnualConflictPatterns();
+            const recurringPatterns = patterns.filter((pattern) => pattern.quarters.size > 1).length;
+
+            while (summaryEl.firstChild) {
+                summaryEl.removeChild(summaryEl.firstChild);
+            }
+
+            const header = document.createElement('div');
+            header.className = 'annual-conflict-header';
+
+            const title = document.createElement('strong');
+            title.textContent = 'Whole-Year Conflict Patterns';
+            header.appendChild(title);
+
+            const stats = document.createElement('div');
+            stats.className = 'annual-conflict-stats';
+            [
+                `${totalYearConflicts} annual conflicts`,
+                `${patterns.length} unique patterns`,
+                `${recurringPatterns} recurring`,
+                `${annualConflictInsights.length} AY setup issues`,
+                `${quarterConflicts} in ${CONFLICT_QUARTER_LABELS[activeQuarter] || activeQuarter}`
+            ].forEach((label) => {
+                const chip = document.createElement('span');
+                chip.className = 'annual-conflict-stat';
+                chip.textContent = label;
+                stats.appendChild(chip);
+            });
+            header.appendChild(stats);
+            summaryEl.appendChild(header);
+
+            if (patterns.length === 0 && annualConflictInsights.length === 0) {
+                const empty = document.createElement('p');
+                empty.className = 'no-conflicts-quarter';
+                empty.textContent = 'No major conflict patterns across the academic year.';
+                summaryEl.appendChild(empty);
+                return;
+            }
+
+            const patternList = document.createElement('div');
+            patternList.className = 'annual-pattern-list';
+
+            patterns.slice(0, 5).forEach((pattern) => {
+                const item = document.createElement('div');
+                item.className = `annual-pattern-item ${pattern.severity}`;
+
+                const itemTitle = document.createElement('div');
+                itemTitle.className = 'annual-pattern-title';
+                itemTitle.textContent = pattern.label;
+
+                const itemMeta = document.createElement('div');
+                itemMeta.className = 'annual-pattern-meta';
+                const quarterLabels = Array.from(pattern.quarters)
+                    .map((quarterKey) => CONFLICT_QUARTER_LABELS[quarterKey] || quarterKey)
+                    .sort()
+                    .join(', ');
+                itemMeta.textContent = `Quarters: ${quarterLabels} | Frequency: ${pattern.count}`;
+
+                item.appendChild(itemTitle);
+                item.appendChild(itemMeta);
+                patternList.appendChild(item);
+            });
+
+            annualConflictInsights.forEach((issue) => {
+                const item = document.createElement('div');
+                item.className = `annual-pattern-item ${issue.severity || 'medium'}`;
+
+                const itemTitle = document.createElement('div');
+                itemTitle.className = 'annual-pattern-title';
+                itemTitle.textContent = issue.title;
+
+                const itemMeta = document.createElement('div');
+                itemMeta.className = 'annual-pattern-meta';
+                itemMeta.textContent = issue.description;
+
+                item.appendChild(itemTitle);
+                item.appendChild(itemMeta);
+                patternList.appendChild(item);
+            });
+
+            summaryEl.appendChild(patternList);
+        }
+
+        function createConflictItem(conflict) {
+            const item = document.createElement('div');
+            item.className = 'conflict-item ' + conflict.severity;
+
+            const header = document.createElement('div');
+            header.className = 'conflict-header';
+
+            const timeSpan = document.createElement('span');
+            timeSpan.className = 'conflict-time';
+            timeSpan.textContent = conflict.time;
+
+            const severityBadge = document.createElement('span');
+            severityBadge.className = 'severity-badge ' + conflict.severity;
+            severityBadge.textContent = conflict.severity;
+
+            header.appendChild(timeSpan);
+            header.appendChild(severityBadge);
+
+            const impactP = document.createElement('p');
+            impactP.style.cssText = 'margin: 10px 0; color: #495057;';
+            impactP.textContent = conflict.impact;
+
+            const affectedP = document.createElement('p');
+            affectedP.style.cssText = 'margin: 10px 0; color: #6c757d; font-size: 0.9em;';
+            const affectedStrong = document.createElement('strong');
+            affectedStrong.textContent = 'Students Affected:';
+            affectedP.appendChild(affectedStrong);
+            affectedP.appendChild(document.createTextNode(' ' + conflict.affected));
+
+            const coursesDiv = document.createElement('div');
+            coursesDiv.className = 'conflict-courses';
+            (conflict.courses || []).forEach(course => {
+                const tag = document.createElement('span');
+                tag.className = 'conflict-course-tag';
+                tag.textContent = course;
+                coursesDiv.appendChild(tag);
+            });
+
+            item.appendChild(header);
+            item.appendChild(impactP);
+            item.appendChild(affectedP);
+            item.appendChild(coursesDiv);
+            return item;
+        }
+
         function renderConflicts(quarter) {
             const conflictsList = document.getElementById('conflictsList');
-            const conflicts = conflictData[quarter] || [];
+            const activeQuarter = CONFLICT_QUARTERS.includes(quarter) ? quarter : 'spring';
+            const quarterOrder = [activeQuarter, ...CONFLICT_QUARTERS.filter((key) => key !== activeQuarter)];
 
-            // Clear safely
+            refreshConflictData();
+            renderAnnualConflictSummary(activeQuarter);
+
             while (conflictsList.firstChild) {
                 conflictsList.removeChild(conflictsList.firstChild);
             }
 
-            if (conflicts.length === 0) {
-                const noConflicts = document.createElement('p');
-                noConflicts.style.cssText = 'color: #51cf66; font-weight: 600;';
-                noConflicts.textContent = 'No major conflicts detected for this quarter!';
-                conflictsList.appendChild(noConflicts);
-                return;
-            }
+            quarterOrder.forEach((quarterKey) => {
+                const group = document.createElement('section');
+                group.className = 'conflict-quarter-group';
 
-            conflicts.forEach(conflict => {
-                const item = document.createElement('div');
-                item.className = 'conflict-item ' + conflict.severity;
+                const title = document.createElement('h3');
+                title.className = 'conflict-quarter-title';
+                title.textContent = `${CONFLICT_QUARTER_LABELS[quarterKey]} Quarter`;
 
-                const header = document.createElement('div');
-                header.className = 'conflict-header';
+                if (quarterKey === activeQuarter) {
+                    const currentTag = document.createElement('span');
+                    currentTag.className = 'current-quarter-tag';
+                    currentTag.textContent = 'Current View';
+                    title.appendChild(currentTag);
+                }
 
-                const timeSpan = document.createElement('span');
-                timeSpan.className = 'conflict-time';
-                timeSpan.textContent = conflict.time;
+                group.appendChild(title);
 
-                const severityBadge = document.createElement('span');
-                severityBadge.className = 'severity-badge ' + conflict.severity;
-                severityBadge.textContent = conflict.severity;
+                const conflicts = conflictData[quarterKey] || [];
+                if (!conflicts.length) {
+                    const noConflicts = document.createElement('p');
+                    noConflicts.className = 'no-conflicts-quarter';
+                    noConflicts.textContent = `No major conflicts detected in ${CONFLICT_QUARTER_LABELS[quarterKey]}.`;
+                    group.appendChild(noConflicts);
+                } else {
+                    conflicts.forEach((conflict) => {
+                        group.appendChild(createConflictItem(conflict));
+                    });
+                }
 
-                header.appendChild(timeSpan);
-                header.appendChild(severityBadge);
-
-                const impactP = document.createElement('p');
-                impactP.style.cssText = 'margin: 10px 0; color: #495057;';
-                impactP.textContent = conflict.impact;
-
-                const affectedP = document.createElement('p');
-                affectedP.style.cssText = 'margin: 10px 0; color: #6c757d; font-size: 0.9em;';
-                const affectedStrong = document.createElement('strong');
-                affectedStrong.textContent = 'Students Affected:';
-                affectedP.appendChild(affectedStrong);
-                affectedP.appendChild(document.createTextNode(' ' + conflict.affected));
-
-                const coursesDiv = document.createElement('div');
-                coursesDiv.className = 'conflict-courses';
-                conflict.courses.forEach(course => {
-                    const tag = document.createElement('span');
-                    tag.className = 'conflict-course-tag';
-                    tag.textContent = course;
-                    coursesDiv.appendChild(tag);
-                });
-
-                item.appendChild(header);
-                item.appendChild(impactP);
-                item.appendChild(affectedP);
-                item.appendChild(coursesDiv);
-                conflictsList.appendChild(item);
+                conflictsList.appendChild(group);
             });
         }
 
         function renderConflictSolver(quarter) {
             const solverList = document.getElementById('conflictSolverList');
-            const data = scheduleData[quarter];
-
-            // Build schedule matrix from current quarter data
-            const scheduleMatrix = {};
+            const data = scheduleData[quarter] || {};
             const days = ['MW', 'TR'];
             const times = ['10:00-12:20', '13:00-15:20', '16:00-18:20'];
+            const rooms = ['206', '209', '210', '212', 'CEB 102', 'CEB 104'];
 
-            days.forEach(day => {
-                times.forEach(time => {
-                    const key = `${day} ${time}`;
-                    const courses = data[day] && data[day][time] ? data[day][time] : [];
-                    scheduleMatrix[key] = courses.map(c => `${c.code} (${c.room})`);
-                });
-            });
-
-            // Define conflicts that need automated resolution
-            const conflictsToSolve = [];
-
-            // Winter: DESN 348/480 conflict
-            if (quarter === 'winter') {
-                conflictsToSolve.push({
-                    name: 'DESN 348 / DESN 480 Conflict',
-                    description: 'Both courses scheduled MW 13:00-15:00. Seniors cannot complete UX minor and graduate on time.',
-                    affectedStudents: 17,
-                    currentSlot: 'MW 13:00-15:00',
-                    courseToMove: 'DESN 480 (Professional Practice)',
-                    instructor: 'C.Manikoth',
-                    alternativeSlots: [
-                        'TR 16:00-18:00',
-                        'MW 16:00-18:00',
-                        'TR 13:00-15:00',
-                        'TR 10:00-12:00'
-                    ]
-                });
-            }
-
-            // Spring: TR 10-12 three-way conflict
-            if (quarter === 'spring') {
-                conflictsToSolve.push({
-                    name: 'Spring TR 10-12 Three-Way Conflict',
-                    description: 'DESN 379, DESN 401, and DESN 463 all at TR 10:00-12:00. Students cannot take multiple desired upper-division courses.',
-                    affectedStudents: 46,
-                    currentSlot: 'TR 10:00-12:00',
-                    courseToMove: 'DESN 463 (Community Design)',
-                    instructor: 'S.Durr',
-                    alternativeSlots: [
-                        'MW 13:00-15:00',
-                        'MW 16:00-18:00',
-                        'TR 13:00-15:00',
-                        'TR 16:00-18:00'
-                    ]
-                });
-            }
+            refreshConflictData();
 
             // Clear safely
             while (solverList.firstChild) {
                 solverList.removeChild(solverList.firstChild);
             }
+
+            // Build slot map for recommendation analysis
+            const scheduleMatrix = {};
+            days.forEach((day) => {
+                times.forEach((time) => {
+                    const key = `${day} ${time}`;
+                    const courses = data[day]?.[time] || [];
+                    scheduleMatrix[key] = courses.map((course) => ({ ...course, day, time }));
+                });
+            });
+
+            const quarterCourses = flattenQuarterData(data).map((course) => ({
+                ...course,
+                code: normalizeCourseCode(course.code)
+            }));
+
+            const conflictsToSolve = (conflictData[quarter] || [])
+                .filter((conflict) =>
+                    conflict.source !== 'ay-setup'
+                    && (conflict.severity === 'critical' || conflict.severity === 'high')
+                    && conflict.dayPattern
+                    && conflict.timeSlot
+                )
+                .map((conflict) => {
+                    const slotKey = `${conflict.dayPattern} ${conflict.timeSlot}`;
+                    const slotCourses = scheduleMatrix[slotKey] || [];
+                    const firstCourseCode = extractConflictCourseCode((conflict.courses || [])[0]);
+
+                    const moveCandidate = slotCourses.find((course) =>
+                        normalizeCourseCode(course.code) === normalizeCourseCode(firstCourseCode)
+                    ) || slotCourses[0] || quarterCourses.find((course) =>
+                        normalizeCourseCode(course.code) === normalizeCourseCode(firstCourseCode)
+                    ) || null;
+
+                    if (!moveCandidate) return null;
+
+                    const sourceLabelMap = {
+                        'pathway-pairing': 'Pathway conflict',
+                        'faculty-double-book': 'Faculty double-booking',
+                        'room-double-book': 'Room double-booking'
+                    };
+
+                    return {
+                        conflict,
+                        dayPattern: conflict.dayPattern,
+                        timeSlot: conflict.timeSlot,
+                        slotKey,
+                        slotCourses,
+                        moveCandidate,
+                        sourceLabel: sourceLabelMap[conflict.source] || 'Schedule conflict'
+                    };
+                })
+                .filter(Boolean);
 
             if (conflictsToSolve.length === 0) {
                 const noConflicts = document.createElement('p');
@@ -5377,41 +6107,53 @@
                 return;
             }
 
-            // Analyze solutions for each conflict
-            conflictsToSolve.forEach(conflict => {
-                const solutions = conflict.alternativeSlots.map(slot => {
-                    const existingCourses = scheduleMatrix[slot] || [];
-                    const roomsUsed = existingCourses.length;
-                    const roomsAvailable = 6 - roomsUsed;
+            conflictsToSolve.forEach((entry) => {
+                const movingInstructor = getCanonicalFacultyName(entry.moveCandidate.instructor || 'TBD');
+                const solutions = [];
 
-                    const wouldCreateConflict = roomsUsed >= 4;
-                    const hasSpace = roomsAvailable > 0;
+                days.forEach((day) => {
+                    times.forEach((time) => {
+                        if (day === entry.dayPattern && time === entry.timeSlot) return;
 
-                    const instructorConflict = existingCourses.some(course =>
-                        course.includes(conflict.instructor) ||
-                        course.includes(conflict.instructor.split('.')[1])
-                    );
+                        const slotKey = `${day} ${time}`;
+                        const existingCourses = scheduleMatrix[slotKey] || [];
+                        const usedRooms = new Set(existingCourses.map((course) => course.room).filter(Boolean));
+                        const availableRooms = rooms.filter((room) => !usedRooms.has(room));
+                        const instructorConflict = movingInstructor !== 'TBD' && existingCourses.some((course) =>
+                            getCanonicalFacultyName(course.instructor || 'TBD') === movingInstructor
+                        );
 
-                    let status = 'viable';
-                    let recommendation = '✅ RECOMMENDED';
+                        let status = 'viable';
+                        let recommendation = '✅ RECOMMENDED';
+                        if (instructorConflict) {
+                            status = 'blocked';
+                            recommendation = '❌ Instructor conflict';
+                        } else if (availableRooms.length === 0) {
+                            status = 'blocked';
+                            recommendation = '❌ No rooms available';
+                        } else if (existingCourses.length >= 4) {
+                            status = 'warning';
+                            recommendation = '⚠️ Dense slot, review impact';
+                        } else if (existingCourses.length <= 2) {
+                            recommendation = '✅ BEST OPTION';
+                        }
 
-                    if (instructorConflict) {
-                        status = 'blocked';
-                        recommendation = '❌ Instructor conflict';
-                    } else if (!hasSpace) {
-                        status = 'blocked';
-                        recommendation = '❌ No rooms available';
-                    } else if (wouldCreateConflict) {
-                        status = 'warning';
-                        recommendation = '⚠️ May create new conflict';
-                    } else if (roomsUsed <= 2) {
-                        recommendation = '✅ BEST OPTION';
-                    }
+                        solutions.push({
+                            slotKey,
+                            slotLabel: `${day} ${time}`,
+                            existingCourses,
+                            roomsAvailable: availableRooms.length,
+                            status,
+                            recommendation,
+                            instructorConflict
+                        });
+                    });
+                });
 
-                    return { slot, existingCourses, roomsAvailable, status, recommendation, instructorConflict };
-                }).sort((a, b) => {
-                    if (a.status === 'viable' && b.status !== 'viable') return -1;
-                    if (b.status === 'viable' && a.status !== 'viable') return 1;
+                const statusRank = { viable: 3, warning: 2, blocked: 1 };
+                solutions.sort((a, b) => {
+                    const rankDelta = (statusRank[b.status] || 0) - (statusRank[a.status] || 0);
+                    if (rankDelta !== 0) return rankDelta;
                     return b.roomsAvailable - a.roomsAvailable;
                 });
 
@@ -5419,24 +6161,15 @@
                 card.className = 'conflict-solution-card';
 
                 const title = document.createElement('h3');
-                title.textContent = conflict.name;
+                title.textContent = `${entry.sourceLabel}: ${formatConflictSlot(entry.dayPattern, entry.timeSlot)}`;
 
                 const infoP = document.createElement('p');
                 infoP.style.cssText = 'color: #666; margin-bottom: 15px;';
-                const impactStrong = document.createElement('strong');
-                impactStrong.textContent = 'Impact:';
-                infoP.appendChild(impactStrong);
-                infoP.appendChild(document.createTextNode(' ' + conflict.affectedStudents + ' students affected'));
-                infoP.appendChild(document.createElement('br'));
-                const issueStrong = document.createElement('strong');
-                issueStrong.textContent = 'Issue:';
-                infoP.appendChild(issueStrong);
-                infoP.appendChild(document.createTextNode(' ' + conflict.description));
-                infoP.appendChild(document.createElement('br'));
-                const slotStrong = document.createElement('strong');
-                slotStrong.textContent = 'Current Slot:';
-                infoP.appendChild(slotStrong);
-                infoP.appendChild(document.createTextNode(' ' + conflict.currentSlot));
+                infoP.innerHTML = `
+                    <strong>Issue:</strong> ${escapeHtml(entry.conflict.impact || 'Conflict detected')}<br>
+                    <strong>Students Affected:</strong> ${escapeHtml(entry.conflict.affected || 'Medium')}<br>
+                    <strong>Current Slot:</strong> ${escapeHtml(entry.slotKey)}
+                `;
 
                 const analysisH4 = document.createElement('h4');
                 analysisH4.style.cssText = 'margin-top: 15px; margin-bottom: 10px; color: #495057;';
@@ -5444,48 +6177,40 @@
 
                 const matrixP = document.createElement('p');
                 matrixP.style.cssText = 'font-size: 0.9em; color: #666; margin-bottom: 15px;';
-                matrixP.appendChild(document.createTextNode('Matrix analysis for moving '));
-                const courseStrong = document.createElement('strong');
-                courseStrong.textContent = conflict.courseToMove;
-                matrixP.appendChild(courseStrong);
-                matrixP.appendChild(document.createTextNode(' (' + conflict.instructor + '):'));
+                matrixP.innerHTML = `Matrix analysis for moving <strong>${escapeHtml(getCourseDisplayLabel(entry.moveCandidate))}</strong> (${escapeHtml(entry.moveCandidate.instructor || 'TBD')}):`;
 
                 card.appendChild(title);
                 card.appendChild(infoP);
                 card.appendChild(analysisH4);
                 card.appendChild(matrixP);
 
-                solutions.forEach(sol => {
+                solutions.slice(0, 6).forEach((solution) => {
                     const option = document.createElement('div');
-                    option.className = 'solution-option' + (sol.status === 'blocked' ? ' creates-conflict' : sol.status === 'warning' ? ' warning' : '');
+                    option.className = 'solution-option' + (solution.status === 'blocked' ? ' creates-conflict' : solution.status === 'warning' ? ' warning' : '');
 
                     const recDiv = document.createElement('div');
                     recDiv.className = 'solution-recommendation';
-                    recDiv.textContent = sol.recommendation + ' Move to ' + sol.slot;
+                    recDiv.textContent = `${solution.recommendation} Move to ${solution.slotLabel}`;
 
                     const detailsDiv = document.createElement('div');
                     detailsDiv.className = 'solution-details';
-                    const schedStrong = document.createElement('strong');
-                    schedStrong.textContent = 'Currently scheduled:';
-                    detailsDiv.appendChild(schedStrong);
-                    detailsDiv.appendChild(document.createTextNode(' ' + (sol.existingCourses.length > 0 ? sol.existingCourses.join(', ') : 'EMPTY SLOT')));
-                    detailsDiv.appendChild(document.createElement('br'));
-                    const roomsStrong = document.createElement('strong');
-                    roomsStrong.textContent = 'Rooms available:';
-                    detailsDiv.appendChild(roomsStrong);
-                    detailsDiv.appendChild(document.createTextNode(' ' + sol.roomsAvailable + ' of 6'));
-                    detailsDiv.appendChild(document.createElement('br'));
+                    const existingText = solution.existingCourses.length > 0
+                        ? solution.existingCourses.map((course) => `${normalizeCourseCode(course.code)} (${course.room || 'TBD'})`).join(', ')
+                        : 'EMPTY SLOT';
+                    detailsDiv.innerHTML = `
+                        <strong>Currently scheduled:</strong> ${escapeHtml(existingText)}<br>
+                        <strong>Rooms available:</strong> ${solution.roomsAvailable} of ${rooms.length}
+                    `;
 
-                    if (sol.instructorConflict) {
+                    if (solution.instructorConflict) {
                         const warnSpan = document.createElement('span');
                         warnSpan.style.color = '#ff6b6b';
-                        warnSpan.textContent = '⚠️ Instructor already teaching at this time';
+                        warnSpan.textContent = ' ⚠️ Instructor already teaching at this time';
                         detailsDiv.appendChild(warnSpan);
-                    }
-                    if (sol.status === 'viable' && sol.roomsAvailable >= 4) {
+                    } else if (solution.status === 'viable' && solution.roomsAvailable >= 4) {
                         const okSpan = document.createElement('span');
                         okSpan.style.color = '#51cf66';
-                        okSpan.textContent = '✓ Minimal impact, plenty of space';
+                        okSpan.textContent = ' ✓ Minimal impact, ample room capacity';
                         detailsDiv.appendChild(okSpan);
                     }
 
@@ -5500,7 +6225,48 @@
 
         function renderRecommendations(quarter) {
             const recList = document.getElementById('recommendationsList');
-            const recs = recommendations[quarter] || [];
+            refreshConflictData();
+            const quarterConflicts = conflictData[quarter] || [];
+            const dynamicRecs = [];
+
+            quarterConflicts.forEach((conflict) => {
+                if (conflict.source === 'ay-setup') {
+                    dynamicRecs.push({
+                        priority: conflict.severity === 'critical' ? 'critical' : 'high',
+                        title: `Align AY Setup: ${conflict.time}`,
+                        description: `${conflict.impact} Update AY setup targets or rebalance assignments to match planned workload.`
+                    });
+                    return;
+                }
+
+                const sourceAction = conflict.source === 'room-double-book'
+                    ? 'Adjust room assignments to remove overlap.'
+                    : conflict.source === 'faculty-double-book'
+                        ? 'Reassign instructor or move one section to an open slot.'
+                        : 'Move one of the overlapping pathway courses to an alternate slot.';
+
+                dynamicRecs.push({
+                    priority: conflict.severity === 'critical' ? 'critical' : conflict.severity === 'high' ? 'high' : 'medium',
+                    title: `Resolve ${conflict.time}`,
+                    description: `${conflict.impact} ${sourceAction}`
+                });
+            });
+
+            annualConflictInsights.forEach((issue) => {
+                dynamicRecs.push({
+                    priority: issue.severity === 'critical' ? 'critical' : issue.severity === 'high' ? 'high' : 'medium',
+                    title: issue.title,
+                    description: `${issue.description} Address this in Academic Year Setup to keep yearly assignments aligned.`
+                });
+            });
+
+            const seen = new Set();
+            const recs = dynamicRecs.filter((rec) => {
+                const key = `${rec.title}::${rec.description}`;
+                if (seen.has(key)) return false;
+                seen.add(key);
+                return true;
+            });
 
             // Clear safely
             while (recList.firstChild) {
@@ -5535,6 +6301,7 @@
 
         function updateStats(quarter) {
             const data = scheduleData[quarter];
+            refreshConflictData();
             const conflicts = conflictData[quarter] || [];
 
             let totalCourses = 0;
@@ -7497,6 +8264,11 @@
         // ============================================
 
         async function exportToGoogleSheets() {
+            if (window.location.hostname.endsWith('github.io')) {
+                showToast('Google Sheets export needs the Node API server and is unavailable on GitHub Pages.', 'error');
+                return;
+            }
+
             showToast('Exporting to Google Sheets...');
             
             try {
@@ -7578,20 +8350,60 @@
          * Get current schedule data from the grid
          */
         function getCurrentScheduleData() {
-            const courses = [];
-            // Get courses from the schedule grid (.course-block elements)
-            document.querySelectorAll('.course-block').forEach(block => {
-                courses.push({
-                    code: block.dataset.courseCode || '',
-                    section: '001',
-                    title: block.querySelector('.course-name')?.textContent?.trim()?.split(' ')[0] || '',
-                    instructor: block.querySelector('.instructor')?.textContent?.trim() || '',
-                    room: block.dataset.room || '',
-                    day: block.dataset.day || '',
-                    time: block.dataset.time || ''
-                });
+            const quarter = document.getElementById('quarterSelect')?.value || 'spring';
+            const quarterCourses = flattenQuarterData(scheduleData[quarter] || {});
+            return quarterCourses.map((course, index) => ({
+                code: normalizeCourseCode(course.code),
+                section: course.section || String(index + 1).padStart(3, '0'),
+                title: course.name || course.title || '',
+                instructor: course.instructor || 'TBD',
+                room: course.room || '',
+                day: course.day || '',
+                time: course.time || '',
+                credits: Number(course.credits) || 5
+            }));
+        }
+
+        function getScheduleByQuarterCourses() {
+            const quarterCourses = {};
+            CONFLICT_QUARTERS.forEach((quarter) => {
+                quarterCourses[quarter] = flattenQuarterData(scheduleData[quarter] || {}).map((course, index) => ({
+                    code: normalizeCourseCode(course.code),
+                    section: course.section || String(index + 1).padStart(3, '0'),
+                    title: course.name || course.title || '',
+                    instructor: course.instructor || 'TBD',
+                    room: course.room || '',
+                    day: course.day || '',
+                    time: course.time || '',
+                    credits: Number(course.credits) || 5
+                }));
             });
-            return courses;
+            return quarterCourses;
+        }
+
+        function ensureAySetupConstraint(constraints) {
+            const list = Array.isArray(constraints) ? [...constraints] : [];
+            const hasAyConstraint = list.some((constraint) => constraint.constraint_type === 'ay_setup_alignment');
+            if (hasAyConstraint) return list;
+
+            list.push({
+                id: 'local-ay-setup-alignment',
+                enabled: true,
+                constraint_type: 'ay_setup_alignment',
+                description: 'Academic Year Setup alignment for workload and adjunct targets',
+                rule_details: {
+                    annualOverloadWarning: 3,
+                    annualOverloadCritical: 8,
+                    annualUnderloadWarning: 6,
+                    quarterOverloadWarning: 2,
+                    quarterOverloadCritical: 5,
+                    quarterUnderloadWarning: 3,
+                    adjunctUnderloadWarning: 0.5,
+                    adjunctOverloadWarning: 2
+                }
+            });
+
+            return list;
         }
 
         // Winter 2026 enrollment data for predictions
@@ -7614,7 +8426,12 @@
             const content = document.getElementById('conflictResultsContent');
 
             // Get the currently selected quarter
-            const currentQuarter = document.getElementById('quarterSelect')?.value || 'Spring 2026';
+            const currentQuarter = document.getElementById('quarterSelect')?.value || 'spring';
+            const [startYearPart, endYearPart] = String(currentAcademicYear || '2025-26').split('-');
+            const quarterYear = currentQuarter === 'fall'
+                ? Number(startYearPart)
+                : Number(`20${endYearPart}`);
+            const currentQuarterDisplay = `${CONFLICT_QUARTER_LABELS[currentQuarter] || currentQuarter} ${quarterYear}`;
 
             // Show panel with loading state
             panel.style.display = 'flex';
@@ -7626,6 +8443,8 @@
 
             // Get all scheduled courses for the current quarter
             const courses = getCurrentScheduleData();
+            const scheduleByQuarter = getScheduleByQuarterCourses();
+            const aySetupData = readAySetupDataForYear(currentAcademicYear);
 
             // Load constraints from database (or fallback)
             let constraints;
@@ -7635,12 +8454,19 @@
                 console.warn('Failed to load constraints, using fallback:', err);
                 constraints = ConstraintsService.getFallbackConstraints();
             }
+            constraints = ensureAySetupConstraint(constraints);
 
             // Run the conflict engine
-            const results = ConflictEngine.evaluate(courses, constraints);
-            const conflicts = results.conflicts;
-            const warnings = results.warnings;
-            const suggestions = results.suggestions;
+            const results = ConflictEngine.evaluate(courses, constraints, {
+                currentQuarter,
+                academicYear: currentAcademicYear,
+                scheduleByQuarter,
+                aySetupData,
+                canonicalizeFacultyName: getCanonicalFacultyName
+            });
+            const conflicts = [...results.conflicts];
+            const warnings = [...results.warnings];
+            const suggestions = [...results.suggestions];
             const enrollmentInsights = [];
 
             // Enrollment-based predictions from Winter 2026 data
@@ -7725,7 +8551,7 @@
                 content.innerHTML = `
                     <div class="no-conflicts">
                         <div class="icon">✅</div>
-                        <h4>No Conflicts Detected in ${currentQuarter}</h4>
+                        <h4>No Conflicts Detected in ${currentQuarterDisplay}</h4>
                         <p>Your schedule looks good! No room or faculty conflicts found.</p>
                     </div>
                 `;
@@ -7736,7 +8562,7 @@
                 html += `
                     <div style="margin-bottom: 16px; padding: 12px; background: #1e293b; border-radius: 8px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                            <div style="font-weight: 600; color: #e2e8f0;">Analyzing: ${currentQuarter}</div>
+                            <div style="font-weight: 600; color: #e2e8f0;">Analyzing: ${currentQuarterDisplay}</div>
                             <div style="display: flex; align-items: center; gap: 6px;">
                                 <span style="color: #8b5cf6;">🎓 Pathway Health:</span>
                                 <span style="background: ${pathwayResults.pathwayHealth >= 80 ? '#10b981' : pathwayResults.pathwayHealth >= 60 ? '#f59e0b' : '#ef4444'}; color: white; padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 0.85em;">${pathwayResults.pathwayHealth}%</span>
@@ -7822,7 +8648,7 @@
                 // Enrollment insights section (Winter data to inform Spring planning)
                 if (enrollmentInsights.length > 0) {
                     html += `<h4 style="color: #3b82f6; margin: 16px 0 8px;">Predictions Based on Winter 2026 Enrollment</h4>
-                             <p style="color: #94a3b8; font-size: 0.85em; margin-bottom: 12px;">Using Winter enrollment data to inform ${currentQuarter} planning</p>`;
+                             <p style="color: #94a3b8; font-size: 0.85em; margin-bottom: 12px;">Using Winter enrollment data to inform ${currentQuarterDisplay} planning</p>`;
                     html += enrollmentInsights.map(e => `
                         <div class="conflict-item" style="border-left-color: ${e.type === 'high-demand' ? '#10b981' : e.type === 'low-enrollment' ? '#f59e0b' : '#3b82f6'};">
                             <h4>${e.type === 'high-demand' ? '📈' : e.type === 'low-enrollment' ? '📉' : 'ℹ️'} ${e.title}</h4>

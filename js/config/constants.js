@@ -13,9 +13,10 @@ const CONSTANTS = {
          * Regular courses use 1.0 multiplier
          */
         MULTIPLIERS: {
+            'DESN 399': 0.2,  // Independent Study
+            'DESN 491': 0.2,  // Senior Project
             'DESN 499': 0.2,  // Independent Study
             'DESN 495': 0.1,  // Internship
-            'DESN 491': 0.15, // Practicum
             DEFAULT: 1.0
         },
 

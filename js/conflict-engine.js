@@ -9,6 +9,12 @@ const ConflictEngine = (function() {
     const ROOMS = ['206', '207', '208', '209', '210', '212'];
     const TIME_SLOTS = ['10:00-12:00', '13:00-15:00', '16:00-18:00'];
     const DAY_PATTERNS = ['MW', 'TR'];
+    const AY_QUARTERS = ['fall', 'winter', 'spring'];
+    const AY_QUARTER_LABELS = {
+        fall: 'Fall',
+        winter: 'Winter',
+        spring: 'Spring'
+    };
     
     // Common course pairings that students typically take together
     // These are graduation pathway conflicts - courses in the same pathway/year
@@ -50,13 +56,327 @@ const ConflictEngine = (function() {
         ['DESN 369', 'DESN 469']
     ];
 
+    const AY_DEFAULT_THRESHOLDS = {
+        annualOverloadWarning: 3,
+        annualOverloadCritical: 8,
+        annualUnderloadWarning: 6,
+        quarterOverloadWarning: 2,
+        quarterOverloadCritical: 5,
+        quarterUnderloadWarning: 3,
+        adjunctUnderloadWarning: 0.5,
+        adjunctOverloadWarning: 2
+    };
+
+    function getIssueSeverityRank(severity) {
+        if (severity === 'critical') return 2;
+        if (severity === 'warning') return 1;
+        return 0;
+    }
+
+    function normalizeCourseCode(courseCode) {
+        return String(courseCode || '')
+            .toUpperCase()
+            .replace(/\s+/g, ' ')
+            .trim();
+    }
+
+    function normalizeFacultyName(name, canonicalizeFacultyName) {
+        const raw = String(name || '').trim();
+        if (!raw) return 'TBD';
+        if (typeof canonicalizeFacultyName === 'function') {
+            return canonicalizeFacultyName(raw);
+        }
+
+        const lower = raw.toLowerCase();
+        if (lower.includes('adjunct')) return 'Adjunct';
+        if (lower.includes('barton') || lower.includes('pettigrew') || lower.includes('online')) return 'Barton/Pettigrew';
+        if (lower.includes('tbd')) return 'TBD';
+        return raw;
+    }
+
+    function normalizeQuarterSchedule(scheduleByQuarter, canonicalizeFacultyName) {
+        const normalized = {
+            fall: [],
+            winter: [],
+            spring: []
+        };
+
+        AY_QUARTERS.forEach((quarter) => {
+            const quarterCourses = Array.isArray(scheduleByQuarter?.[quarter]) ? scheduleByQuarter[quarter] : [];
+            normalized[quarter] = quarterCourses.map((course) => ({
+                code: normalizeCourseCode(course.code),
+                title: String(course.title || course.name || '').trim(),
+                instructor: normalizeFacultyName(course.instructor, canonicalizeFacultyName),
+                room: String(course.room || '').trim(),
+                day: String(course.day || '').trim(),
+                time: String(course.time || '').trim(),
+                credits: Number(course.credits) || 5
+            }));
+        });
+
+        return normalized;
+    }
+
+    function sortAndDedupeIssues(issues) {
+        const deduped = [];
+        const seen = new Set();
+
+        issues.forEach((issue) => {
+            const key = [
+                issue.type || '',
+                issue.scope || '',
+                issue.quarter || '',
+                issue.title || '',
+                issue.description || '',
+                issue.severity || ''
+            ].join('::');
+
+            if (seen.has(key)) return;
+            seen.add(key);
+            deduped.push(issue);
+        });
+
+        deduped.sort((a, b) => {
+            const severityDelta = getIssueSeverityRank(b.severity) - getIssueSeverityRank(a.severity);
+            if (severityDelta !== 0) return severityDelta;
+            return String(a.title || '').localeCompare(String(b.title || ''));
+        });
+
+        return deduped;
+    }
+
+    function createAyIssue({
+        severity = 'warning',
+        priority = 'medium',
+        title = 'AY Setup Check',
+        description = '',
+        suggestion = 'Update AY Setup values or rebalance assignments to match planned workload.',
+        courses = [],
+        scope = 'quarter',
+        quarter = null
+    }) {
+        return {
+            type: 'ay-setup',
+            severity,
+            priority,
+            title,
+            description,
+            suggestion,
+            courses,
+            scope,
+            quarter
+        };
+    }
+
+    function mapQuarterCoursesToDisplay(courses) {
+        return (courses || []).map((course) => ({
+            code: normalizeCourseCode(course.code),
+            title: String(course.title || '').trim(),
+            instructor: String(course.instructor || '').trim(),
+            day: String(course.day || '').trim(),
+            time: String(course.time || '').trim(),
+            room: String(course.room || '').trim(),
+            credits: Number(course.credits) || 5
+        }));
+    }
+
+    function evaluateAySetup(scheduleByQuarter, aySetupData, options = {}) {
+        const byQuarter = {
+            fall: [],
+            winter: [],
+            spring: []
+        };
+        const annualIssues = [];
+        const thresholds = { ...AY_DEFAULT_THRESHOLDS, ...(options.thresholds || {}) };
+        const academicYear = String(options.academicYear || 'this academic year');
+        const canonicalizeFacultyName = options.canonicalizeFacultyName;
+
+        const normalizedSchedule = normalizeQuarterSchedule(scheduleByQuarter, canonicalizeFacultyName);
+        const setupData = aySetupData || {};
+        const setupFaculty = Array.isArray(setupData.faculty) ? setupData.faculty : [];
+        const adjunctTargets = setupData.adjunctTargets || {};
+        const setupByFaculty = new Map();
+
+        if (setupFaculty.length === 0) {
+            annualIssues.push(createAyIssue({
+                severity: 'warning',
+                priority: 'high',
+                title: `No AY Setup Data for ${academicYear}`,
+                description: 'Add faculty targets, release time, and adjunct targets in Academic Year Setup so assignment checks can run.',
+                scope: 'annual'
+            }));
+
+            return {
+                byQuarter,
+                annualIssues: sortAndDedupeIssues(annualIssues)
+            };
+        }
+
+        setupFaculty.forEach((record) => {
+            const canonicalName = normalizeFacultyName(record.name, canonicalizeFacultyName);
+            setupByFaculty.set(canonicalName, record);
+        });
+
+        const facultyLoads = new Map();
+        AY_QUARTERS.forEach((quarter) => {
+            normalizedSchedule[quarter].forEach((course) => {
+                const instructor = normalizeFacultyName(course.instructor, canonicalizeFacultyName);
+                if (!instructor || instructor === 'TBD') return;
+
+                if (!facultyLoads.has(instructor)) {
+                    facultyLoads.set(instructor, {
+                        annualCredits: 0,
+                        byQuarter: { fall: 0, winter: 0, spring: 0 },
+                        coursesByQuarter: { fall: [], winter: [], spring: [] }
+                    });
+                }
+
+                const facultyLoad = facultyLoads.get(instructor);
+                facultyLoad.annualCredits += Number(course.credits) || 5;
+                facultyLoad.byQuarter[quarter] += Number(course.credits) || 5;
+                facultyLoad.coursesByQuarter[quarter].push(course);
+            });
+        });
+
+        // Missing AY setup records for scheduled instructors
+        facultyLoads.forEach((facultyLoad, facultyName) => {
+            if (facultyName === 'Adjunct' || facultyName === 'Barton/Pettigrew') return;
+            if (setupByFaculty.has(facultyName)) return;
+
+            annualIssues.push(createAyIssue({
+                severity: 'warning',
+                priority: 'high',
+                title: `Missing AY Setup Record: ${facultyName}`,
+                description: `${facultyName} has assigned courses but no setup record for ${academicYear}.`,
+                scope: 'annual'
+            }));
+        });
+
+        setupByFaculty.forEach((record, facultyName) => {
+            const annualTarget = Number(record.annualTargetCredits) || 0;
+            const releaseCredits = Number(record.releaseCredits) || 0;
+            const netAnnualTarget = Math.max(0, annualTarget - releaseCredits);
+            const expectedQuarter = netAnnualTarget > 0 ? netAnnualTarget / 3 : 0;
+            const facultyLoad = facultyLoads.get(facultyName) || {
+                annualCredits: 0,
+                byQuarter: { fall: 0, winter: 0, spring: 0 },
+                coursesByQuarter: { fall: [], winter: [], spring: [] }
+            };
+
+            if (netAnnualTarget > 0) {
+                const annualDelta = facultyLoad.annualCredits - netAnnualTarget;
+                if (annualDelta > thresholds.annualOverloadWarning) {
+                    annualIssues.push(createAyIssue({
+                        severity: annualDelta > thresholds.annualOverloadCritical ? 'critical' : 'warning',
+                        priority: annualDelta > thresholds.annualOverloadCritical ? 'critical' : 'high',
+                        title: `Annual Overload Risk: ${facultyName}`,
+                        description: `${facultyName} is assigned ${facultyLoad.annualCredits} credits vs ${netAnnualTarget} planned (after release).`,
+                        scope: 'annual',
+                        courses: mapQuarterCoursesToDisplay([
+                            ...facultyLoad.coursesByQuarter.fall,
+                            ...facultyLoad.coursesByQuarter.winter,
+                            ...facultyLoad.coursesByQuarter.spring
+                        ])
+                    }));
+                } else if (annualDelta < -thresholds.annualUnderloadWarning) {
+                    annualIssues.push(createAyIssue({
+                        severity: 'warning',
+                        priority: 'medium',
+                        title: `Annual Underload: ${facultyName}`,
+                        description: `${facultyName} is assigned ${facultyLoad.annualCredits} credits vs ${netAnnualTarget} planned (after release).`,
+                        scope: 'annual',
+                        courses: mapQuarterCoursesToDisplay([
+                            ...facultyLoad.coursesByQuarter.fall,
+                            ...facultyLoad.coursesByQuarter.winter,
+                            ...facultyLoad.coursesByQuarter.spring
+                        ])
+                    }));
+                }
+            }
+
+            AY_QUARTERS.forEach((quarter) => {
+                if (expectedQuarter <= 0) return;
+
+                const quarterAssigned = facultyLoad.byQuarter[quarter] || 0;
+                const quarterDelta = quarterAssigned - expectedQuarter;
+                const quarterCourses = mapQuarterCoursesToDisplay(facultyLoad.coursesByQuarter[quarter] || []);
+
+                if (quarterDelta > thresholds.quarterOverloadWarning) {
+                    byQuarter[quarter].push(createAyIssue({
+                        severity: quarterDelta > thresholds.quarterOverloadCritical ? 'critical' : 'warning',
+                        priority: quarterDelta > thresholds.quarterOverloadCritical ? 'critical' : 'high',
+                        title: `${AY_QUARTER_LABELS[quarter]} Workload Pacing: ${facultyName}`,
+                        description: `${facultyName} has ${quarterAssigned} credits vs ${expectedQuarter.toFixed(1)} planned in AY setup.`,
+                        quarter,
+                        courses: quarterCourses
+                    }));
+                } else if (quarterDelta < -thresholds.quarterUnderloadWarning && quarterAssigned > 0) {
+                    byQuarter[quarter].push(createAyIssue({
+                        severity: 'warning',
+                        priority: 'medium',
+                        title: `${AY_QUARTER_LABELS[quarter]} Workload Pacing: ${facultyName}`,
+                        description: `${facultyName} has ${quarterAssigned} credits vs ${expectedQuarter.toFixed(1)} planned in AY setup.`,
+                        quarter,
+                        courses: quarterCourses
+                    }));
+                }
+            });
+        });
+
+        AY_QUARTERS.forEach((quarter) => {
+            const target = Number(adjunctTargets[quarter]) || 0;
+            const adjunctLoad = facultyLoads.get('Adjunct');
+            const assigned = adjunctLoad?.byQuarter?.[quarter] || 0;
+            const delta = assigned - target;
+            const adjunctCourses = mapQuarterCoursesToDisplay(adjunctLoad?.coursesByQuarter?.[quarter] || []);
+
+            if (target === 0 && assigned > 0) {
+                byQuarter[quarter].push(createAyIssue({
+                    severity: 'warning',
+                    priority: 'medium',
+                    title: `${AY_QUARTER_LABELS[quarter]} Adjunct Allocation`,
+                    description: `Adjunct is carrying ${assigned} credits with a target of 0 in AY setup.`,
+                    quarter,
+                    courses: adjunctCourses
+                }));
+            } else if (delta < -thresholds.adjunctUnderloadWarning) {
+                byQuarter[quarter].push(createAyIssue({
+                    severity: 'warning',
+                    priority: 'high',
+                    title: `${AY_QUARTER_LABELS[quarter]} Adjunct Shortfall`,
+                    description: `${assigned} assigned vs ${target} target adjunct credits for ${AY_QUARTER_LABELS[quarter]}.`,
+                    quarter,
+                    courses: adjunctCourses
+                }));
+            } else if (delta > thresholds.adjunctOverloadWarning) {
+                byQuarter[quarter].push(createAyIssue({
+                    severity: 'warning',
+                    priority: 'medium',
+                    title: `${AY_QUARTER_LABELS[quarter]} Adjunct Over-allocation`,
+                    description: `${assigned} assigned vs ${target} target adjunct credits for ${AY_QUARTER_LABELS[quarter]}.`,
+                    quarter,
+                    courses: adjunctCourses
+                }));
+            }
+        });
+
+        return {
+            byQuarter: {
+                fall: sortAndDedupeIssues(byQuarter.fall),
+                winter: sortAndDedupeIssues(byQuarter.winter),
+                spring: sortAndDedupeIssues(byQuarter.spring)
+            },
+            annualIssues: sortAndDedupeIssues(annualIssues)
+        };
+    }
+
     /**
      * Evaluate a schedule against all enabled constraints
      * @param {Array} schedule - Array of course objects from getCurrentScheduleData()
      * @param {Array} constraints - Array of constraint objects from ConstraintsService
      * @returns {Object} { conflicts: [], warnings: [], suggestions: [] }
      */
-    function evaluate(schedule, constraints) {
+    function evaluate(schedule, constraints, context = {}) {
         const results = {
             conflicts: [],
             warnings: [],
@@ -73,10 +393,10 @@ const ConflictEngine = (function() {
         }
 
         // Run each enabled constraint checker
-        constraints.filter(c => c.enabled).forEach(constraint => {
+        (constraints || []).filter(c => c.enabled).forEach(constraint => {
             const checker = checkers[constraint.constraint_type];
             if (checker) {
-                const issues = checker(schedule, constraint.rule_details, constraint);
+                const issues = checker(schedule, constraint.rule_details, constraint, context);
                 issues.forEach(issue => {
                     issue.constraintId = constraint.id;
                     issue.constraintType = constraint.constraint_type;
@@ -135,6 +455,28 @@ const ConflictEngine = (function() {
             });
 
             return issues;
+        },
+
+        /**
+         * Academic-year setup alignment checks
+         * Ensures assignments are aligned to AY faculty targets and adjunct goals.
+         */
+        ay_setup_alignment: function(schedule, rule, constraint, context) {
+            const currentQuarter = String(context?.currentQuarter || 'spring').toLowerCase();
+            const scheduleByQuarter = context?.scheduleByQuarter || {
+                [currentQuarter]: Array.isArray(schedule) ? schedule : []
+            };
+            const aySetupData = context?.aySetupData || null;
+            const analysis = evaluateAySetup(scheduleByQuarter, aySetupData, {
+                academicYear: context?.academicYear,
+                canonicalizeFacultyName: context?.canonicalizeFacultyName,
+                thresholds: rule || {}
+            });
+
+            return [
+                ...analysis.annualIssues,
+                ...(analysis.byQuarter[currentQuarter] || [])
+            ];
         },
 
         /**
@@ -445,7 +787,8 @@ const ConflictEngine = (function() {
     return {
         evaluate,
         checkers,
-        COMMON_PAIRINGS
+        COMMON_PAIRINGS,
+        evaluateAySetup
     };
 })();
 

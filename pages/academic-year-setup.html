@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Year Setup - Program Command</title>
+    <link rel="stylesheet" href="../css/design-system.css">
+    <link rel="stylesheet" href="../css/academic-year-setup.css">
+</head>
+<body>
+    <div class="page-shell">
+        <div class="page-top-actions">
+            <a href="../index.html" class="back-link">&larr; Back to Program Command</a>
+        </div>
+        <header class="page-header">
+            <div class="header-eyebrow">EWU DESIGN · PROGRAM COMMAND</div>
+            <h1>Academic Year Setup</h1>
+            <p class="subtitle">Define faculty roles, workload targets, release time, and adjunct needs before scheduling.</p>
+        </header>
+
+        <main class="content-grid">
+            <section class="panel setup-controls">
+                <div class="control-row">
+                    <label for="academicYearSelect">Academic Year</label>
+                    <div class="year-actions">
+                        <select id="academicYearSelect"></select>
+                        <button id="addYearBtn" type="button" class="secondary">Add Year</button>
+                        <button id="copyPreviousYearBtn" type="button" class="secondary">Copy Previous Year</button>
+                    </div>
+                </div>
+
+                <div class="summary-grid">
+                    <article class="summary-card">
+                        <h2>Faculty</h2>
+                        <p id="summaryFacultyCount">0</p>
+                    </article>
+                    <article class="summary-card">
+                        <h2>Target Credits</h2>
+                        <p id="summaryTargetCredits">0</p>
+                    </article>
+                    <article class="summary-card">
+                        <h2>Release Credits</h2>
+                        <p id="summaryReleaseCredits">0</p>
+                    </article>
+                    <article class="summary-card">
+                        <h2>Adjunct Need</h2>
+                        <p id="summaryAdjunctCredits">0</p>
+                    </article>
+                </div>
+            </section>
+
+            <section class="panel adjunct-planning">
+                <h2>Adjunct Planning (Credits)</h2>
+                <p class="panel-help">Set expected adjunct credits needed per quarter for this academic year.</p>
+                <div class="adjunct-inputs">
+                    <label>
+                        Fall
+                        <input id="adjunctFall" type="number" min="0" step="1" value="0">
+                    </label>
+                    <label>
+                        Winter
+                        <input id="adjunctWinter" type="number" min="0" step="1" value="0">
+                    </label>
+                    <label>
+                        Spring
+                        <input id="adjunctSpring" type="number" min="0" step="1" value="0">
+                    </label>
+                </div>
+                <label class="block-label">
+                    Year Notes
+                    <textarea id="yearNotes" rows="3" placeholder="Optional notes for this planning year."></textarea>
+                </label>
+            </section>
+
+            <section class="panel faculty-form-panel">
+                <div class="panel-title-row">
+                    <h2>Faculty Input</h2>
+                    <span id="formModeTag">New record</span>
+                </div>
+                <form id="facultyForm">
+                    <input type="hidden" id="facultyId">
+                    <div class="form-grid">
+                        <label>
+                            Faculty Name
+                            <input id="facultyName" type="text" required placeholder="e.g., T.Masingale">
+                        </label>
+                        <label>
+                            Role
+                            <select id="facultyRole" required>
+                                <option value="Tenure/Tenure-track">Tenure/Tenure-track</option>
+                                <option value="Lecturer">Lecturer</option>
+                                <option value="Adjunct">Adjunct</option>
+                                <option value="Staff/Other">Staff/Other</option>
+                            </select>
+                        </label>
+                        <label>
+                            FTE (%)
+                            <input id="ftePercent" type="number" min="0" max="100" step="1" value="100">
+                        </label>
+                        <label>
+                            Annual Target Credits
+                            <input id="annualTargetCredits" type="number" min="0" step="0.5" value="36">
+                        </label>
+                        <label>
+                            Release Credits
+                            <input id="releaseCredits" type="number" min="0" step="0.5" value="0">
+                        </label>
+                        <label>
+                            Release (%)
+                            <input id="releasePercent" type="number" min="0" max="100" step="0.1" value="0">
+                        </label>
+                        <label>
+                            Release Reason
+                            <input id="releaseReason" type="text" placeholder="Chair, leave, scholarship, etc.">
+                        </label>
+                    </div>
+                    <label class="block-label">
+                        Notes
+                        <textarea id="facultyNotes" rows="2" placeholder="Optional workload notes or constraints."></textarea>
+                    </label>
+                    <div class="form-actions">
+                        <button type="submit" id="saveFacultyBtn">Add Faculty</button>
+                        <button type="button" id="cancelEditBtn" class="secondary">Cancel Edit</button>
+                        <button type="button" id="importFromScheduleBtn" class="secondary">Import from Schedule</button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="panel faculty-table-panel">
+                <h2>Faculty Roster for <span id="facultyTableYearLabel"></span></h2>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Role</th>
+                                <th>FTE</th>
+                                <th>Target</th>
+                                <th>Release</th>
+                                <th>Net</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="facultyTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script type="module" src="../js/academic-year-setup.js"></script>
+</body>
+</html>

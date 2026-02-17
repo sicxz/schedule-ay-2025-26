@@ -23,9 +23,10 @@ const ScheduleManager = (function() {
                     'Adjunct': 15
                 },
                 MULTIPLIERS: {
+                    'DESN 399': 0.2,
+                    'DESN 491': 0.2,
                     'DESN 499': 0.2,
                     'DESN 495': 0.1,
-                    'DESN 491': 0.15,
                     DEFAULT: 1.0
                 }
             },
