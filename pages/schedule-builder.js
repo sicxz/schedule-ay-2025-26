@@ -10,11 +10,13 @@ let assignedCourses = {}; // { 'MW-10:00-12:00-206': [course1, course2], ... }
 let roomConstraints = null; // Loaded from room-constraints.json
 let caseByeCaseCourses = []; // Courses handled individually, not in grid
 
-// Room configuration - organized by campus (207 excluded - dedicated project room)
-const CATALYST_ROOMS = ['206', '209', '210', '212'];
-const CHENEY_ROOMS = ['CEB 102', 'CEB 104'];
-const ROOMS = [...CATALYST_ROOMS, ...CHENEY_ROOMS];
-const ROOM_NAMES = {
+// Room configuration - organized by campus (data-driven from room-constraints.json when available)
+const DEFAULT_CATALYST_ROOMS = ['206', '209', '210', '212'];
+const DEFAULT_CHENEY_ROOMS = ['CEB 102', 'CEB 104'];
+let CATALYST_ROOMS = [...DEFAULT_CATALYST_ROOMS];
+let CHENEY_ROOMS = [...DEFAULT_CHENEY_ROOMS];
+let ROOMS = [...CATALYST_ROOMS, ...CHENEY_ROOMS];
+let ROOM_NAMES = {
     '206': '206 UX Lab',
     '209': '209 Mac Lab',
     '210': '210 Mac Lab',
@@ -24,8 +26,64 @@ const ROOM_NAMES = {
 };
 
 // Courses allowed in Room 212
-const ROOM_212_PRIMARY = ['DESN 301', 'DESN 359', 'DESN 401'];
-const ROOM_212_OVERFLOW = ['DESN 100', 'DESN 200'];
+let ROOM_212_PRIMARY = ['DESN 301', 'DESN 359', 'DESN 401'];
+let ROOM_212_OVERFLOW = ['DESN 100', 'DESN 200'];
+
+function getRoomCode(entry) {
+    if (!entry) return '';
+    if (typeof entry === 'string') return entry.trim();
+    return String(entry.id || entry.code || '').trim();
+}
+
+function getRoomLabel(entry, fallbackCode) {
+    if (!entry) return fallbackCode;
+    if (typeof entry === 'string') return fallbackCode;
+    return String(entry.name || fallbackCode || '').trim() || fallbackCode;
+}
+
+function applyRoomConfigurationFromConstraints() {
+    const catalystRooms = [];
+    const cheneyRooms = [];
+    const roomNames = {};
+
+    const catalystEntries = roomConstraints?.campuses?.catalyst?.rooms || [];
+    const cheneyEntries = roomConstraints?.campuses?.cheney?.rooms || [];
+    const includeRoom = (entry) => !entry?.excludeFromGrid;
+
+    catalystEntries.filter(includeRoom).forEach((entry) => {
+        const code = getRoomCode(entry);
+        if (!code) return;
+        catalystRooms.push(code);
+        roomNames[code] = getRoomLabel(entry, code);
+    });
+
+    cheneyEntries.filter(includeRoom).forEach((entry) => {
+        const code = getRoomCode(entry);
+        if (!code) return;
+        cheneyRooms.push(code);
+        roomNames[code] = getRoomLabel(entry, code);
+    });
+
+    CATALYST_ROOMS = catalystRooms.length ? catalystRooms : [...DEFAULT_CATALYST_ROOMS];
+    CHENEY_ROOMS = cheneyRooms.length ? cheneyRooms : [...DEFAULT_CHENEY_ROOMS];
+    ROOMS = [...CATALYST_ROOMS, ...CHENEY_ROOMS];
+    ROOM_NAMES = { ...ROOM_NAMES, ...roomNames };
+
+    const primary212 = roomConstraints?.courseRoomRules?.room212Only?.courses;
+    const overflow212 = roomConstraints?.courseRoomRules?.cheneyOnly?.overflowCourses;
+    if (Array.isArray(primary212) && primary212.length > 0) {
+        ROOM_212_PRIMARY = [...new Set(primary212.map((code) => String(code || '').trim()).filter(Boolean))];
+    }
+    if (Array.isArray(overflow212) && overflow212.length > 0) {
+        ROOM_212_OVERFLOW = [...new Set(overflow212.map((code) => String(code || '').trim()).filter(Boolean))];
+    }
+}
+
+function getCampusRooms(campusId) {
+    if (campusId === 'catalyst') return [...CATALYST_ROOMS];
+    if (campusId === 'cheney') return [...CHENEY_ROOMS];
+    return [...ROOMS];
+}
 
 // State for all quarters
 let allQuartersSchedule = {
@@ -36,13 +94,28 @@ let allQuartersSchedule = {
 let activeQuarter = 'Fall';
 let courseCatalog = null; // Loaded from course-catalog.json
 
-// Time slots: 2hr 20min classes
-const TIMES = ['10:00 AM - 12:20 PM', '1:00 PM - 3:20 PM', '4:00 PM - 6:20 PM'];
-const TIME_KEYS = ['10:00-12:20', '13:00-15:20', '16:00-18:20']; // For data storage
-const DAYS = ['MW', 'TR'];
+// Scheduler pattern configuration (profile-driven with sensible defaults for Design)
+let schedulerDayPatterns = [
+    { id: 'MW', label: 'Monday / Wednesday' },
+    { id: 'TR', label: 'Tuesday / Thursday' }
+];
+let schedulerTimeSlots = [
+    { id: '10:00-12:20', label: '10:00-12:20', startMinutes: 10 * 60, endMinutes: (12 * 60) + 20 },
+    { id: '13:00-15:20', label: '13:00-15:20', startMinutes: 13 * 60, endMinutes: (15 * 60) + 20 },
+    { id: '16:00-18:20', label: '16:00-18:20', startMinutes: 16 * 60, endMinutes: (18 * 60) + 20 }
+];
 
-// Evening time slot (for safety pairing rule)
-const EVENING_TIME = '4:00 PM - 6:20 PM';
+let DAYS = schedulerDayPatterns.map((pattern) => pattern.id);
+let TIME_KEYS = schedulerTimeSlots.map((slot) => slot.id); // For data storage
+let TIMES = schedulerTimeSlots.map((slot) => slot.label);
+
+// Derived bucket helpers (updated once profile is loaded)
+let EVENING_SLOT_IDS = schedulerTimeSlots
+    .filter((slot) => Number.isFinite(slot.startMinutes) && slot.startMinutes >= 16 * 60)
+    .map((slot) => slot.id);
+
+// Program Command storage prefix (kept in sync with department profile scheduler.storageKeyPrefix)
+let PROGRAM_COMMAND_STORAGE_KEY_PREFIX = 'designSchedulerData_';
 
 // Store courses from database for constraints
 let dbCourses = [];
@@ -51,6 +124,7 @@ let dbCourses = [];
 const SCHEDULE_PLACEMENTS_KEY = 'schedule_placements';
 const FACULTY_BUILD_STORAGE_KEY = 'faculty_build_scenario_v1';
 const FACULTY_PREFERENCES_LOCAL_KEY = 'faculty_preferences_local_v1';
+const SAVE_ATTRIBUTION_STORAGE_KEY = 'schedule_builder_last_save_attribution_v1';
 
 const DEFAULT_FACULTY_BUILD_SCENARIO = {
     faculty: [
@@ -106,6 +180,105 @@ function saveFacultyPreferencesCache() {
     } catch (error) {
         console.warn('Could not save faculty preferences cache:', error);
     }
+}
+
+function formatSaveAttributionDate(isoString) {
+    if (!isoString) return '--';
+    const date = new Date(isoString);
+    if (Number.isNaN(date.getTime())) return '--';
+    return date.toLocaleString();
+}
+
+function setSaveAttributionLabel(userLabel, savedAt) {
+    const label = document.getElementById('saveAttributionLabel');
+    if (!label) return;
+    label.textContent = `Last saved by ${userLabel || '--'} at ${formatSaveAttributionDate(savedAt)}`;
+}
+
+function readSaveAttributionState() {
+    try {
+        const raw = localStorage.getItem(SAVE_ATTRIBUTION_STORAGE_KEY);
+        return raw ? JSON.parse(raw) : null;
+    } catch (error) {
+        return null;
+    }
+}
+
+function writeSaveAttributionState(state) {
+    try {
+        localStorage.setItem(SAVE_ATTRIBUTION_STORAGE_KEY, JSON.stringify(state));
+    } catch (error) {
+        console.warn('Could not persist save attribution state:', error);
+    }
+}
+
+function refreshSaveAttributionLabelForYear(targetYear) {
+    const state = readSaveAttributionState();
+    if (!state || state.year !== targetYear) {
+        setSaveAttributionLabel('--', null);
+        return;
+    }
+    setSaveAttributionLabel(state.userLabel, state.savedAt);
+}
+
+let saveCloudButtonResetTimer = null;
+
+function setCloudSaveUi(state, detail = '') {
+    const saveButton = document.getElementById('saveToCloudBtn');
+    const statusLabel = document.getElementById('saveCloudStatus');
+    if (!saveButton) return;
+
+    if (saveCloudButtonResetTimer) {
+        clearTimeout(saveCloudButtonResetTimer);
+        saveCloudButtonResetTimer = null;
+    }
+
+    const targetYear = document.getElementById('academicYear')?.value || currentSchedule?.year || '--';
+    const defaultStatus = detail || `Ready to save ${targetYear}`;
+
+    if (state === 'saving') {
+        saveButton.disabled = true;
+        saveButton.textContent = '☁️ Saving...';
+        if (statusLabel) statusLabel.textContent = detail || `Saving ${targetYear} to cloud...`;
+        return;
+    }
+
+    if (state === 'saved') {
+        saveButton.disabled = false;
+        saveButton.textContent = '✅ Saved';
+        if (statusLabel) statusLabel.textContent = detail || `Saved ${targetYear}`;
+        saveCloudButtonResetTimer = setTimeout(() => {
+            saveButton.textContent = '☁️ Save to Cloud';
+            if (statusLabel) statusLabel.textContent = `Ready to save ${targetYear}`;
+        }, 2500);
+        return;
+    }
+
+    if (state === 'error') {
+        saveButton.disabled = false;
+        saveButton.textContent = '⚠️ Retry Save';
+        if (statusLabel) statusLabel.textContent = detail || `Save failed for ${targetYear}`;
+        return;
+    }
+
+    saveButton.disabled = false;
+    saveButton.textContent = '☁️ Save to Cloud';
+    if (statusLabel) statusLabel.textContent = defaultStatus;
+}
+
+async function resolveCurrentUserAttribution() {
+    if (typeof window !== 'undefined' && window.AuthService && typeof window.AuthService.getUser === 'function') {
+        try {
+            const user = await window.AuthService.getUser();
+            if (user?.id) {
+                const preferredName = user.user_metadata?.full_name || user.user_metadata?.name || user.email || user.id;
+                return { id: user.id, label: preferredName };
+            }
+        } catch (error) {
+            // fallback below
+        }
+    }
+    return { id: null, label: 'Authenticated user' };
 }
 
 function setFacultyPreference(name, preference) {
@@ -499,10 +672,48 @@ document.addEventListener('DOMContentLoaded', async function() {
     console.log('Initializing Schedule Builder...');
 
     try {
+        // Initialize department profile + scheduler patterns
+        if (window.DepartmentProfileManager && typeof window.DepartmentProfileManager.initialize === 'function') {
+            try {
+                const snapshot = await window.DepartmentProfileManager.initialize();
+                const profile = snapshot?.profile
+                    || (typeof window.DepartmentProfileManager.getCurrentProfile === 'function'
+                        ? window.DepartmentProfileManager.getCurrentProfile()
+                        : null)
+                    || (typeof window.DepartmentProfileManager.getDefaultProfile === 'function'
+                        ? window.DepartmentProfileManager.getDefaultProfile()
+                        : null);
+
+                const scheduler = profile && profile.scheduler ? profile.scheduler : {};
+
+                if (Array.isArray(scheduler.dayPatterns) && scheduler.dayPatterns.length > 0) {
+                    schedulerDayPatterns = scheduler.dayPatterns.slice();
+                }
+                if (Array.isArray(scheduler.timeSlots) && scheduler.timeSlots.length > 0) {
+                    schedulerTimeSlots = scheduler.timeSlots.slice();
+                }
+
+                DAYS = schedulerDayPatterns.map((pattern) => String(pattern.id || '').trim().toUpperCase()).filter(Boolean);
+                TIME_KEYS = schedulerTimeSlots.map((slot) => String(slot.id || '').trim()).filter(Boolean);
+                TIMES = schedulerTimeSlots.map((slot) => String(slot.label || slot.id || '').trim());
+
+                EVENING_SLOT_IDS = schedulerTimeSlots
+                    .filter((slot) => Number.isFinite(slot.startMinutes) && slot.startMinutes >= 16 * 60)
+                    .map((slot) => slot.id);
+
+                if (scheduler.storageKeyPrefix && typeof scheduler.storageKeyPrefix === 'string') {
+                    PROGRAM_COMMAND_STORAGE_KEY_PREFIX = scheduler.storageKeyPrefix.trim() || PROGRAM_COMMAND_STORAGE_KEY_PREFIX;
+                }
+            } catch (profileError) {
+                console.warn('Could not initialize department profile for Schedule Builder; falling back to defaults.', profileError);
+            }
+        }
+
         // Load room constraints
         const constraintsResponse = await fetch('../data/room-constraints.json');
         if (constraintsResponse.ok) {
             roomConstraints = await constraintsResponse.json();
+            applyRoomConfigurationFromConstraints();
             console.log('Room constraints loaded:', roomConstraints);
         }
 
@@ -554,6 +765,17 @@ document.addEventListener('DOMContentLoaded', async function() {
         initializeFacultyBuildScenario();
         loadDraft();
 
+        const activeYear = document.getElementById('academicYear')?.value || '2026-27';
+        refreshSaveAttributionLabelForYear(activeYear);
+        setCloudSaveUi('idle', `Ready to save ${activeYear}`);
+        const academicYearSelect = document.getElementById('academicYear');
+        if (academicYearSelect) {
+            academicYearSelect.addEventListener('change', (event) => {
+                refreshSaveAttributionLabelForYear(event.target.value);
+                setCloudSaveUi('idle', `Ready to save ${event.target.value}`);
+            });
+        }
+
     } catch (error) {
         console.error('Initialization error:', error);
         showToast('Error initializing: ' + error.message, 'error');
@@ -562,6 +784,93 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 // Store analysis results for recommendations
 let analysisResults = null;
+
+function getProgramCommandScheduleStorageKey(academicYear) {
+    return `${PROGRAM_COMMAND_STORAGE_KEY_PREFIX}${academicYear}`;
+}
+
+function extractCoursesFromProgramCommandDraft(academicYear) {
+    const raw = localStorage.getItem(getProgramCommandScheduleStorageKey(academicYear));
+    if (!raw) return [];
+
+    let parsed = null;
+    try {
+        parsed = JSON.parse(raw);
+    } catch (error) {
+        console.warn(`Could not parse Program Command schedule draft for ${academicYear}:`, error);
+        return [];
+    }
+
+    if (!parsed || typeof parsed !== 'object') return [];
+
+    const quarterMap = {
+        fall: 'Fall',
+        winter: 'Winter',
+        spring: 'Spring'
+    };
+
+    const courses = [];
+    Object.entries(quarterMap).forEach(([quarterKey, quarterName]) => {
+        const quarterData = parsed[quarterKey];
+        if (!quarterData || typeof quarterData !== 'object') return;
+
+        Object.entries(quarterData).forEach(([day, daySlots]) => {
+            if (!daySlots || typeof daySlots !== 'object') return;
+
+            Object.entries(daySlots).forEach(([time, slotCourses]) => {
+                if (!Array.isArray(slotCourses)) return;
+
+                slotCourses.forEach((course, index) => {
+                    const code = String(course?.code || course?.courseCode || '').trim();
+                    if (!code) return;
+
+                    courses.push({
+                        id: `${academicYear}-${quarterKey}-${day}-${time}-${index}`,
+                        courseCode: code.replace(/-/g, ' ').replace(/\s+/g, ' ').trim().toUpperCase(),
+                        courseTitle: String(course?.name || course?.title || '').trim(),
+                        section: String(course?.section || '001').trim(),
+                        quarter: quarterName,
+                        credits: Number(course?.credits) || 5,
+                        enrolled: Number(course?.enrolled) || Number(course?.enrollment) || 0,
+                        facultyName: String(course?.instructor || 'TBD').trim() || 'TBD',
+                        room: String(course?.room || '').trim(),
+                        day: String(day || '').trim(),
+                        time: String(time || '').trim(),
+                        type: 'scheduled',
+                        source: 'program-command-draft'
+                    });
+                });
+            });
+        });
+    });
+
+    return courses;
+}
+
+async function loadSourceCoursesForBuilder(sourceYear) {
+    const draftCourses = extractCoursesFromProgramCommandDraft(sourceYear);
+    if (draftCourses.length > 0) {
+        return {
+            courses: draftCourses,
+            sourceKind: 'program-command-draft',
+            sourceLabel: 'main scheduler draft (local)'
+        };
+    }
+
+    const workloadResponse = await fetch('../workload-data.json');
+    if (!workloadResponse.ok) throw new Error('Failed to load workload data');
+    const workloadData = await workloadResponse.json();
+
+    const yearData = workloadData.workloadByYear?.byYear?.[sourceYear];
+    if (!yearData) throw new Error(`No data found for ${sourceYear}`);
+
+    const workloadCourses = extractCoursesFromYear(yearData, workloadData.facultyWorkload);
+    return {
+        courses: workloadCourses,
+        sourceKind: 'workload-data',
+        sourceLabel: 'workload-data.json'
+    };
+}
 
 /**
  * Handle Load & Analyze button - loads previous year and runs analysis
@@ -582,17 +891,12 @@ async function handleLoadAndAnalyze() {
         // Initialize analyzer
         await ScheduleAnalyzer.init();
 
-        // Load source year's schedule from workload-data.json
-        const workloadResponse = await fetch('../workload-data.json');
-        if (!workloadResponse.ok) throw new Error('Failed to load workload data');
-        const workloadData = await workloadResponse.json();
-
-        // Get source year data
-        const yearData = workloadData.workloadByYear?.byYear?.[sourceYear];
-        if (!yearData) throw new Error(`No data found for ${sourceYear}`);
-
-        // Extract all courses from all faculty
-        const allCourses = extractCoursesFromYear(yearData, workloadData.facultyWorkload);
+        // Load source year's schedule from Program Command draft first, then workload-data fallback
+        const sourceSchedule = await loadSourceCoursesForBuilder(sourceYear);
+        const allCourses = sourceSchedule.courses;
+        if (!Array.isArray(allCourses) || allCourses.length === 0) {
+            throw new Error(`No source schedule sections found for ${sourceYear}. Load/copy that year in the main scheduler first, or restore workload-data.json.`);
+        }
 
         // Group by quarter and build schedule
         const quarters = ['Fall', 'Winter', 'Spring'];
@@ -647,7 +951,7 @@ async function handleLoadAndAnalyze() {
         updatePlacementsFromSchedule(sourceYear);
         console.log(`✅ Auto-saved placements from ${sourceYear} schedule`);
 
-        showToast(`Loaded ${totalSections} sections from ${sourceYear}. Review analysis before proceeding.`);
+        showToast(`Loaded ${totalSections} sections from ${sourceYear} (${sourceSchedule.sourceLabel}). Review analysis before proceeding.`);
         updateScenarioAssignmentSummary();
 
     } catch (error) {
@@ -961,17 +1265,12 @@ async function handleGenerate() {
     document.getElementById('actionBar').style.display = 'none';
 
     try {
-        // Load previous year's schedule from workload-data.json
-        const workloadResponse = await fetch('../workload-data.json');
-        if (!workloadResponse.ok) throw new Error('Failed to load workload data');
-        const workloadData = await workloadResponse.json();
-
-        // Get previous year data
-        const yearData = workloadData.workloadByYear?.byYear?.[previousYear];
-        if (!yearData) throw new Error(`No data found for ${previousYear}`);
-
-        // Extract all courses from all faculty
-        const allCourses = extractCoursesFromYear(yearData, workloadData.facultyWorkload);
+        // Load previous year's schedule from Program Command draft first, then workload-data fallback
+        const sourceSchedule = await loadSourceCoursesForBuilder(previousYear);
+        const allCourses = sourceSchedule.courses;
+        if (!Array.isArray(allCourses) || allCourses.length === 0) {
+            throw new Error(`No source schedule sections found for ${previousYear}. Load/copy that year in the main scheduler first, or restore workload-data.json.`);
+        }
 
         // Group by quarter
         const quarters = ['Fall', 'Winter', 'Spring'];
@@ -1050,7 +1349,7 @@ async function handleGenerate() {
         // Auto-save placements after generation for future preservation
         updatePlacementsFromSchedule(previousYear);
 
-        showToast(`Generated schedule for ${targetYear} based on ${previousYear} data (${totalSections} total sections)`);
+        showToast(`Generated schedule for ${targetYear} based on ${previousYear} (${sourceSchedule.sourceLabel}) (${totalSections} total sections)`);
         updateScenarioAssignmentSummary();
 
     } catch (error) {
@@ -1330,7 +1629,7 @@ function getValidRooms(courseCode, quarter, slotUsage = {}) {
         const cebSlots = Object.keys(slotUsage).filter(k =>
             k.includes('CEB 102') || k.includes('CEB 104')
         );
-        const cebFull = cebSlots.length >= (TIMES.length * DAYS.length * 2); // 2 CEB rooms
+        const cebFull = cebSlots.length >= (TIME_KEYS.length * DAYS.length * 2); // 2 CEB rooms
 
         if (cebFull && ROOM_212_OVERFLOW.includes(courseCode)) {
             return ['CEB 102', 'CEB 104', '212'];
@@ -1389,8 +1688,15 @@ function getFacultyCandidates(preferredFaculty, selectedFaculty = []) {
 }
 
 function getTimeBucketForKey(timeKey) {
-    if (timeKey === '10:00-12:20') return 'morning';
-    if (timeKey === '13:00-15:20') return 'afternoon';
+    const slot = schedulerTimeSlots.find((entry) => String(entry.id || '').trim() === String(timeKey || '').trim());
+    if (!slot || !Number.isFinite(slot.startMinutes) || !Number.isFinite(slot.endMinutes)) {
+        return 'unspecified';
+    }
+
+    const start = slot.startMinutes;
+
+    if (start < 12 * 60) return 'morning';
+    if (start < 16 * 60) return 'afternoon';
     return 'evening';
 }
 
@@ -2393,95 +2699,214 @@ function loadDraft() {
 // DATABASE SAVE/LOAD FUNCTIONS
 // ============================================
 
+
+function getAllQuarterSchedulesForSave() {
+    const snapshot = {
+        Fall: allQuartersSchedule.Fall || { assignedCourses: {}, caseByeCaseCourses: [] },
+        Winter: allQuartersSchedule.Winter || { assignedCourses: {}, caseByeCaseCourses: [] },
+        Spring: allQuartersSchedule.Spring || { assignedCourses: {}, caseByeCaseCourses: [] }
+    };
+
+    const activeQuarterSnapshot = snapshot[activeQuarter] || { assignedCourses: {}, caseByeCaseCourses: [] };
+    snapshot[activeQuarter] = {
+        ...activeQuarterSnapshot,
+        assignedCourses: { ...assignedCourses },
+        caseByeCaseCourses: [...caseByeCaseCourses]
+    };
+
+    return snapshot;
+}
+
+function parseScheduleSlotKey(slotKey) {
+    const parts = String(slotKey || '').split('-');
+    if (parts.length < 4) return null;
+
+    const dayPattern = parts[0];
+    const timeSlot = `${parts[1]}-${parts[2]}`;
+    const roomCode = parts.slice(3).join('-');
+
+    if (!dayPattern || !timeSlot || !roomCode) return null;
+
+    return { dayPattern, timeSlot, roomCode };
+}
+
+function shouldPersistFacultyName(name) {
+    const normalized = String(name || '').trim().toLowerCase();
+    return !!normalized && normalized !== 'tbd' && normalized !== 'adjunct';
+}
+
+function buildDatabaseSaveErrorMessage(error) {
+    const message = String(error?.message || error || 'Unknown save error');
+    const normalized = message.toLowerCase();
+
+    if (error?.code === '42501' || normalized.includes('permission') || normalized.includes('rls') || normalized.includes('policy')) {
+        return 'Save blocked by permissions. Verify Supabase RLS policies for schedule writes. Draft changes were not modified.';
+    }
+
+    if (normalized.includes('network') || normalized.includes('fetch') || normalized.includes('timeout')) {
+        return 'Network error while saving. Draft changes were not modified; retry after reconnecting.';
+    }
+
+    if (normalized.includes('academicyearid is required') || normalized.includes('p_academic_year_id is required') || normalized.includes('quarter is required')) {
+        return `Save validation failed: ${message}`;
+    }
+
+    return `Error saving to database: ${message}`;
+}
+
+async function buildYearScopedScheduleSyncRecords(quarterSchedules) {
+    const records = [];
+    const courseIdCache = new Map();
+    const facultyIdCache = new Map();
+    const roomIdCache = new Map();
+
+    const lookupCachedId = async (cache, key, lookup) => {
+        if (!key) return null;
+        if (!cache.has(key)) {
+            cache.set(key, await lookup(key));
+        }
+        return cache.get(key) || null;
+    };
+
+    for (const quarter of ['Fall', 'Winter', 'Spring']) {
+        const slotAssignments = quarterSchedules?.[quarter]?.assignedCourses || {};
+
+        for (const [slotKey, courses] of Object.entries(slotAssignments)) {
+            if (slotKey === 'unassigned') continue;
+
+            const parsedSlot = parseScheduleSlotKey(slotKey);
+            if (!parsedSlot) {
+                console.warn('Skipping invalid schedule slot key during save:', slotKey);
+                continue;
+            }
+
+            const { dayPattern, timeSlot, roomCode } = parsedSlot;
+            const roomId = await lookupCachedId(roomIdCache, roomCode, (value) => dbService.lookupRoomId(value));
+
+            for (const course of courses || []) {
+                const courseCode = String(course?.courseCode || '').trim();
+                if (!courseCode) {
+                    console.warn('Skipping schedule row without course code:', course);
+                    continue;
+                }
+
+                const facultyName = String(course?.facultyName || '').trim();
+                const courseId = await lookupCachedId(courseIdCache, courseCode, (value) => dbService.lookupCourseId(value));
+                const facultyId = shouldPersistFacultyName(facultyName)
+                    ? await lookupCachedId(facultyIdCache, facultyName, (value) => dbService.lookupFacultyId(value))
+                    : null;
+
+                records.push({
+                    course_id: courseId,
+                    faculty_id: facultyId,
+                    room_id: roomId,
+                    quarter,
+                    day_pattern: dayPattern,
+                    time_slot: timeSlot,
+                    section: course?.section || '001',
+                    projected_enrollment: course?.predictedDemand ?? null
+                });
+            }
+        }
+    }
+
+    return records;
+}
+
+function __setSaveStateForTests(nextState = {}) {
+    if (Object.prototype.hasOwnProperty.call(nextState, 'currentSchedule')) {
+        currentSchedule = nextState.currentSchedule;
+    }
+    if (Object.prototype.hasOwnProperty.call(nextState, 'assignedCourses')) {
+        assignedCourses = nextState.assignedCourses;
+    }
+    if (Object.prototype.hasOwnProperty.call(nextState, 'caseByeCaseCourses')) {
+        caseByeCaseCourses = nextState.caseByeCaseCourses;
+    }
+    if (Object.prototype.hasOwnProperty.call(nextState, 'allQuartersSchedule')) {
+        allQuartersSchedule = nextState.allQuartersSchedule;
+    }
+    if (Object.prototype.hasOwnProperty.call(nextState, 'activeQuarter')) {
+        activeQuarter = nextState.activeQuarter;
+    }
+}
+
+function __getSaveStateForTests() {
+    return {
+        currentSchedule,
+        assignedCourses,
+        caseByeCaseCourses,
+        allQuartersSchedule,
+        activeQuarter
+    };
+}
+
 /**
  * Save schedule to Supabase database
  */
 async function saveToDatabase() {
     if (!currentSchedule) {
+        setCloudSaveUi('error', 'No schedule loaded to save');
         showToast('No schedule to save', 'error');
         return;
     }
 
     if (!isSupabaseConfigured()) {
+        setCloudSaveUi('error', 'Database not configured');
         showToast('Database not configured', 'error');
         return;
     }
 
     try {
+        setCloudSaveUi('saving');
         showToast('Saving to database...');
+        const userAttribution = await resolveCurrentUserAttribution();
 
         // Initialize database service
         await dbService.initialize();
 
+        const targetYear = document.getElementById('academicYear')?.value || currentSchedule.year;
+
         // Get or create academic year
-        const yearRecord = await dbService.getOrCreateYear(currentSchedule.year);
+        const yearRecord = await dbService.getOrCreateYear(targetYear);
         if (!yearRecord) {
+            setCloudSaveUi('error', `Could not resolve academic year ${targetYear}`);
             showToast('Failed to get academic year', 'error');
             return;
         }
 
-        // Clear existing schedule for this year/quarter
-        const { error: deleteError } = await supabase
-            .from('scheduled_courses')
-            .delete()
-            .eq('academic_year_id', yearRecord.id)
-            .eq('quarter', currentSchedule.quarter);
+        const quarterSchedules = getAllQuarterSchedulesForSave();
+        const records = await buildYearScopedScheduleSyncRecords(quarterSchedules);
+        const recordsWithUserContext = records.map((record) => ({
+            ...record,
+            updated_by: userAttribution.id
+        }));
+        const syncResult = await dbService.syncScheduledCoursesForAcademicYear(yearRecord.id, recordsWithUserContext);
 
-        if (deleteError) {
-            console.error('Error clearing old schedule:', deleteError);
+        if (!syncResult) {
+            setCloudSaveUi('error', `Save failed for ${targetYear}`);
+            showToast('Error saving to database', 'error');
+            return;
         }
 
-        // Build records to insert
-        const records = [];
-
-        for (const [key, courses] of Object.entries(assignedCourses)) {
-            if (key === 'unassigned') continue;
-
-            const [dayPattern, timeSlot, room] = key.split('-');
-
-            for (const course of courses) {
-                // Look up IDs
-                const courseId = await dbService.lookupCourseId(course.courseCode);
-                const facultyId = course.facultyName && course.facultyName !== 'TBD' && course.facultyName !== 'Adjunct'
-                    ? await dbService.lookupFacultyId(course.facultyName)
-                    : null;
-                const roomId = await dbService.lookupRoomId(room);
-
-                records.push({
-                    academic_year_id: yearRecord.id,
-                    course_id: courseId,
-                    faculty_id: facultyId,
-                    room_id: roomId,
-                    quarter: currentSchedule.quarter,
-                    day_pattern: dayPattern,
-                    time_slot: timeSlot,
-                    section: course.section || '001',
-                    projected_enrollment: course.predictedDemand || null
-                });
-            }
-        }
-
-        // Insert all records
-        if (records.length > 0) {
-            const { data, error } = await supabase
-                .from('scheduled_courses')
-                .insert(records)
-                .select();
-
-            if (error) {
-                console.error('Error saving schedule:', error);
-                showToast('Error saving to database', 'error');
-                return;
-            }
-
-            showToast(`Saved ${records.length} courses to database`);
-        } else {
-            showToast('No courses to save');
-        }
+        const updatedCount = Number(syncResult.updated_count || 0);
+        const insertedCount = Number(syncResult.inserted_count || 0);
+        const deletedCount = Number(syncResult.deleted_count || 0);
+        const savedAt = new Date().toISOString();
+        writeSaveAttributionState({
+            year: targetYear,
+            userId: userAttribution.id,
+            userLabel: userAttribution.label,
+            savedAt
+        });
+        setSaveAttributionLabel(userAttribution.label, savedAt);
+        setCloudSaveUi('saved', `Saved ${targetYear} at ${formatSaveAttributionDate(savedAt)}`);
+        showToast(`Saved ${targetYear}: ${updatedCount} updated, ${insertedCount} inserted, ${deletedCount} removed`);
 
     } catch (error) {
         console.error('Database save error:', error);
-        showToast('Error saving to database', 'error');
+        setCloudSaveUi('error', 'Save failed. Review error details and retry.');
+        showToast(buildDatabaseSaveErrorMessage(error), 'error');
     }
 }
 
@@ -2628,20 +3053,16 @@ function exportJSON() {
 /**
  * Export to main schedule page (all three quarters)
  */
-function exportToEditor() {
-    if (!currentSchedule) {
-        showToast('No schedule to export', 'error');
-        return;
-    }
-
-    // Save current quarter state first
+function syncCurrentQuarterIntoAllQuartersSchedule() {
+    if (!currentSchedule) return;
     allQuartersSchedule[activeQuarter] = {
         ...allQuartersSchedule[activeQuarter],
         assignedCourses: { ...assignedCourses },
         caseByeCaseCourses: [...caseByeCaseCourses]
     };
+}
 
-    // Build schedule data in the format the main page expects
+function buildProgramCommandScheduleDataFromBuilder() {
     const scheduleData = {
         fall: { MW: {}, TR: {} },
         winter: { MW: {}, TR: {} },
@@ -2656,7 +3077,7 @@ function exportToEditor() {
         if (!quarterData?.assignedCourses) return;
 
         // Initialize time slots
-        TIMES.forEach(time => {
+        TIME_KEYS.forEach(time => {
             scheduleData[quarterKey]['MW'][time] = [];
             scheduleData[quarterKey]['TR'][time] = [];
         });
@@ -2687,6 +3108,49 @@ function exportToEditor() {
             });
         });
     });
+
+    return scheduleData;
+}
+
+function persistBuilderScheduleForProgramCommand(year, scheduleData) {
+    if (!year || !scheduleData) return false;
+    try {
+        localStorage.setItem(`designSchedulerData_${year}`, JSON.stringify(scheduleData));
+        return true;
+    } catch (error) {
+        console.error('Error saving builder schedule for Program Command handoff:', error);
+        return false;
+    }
+}
+
+function openWorkloadReview() {
+    if (!currentSchedule) {
+        showToast('No schedule to export', 'error');
+        return;
+    }
+
+    syncCurrentQuarterIntoAllQuartersSchedule();
+    const scheduleData = buildProgramCommandScheduleDataFromBuilder();
+    const saved = persistBuilderScheduleForProgramCommand(currentSchedule.year, scheduleData);
+    if (!saved) {
+        showToast('Could not prepare workload handoff', 'error');
+        return;
+    }
+
+    showToast(`Opening workload review for ${currentSchedule.year}...`, 'info');
+    setTimeout(() => {
+        window.location.href = `workload-dashboard.html?year=${encodeURIComponent(currentSchedule.year)}`;
+    }, 300);
+}
+
+function exportToEditor() {
+    if (!currentSchedule) {
+        showToast('No schedule to export', 'error');
+        return;
+    }
+
+    syncCurrentQuarterIntoAllQuartersSchedule();
+    const scheduleData = buildProgramCommandScheduleDataFromBuilder();
 
     // Store in localStorage for main page to import
     const exportData = {
@@ -2723,10 +3187,51 @@ function showToast(message, type = 'success') {
 }
 
 /**
+ * Populate room dropdown from room constraints data
+ */
+function populateRoomDropdown() {
+    const select = document.getElementById('addCourseRoom');
+    if (!select) return;
+
+    const previousValue = select.value;
+    select.innerHTML = '';
+
+    const onlineOption = document.createElement('option');
+    onlineOption.value = 'ONLINE ASYNC';
+    onlineOption.textContent = 'ONLINE ASYNC';
+    select.appendChild(onlineOption);
+
+    const addCampusGroup = (label, rooms) => {
+        if (!Array.isArray(rooms) || rooms.length === 0) return;
+        const group = document.createElement('optgroup');
+        group.label = label;
+        rooms.forEach((roomCode) => {
+            const option = document.createElement('option');
+            option.value = roomCode;
+            option.textContent = ROOM_NAMES[roomCode] || roomCode;
+            group.appendChild(option);
+        });
+        select.appendChild(group);
+    };
+
+    addCampusGroup('Catalyst (Spokane)', CATALYST_ROOMS);
+    addCampusGroup('Cheney (Main)', CHENEY_ROOMS);
+
+    const hasPrevious = [...select.options].some((option) => option.value === previousValue);
+    if (hasPrevious) {
+        select.value = previousValue;
+    } else {
+        const preferredDefault = CATALYST_ROOMS[0] || CHENEY_ROOMS[0] || 'ONLINE ASYNC';
+        select.value = preferredDefault;
+    }
+}
+
+/**
  * Open Add Course modal
  */
 function openAddCourseModal() {
     populateCourseDropdown();
+    populateRoomDropdown();
     populateFacultyDropdown();
     document.getElementById('addCourseModal').classList.add('active');
     document.getElementById('addCourseSection').value = '001';
@@ -2764,12 +3269,14 @@ function handleCourseSelection() {
         // Pre-populate time slot based on preferred times
         const timeSelect = document.getElementById('addCourseTime');
         if (prefs.preferredTimes && prefs.preferredTimes.length > 0) {
-            // Map time preferences to actual time keys
-            const timeMapping = {
-                'morning': '10:00-12:20',
-                'afternoon': '13:00-15:20',
-                'evening': '16:00-18:20'
-            };
+            // Map time preferences to actual time keys using current profile-driven slots
+            const timeMapping = {};
+            schedulerTimeSlots.forEach((slot) => {
+                const bucket = getTimeBucketForKey(slot.id);
+                if (!timeMapping[bucket]) {
+                    timeMapping[bucket] = slot.id;
+                }
+            });
             // Select first preferred time that's valid
             for (const timePref of prefs.preferredTimes) {
                 const timeKey = timeMapping[timePref];
@@ -2790,11 +3297,7 @@ function handleCourseSelection() {
             }
         } else if (prefs.allowedCampus) {
             // Select first room on allowed campus
-            const campusRooms = {
-                'catalyst': ['206', '209', '210', '212'],
-                'cheney': ['CEB 102', 'CEB 104']
-            };
-            const rooms = campusRooms[prefs.allowedCampus] || [];
+            const rooms = getCampusRooms(prefs.allowedCampus);
             for (const room of rooms) {
                 if ([...roomSelect.options].some(opt => opt.value === room)) {
                     roomSelect.value = room;
@@ -2865,22 +3368,19 @@ function populateCourseDropdown() {
     // Get courses from catalog or use default list
     const courses = courseCatalog?.courses || [
         { code: 'DESN 100', title: 'Introduction to Design' },
-        { code: 'DESN 200', title: 'Typography' },
-        { code: 'DESN 216', title: 'Drawing for Design' },
-        { code: 'DESN 263', title: 'Digital Imaging' },
-        { code: 'DESN 265', title: 'Digital Illustration' },
-        { code: 'DESN 267', title: 'Visual Storytelling' },
-        { code: 'DESN 301', title: 'Senior Thesis I' },
-        { code: 'DESN 311', title: 'UX I' },
-        { code: 'DESN 313', title: 'UX II' },
-        { code: 'DESN 326', title: 'Motion Design I' },
-        { code: 'DESN 336', title: 'Motion Design II' },
-        { code: 'DESN 350', title: 'Design History' },
-        { code: 'DESN 355', title: 'Web Design' },
-        { code: 'DESN 357', title: 'Print Design' },
+        { code: 'DESN 200', title: 'Visual Communication I' },
+        { code: 'DESN 216', title: 'Digital Foundations' },
+        { code: 'DESN 243', title: 'Typography' },
+        { code: 'DESN 263', title: 'Visual Communication Design' },
+        { code: 'DESN 301', title: 'Visual Storytelling' },
+        { code: 'DESN 305', title: 'Social Media Design' },
+        { code: 'DESN 326', title: 'Motion Graphics II' },
+        { code: 'DESN 336', title: 'Web Design II' },
+        { code: 'DESN 350', title: 'Brand Identity Design' },
+        { code: 'DESN 355', title: 'Environmental Graphics' },
         { code: 'DESN 359', title: 'Design Studio I' },
         { code: 'DESN 360', title: 'Design Studio II' },
-        { code: 'DESN 384', title: 'Professional Practice' },
+        { code: 'DESN 384', title: 'Digital Sound' },
         { code: 'DESN 401', title: 'Senior Thesis II' }
     ];
 
@@ -3537,4 +4037,17 @@ function exportAiReport() {
     URL.revokeObjectURL(url);
 
     showToast('Report exported');
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        saveToDatabase,
+        getAllQuarterSchedulesForSave,
+        parseScheduleSlotKey,
+        shouldPersistFacultyName,
+        buildDatabaseSaveErrorMessage,
+        buildYearScopedScheduleSyncRecords,
+        __setSaveStateForTests,
+        __getSaveStateForTests
+    };
 }
