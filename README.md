@@ -297,6 +297,23 @@ System tracks and visualizes:
 - **Version Control**: Git/GitHub
 - **Hosting**: GitHub Pages compatible
 
+## Supabase keep-alive
+
+The scheduled GitHub Actions workflow in `.github/workflows/keep-supabase-awake.yml` calls a small, read-only Supabase RPC every six hours. This external database request reduces the risk that a low-traffic free-plan project is paused for inactivity, but it is not a formal uptime guarantee.
+
+This repository is public, and GitHub may automatically disable scheduled workflows after 60 days with no repository activity. Check the workflow periodically and re-enable it from the Actions tab if needed. If the keep-alive must remain independent of repository activity, use a separate external scheduler instead of relying solely on GitHub Actions.
+
+Before enabling the workflow:
+
+1. Run `scripts/add-keep-alive-function.sql` in the Supabase SQL Editor.
+2. In the GitHub repository, open **Settings → Secrets and variables → Actions** and add:
+   - `SUPABASE_URL`: the Supabase project URL.
+   - `SUPABASE_ANON_KEY`: the project's legacy anon key, matching the key type and naming already used by this application.
+
+Use the legacy client-safe anon key already used by this application. Never configure a publishable key or the Supabase service-role key for this workflow: the required duplicated `Authorization` header expects the legacy JWT-formatted anon key.
+
+To test manually, open **Actions → Keep Supabase Awake → Run workflow**. Open the resulting workflow run and confirm that the **Query Supabase database** step finishes successfully and logs `Supabase keep-alive RPC succeeded.` A missing secret, unavailable RPC, authorization error, or unsuccessful HTTP response causes the step to fail.
+
 ## 🤝 Contributing
 
 When adding data or making changes:
