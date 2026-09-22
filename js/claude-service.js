@@ -143,11 +143,14 @@ const ClaudeService = (function() {
             headers['x-ai-api-key'] = apiKey;
         }
 
-        const response = await fetch(endpoint, {
+        const requestOptions = {
             method: 'POST',
             headers,
             body: JSON.stringify(payload)
-        });
+        };
+        const response = window.AuthService
+            ? await window.AuthService.authorizedFetch(endpoint, requestOptions)
+            : await fetch(endpoint, requestOptions);
 
         let data = {};
         try {

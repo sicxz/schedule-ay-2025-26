@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users — Program Command</title>
+    <script src="/js/auth-bootstrap.js"></script>
+    <link rel="stylesheet" href="/css/public-schedule.css">
+    <link rel="stylesheet" href="/css/user-management.css">
+</head>
+<body data-requires-role="admin" class="foundry users-page">
+    <div class="public-shell users-shell">
+        <header class="public-header users-header">
+            <div class="public-header-copy">
+                <span class="public-header-mark" aria-hidden="true">PC</span>
+                <div>
+                    <p class="public-header-label">EWU Design</p>
+                    <p class="users-header-title">Program Command</p>
+                </div>
+            </div>
+        </header>
+
+        <main class="public-main users-content">
+            <section class="public-context" aria-label="Users and access">
+                <div>
+                    <p class="public-eyebrow">Administration</p>
+                    <h1>Users and access</h1>
+                    <p class="users-subtitle">Invite people to the scheduler and control who can save shared changes.</p>
+                </div>
+                <div class="public-meta">
+                    <span class="public-status invite-only-badge" data-state="ready">Invite only</span>
+                    <a href="/index.html" class="public-login-link back-link">← Back to Program Command</a>
+                </div>
+            </section>
+
+            <section class="users-panel invite-panel" aria-labelledby="inviteHeading">
+                <div class="users-panel-heading">
+                    <div>
+                        <h2 id="inviteHeading">Invite a user</h2>
+                        <p>They’ll receive an email link to create a password. Google, Apple, and other social sign-in methods are unavailable.</p>
+                    </div>
+                </div>
+                <div class="users-panel-body">
+                    <form id="inviteForm" class="invite-form">
+                        <div class="invite-field">
+                            <label for="inviteEmail">Email address</label>
+                            <input id="inviteEmail" name="email" type="email" autocomplete="email" placeholder="name@ewu.edu" required>
+                        </div>
+                        <div class="invite-field">
+                            <label for="inviteRole">Role</label>
+                            <select id="inviteRole" name="role">
+                                <option value="participant">Participant — view and create local drafts</option>
+                                <option value="admin">Administrator — manage shared data and users</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="users-primary-button">Send invitation</button>
+                    </form>
+                    <p id="inviteMessage" class="users-message" role="status"></p>
+                </div>
+            </section>
+
+            <section class="users-panel users-list-panel" aria-labelledby="usersHeading">
+                <div class="users-panel-heading users-list-heading">
+                    <div>
+                        <h2 id="usersHeading">People with access</h2>
+                        <p id="userCount" class="public-panel-count">Loading users…</p>
+                    </div>
+                    <button id="refreshUsersButton" type="button" class="users-secondary-button">Refresh</button>
+                </div>
+                <div id="usersError" class="users-error" role="alert" hidden></div>
+                <div class="users-table-wrap">
+                    <table class="users-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">User</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Last sign-in</th>
+                                <th scope="col">Role</th>
+                                <th scope="col"><span class="visually-hidden">Actions</span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <dialog id="removeUserDialog" class="remove-user-dialog">
+        <form method="dialog">
+            <h2>Remove access?</h2>
+            <p id="removeUserMessage"></p>
+            <div class="dialog-actions">
+                <button value="cancel" class="users-secondary-button">Cancel</button>
+                <button id="confirmRemoveUserButton" value="confirm" class="users-danger-button">Remove access</button>
+            </div>
+        </form>
+    </dialog>
+    <script src="user-management.js"></script>
+</body>
+</html>

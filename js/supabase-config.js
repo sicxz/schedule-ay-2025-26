@@ -1,55 +1,62 @@
 /**
- * Supabase Configuration
- *
- * SETUP INSTRUCTIONS:
- * 1. Go to https://supabase.com and create a free account
- * 2. Create a new project (e.g., "ewu-schedule")
- * 3. Go to Project Settings > API
- * 4. Copy your Project URL and paste below
- * 5. Copy your anon/public key and paste below
+ * Browser Supabase configuration.
+ * The publishable/anon key is safe to expose; authorization is enforced by RLS.
  */
+(function configureSupabase(global) {
+    'use strict';
 
-// Supabase project credentials
-const SUPABASE_URL = 'https://ohnrhjxcjkrdtudpzjgn.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9obnJoanhjamtyZHR1ZHB6amduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ5NDQ2NzAsImV4cCI6MjA4MDUyMDY3MH0.XN1CC0xC5dizIhF4cIEkv90TApJHXRBYTC7a6AXPvtU';
+    const projectUrl = 'https://ohnrhjxcjkrdtudpzjgn.supabase.co';
+    const publishableKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9obnJoanhjamtyZHR1ZHB6amduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ5NDQ2NzAsImV4cCI6MjA4MDUyMDY3MH0.XN1CC0xC5dizIhF4cIEkv90TApJHXRBYTC7a6AXPvtU';
 
-// Current department code (for multi-department support)
-const CURRENT_DEPARTMENT_CODE = 'DESN';
+    if (global.supabase?.createClient) global.supabaseJs = global.supabase;
 
-// Initialize Supabase client (only if credentials are configured)
-let supabaseClient = null;
-var supabase = null; // Global reference for other services (var to avoid redeclaration issues)
+    global.SUPABASE_URL = projectUrl;
+    global.SUPABASE_ANON_KEY = publishableKey;
+    global.CURRENT_DEPARTMENT_CODE = global.CURRENT_DEPARTMENT_CODE || 'DESN';
 
-function isSupabaseConfigured() {
-    return SUPABASE_URL !== 'YOUR_SUPABASE_PROJECT_URL' &&
-           SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY';
-}
+    global.isSupabaseConfigured = function isSupabaseConfigured() {
+        return Boolean(
+            global.SUPABASE_URL &&
+            global.SUPABASE_ANON_KEY &&
+            global.SUPABASE_URL !== 'YOUR_SUPABASE_PROJECT_URL' &&
+            global.SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY'
+        );
+    };
 
-function initSupabase() {
-    if (!isSupabaseConfigured()) {
-        console.warn('Supabase not configured. Using local JSON files as fallback.');
-        return null;
-    }
+    global.initSupabase = function initSupabase() {
+        if (global.supabaseClient) {
+            global.supabase = global.supabaseClient;
+            return global.supabaseClient;
+        }
+        if (!global.isSupabaseConfigured()) {
+            console.warn('Supabase is not configured.');
+            return null;
+        }
+        const sdk = global.supabaseJs || global.supabase;
+        if (!sdk?.createClient) {
+            console.error('Supabase JS has not loaded.');
+            return null;
+        }
 
-    if (!window.supabase || !window.supabase.createClient) {
-        console.error('Supabase JS library not loaded. Add the script tag before this file.');
-        return null;
-    }
+        global.supabaseClient = sdk.createClient(
+            global.SUPABASE_URL,
+            global.SUPABASE_ANON_KEY,
+            {
+                auth: {
+                    persistSession: true,
+                    autoRefreshToken: true,
+                    detectSessionInUrl: true
+                }
+            }
+        );
+        global.supabase = global.supabaseClient;
+        return global.supabaseClient;
+    };
 
-    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    supabase = supabaseClient; // Set global reference
-    console.log('Supabase client initialized successfully');
-    return supabaseClient;
-}
+    global.getSupabaseClient = function getSupabaseClient() {
+        return global.supabaseClient || global.initSupabase();
+    };
 
-function getSupabaseClient() {
-    if (!supabaseClient) {
-        return initSupabase();
-    }
-    return supabaseClient;
-}
-
-// Auto-initialize when script loads
-document.addEventListener('DOMContentLoaded', () => {
-    initSupabase();
-});
+    global.supabaseClient = global.supabaseClient || null;
+    if (global.supabaseJs?.createClient) global.initSupabase();
+})(window);

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in — Program Command</title>
+    <script src="/js/auth-bootstrap.js" data-public-page="true"></script>
+    <link rel="stylesheet" href="/css/public-schedule.css">
+    <link rel="stylesheet" href="/css/auth.css">
+</head>
+<body class="foundry auth-login-body">
+    <div class="public-shell auth-shell">
+        <header class="public-header">
+            <div class="public-header-copy">
+                <span class="public-header-mark" aria-hidden="true">PC</span>
+                <div>
+                    <p class="public-header-label">EWU Design</p>
+                    <h1 id="authBrandTitle">Program Command</h1>
+                </div>
+            </div>
+        </header>
+
+        <main class="public-main" aria-labelledby="authBrandTitle">
+            <section class="public-context" aria-label="Account access">
+                <div>
+                    <p class="public-eyebrow">Account access</p>
+                    <h2>Account</h2>
+                </div>
+                <div class="public-meta">
+                    <span class="public-status" data-state="ready">Invite only</span>
+                </div>
+            </section>
+
+            <div class="auth-panel">
+                <section class="auth-form-panel" aria-live="polite">
+                    <form id="signInForm" class="auth-form">
+                        <div class="auth-form-heading">
+                            <h3>Sign in</h3>
+                            <p>Use the email address for your Program Command account.</p>
+                        </div>
+                        <div class="auth-field">
+                            <label for="email">Email address</label>
+                            <input id="email" name="email" type="email" autocomplete="username" required>
+                        </div>
+                        <div class="auth-field">
+                            <label for="password">Password</label>
+                            <input id="password" name="password" type="password" autocomplete="current-password" required>
+                        </div>
+                        <p id="signInMessage" class="auth-message" role="status"></p>
+                        <button class="auth-primary-button" type="submit">Sign in</button>
+                        <button class="auth-text-button" id="showResetButton" type="button">Forgot your password?</button>
+                    </form>
+
+                    <form id="setPasswordForm" class="auth-form" hidden>
+                        <div class="auth-form-heading">
+                            <h3>Create your password</h3>
+                            <p>Your invitation has been confirmed. Choose a password to finish setting up your account.</p>
+                        </div>
+                        <div class="auth-field">
+                            <label for="newPassword">Password</label>
+                            <input id="newPassword" name="newPassword" type="password" autocomplete="new-password" minlength="12" required>
+                        </div>
+                        <div class="auth-field">
+                            <label for="confirmPassword">Confirm password</label>
+                            <input id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" minlength="12" required>
+                            <p class="auth-field-help">Use at least 12 characters.</p>
+                        </div>
+                        <p id="passwordMessage" class="auth-message" role="status"></p>
+                        <button class="auth-primary-button" type="submit">Save password and continue</button>
+                    </form>
+
+                    <form id="resetPasswordForm" class="auth-form" hidden>
+                        <div class="auth-form-heading">
+                            <h3>Reset your password</h3>
+                            <p>We’ll email a reset link if this address has a Program Command account.</p>
+                        </div>
+                        <div class="auth-field">
+                            <label for="resetEmail">Email address</label>
+                            <input id="resetEmail" name="resetEmail" type="email" autocomplete="email" required>
+                        </div>
+                        <p id="resetMessage" class="auth-message" role="status"></p>
+                        <button class="auth-primary-button" type="submit">Send reset link</button>
+                        <button class="auth-text-button" id="backToSignInButton" type="button">Back to sign in</button>
+                    </form>
+                </section>
+
+                <p class="auth-invite-note">Access is by invitation only. Ask a Program Command administrator for an invitation.</p>
+            </div>
+        </main>
+    </div>
+    <script src="/js/login.js"></script>
+</body>
+</html>

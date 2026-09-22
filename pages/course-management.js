@@ -140,12 +140,13 @@ function renderCatalogTable() {
                 <td><div class="pref-badges">${timeBadges} ${dayBadges}</div></td>
                 <td>${locationDisplay}</td>
                 <td class="actions">
-                    <button class="ds-btn ds-btn-secondary ds-btn-sm" onclick="editCourse('${course.id}')">Edit</button>
-                    <button class="ds-btn ds-btn-secondary ds-btn-sm" onclick="confirmDeleteCourse('${course.id}')">Delete</button>
+                    <button class="ds-btn ds-btn-secondary ds-btn-sm" data-auth-action="write" onclick="editCourse('${course.id}')">Edit</button>
+                    <button class="ds-btn ds-btn-secondary ds-btn-sm" data-auth-action="write" onclick="confirmDeleteCourse('${course.id}')">Delete</button>
                 </td>
             </tr>
         `;
     }).join('');
+    window.AuthGuard?.applyPermissionState();
 }
 
 function getTimeLabel(time) {
@@ -256,12 +257,13 @@ function renderSectionsTable() {
                     </div>
                 </td>
                 <td class="actions">
-                    <button class="ds-btn ds-btn-secondary ds-btn-sm" onclick="editSection('${section.id}')">Edit</button>
-                    <button class="ds-btn ds-btn-secondary ds-btn-sm" onclick="confirmDeleteSection('${section.id}')">Delete</button>
+                    <button class="ds-btn ds-btn-secondary ds-btn-sm" data-auth-action="write" onclick="editSection('${section.id}')">Edit</button>
+                    <button class="ds-btn ds-btn-secondary ds-btn-sm" data-auth-action="write" onclick="confirmDeleteSection('${section.id}')">Delete</button>
                 </td>
             </tr>
         `;
     }).join('');
+    window.AuthGuard?.applyPermissionState();
 }
 
 function filterSections() {

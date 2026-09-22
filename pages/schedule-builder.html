@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="/js/auth-bootstrap.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Schedule Builder - Design Scheduler</title>
@@ -326,7 +327,7 @@
             <button class="btn-secondary" onclick="saveDraft()">
                 💾 Save Draft
             </button>
-            <button class="btn-primary" onclick="saveToDatabase()" id="saveToCloudBtn">
+            <button class="btn-primary" data-auth-action="write" onclick="saveToDatabase()" id="saveToCloudBtn">
                 ☁️ Save to Cloud
             </button>
             <button class="btn-ai" onclick="evaluateWithAI()">
