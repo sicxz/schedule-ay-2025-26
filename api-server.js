@@ -2,6 +2,7 @@ import http from 'http';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { createClient } from '@supabase/supabase-js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -54,6 +55,7 @@ const ANTHROPIC_VERSION = '2023-06-01';
 const DEFAULT_OPENAI_MODEL = process.env.OPENAI_MODEL || 'gpt-4o-mini';
 const DEFAULT_ANTHROPIC_MODEL = process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-5';
 let createScheduleSpreadsheet = null;
+let supabaseAdminClient = null;
 
 const mimeTypes = {
   '.html': 'text/html',
@@ -72,8 +74,209 @@ const mimeTypes = {
 };
 
 function sendJson(res, statusCode, payload) {
-  res.writeHead(statusCode, { 'Content-Type': 'application/json' });
+  res.writeHead(statusCode, {
+    'Content-Type': 'application/json',
+    'Cache-Control': 'no-store'
+  });
   res.end(JSON.stringify(payload));
+}
+
+class HttpError extends Error {
+  constructor(statusCode, message) {
+    super(message);
+    this.statusCode = statusCode;
+  }
+}
+
+function getSupabaseAdminClient() {
+  if (supabaseAdminClient) return supabaseAdminClient;
+
+  const url = process.env.SUPABASE_URL;
+  const secretKey = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !secretKey) {
+    throw new HttpError(503, 'User management is not configured on the server.');
+  }
+
+  supabaseAdminClient = createClient(url, secretKey, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+      detectSessionInUrl: false
+    }
+  });
+  return supabaseAdminClient;
+}
+
+function getBearerToken(req) {
+  const authorization = req.headers.authorization;
+  if (typeof authorization !== 'string') return null;
+  const match = authorization.match(/^Bearer\s+(.+)$/i);
+  return match?.[1]?.trim() || null;
+}
+
+async function authenticateApiRequest(req) {
+  const token = getBearerToken(req);
+  if (!token) throw new HttpError(401, 'Sign in to continue.');
+
+  const adminClient = getSupabaseAdminClient();
+  const { data: userResult, error: userError } = await adminClient.auth.getUser(token);
+  const user = userResult?.user;
+  if (userError || !user) throw new HttpError(401, 'Your session is invalid or has expired.');
+  if (!hasEmailOnlyIdentity(user)) {
+    throw new HttpError(403, 'Only invited email accounts can access the scheduler.');
+  }
+
+  const { data: profile, error: profileError } = await adminClient
+    .from('user_profiles')
+    .select('id, email, display_name, role')
+    .eq('id', user.id)
+    .single();
+  if (profileError || !profile) throw new HttpError(403, 'This account does not have scheduler access.');
+
+  return { adminClient, user, profile };
+}
+
+function hasEmailOnlyIdentity(user) {
+  const provider = user?.app_metadata?.provider;
+  const providers = user?.app_metadata?.providers;
+  return provider === 'email' && (
+    !Array.isArray(providers) || providers.every((candidate) => candidate === 'email')
+  );
+}
+
+function requireAdmin(context) {
+  if (context?.profile?.role !== 'admin') {
+    throw new HttpError(403, 'Administrator access is required.');
+  }
+}
+
+function normalizeRole(value) {
+  if (value === 'admin' || value === 'participant') return value;
+  throw new HttpError(400, 'Role must be admin or participant.');
+}
+
+function normalizeEmail(value) {
+  const email = String(value || '').trim().toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    throw new HttpError(400, 'Enter a valid email address.');
+  }
+  return email;
+}
+
+function getInviteRedirectUrl() {
+  const appUrl = process.env.APP_URL;
+  if (!appUrl) return null;
+  try {
+    return new URL('/login.html?invited=1', appUrl).toString();
+  } catch {
+    throw new HttpError(503, 'APP_URL is not a valid URL.');
+  }
+}
+
+function serializeUser(user, profile = {}) {
+  return {
+    id: user.id,
+    email: user.email || profile.email || '',
+    displayName: profile.display_name || null,
+    role: profile.role === 'admin' ? 'admin' : 'participant',
+    createdAt: user.created_at || null,
+    invitedAt: user.invited_at || null,
+    emailConfirmedAt: user.email_confirmed_at || user.confirmed_at || null,
+    lastSignInAt: user.last_sign_in_at || null
+  };
+}
+
+async function handleAdminUsersRequest(req, res, pathname, context) {
+  requireAdmin(context);
+  const { adminClient, user: actor } = context;
+
+  if (req.method === 'GET' && pathname === '/api/admin/users') {
+    const [userResult, profileResult] = await Promise.all([
+      adminClient.auth.admin.listUsers({ page: 1, perPage: 1000 }),
+      adminClient.from('user_profiles').select('id, email, display_name, role')
+    ]);
+    const { data: userData, error: usersError } = userResult;
+    if (usersError) throw new HttpError(502, usersError.message);
+
+    const { data: profiles, error: profilesError } = profileResult;
+    if (profilesError) throw new HttpError(502, profilesError.message);
+
+    const profileById = new Map((profiles || []).map((profile) => [profile.id, profile]));
+    const users = (userData?.users || [])
+      .filter((user) => profileById.has(user.id) && hasEmailOnlyIdentity(user))
+      .map((user) => serializeUser(user, profileById.get(user.id)))
+      .sort((left, right) => left.email.localeCompare(right.email));
+    sendJson(res, 200, { success: true, users });
+    return true;
+  }
+
+  if (req.method === 'POST' && pathname === '/api/admin/users/invite') {
+    const body = await parseBody(req);
+    const email = normalizeEmail(body.email);
+    const role = normalizeRole(body.role || 'participant');
+    const redirectTo = getInviteRedirectUrl();
+    const inviteOptions = redirectTo ? { redirectTo } : {};
+
+    const { data: invitation, error: invitationError } = await adminClient.auth.admin.inviteUserByEmail(
+      email,
+      inviteOptions
+    );
+    if (invitationError) throw new HttpError(400, invitationError.message);
+    if (!invitation?.user?.id) throw new HttpError(502, 'Supabase did not return the invited user.');
+
+    const { data: profile, error: profileError } = await adminClient
+      .from('user_profiles')
+      .upsert({
+        id: invitation.user.id,
+        email,
+        role,
+        invited_by: actor.id,
+        updated_at: new Date().toISOString()
+      }, { onConflict: 'id' })
+      .select('id, email, display_name, role')
+      .single();
+    if (profileError) {
+      // The account is still participant by trigger/default if role assignment
+      // fails; never report a requested admin role that was not persisted.
+      throw new HttpError(502, `The invitation was sent, but its role could not be saved: ${profileError.message}`);
+    }
+
+    sendJson(res, 201, {
+      success: true,
+      user: serializeUser(invitation.user, profile)
+    });
+    return true;
+  }
+
+  const match = pathname.match(/^\/api\/admin\/users\/([0-9a-f-]{36})$/i);
+  if (!match) return false;
+  const targetUserId = match[1];
+  if (targetUserId === actor.id) {
+    throw new HttpError(400, 'You cannot change or remove your own administrator account.');
+  }
+
+  if (req.method === 'PATCH') {
+    const body = await parseBody(req);
+    const role = normalizeRole(body.role);
+    const { data: profile, error } = await adminClient
+      .from('user_profiles')
+      .update({ role, updated_at: new Date().toISOString() })
+      .eq('id', targetUserId)
+      .select('id, email, display_name, role')
+      .single();
+    if (error || !profile) throw new HttpError(404, error?.message || 'User not found.');
+    sendJson(res, 200, { success: true, user: profile });
+    return true;
+  }
+
+  if (req.method === 'DELETE') {
+    const { error } = await adminClient.auth.admin.deleteUser(targetUserId, false);
+    if (error) throw new HttpError(400, error.message);
+    sendJson(res, 200, { success: true });
+    return true;
+  }
+
+  return false;
 }
 
 function parseBody(req) {
@@ -321,6 +524,28 @@ const server = http.createServer(async (req, res) => {
   const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
   const pathname = decodeURIComponent(parsedUrl.pathname);
 
+  let apiContext = null;
+  if (pathname.startsWith('/api/')) {
+    try {
+      apiContext = await authenticateApiRequest(req);
+    } catch (error) {
+      const statusCode = error instanceof HttpError ? error.statusCode : 500;
+      sendJson(res, statusCode, { success: false, error: error.message || 'Authentication failed.' });
+      return;
+    }
+  }
+
+  if (pathname.startsWith('/api/admin/users')) {
+    try {
+      const handled = await handleAdminUsersRequest(req, res, pathname, apiContext);
+      if (!handled) sendJson(res, 404, { success: false, error: 'Admin API route not found.' });
+    } catch (error) {
+      const statusCode = error instanceof HttpError ? error.statusCode : 500;
+      sendJson(res, statusCode, { success: false, error: error.message || 'User management failed.' });
+    }
+    return;
+  }
+
   if (req.method === 'POST' && pathname === '/api/export-to-sheets') {
     try {
       const body = await parseBody(req);
@@ -434,7 +659,10 @@ const server = http.createServer(async (req, res) => {
   const relativePath = safePath.replace(/^[/\\]+/, '');
   const resolvedPath = path.join(ROOT_DIR, relativePath);
 
-  if (!resolvedPath.startsWith(ROOT_DIR)) {
+  const hasPrivateSegment = relativePath
+    .split(/[\\/]+/)
+    .some((segment) => segment.startsWith('.'));
+  if (hasPrivateSegment || !resolvedPath.startsWith(ROOT_DIR)) {
     sendJson(res, 403, { success: false, error: 'Access denied' });
     return;
   }

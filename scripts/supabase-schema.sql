@@ -121,27 +121,9 @@ ALTER TABLE faculty_preferences ENABLE ROW LEVEL SECURITY;
 ALTER TABLE scheduling_constraints ENABLE ROW LEVEL SECURITY;
 ALTER TABLE release_time ENABLE ROW LEVEL SECURITY;
 
--- Public read access policies (can restrict later with auth)
-CREATE POLICY "Public read" ON departments FOR SELECT USING (true);
-CREATE POLICY "Public read" ON academic_years FOR SELECT USING (true);
-CREATE POLICY "Public read" ON rooms FOR SELECT USING (true);
-CREATE POLICY "Public read" ON courses FOR SELECT USING (true);
-CREATE POLICY "Public read" ON faculty FOR SELECT USING (true);
-CREATE POLICY "Public read" ON scheduled_courses FOR SELECT USING (true);
-CREATE POLICY "Public read" ON faculty_preferences FOR SELECT USING (true);
-CREATE POLICY "Public read" ON scheduling_constraints FOR SELECT USING (true);
-CREATE POLICY "Public read" ON release_time FOR SELECT USING (true);
-
--- Public write access (restrict later when adding auth)
-CREATE POLICY "Public write" ON departments FOR ALL USING (true);
-CREATE POLICY "Public write" ON academic_years FOR ALL USING (true);
-CREATE POLICY "Public write" ON rooms FOR ALL USING (true);
-CREATE POLICY "Public write" ON courses FOR ALL USING (true);
-CREATE POLICY "Public write" ON faculty FOR ALL USING (true);
-CREATE POLICY "Public write" ON scheduled_courses FOR ALL USING (true);
-CREATE POLICY "Public write" ON faculty_preferences FOR ALL USING (true);
-CREATE POLICY "Public write" ON scheduling_constraints FOR ALL USING (true);
-CREATE POLICY "Public write" ON release_time FOR ALL USING (true);
+-- This base schema deliberately creates no anonymous access policies. Run
+-- scripts/add-invite-only-auth.sql after seeding to install authenticated-read
+-- and administrator-write policies.
 
 -- Insert initial Design department
 INSERT INTO departments (name, code) VALUES ('Design', 'DESN');

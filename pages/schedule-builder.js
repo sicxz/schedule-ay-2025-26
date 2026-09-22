@@ -228,6 +228,13 @@ function setCloudSaveUi(state, detail = '') {
     const statusLabel = document.getElementById('saveCloudStatus');
     if (!saveButton) return;
 
+    if (window.AuthService && !window.AuthService.can('write', 'schedule')) {
+        saveButton.disabled = true;
+        saveButton.textContent = 'Local draft only';
+        if (statusLabel) statusLabel.textContent = 'Only administrators can save shared schedules';
+        return;
+    }
+
     if (saveCloudButtonResetTimer) {
         clearTimeout(saveCloudButtonResetTimer);
         saveCloudButtonResetTimer = null;
@@ -2848,6 +2855,13 @@ async function saveToDatabase() {
     if (!currentSchedule) {
         setCloudSaveUi('error', 'No schedule loaded to save');
         showToast('No schedule to save', 'error');
+        return;
+    }
+
+    if (window.AuthService && !window.AuthService.can('write', 'schedule')) {
+        saveDraft();
+        setCloudSaveUi('idle', 'Draft saved locally on this device');
+        showToast('Draft saved locally. Only administrators can save the shared schedule.');
         return;
     }
 

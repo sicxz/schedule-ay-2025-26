@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    <script src="/js/auth-bootstrap.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Program Command - EWU Design</title>
@@ -4559,7 +4560,7 @@
                         </label>
                         <span class="swap-toggle-label" id="swapLabel">Swap</span>
                     </div>
-                    <button type="button" id="saveDbButton" class="btn-ewu-accent btn-add-course-main btn-save-db" onclick="saveScheduleToDatabase()">
+                    <button type="button" id="saveDbButton" class="btn-ewu-accent btn-add-course-main btn-save-db" data-auth-action="write" onclick="saveScheduleToDatabase()">
                         <span class="save-dirty-dot" id="saveDirtyDot" aria-hidden="true"></span>
                         <span id="saveDbButtonText">Save Schedule</span>
                     </button>
@@ -5489,7 +5490,7 @@
         // Listen for the custom event from the AppHeader component
         function canPerform(action, resource) {
             if (!window.AuthService || typeof window.AuthService.can !== 'function') {
-                return true;
+                return action === 'read' || action === 'interact';
             }
             return window.AuthService.can(action, resource);
         }
@@ -5528,7 +5529,7 @@
                     showToast('Insufficient permissions: only admins can manage users and accounts.', 'error');
                     return;
                 }
-                showToast('Users & accounts management UI is not implemented yet.');
+                window.location.href = '/pages/user-management.html';
             } else if (action === 'nav-enrollment') {
                 navigateWithDirtyGuard('enrollment-dashboard.html');
             } else if (action === 'nav-workload') {
@@ -8568,14 +8569,18 @@
             const status = document.getElementById('saveDbStatus');
             if (!button || !label) return;
 
+            const canSaveSharedData = !window.AuthService || window.AuthService.can('write', 'schedule');
             const shouldShow = true;
             button.classList.toggle('visible', shouldShow);
-            button.disabled = scheduleSaveInProgress;
+            button.disabled = scheduleSaveInProgress || !canSaveSharedData;
             if (dirtyDot) {
                 dirtyDot.classList.toggle('visible', scheduleDirty);
             }
 
-            if (scheduleSaveInProgress) {
+            if (!canSaveSharedData) {
+                label.textContent = 'Local draft only';
+                if (status) status.textContent = 'Only administrators can save shared schedules';
+            } else if (scheduleSaveInProgress) {
                 label.textContent = 'Saving...';
                 if (status) {
                     status.textContent = currentAcademicYear ? `Saving ${currentAcademicYear}...` : 'Saving changes...';
@@ -13982,14 +13987,17 @@
                     spring: flattenQuarterData(scheduleData.spring || {})
                 };
 
-                const response = await fetch('/api/export-to-sheets', {
+                const requestOptions = {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         scheduleData: exportData,
                         academicYear: currentAcademicYear
                     })
-                });
+                };
+                const response = window.AuthService
+                    ? await window.AuthService.authorizedFetch('/api/export-to-sheets', requestOptions)
+                    : await fetch('/api/export-to-sheets', requestOptions);
 
                 const result = await response.json();
 
@@ -14098,7 +14106,7 @@
             });
 
             if (rpcResult.error) {
-                if (isMissingScheduleSyncRpcError(rpcResult.error)) {
+                if (isMissingScheduleSyncRpcError(rpcResult.error) || isPermissionDeniedError(rpcResult.error)) {
                     console.warn('Atomic schedule sync RPC not available yet; falling back to client-side sync.', rpcResult.error);
                     return null;
                 }
@@ -14181,6 +14189,16 @@
         async function saveScheduleToDatabase(options = {}) {
             const { silent = false, trigger = 'manual' } = options || {};
             if (scheduleSaveInProgress) return false;
+
+            if (window.AuthService && !window.AuthService.can('write', 'schedule')) {
+                saveScheduleData();
+                setScheduleDirty(false);
+                safeCaptureRecoveryDraft(`participant-local-${trigger}`);
+                if (!silent) {
+                    showToast('Draft saved locally. Only administrators can save the shared schedule.', 'warning');
+                }
+                return true;
+            }
 
             const client = getDatabaseClient();
             if (!client) {

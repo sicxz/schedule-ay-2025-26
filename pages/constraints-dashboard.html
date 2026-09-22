@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="/js/auth-bootstrap.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Constraints - Design Scheduler</title>
@@ -23,8 +24,8 @@
             </div>
             <div class="action-group">
                 <button class="btn-secondary" onclick="window.location.href='pamcam-playground.html'">PamCam Lab</button>
-                <button class="btn-secondary" onclick="resetToDefaults()">Reset to Defaults</button>
-                <button class="btn-primary" onclick="saveRules()">Save Changes</button>
+                <button class="btn-secondary" data-auth-action="write" onclick="resetToDefaults()">Reset to Defaults</button>
+                <button class="btn-primary" data-auth-action="write" onclick="saveRules()">Save Changes</button>
             </div>
         </div>
 
@@ -34,7 +35,7 @@
             <section class="constraint-section">
                 <div class="section-header">
                     <h2>Course Constraints</h2>
-                    <button class="btn-add" onclick="showAddCourseConstraint()">+ Add Rule</button>
+                    <button class="btn-add" data-auth-action="write" onclick="showAddCourseConstraint()">+ Add Rule</button>
                 </div>
                 <p class="section-description">Define which rooms and times specific courses can use</p>
 
@@ -59,7 +60,7 @@
             <section class="constraint-section">
                 <div class="section-header">
                     <h2>Faculty Preferences</h2>
-                    <button class="btn-add" onclick="showAddFacultyPreference()">+ Add Faculty</button>
+                    <button class="btn-add" data-auth-action="write" onclick="showAddFacultyPreference()">+ Add Faculty</button>
                 </div>
                 <p class="section-description">Individual faculty time/day preferences, campus assignments, and course qualifications</p>
 
@@ -93,7 +94,7 @@
             <section class="constraint-section">
                 <div class="section-header">
                     <h2>Case-by-Case Courses</h2>
-                    <button class="btn-add" onclick="showAddCaseByCase()">+ Add Course</button>
+                    <button class="btn-add" data-auth-action="write" onclick="showAddCaseByCase()">+ Add Course</button>
                 </div>
                 <p class="section-description">Courses not scheduled in the regular grid - handled individually</p>
 
@@ -130,7 +131,7 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn-secondary" onclick="closeModal()">Cancel</button>
-                    <button class="btn-primary" id="modalSaveBtn" onclick="saveConstraint()">Save</button>
+                    <button class="btn-primary" id="modalSaveBtn" data-auth-action="write" onclick="saveConstraint()">Save</button>
                 </div>
             </div>
         </div>
